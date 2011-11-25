@@ -1,0 +1,5 @@
+Gypsum is a MUD/Telnet client written in Pike. It's built like a
+server, but it's a client.
+
+This is *extremely* skeletal at present. It's also hopelessly poor
+performing. But it does color, telnet codes, and prompts...
