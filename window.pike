@@ -5,6 +5,7 @@ string prompt="";
 GTK2.Label label;
 GTK2.Adjustment scr;
 GTK2.Entry ef;
+GTK2.Button defbutton;
 array signal;
 array(string) cmdhist=({ });
 int histpos=-1;
@@ -48,10 +49,14 @@ void create(string name)
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 			->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
 		maindisplay->get_child()->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
+		defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT);
 		mainwindow->add(GTK2.Vbox(0,0)
 			->add(maindisplay)
 			->pack_end(ef=GTK2.Entry(),0,0,0)
+			->pack_end(defbutton,0,0,0)
 		)->show_all();
+		ef->grab_focus();
+		mainwindow->set_default(defbutton); ef->set_activates_default(1);
 		mainwindow->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
 		//maindisplay->get_child()->signal_connect("event",showev);
 		//say("Hello, world!"); say("Red","red"); say("Blue on green","blue","green");
@@ -61,13 +66,18 @@ void create(string name)
 	else
 	{
 		object other=G->G->window;
-		label=other->label; scr=other->scr; ef=other->ef; buf=other->buf;
+		label=other->label; scr=other->scr; ef=other->ef; defbutton=other->defbutton; buf=other->buf;
 		cmdhist=other->cmdhist; histpos=other->histpos;
 		prompt=other->prompt;
-		foreach (other->signal,int sig) ef->signal_disconnect(sig);
+		if (other->signal)
+		{
+			ef->signal_disconnect(other->signal[0]);
+			if (sizeof(other->signal)>1) defbutton->signal_disconnect(other->signal[1]);
+		}
 	}
 	signal=({ef->signal_connect("key_press_event",keypress),
 		//ef->signal_connect("activate",enterpressed), //Crashes Pike!
+		defbutton->signal_connect("clicked",enterpressed),
 	});
 	G->G->window=this;
 }
@@ -78,6 +88,12 @@ int window_destroy(object self)
 
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,ev[0]);}
 
+void settext(string text)
+{
+	ef->set_text(text);
+	ef->set_position(sizeof(text));
+}
+
 int keypress(object self,array(object) ev)
 {
 	switch (ev[0]->keyval)
@@ -86,7 +102,7 @@ int keypress(object self,array(object) ev)
 		case 0xFF52: //Up arrow
 		{
 			if (histpos==-1) histpos=sizeof(cmdhist);
-			if (histpos) ef->set_text(cmdhist[--histpos]);
+			if (histpos) settext(cmdhist[--histpos]);
 			return 1;
 		}
 		case 0xFF54: //Down arrow
@@ -95,7 +111,7 @@ int keypress(object self,array(object) ev)
 			{
 				//Optionally clear the EF
 			}
-			else if (histpos<sizeof(cmdhist)-1) ef->set_text(cmdhist[++histpos]);
+			else if (histpos<sizeof(cmdhist)-1) settext(cmdhist[++histpos]);
 			else {ef->set_text(""); histpos=-1;}
 			return 1;
 		}
