@@ -40,8 +40,8 @@ void create(string name)
 	{
 		add_constant("say",saybouncer);
 		GTK2.setup_gtk();
-		object mainwindow=GTK2.Window(GTK2.WindowToplevel);
-		mainwindow->set_title("Gypsum")->set_default_size(800,400)->signal_connect("destroy",window_destroy);
+		object mainwindow=G->G->mainwindow=GTK2.Window(GTK2.WindowToplevel);
+		mainwindow->set_title("Gypsum")->set_default_size(800,500)->signal_connect("destroy",window_destroy);
 		mainwindow->signal_connect("delete_event",window_destroy);
 		GTK2.Widget maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":scr=GTK2.Adjustment(),"background":"black"]))
 			->add(label=GTK2.Label((["xalign":0,"yalign":0,"foreground":"white"])))

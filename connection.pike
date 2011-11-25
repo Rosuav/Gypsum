@@ -2,6 +2,7 @@
 
 Stdio.File sock;
 string curmsg="";
+string worldname;
 
 void create(string name)
 {
@@ -9,18 +10,13 @@ void create(string name)
 	G->G->connect=connect;
 	//Note: Doesn't copy in curmsg.
 }
-int sockconnected(int success)
-{
-	if (success) say("%%% Connected to Threshold RPG.");
-	else say("%%% Error connecting to Threshold RPG: "+sock->errno());
-	sock->set_nonblocking(sockread,0,sockclose);
-}
 
 string readbuffer="";
 string getchr()
 {
 	//return sock->read(1);
 	if (readbuffer=="") readbuffer=sock->read(1024,1);
+	if (!readbuffer) {readbuffer=""; return 0;}
 	string c=readbuffer[0..0]; readbuffer=readbuffer[1..]; return c;
 }
 int getc() {return getchr()[0];}
@@ -28,8 +24,8 @@ void sockread(string|void starting)
 {
 	if (!starting)
 	{
-		if (!sock->connect(G->G->conn_host,G->G->conn_port)) {say("%%% Error connecting to Threshold RPG: "+sock->errno()); sock->close(); return;}
-		say("%%% Connected to Threshold RPG.");
+		if (!sock->connect(G->G->conn_host,G->G->conn_port)) {say("%%% Error connecting to "+worldname+": "+sock->errno()); sock->close(); return;}
+		say("%%% Connected to "+worldname+".");
 	}
 	else readbuffer=starting;
 	enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
@@ -128,10 +124,11 @@ int sockclose(Stdio.File socket)
 	say("%%% Disconnected from server.");
 	sock=0;
 }
-void connect()
+void connect(mapping info)
 {
 	if (sock) sock->close();
-	say("Connecting to "+G->G->conn_host+" : "+G->G->conn_port+"...");
+	say("Connecting to "+(G->G->conn_host=info->host)+" : "+(G->G->conn_port=info->port)+"...");
+	worldname=info->name;
 	sock=Stdio.File(); sock->open_socket(); //Odd Pike bug? 7.8.352 on Windows fails on the async_connect if this has been done.
 	G->G->sock=sock;
 	G->G->sockthrd=thread_create(sockread);

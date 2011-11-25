@@ -1,12 +1,14 @@
 inherit cmdbase;
 
-mapping(string:string) host=(["threshold":"thresholdrpg.com 23","minstrelhall":"gideon.rosuav.com 221"]);
+mapping(string:mapping) worlds=([
+	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG"]),
+	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall"]),
+]);
 
 int process(string param)
 {
 	if (param=="") param="threshold";
-	if (!host[param]) {say("%% Connect to what?"); return 1;}
-	sscanf(host[param],"%s %d",G->G->conn_host,G->G->conn_port);
-	G->G->connect();
+	if (!worlds[param]) {say("%% Connect to what?"); return 1;}
+	G->G->connect(worlds[param]);
 	return 1;
 }
