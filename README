@@ -3,3 +3,8 @@ server, but it's a client.
 
 This is *extremely* skeletal at present. It's also hopelessly poor
 performing. But it does color, telnet codes, and prompts...
+
+The main routine is in gypsum.pike; it loads all the other modules.
+Needs a MUD server to connect to - I use Threshold RPG and Minstrel
+Hall myself, but any will do. Currently you have to hack it to pick
+servers - see plugins/connect.pike for IPs/ports.
