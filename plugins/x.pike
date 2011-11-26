@@ -5,7 +5,15 @@ void compile_warning(string fn,int l,string msg) {say("Compilation warning on li
 int process(string param)
 {
 	program tmp; mixed err,ret;
-	err=catch {tmp=compile_string("mixed foo()\n{mixed ret="+param+"; return ret;}",".exec",this);};
+	err=catch {tmp=compile_string(#"
+GTK2.Window mw=G->G->mainwindow;
+# Add any other 'convenience names' here
+
+mixed foo()
+{
+	mixed ret="+param+#";
+	return ret;
+}",".exec",this);};
 	if (err) {say(sprintf("Error in compilation: %O\n",err)); return 1;}
 	err=catch {ret=tmp()->foo();};
 	if (err) {say(sprintf("Error in execution: %O\n",err)); return 1;}
