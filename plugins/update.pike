@@ -3,11 +3,11 @@ inherit cmdbase;
 int process(string param)
 {
 	if (param=="") {say("%% Update what?"); return 1;}
-	if (has_prefix(param,"cmd/") && !has_suffix(param,".pike"))
+	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
 	{
-		//Allow "update cmd/blah" to update the file where blah is coded
-		//Normally this will be "cmd/blah.pike", which just means you can omit the ".pike", but it helps with pathing/aliasing.
-		function f=G->G->command[param[4..]];
+		//Allow "update /blah" to update the file where /blah is coded
+		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
+		function f=G->G->command[param[1..]];
 		if (!f) {say("%% Command not found: "+param[4..]+"\n"); return 1;}
 		string def=Program.defined(function_program(f)); //Don't just use Function.defined - sometimes process() is in an inherited parent.
 		if (!def) {say("%% Function origin not found: "+param[4..]+"\n"); return 1;}
