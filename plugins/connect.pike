@@ -1,4 +1,4 @@
-inherit cmdbase;
+inherit command;
 
 mapping(string:mapping) worlds=([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG"]),

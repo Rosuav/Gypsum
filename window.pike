@@ -55,8 +55,7 @@ void create(string name)
 			->pack_end(ef=GTK2.Entry(),0,0,0)
 			->pack_end(defbutton,0,0,0)
 		)->show_all();
-		ef->grab_focus();
-		mainwindow->set_default(defbutton); ef->set_activates_default(1);
+		ef->grab_focus(); defbutton->grab_default(); ef->set_activates_default(1);
 		mainwindow->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
 		//maindisplay->get_child()->signal_connect("event",showev);
 		//say("Hello, world!"); say("Red","red"); say("Blue on green","blue","green");
@@ -138,11 +137,13 @@ int enterpressed(object self)
 	{
 		redraw();
 		sscanf(cmd,"/%[^ ] %s",cmd,string args);
-		if (G->G->command[cmd] && G->G->command[cmd](args||"")) return 0;
+		if (G->G->commands[cmd] && G->G->commands[cmd](args||"")) return 0;
 		say("%% Unknown command.");
 		return 0;
 	}
 	prompt=""; redraw();
+	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
+	foreach (hooks,object h) if (h->inputhook(cmd)) return 1;
 	G->G->sock->write(cmd+"\r\n");
 	return 1;
 }

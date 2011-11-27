@@ -70,7 +70,7 @@ int main(int argc,array(string) argv)
 	bootstrap("connection.pike");
 	bootstrap("commands.pike");
 	bootstrap_all("plugins");
-	if (sizeof(needupdate) && G->command->update) G->command->update("."); //Rebuild anything that needs it
-	if (G->command->connect) G->command->connect("");
+	if (sizeof(needupdate) && G->commands->update) G->commands->update("."); //Rebuild anything that needs it
+	if (G->commands->connect) G->commands->connect("");
 	return -1;
 }

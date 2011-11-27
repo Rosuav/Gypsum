@@ -1,4 +1,4 @@
-inherit cmdbase;
+inherit command;
 
 int process(string param)
 {
@@ -7,7 +7,7 @@ int process(string param)
 	{
 		//Allow "update /blah" to update the file where /blah is coded
 		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
-		function f=G->G->command[param[1..]];
+		function f=G->G->commands[param[1..]];
 		if (!f) {say("%% Command not found: "+param[1..]+"\n"); return 1;}
 		string def=Program.defined(function_program(f)); //Don't just use Function.defined - sometimes process() is in an inherited parent.
 		if (!def) {say("%% Function origin not found: "+param[1..]+"\n"); return 1;}

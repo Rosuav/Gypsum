@@ -1,14 +1,14 @@
 //Connection handler.
 
 Stdio.File sock;
-string curmsg="";
+string curmsg="",curline="";
 string worldname;
 
 void create(string name)
 {
 	sock=G->G->sock;
 	G->G->connect=connect;
-	//Note: Doesn't copy in curmsg.
+	//Note: Doesn't copy in curmsg/curline.
 }
 
 string readbuffer="";
@@ -48,7 +48,7 @@ void sockread(string|void starting)
 				//say(sprintf("%%%% IAC %02X",iaccode));
 				switch (iaccode)
 				{
-					case IAC: curmsg+="\xFF"; break;
+					case IAC: curmsg+="\xFF"; curline+="\xFF"; break;
 					case DO: case DONT: case WILL: case WONT:
 					{
 						switch (getc())
@@ -81,7 +81,7 @@ void sockread(string|void starting)
 					{
 						//Prompt! Woot!
 						G->G->window->prompt=curmsg; G->G->window->redraw();
-						curmsg="";
+						curmsg=curline="";
 						break;
 					}
 					default: break;
@@ -109,15 +109,20 @@ void sockread(string|void starting)
 			case '\r': if ((readbuffer!="" || sock->peek()) && (ungetc=getchr())=="\n") ungetc=0;
 			case '\n':
 			{
-				//say("line");
-				G->G->window->say_raw(curmsg);
-				curmsg="";
+				if (!dohooks(curline)) G->G->window->say_raw(curmsg);
+				curmsg=curline="";
 				break;
 			}
-			case '<': curmsg+="&lt;"; break;
-			default: curmsg+=chr;
+			case '<': curmsg+="&lt;"; curline+=chr; break;
+			case '&': curmsg+="&amp;"; curline+=chr; break;
+			default: curmsg+=chr; curline+=chr;
 		}
 	}
+}
+int dohooks(string line)
+{
+	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
+	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line)) return 1;}) say("Error in hook: "+describe_error(ex));
 }
 int sockclose(Stdio.File socket)
 {
