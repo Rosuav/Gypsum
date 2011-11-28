@@ -13,6 +13,7 @@ array(string) colors=({
 	"black","dark red","dark green","#880","dark blue","dark magenta","dark cyan","grey",
 	"dark grey","red","green","yellow","blue","magenta","cyan","white",
 });
+int passwordmode; //When 1, commands won't be saved.
 
 void saybouncer(string msg) {G->G->window->say(msg);} //Say, Bouncer, say!
 void say(string msg)
@@ -131,8 +132,16 @@ int keypress(object self,array(object) ev)
 int enterpressed(object self)
 {
 	string cmd=ef->get_text(); ef->set_text("");
-	histpos=-1; if (!sizeof(cmdhist) || cmd!=cmdhist[-1]) cmdhist+=({cmd});
-	buf+=prompt+replace(cmd,"<","&lt;")+"\n";
+	histpos=-1;
+	if (passwordmode)
+	{
+		buf+=prompt+"\n";
+	}
+	else
+	{
+		if (!sizeof(cmdhist) || cmd!=cmdhist[-1]) cmdhist+=({cmd});
+		buf+=prompt+replace(cmd,"<","&lt;")+"\n";
+	}
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
 		redraw();
@@ -142,8 +151,13 @@ int enterpressed(object self)
 		return 0;
 	}
 	prompt=""; redraw();
-	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-	foreach (hooks,object h) if (h->inputhook(cmd)) return 1;
+	if (!passwordmode)
+	{
+		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
+		foreach (hooks,object h) if (h->inputhook(cmd)) return 1;
+	}
 	G->G->sock->write(cmd+"\r\n");
 	return 1;
 }
+void   password() {passwordmode=1; ef->set_visibility(0);}
+void unpassword() {passwordmode=0; ef->set_visibility(1);}

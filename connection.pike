@@ -14,9 +14,12 @@ void create(string name)
 string readbuffer="";
 string getchr()
 {
-	//return sock->read(1);
-	if (readbuffer=="") readbuffer=sock->read(1024,1);
-	if (!readbuffer) {readbuffer=""; return 0;}
+	//return sock->read(1); //This is what getchr() effectively does. Do a little buffering, though, for performance's sake.
+	if (readbuffer=="")
+	{
+		readbuffer=sock->read(1024,1) || "";
+		if (readbuffer=="") return "";
+	}
 	string c=readbuffer[0..0]; readbuffer=readbuffer[1..]; return c;
 }
 int getc() {return getchr()[0];}
@@ -53,7 +56,7 @@ void sockread(string|void starting)
 					{
 						switch (getc())
 						{
-							case ECHO: if (iaccode==WILL) ; else ; break; //Password mode on/off
+							case ECHO: if (iaccode==WILL) G->G->window->password(); else G->G->window->unpassword(); break; //Password mode on/off
 							case NAWS: if (iaccode==DO) sock->write((string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
 							case TERMTYPE: if (iaccode==DO) sock->write((string)({IAC,WILL,TERMTYPE})); break;
 							case SUPPRESSGA: break; //Do we need this?
@@ -118,6 +121,7 @@ void sockread(string|void starting)
 			default: curmsg+=chr; curline+=chr;
 		}
 	}
+	say("%%% Disconnected from server.");
 }
 int dohooks(string line)
 {
