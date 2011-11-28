@@ -94,9 +94,10 @@ void settext(string text)
 	ef->set_position(sizeof(text));
 }
 
-int keypress(object self,array(object) ev)
+int keypress(object self,array|object ev)
 {
-	switch (ev[0]->keyval)
+	if (arrayp(ev)) ev=ev[0];
+	switch (ev->keyval)
 	{
 		case 0xFFC1: enterpressed(self); return 1; //F4 - hack.
 		case 0xFF52: //Up arrow
