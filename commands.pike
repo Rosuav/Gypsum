@@ -23,6 +23,12 @@ class hook
 		if (cmdname) G->G->hooks[cmdname]=this;
 	}
 }
+class commandhook //If you want both, you need to call both create() functions.
+{
+	inherit command;
+	inherit hook;
+	void create(string name) {command::create(name); hook::create(name);}
+}
 
 void create(string name)
 {
@@ -38,4 +44,5 @@ void create(string name)
 	}
 	add_constant("command",command);
 	add_constant("hook",hook);
+	add_constant("commandhook",commandhook);
 }

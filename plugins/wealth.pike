@@ -1,6 +1,4 @@
-inherit command;
-inherit hook;
-void create(string name) {command::create(name); hook::create(name);} //Necessary when one file uses both
+inherit commandhook;
 
 array(mapping) monitors=({
 	(["find":" Total Wealth: %[0-9,]","show":"%9s Prv: %s","last":0]),
