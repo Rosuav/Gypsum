@@ -1,4 +1,5 @@
 //Persistent storage (when this dies, bring it back with a -1/-1 counter on it).
+//It's also undying storage. When it dies, bring it back one way or the other. :)
 /* Usage:
  * persist["some/string/identifier"]=any_value;
  * retrieved_value=persist["some/string/identifier"];
