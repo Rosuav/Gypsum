@@ -105,7 +105,7 @@ void create(string name)
 	else
 	{
 		object other=G->G->window;
-		display=other->display; scr=other->scr; ef=other->ef; defbutton=other->defbutton; lines=other->lines;
+		display=other->display; scr=other->scr; ef=other->ef; defbutton=other->defbutton; lines=other->lines; colors=other->colors;
 		cmdhist=other->cmdhist; histpos=other->histpos;
 		prompt=other->prompt;
 		if (other->signal)
