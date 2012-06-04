@@ -112,7 +112,6 @@ void create(string name)
 		//maindisplay->get_child()->signal_connect("event",showev);
 		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
 		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
-		calcheight();
 	}
 	else
 	{
@@ -126,6 +125,7 @@ void create(string name)
 			if (sizeof(other->signal)>1) defbutton->signal_disconnect(other->signal[1]);
 		}
 	}
+	calcheight();
 	signal=({ef->signal_connect("key_press_event",keypress),
 		//ef->signal_connect("activate",enterpressed), //Crashes Pike!
 		defbutton->signal_connect("clicked",enterpressed),
