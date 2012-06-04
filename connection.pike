@@ -1,7 +1,8 @@
 //Connection handler.
 
 Stdio.File sock;
-string curmsg="",curline="";
+array curmsg=({0,""});
+string curline="";
 string worldname;
 
 void create(string name)
@@ -51,7 +52,7 @@ void sockread(string|void starting)
 				//say(sprintf("%%%% IAC %02X",iaccode));
 				switch (iaccode)
 				{
-					case IAC: curmsg+="\xFF"; curline+="\xFF"; break;
+					case IAC: curmsg[-1]+="\xFF"; curline+="\xFF"; break;
 					case DO: case DONT: case WILL: case WONT:
 					{
 						switch (getc())
@@ -84,7 +85,7 @@ void sockread(string|void starting)
 					{
 						//Prompt! Woot!
 						G->G->window->prompt=curmsg; G->G->window->redraw();
-						curmsg=curline="";
+						curmsg=({0,curline=""});
 						break;
 					}
 					default: break;
@@ -106,19 +107,17 @@ void sockread(string|void starting)
 					default: break;
 				}
 				if (fg!=-1) fg+=bold;
-				curmsg+=G->G->window->mkcolor(fg,bg);
+				curmsg+=({G->G->window->mkcolor(fg,bg),""});
 				break;
 			}
 			case '\r': if ((readbuffer!="" || sock->peek()) && (ungetc=getchr())=="\n") ungetc=0;
 			case '\n':
 			{
-				if (!dohooks(curline)) G->G->window->say_raw(curmsg);
-				curmsg=curline="";
+				if (!dohooks(curline)) G->G->window->say(curmsg);
+				curmsg=({0,curline=""});
 				break;
 			}
-			case '<': curmsg+="&lt;"; curline+=chr; break;
-			case '&': curmsg+="&amp;"; curline+=chr; break;
-			default: curmsg+=chr; curline+=chr;
+			default: curmsg[-1]+=chr; curline+=chr;
 		}
 	}
 	say("%%% Disconnected from server.");

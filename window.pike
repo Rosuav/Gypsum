@@ -1,39 +1,75 @@
 //GUI handler.
 
-string buf="<tt><span foreground='white' background='black'>";
-string prompt="";
-GTK2.Label label;
+//Each 'line' represents one line that came from the MUD. In theory, they might be wrapped for display, which would
+//mean taking up more than one display line, though currently this is not implemented.
+//Each entry must alternate between color and string, in that order.
+array(array(GTK2.GdkColor|string)) lines=({ });
+array(GTK2.GdkColor|string) prompt=({ });
+GTK2.DrawingArea display;
+GTK2.ScrolledWindow maindisplay;
 GTK2.Adjustment scr;
 GTK2.Entry ef;
 GTK2.Button defbutton;
 array signal;
 array(string) cmdhist=({ });
 int histpos=-1;
-array(string) colors=({
+string defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
+array(GTK2.GdkColor) colors;
+array(string) colornames=({
 	"black","dark red","dark green","#880","dark blue","dark magenta","dark cyan","grey",
 	"dark grey","red","green","yellow","blue","magenta","cyan","white",
 });
 int passwordmode; //When 1, commands won't be saved.
 
 void saybouncer(string msg) {G->G->window->say(msg);} //Say, Bouncer, say!
-void say(string msg)
+void say(string|array msg)
 {
-	buf+=replace(msg,"<","&lt;")+"\n";
+	if (stringp(msg)) msg=({colors[7],msg});
+	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
+	lines+=({msg});
 	redraw();
 }
 
-void say_raw(string msg)
+void say_color(int col,string msg)
 {
-	buf+=msg+"\n";
+	lines+=({({colors[col],msg})});
 	redraw();
 }
-void redraw() {label->set_markup(buf+prompt+"</span></tt>");}
+void redraw() {paint(display);}
 
-string mkcolor(int fg,int bg)
+object mkcolor(int fg,int bg)
 {
-	return "</span><span"
-		+ (fg!=-1 ? " foreground='"+colors[fg]+"'" : "")
-		+ (bg!=-1 ? " background='"+colors[bg]+"'" : "") + ">";
+	return colors[fg];
+}
+
+//Paint one line of text at the given 'y'; returns the height, if calculable, else returns 0.
+int paintline(GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y)
+{
+	int x=3,height=0;
+	for (int i=0;i<sizeof(line);i+=2)
+	{
+		//display->create_pango_layout(""); //Without one of these calls for every draw_text, Pike 7.8.352 crashes.
+		mapping sz; if (sizeof(line[i+1])) sz=display->create_pango_layout(line[i+1])->index_to_pos(sizeof(line[i+1])-1);
+		else display->create_pango_layout("");
+		gc->set_foreground(line[i] || colors[7]);
+		display->draw_text(gc,x,y,line[i+1]);
+		if (sz) {x+=(sz->x+sz->width)/1024; height=sz->height/1024;}
+	}
+	return height;
+}
+int paint(object self)
+{
+	display->set_background(GTK2.GdkColor(0,0,0));
+	GTK2.GdkGC gc=GTK2.GdkGC(display);
+	int y=(int)scr->get_property("page size");
+	int height=14; //Not sure what to do if nothing ever trips it inside the loop.
+	foreach (lines,array(GTK2.GdkColor|string) line)
+	{
+		height=paintline(gc,line,y) || height;
+		y+=height;
+	}
+	y+=paintline(gc,prompt,y) || height;
+	display->set_size_request(-1,y);
 }
 
 void create(string name)
@@ -42,31 +78,34 @@ void create(string name)
 	{
 		add_constant("say",saybouncer);
 		GTK2.setup_gtk();
+		colors=({});
+		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		object mainwindow=G->G->mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum")->set_default_size(800,500)->signal_connect("destroy",window_destroy);
 		mainwindow->signal_connect("delete_event",window_destroy);
-		GTK2.Widget maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":scr=GTK2.Adjustment(),"background":"black"]))
-			->add(label=GTK2.Label((["xalign":0,"yalign":0,"foreground":"white"])))
+		maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":scr=GTK2.Adjustment(),"background":"black"]))
+			->add(display=GTK2.DrawingArea())
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 			->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
-		maindisplay->get_child()->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
 		defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT);
 		mainwindow->add(GTK2.Vbox(0,0)
 			->add(maindisplay)
 			->pack_end(ef=GTK2.Entry(),0,0,0)
 			->pack_end(defbutton,0,0,0)
 		)->show_all();
+		display->set_background(GTK2.GdkColor(0,0,0))->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint);
+		scr=GTK2.Adjustment();
 		ef->grab_focus(); defbutton->grab_default(); ef->set_activates_default(1);
 		mainwindow->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
+		scr=maindisplay->get_vadjustment();
 		//maindisplay->get_child()->signal_connect("event",showev);
-		//say("Hello, world!"); say("Red","red"); say("Blue on green","blue","green");
 		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
 		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
 	}
 	else
 	{
 		object other=G->G->window;
-		label=other->label; scr=other->scr; ef=other->ef; defbutton=other->defbutton; buf=other->buf;
+		display=other->display; scr=other->scr; ef=other->ef; defbutton=other->defbutton; lines=other->lines;
 		cmdhist=other->cmdhist; histpos=other->histpos;
 		prompt=other->prompt;
 		if (other->signal)
@@ -134,15 +173,12 @@ int enterpressed(object self)
 {
 	string cmd=ef->get_text(); ef->set_text("");
 	histpos=-1;
-	if (passwordmode)
-	{
-		buf+=prompt+"\n";
-	}
-	else
+	if (!passwordmode)
 	{
 		if (!sizeof(cmdhist) || cmd!=cmdhist[-1]) cmdhist+=({cmd});
-		buf+=prompt+replace(cmd,"<","&lt;")+"\n";
+		prompt+=({colors[6],cmd});
 	}
+	lines+=({prompt});
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
 		redraw();
@@ -151,7 +187,7 @@ int enterpressed(object self)
 		say("%% Unknown command.");
 		return 0;
 	}
-	prompt=""; redraw();
+	prompt=({ }); redraw();
 	if (!passwordmode)
 	{
 		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
