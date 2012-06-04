@@ -176,9 +176,9 @@ int enterpressed(object self)
 	if (!passwordmode)
 	{
 		if (!sizeof(cmdhist) || cmd!=cmdhist[-1]) cmdhist+=({cmd});
-		prompt+=({colors[6],cmd});
+		lines+=({prompt+({colors[6],cmd})});
 	}
-	lines+=({prompt});
+	else lines+=({prompt});
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
 		redraw();
