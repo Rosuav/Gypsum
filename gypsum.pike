@@ -67,6 +67,7 @@ int main(int argc,array(string) argv)
 	//Be careful of the order of these. There may be dependancies.
 	bootstrap("globals.pike");
 	bootstrap("window.pike");
+	if (!globals->say) return 1;
 	bootstrap("connection.pike");
 	bootstrap("commands.pike");
 	bootstrap_all("plugins");
