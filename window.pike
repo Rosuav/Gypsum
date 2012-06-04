@@ -20,6 +20,8 @@ array(string) colornames=({
 	"dark grey","red","green","yellow","blue","magenta","cyan","white",
 });
 int passwordmode; //When 1, commands won't be saved.
+int lineheight; //Pixel height of a line of text
+int totheight; //Current height of the display
 
 void saybouncer(string msg) {G->G->window->say(msg);} //Say, Bouncer, say!
 void say(string|array msg)
@@ -35,17 +37,27 @@ void say_color(int col,string msg)
 	lines+=({({colors[col],msg})});
 	redraw();
 }
-void redraw() {paint(display);}
+void redraw()
+{
+	int height=(int)scr->get_property("page size")+lineheight*(sizeof(lines)+1);
+	if (height!=totheight) display->set_size_request(-1,totheight=height);
+}
 
 object mkcolor(int fg,int bg)
 {
 	return colors[fg];
 }
 
-//Paint one line of text at the given 'y'; returns the height, if calculable, else returns 0.
+void calcheight()
+{
+	mapping sz=display->create_pango_layout("asdf")->index_to_pos(3);
+	lineheight=sz->height/1024;
+}
+
+//Paint one line of text at the given 'y'.
 int paintline(GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y)
 {
-	int x=3,height=0;
+	int x=3;
 	for (int i=0;i<sizeof(line);i+=2)
 	{
 		//display->create_pango_layout(""); //Without one of these calls for every draw_text, Pike 7.8.352 crashes.
@@ -53,23 +65,22 @@ int paintline(GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y)
 		else display->create_pango_layout("");
 		gc->set_foreground(line[i] || colors[7]);
 		display->draw_text(gc,x,y,line[i+1]);
-		if (sz) {x+=(sz->x+sz->width)/1024; height=sz->height/1024;}
+		if (sz) x+=(sz->x+sz->width)/1024;
 	}
-	return height;
 }
 int paint(object self)
 {
 	display->set_background(GTK2.GdkColor(0,0,0));
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)scr->get_property("page size");
-	int height=14; //Not sure what to do if nothing ever trips it inside the loop.
 	foreach (lines,array(GTK2.GdkColor|string) line)
 	{
-		height=paintline(gc,line,y) || height;
-		y+=height;
+		paintline(gc,line,y);
+		y+=lineheight;
 	}
-	y+=paintline(gc,prompt,y) || height;
-	display->set_size_request(-1,y);
+	paintline(gc,prompt,y);
+	display->set_size_request(-1,y+=lineheight);
+	if (y!=totheight) display->set_size_request(-1,totheight=y);
 }
 
 void create(string name)
@@ -101,6 +112,7 @@ void create(string name)
 		//maindisplay->get_child()->signal_connect("event",showev);
 		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
 		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
+		calcheight();
 	}
 	else
 	{
