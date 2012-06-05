@@ -9,6 +9,6 @@ int process(string param)
 {
 	if (param=="") param="threshold";
 	if (!worlds[param]) {say("%% Connect to what?"); return 1;}
-	G->G->connect(worlds[param]);
+	G->G->window->connect(worlds[param]);
 	return 1;
 }

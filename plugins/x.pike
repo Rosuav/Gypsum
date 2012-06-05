@@ -6,7 +6,7 @@ int process(string param)
 {
 	program tmp; mixed err,ret;
 	err=catch {tmp=compile_string(#"
-GTK2.Window mw=G->G->mainwindow;
+GTK2.Window mw=G->G->window->mainwindow;
 object window=G->G->window;
 //Add any other 'convenience names' here
 
