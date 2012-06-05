@@ -14,12 +14,15 @@ string savefn=".gypsumrc"; //TODO: Make this configurable somewhere.
 void create(string name)
 {
 	add_constant("persist",this);
-	Stdio.File f=Stdio.File(savefn);
-	if (!f) return;
-	string raw=f->read();
-	if (!raw) return;
-	mixed decode=decode_value(raw);
-	if (mappingp(decode)) data=decode;
+	catch //Ignore any errors, just have no saved data.
+	{
+		Stdio.File f=Stdio.File(savefn);
+		if (!f) return;
+		string raw=f->read();
+		if (!raw) return;
+		mixed decode=decode_value(raw);
+		if (mappingp(decode)) data=decode;
+	};
 }
 
 mixed `[](string idx) {return data[idx];}
