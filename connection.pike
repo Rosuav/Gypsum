@@ -15,16 +15,16 @@ void create(string|object uplink)
 	if (stringp(uplink))
 	{
 		//Code's been updated.
-		//TODO: Reinstantiate and snag all.
 		G->G->connection=this_program;
 		return;
 	}
-	//If we get here, we're a real connection.
+	//If we get here, we're a real connection - either snagging an old one or creating a new one.
 	if (uplink->readbuffer)
 	{
 		//Snag info from the other one, we're taking over from it.
 		sock=uplink->sock; display=uplink->display;
 		//Note: Doesn't copy in curmsg/curline.
+		return;
 	}
 	//Otherwise, we're a new connection.
 	display=uplink;
@@ -58,7 +58,13 @@ void sockread(string|void starting)
 		string chr;
 		if (ungetc) {chr=ungetc; ungetc=0;}
 		else {chr=getchr(); if (chr=="") break;}
-		//if (G->G->connect!=connect) {G->G->sockthrd=thread_create(function_object(G->G->connect)->sockread,chr+readbuffer); return;} //Code's been updated. (Is this check too expensive?)
+		if (G->G->connection!=this_program)
+		{
+			//Code's been updated.
+			thread_create((display->connection=G->G->connection(this))->sockread,chr+readbuffer);
+			destruct(); //Just in case.
+			return;
+		}
 		switch (chr[0])
 		{
 			case 7: break; //Beep
