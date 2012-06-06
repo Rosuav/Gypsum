@@ -139,6 +139,7 @@ void sockread(string|void starting)
 		}
 	}
 	display->say("%%% Disconnected from server.");
+	destruct(); //Clean up this object and zero out its entry in the corresponding window object
 }
 int dohooks(string line)
 {
