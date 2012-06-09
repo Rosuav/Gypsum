@@ -44,8 +44,6 @@ class subwindow
 		display->set_background(GTK2.GdkColor(0,0,0))->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint);
 		ef->grab_focus(); ef->set_activates_default(1);
 		scr=maindisplay->get_vadjustment();
-		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
-		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
 		reinit();
 	}
 	object snag(object other) //Snag data from a previous instantiation (used for updating code)
@@ -56,6 +54,7 @@ class subwindow
 		if (other->signal)
 		{
 			ef->signal_disconnect(other->signal->efkey);
+			scr->signal_disconnect(other->signal->scrchg);
 		}
 		reinit();
 		return this;
@@ -65,6 +64,7 @@ class subwindow
 		signal=([
 			"efkey":ef->signal_connect("key_press_event",keypress),
 			//"efenter":ef->signal_connect("activate",enterpressed), //Crashes Pike!
+			"scrchg":scr->signal_connect("changed",scrchanged),
 		]);
 		lineheight=display->create_pango_layout("asdf")->index_to_pos(3)->height/1024; //Nice little one-liner, that! :)
 		tabs+=({this});
@@ -178,6 +178,11 @@ class subwindow
 				break;
 			default: say(sprintf("%%%% keypress: %X",ev->keyval)); break;
 		}
+	}
+	int scrchanged(object self,mixed ... args)
+	{
+		scr->set_value(scr->get_property("upper")-scr->get_property("page size"));
+		//TODO: Blank the newly-exposed bit?
 	}
 	int enterpressed()
 	{
