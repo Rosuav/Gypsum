@@ -108,6 +108,7 @@ void sockread(string|void starting)
 					case GA:
 					{
 						//Prompt! Woot!
+						curmsg[-1]=utf8_to_string(curmsg[-1]);
 						display->prompt=curmsg; display->redraw();
 						curmsg=({curcolor,curline=""});
 						break;
@@ -131,13 +132,15 @@ void sockread(string|void starting)
 					default: break;
 				}
 				if (fg!=-1) fg+=bold;
+				curmsg[-1]=utf8_to_string(curmsg[-1]);
 				curmsg+=({curcolor=display->mkcolor(fg,bg),""});
 				break;
 			}
 			case '\r': if ((readbuffer!="" || sock->peek()) && (ungetc=getchr())=="\n") ungetc=0;
 			case '\n':
 			{
-				if (!dohooks(curline)) display->say(curmsg);
+				curmsg[-1]=utf8_to_string(curmsg[-1]);
+				if (!dohooks(utf8_to_string(curline))) display->say(curmsg);
 				curmsg=({curcolor,curline=""});
 				break;
 			}
