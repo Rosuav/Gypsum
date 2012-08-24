@@ -7,7 +7,7 @@ mapping(string:mapping) worlds=([
 
 int process(string param)
 {
-	if (param=="") param="threshold";
+	if (param=="") param="minstrelhall";
 	if (!worlds[param]) {say("%% Connect to what?"); return 1;}
 	G->G->window->connect(worlds[param]);
 	return 1;
