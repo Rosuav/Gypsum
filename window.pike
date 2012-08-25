@@ -22,6 +22,7 @@ class subwindow
 	GTK2.ScrolledWindow maindisplay;
 	GTK2.Adjustment scr;
 	GTK2.Entry ef;
+	GTK2.Widget page;
 	mapping signal;
 	array(string) cmdhist=({ });
 	int histpos=-1;
@@ -29,21 +30,25 @@ class subwindow
 	int lineheight; //Pixel height of a line of text
 	int totheight; //Current height of the display
 	object connection;
+	string tabtext;
+	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
 
-	void init(string tabtext)
+	void init(string txt)
 	{
 		//Build the window
-		notebook->append_page(GTK2.Vbox(0,0)
+		notebook->append_page(page=GTK2.Vbox(0,0)
 			->add(maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":scr=GTK2.Adjustment(),"background":"black"]))
 				->add(display=GTK2.DrawingArea())
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 				->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0))
 			)
 			->pack_end(ef=GTK2.Entry(),0,0,0)
-		->show_all(),GTK2.Label(tabtext));
+		->show_all(),GTK2.Label(tabtext=txt));
 		display->set_background(GTK2.GdkColor(0,0,0))->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint);
 		ef->grab_focus(); ef->set_activates_default(1);
 		scr=maindisplay->get_vadjustment();
+		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
+		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
 		reinit();
 	}
 	object snag(object other) //Snag data from a previous instantiation (used for updating code)
@@ -54,7 +59,6 @@ class subwindow
 		if (other->signal)
 		{
 			ef->signal_disconnect(other->signal->efkey);
-			scr->signal_disconnect(other->signal->scrchg);
 		}
 		reinit();
 		return this;
@@ -64,7 +68,6 @@ class subwindow
 		signal=([
 			"efkey":ef->signal_connect("key_press_event",keypress),
 			//"efenter":ef->signal_connect("activate",enterpressed), //Crashes Pike!
-			"scrchg":scr->signal_connect("changed",scrchanged),
 		]);
 		lineheight=display->create_pango_layout("asdf")->index_to_pos(3)->height/1024; //Nice little one-liner, that! :)
 		tabs+=({this});
@@ -81,11 +84,13 @@ class subwindow
 			for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
 			lines+=({msg});
 		}
+		activity=1;
 		redraw();
 	}
 	void say_color(int col,string msg)
 	{
 		lines+=({({colors[col],msg})});
+		activity=1;
 		redraw();
 	}
 	void connect(mapping info)
@@ -93,12 +98,15 @@ class subwindow
 		if (connection) {say("%% Already connected."); return;}
 		connection=G->G->connection(this);
 		connection->connect(info);
+		tabtext=info->tabtext || info->name || "(unnamed)";
 	}
 
 	void redraw()
 	{
 		int height=(int)scr->get_property("page size")+lineheight*(sizeof(lines)+1);
 		if (height!=totheight) display->set_size_request(-1,totheight=height);
+		if (tabs[notebook->get_current_page()]==this) activity=0;
+		notebook->set_tab_label_text(page,"* "*activity+tabtext);
 	}
 
 	object mkcolor(int fg,int bg)
@@ -185,11 +193,6 @@ class subwindow
 				break;
 			default: say(sprintf("%%%% keypress: %X",ev->keyval)); break;
 		}
-	}
-	int scrchanged(object self,mixed ... args)
-	{
-		scr->set_value(scr->get_property("upper")-scr->get_property("page size"));
-		//TODO: Blank the newly-exposed bit?
 	}
 	int enterpressed()
 	{
