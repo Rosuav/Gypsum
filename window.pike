@@ -247,7 +247,7 @@ void create(string name)
 	else
 	{
 		object other=G->G->window;
-		colors=other->colors; notebook=other->notebook; curtab=other->curtab; defbutton=other->defbutton;
+		colors=other->colors; notebook=other->notebook; curtab=other->curtab; defbutton=other->defbutton; mainwindow=other->mainwindow;
 		if (other->tabs) foreach (other->tabs,object subw) subwindow()->snag(subw);
 		else addtab();
 		if (other->signal)
