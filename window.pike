@@ -71,9 +71,16 @@ class subwindow
 	}
 	void say(string|array msg)
 	{
-		if (stringp(msg)) msg=({colors[7],msg}); //TODO: msg/"\n" and insert color 7
-		for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
-		lines+=({msg});
+		if (stringp(msg))
+		{
+			if (msg[-1]=='\n') msg=msg[..<1];
+			foreach (msg/"\n",string line) lines+=({({colors[7],line})});
+		}
+		else
+		{
+			for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
+			lines+=({msg});
+		}
 		redraw();
 	}
 	void say_color(int col,string msg)
