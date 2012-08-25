@@ -12,3 +12,11 @@ int process(string param)
 	G->G->window->connect(worlds[param]);
 	return 1;
 }
+
+int dc(string param) {G->G->window->connect(0); return 1;}
+
+void create(string name)
+{
+	::create(name);
+	G->G->commands->dc=dc;
+}

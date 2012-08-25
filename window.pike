@@ -95,6 +95,13 @@ class subwindow
 	}
 	void connect(mapping info)
 	{
+		if (!info)
+		{
+			//Disconnect
+			if (!connection) return; //Silent if nothing to dc
+			connection->sock->close();
+			return;
+		}
 		if (connection) {say("%% Already connected."); return;}
 		connection=G->G->connection(this);
 		connection->connect(info);
