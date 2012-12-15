@@ -8,7 +8,12 @@ mapping(string:mapping) worlds=([
 int process(string param)
 {
 	if (param=="") param="minstrelhall";
-	if (!worlds[param]) {say("%% Connect to what?"); return 1;}
+	if (!worlds[param])
+	{
+		if (sscanf(param,"%s %d",string host,int port) && port) G->G->window->connect((["host":host,"port":port,"name":sprintf("%s : %d",host,port)]));
+		else say("%% Connect to what?");
+		return 1;
+	}
 	G->G->window->connect(worlds[param]);
 	return 1;
 }
