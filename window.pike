@@ -113,6 +113,7 @@ class subwindow
 		if (height!=totheight) display->set_size_request(-1,totheight=height);
 		if (tabs[notebook->get_current_page()]==this) activity=0;
 		notebook->set_tab_label_text(page,"* "*activity+tabtext);
+		maindisplay->queue_draw();
 	}
 
 	object mkcolor(int fg,int bg)
