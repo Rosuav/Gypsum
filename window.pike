@@ -29,7 +29,7 @@ class subwindow
 	int passwordmode; //When 1, commands won't be saved.
 	int lineheight; //Pixel height of a line of text
 	int totheight; //Current height of the display
-	object connection;
+	mapping connection;
 	string tabtext;
 	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
 
@@ -99,12 +99,11 @@ class subwindow
 		{
 			//Disconnect
 			if (!connection) return; //Silent if nothing to dc
-			connection->sock->close();
+			connection->sock->close(); G->G->connection->sockclosed(connection); connection=0;
 			return;
 		}
 		if (connection) {say("%% Already connected."); return;}
-		connection=G->G->connection(this);
-		connection->connect(info);
+		connection=G->G->connection->connect(this,info);
 		tabtext=info->tabtext || info->name || "(unnamed)";
 	}
 
@@ -225,7 +224,7 @@ class subwindow
 			array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
 			foreach (hooks,object h) if (h->inputhook(cmd)) return 1;
 		}
-		if (connection) connection->sock->write(cmd+"\r\n");
+		if (connection) G->G->connection->write(connection,cmd+"\r\n");
 		return 1;
 	}
 	void   password() {passwordmode=1; ef->set_visibility(0);}
