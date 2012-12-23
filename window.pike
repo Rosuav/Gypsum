@@ -98,11 +98,11 @@ class subwindow
 		if (!info)
 		{
 			//Disconnect
-			if (!connection) return; //Silent if nothing to dc
+			if (!connection || !connection->sock) return; //Silent if nothing to dc
 			connection->sock->close(); G->G->connection->sockclosed(connection); connection=0;
 			return;
 		}
-		if (connection) {say("%% Already connected."); return;}
+		if (connection && connection->sock) {say("%% Already connected."); return;}
 		connection=G->G->connection->connect(this,info);
 		tabtext=info->tabtext || info->name || "(unnamed)";
 	}
