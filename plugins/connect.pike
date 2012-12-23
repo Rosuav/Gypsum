@@ -25,4 +25,5 @@ void create(string name)
 {
 	::create(name);
 	G->G->commands->dc=dc;
+	G->G->commands->c=process;
 }
