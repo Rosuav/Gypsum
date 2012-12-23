@@ -4,4 +4,9 @@
 * Global activity alert
 * Logging to file
 * Clickable URLs
+* URL shortener
 * Copy and paste
+* Idle killer as per RosMud
+* Timers (triggered text starts/resets the timer, ticks down until time expires)
+* Sound triggers using SDL.Music (triggered text starts the audio)
+* Client-side aliases
