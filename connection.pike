@@ -175,7 +175,7 @@ void connected(int ok,mapping conn)
 mapping connect(object display,mapping info)
 {
 	//if (sock) sock->close(); //CJA 20121216: Why would this ever have happened?
-	mapping(string:mixed) conn=(["display":display]);
+	mapping(string:mixed) conn=(["display":display,"recon":info->recon]);
 	conn->display->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop

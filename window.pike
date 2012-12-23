@@ -99,7 +99,7 @@ class subwindow
 		{
 			//Disconnect
 			if (!connection || !connection->sock) return; //Silent if nothing to dc
-			connection->sock->close(); G->G->connection->sockclosed(connection); connection=0;
+			connection->sock->close(); G->G->connection->sockclosed(connection);
 			return;
 		}
 		if (connection && connection->sock) {say("%% Already connected."); return;}
@@ -235,6 +235,7 @@ class subwindow
 void saybouncer(string msg) {G->G->window->say(msg);} //Say, Bouncer, say!
 void say(string|array msg) {tabs[notebook->get_current_page()]->say(msg);} //Emit a line to the current tab
 void connect(mapping info) {tabs[notebook->get_current_page()]->connect(info);}
+string recon() {return (tabs[notebook->get_current_page()]->connection||([]))->recon;}
 
 void create(string name)
 {
