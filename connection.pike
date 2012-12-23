@@ -106,9 +106,9 @@ void sockread(mapping conn,string data)
 					if (iac[i]==IAC && iac[++i]==SE) {subneg=iac[..i]; iac=iac[i+1..]; break;} //Any other TELNET commands inside subneg will be buggy unless they're IAC IAC doubling (which this handles correctly)
 				}
 				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do. (Actually, omitting this line will have the same effect, because the subscripting will throw an exception. So this is optional, and redundant, just like this sentence is redundant.)
-				switch (subneg[0])
+				switch (subneg[1])
 				{
-					case TERMTYPE: if (subneg[1]==SEND) write(conn,(string)({IAC,SB,TERMTYPE,IS})+"Gypsum"+(string)({IAC,SE})); break;
+					case TERMTYPE: if (subneg[2]==SEND) write(conn,(string)({IAC,SB,TERMTYPE,IS})+"Gypsum"+(string)({IAC,SE})); break;
 					default: break;
 				}
 			}
