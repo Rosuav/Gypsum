@@ -1,7 +1,6 @@
 * Pressing Enter needs to instantly clear the Entry, ready for more text.
 * [20111129] Gypsum has now been used in combat.
 * Bugs involving updating of window - not showing local text
-* Impl /dc command (currently stub, see connect.pike and window.pike's connect(0))
 * Global activity alert
 * Logging to file
 * Clickable URLs
