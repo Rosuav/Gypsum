@@ -22,9 +22,24 @@ int process(string param,int|void newtab)
 
 int dc(string param) {G->G->window->connect(0); return 1;}
 
+int listworlds(string param)
+{
+	say("%% The following worlds are recognized:");
+	say(sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"));
+	foreach (sort(indices(worlds)),string kwd)
+	{
+		mapping info=worlds[kwd];
+		say(sprintf("%%%%   %-14s %-20s %-20s %4d",kwd,info->name,info->host,info->port));
+	}
+	say("%% Connect to any of the above worlds with: /connect keyword");
+	say("%% Connect to any other MUD with: /connect host:port");
+	return 1;
+}
+
 void create(string name)
 {
 	::create(name);
 	G->G->commands->dc=dc;
 	G->G->commands->c=process;
+	G->G->commands->worlds=listworlds;
 }
