@@ -9,7 +9,7 @@ Needs a MUD server to connect to - I use Threshold RPG and Minstrel
 Hall myself, but any will do. Currently you have to hack it to pick
 servers - see plugins/connect.pike for IPs/ports.
 
-You will need a Pike interpreter - see http://pike.ida.liu.se/
+You will need a Pike interpreter - see http://pike.lysator.liu.se/
 
 Licensed under the BSD Open Source license.
 
