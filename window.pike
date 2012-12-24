@@ -194,7 +194,7 @@ int enterpressed(mapping subw)
 	subw->histpos=-1;
 	if (!subw->passwordmode)
 	{
-		if (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1]) subw->cmdhist+=({cmd});
+		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
 		subw->lines+=({subw->prompt+({colors[6],cmd})});
 	}
 	else subw->lines+=({subw->prompt});
