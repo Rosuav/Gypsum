@@ -1,5 +1,6 @@
 //GUI handler.
 
+//First color must be black.
 string defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
 array(GTK2.GdkColor) colors;
 
@@ -38,11 +39,11 @@ mapping(string:mixed) subwindow(string txt)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
 			->add(subw->display=GTK2.DrawingArea())
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
-			->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0))
+			->modify_bg(GTK2.STATE_NORMAL,colors[0])
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	subw->display->set_background(GTK2.GdkColor(0,0,0))->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint,subw);
+	subw->display->set_background(colors[0])->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint,subw);
 	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
 	subw->scr=subw->maindisplay->get_vadjustment();
 	subw->scr->signal_connect("changed",scrchange,subw);
@@ -111,18 +112,19 @@ int paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string)
 	int x=3;
 	for (int i=0;i<sizeof(line);i+=2)
 	{
-		//display->create_pango_layout(""); //Without one of these calls for every draw_text, Pike 7.8.352 crashes.
-		mapping sz; if (sizeof(line[i+1])) sz=display->create_pango_layout(line[i+1])->index_to_pos(sizeof(line[i+1])-1);
-		else display->create_pango_layout("");
+		object killme;
+		mapping sz; if (sizeof(line[i+1])) sz=(killme=display->create_pango_layout(line[i+1]))->index_to_pos(sizeof(line[i+1])-1);
+		//else killme=display->create_pango_layout(""); //Without one of these calls for every draw_text, Pike 7.8.352 crashes.
 		gc->set_foreground(line[i] || colors[7]);
 		display->draw_text(gc,x,y,line[i+1]);
 		if (sz) x+=(sz->x+sz->width)/1024;
+		if (killme) destruct(killme);
 	}
 }
 int paint(object self,object ev,mapping subw)
 {
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
-	display->set_background(GTK2.GdkColor(0,0,0)); //TODO: Leak??
+	display->set_background(colors[0]); //TODO: Leak??
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
 	foreach (subw->lines,array(GTK2.GdkColor|string) line)
@@ -242,7 +244,7 @@ void create(string name)
 		)->show_all();
 		defbutton->grab_default();
 		addtab();
-		//mainwindow->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
+		//mainwindow->modify_bg(GTK2.STATE_NORMAL,colors[0]);
 	}
 	else
 	{
