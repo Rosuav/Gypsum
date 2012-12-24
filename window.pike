@@ -33,7 +33,7 @@ class subwindow
 	string tabtext;
 	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
 
-	void init(string txt)
+	this_program init(string txt)
 	{
 		//Build the window
 		notebook->append_page(page=GTK2.Vbox(0,0)
@@ -50,6 +50,7 @@ class subwindow
 		scr->signal_connect("changed",lambda() {scr->set_value(scr->get_property("upper")-scr->get_property("page size"));});
 		//scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",scr->get_value(),scr->get_property("upper")-scr->get_property("page size"));});
 		reinit();
+		return this;
 	}
 	object snag(object other) //Snag data from a previous instantiation (used for updating code)
 	{
@@ -278,7 +279,7 @@ void create(string name)
 	]);
 	G->G->window=this;
 }
-int tabcnt=0; void addtab() {subwindow()->init(curtab="Tab "+ ++tabcnt);}
+int tabcnt=0; object addtab() {return subwindow()->init(curtab="Tab "+ ++tabcnt);}
 int window_destroy(object self)
 {
 	exit(0);

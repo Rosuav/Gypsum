@@ -10,3 +10,4 @@
 * Timers (triggered text starts/resets the timer, ticks down until time expires)
 * Sound triggers using SDL.Music (triggered text starts the audio)
 * Client-side aliases
+* Closing of subwindows (currently you have to close the whole app, not good)

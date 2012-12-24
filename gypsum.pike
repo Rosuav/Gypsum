@@ -72,6 +72,10 @@ int main(int argc,array(string) argv)
 	bootstrap("commands.pike");
 	bootstrap_all("plugins");
 	if (sizeof(needupdate) && G->commands->update) G->commands->update("."); //Rebuild anything that needs it
-	if (G->commands->connect) G->commands->connect("");
+	if (G->commands->connect && argc>1)
+	{
+		G->commands->connect(argv[1]); //Connect to the first world in the current (initial) tab.
+		foreach (argv[2..],string world) G->commands->connect(world,1);
+	}
 	return -1;
 }
