@@ -37,7 +37,7 @@ void textread(mapping conn,string data)
 			line-="\7";
 		}
 		conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]+line);
-		if (!dohooks(conn,utf8_to_string(conn->line+line))) conn->display->say(conn->curmsg);
+		if (!dohooks(conn,utf8_to_string(conn->line+line))) G->G->window->say(conn->curmsg,conn->display);
 		conn->curmsg=({conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
@@ -63,7 +63,7 @@ void ansiread(mapping conn,string data)
 			case ';': break;
 			case 'm':
 				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
-				conn->curmsg+=({conn->curcolor=conn->display->mkcolor(conn->fg+conn->bold,conn->bg),""});
+				conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
 				ansi=ansi[i+1..];
 				break colorloop;
 			default: werror("Unexpected: %c\n",ansi[i]); return;
@@ -79,7 +79,7 @@ void sockread(mapping conn,string data)
 {
 	//werror("sockread: %O\n",data);
 	conn->readbuffer+=data;
-	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (catch
+	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
 		ansiread(conn,data); conn->readbuffer="\xff"+iac;
 		switch (iac[0])
@@ -89,7 +89,7 @@ void sockread(mapping conn,string data)
 			{
 				switch (iac[1])
 				{
-					case ECHO: if (iac[0]==WILL) conn->display->password(); else conn->display->unpassword(); break; //Password mode on/off
+					case ECHO: if (iac[0]==WILL) G->G->window->password(conn->display); else G->G->window->unpassword(conn->display); break; //Password mode on/off
 					case NAWS: if (iac[0]==DO) write(conn,(string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
 					case TERMTYPE: if (iac[0]==DO) write(conn,(string)({IAC,WILL,TERMTYPE})); break;
 					case SUPPRESSGA: break; //Do we need this?
@@ -117,7 +117,7 @@ void sockread(mapping conn,string data)
 			{
 				//Prompt! Woot!
 				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
-				conn->display->prompt=conn->curmsg; conn->display->redraw();
+				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 				conn->curmsg=({conn->curcolor,conn->curline=""});
 				iac=iac[2..];
 				break;
@@ -125,19 +125,19 @@ void sockread(mapping conn,string data)
 			default: break;
 		}
 		conn->readbuffer=iac;
-	}) return; //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
+	}) {werror("ERROR in sockread: %s\n",describe_backtrace(ex)); return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
 	ansiread(conn,conn->readbuffer); conn->readbuffer="";
 }
 
 int dohooks(mapping conn,string line)
 {
 	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line)) return 1;}) conn->display->say("Error in hook: "+describe_error(ex));
+	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line)) return 1;}) G->G->window->say("Error in hook: "+describe_error(ex),conn);
 }
 
 int sockclosed(mapping conn)
 {
-	conn->display->say("%%% Disconnected from server.");
+	G->G->window->say("%%% Disconnected from server.",conn->display);
 	conn->display->prompt=({ });
 	conn->sock=0; //Break refloop
 }
@@ -162,21 +162,20 @@ void connected(int ok,mapping conn)
 {
 	if (!ok)
 	{
-		conn->display->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()));
+		G->G->window->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
 		conn->sock->close(); //Probably unnecessary
 		sockclosed(conn);
 		return;
 	}
-	conn->display->say("%%% Connected to "+conn->worldname+".");
+	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
 	conn->curmsg=({0,""}); conn->readbuffer=conn->ansibuffer=conn->curline=conn->writeme="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
 }
 
 mapping connect(object display,mapping info)
 {
-	//if (sock) sock->close(); //CJA 20121216: Why would this ever have happened?
 	mapping(string:mixed) conn=(["display":display,"recon":info->recon]);
-	conn->display->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
+	G->G->window->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->async_connect(conn->host,conn->port,connected,conn);

@@ -15,8 +15,7 @@ int process(string param,int|void newtab)
 		else {say("%% Connect to what?"); return 1;}
 	}
 	info->recon=param;
-	if (newtab) G->G->window->addtab()->connect(info);
-	else G->G->window->connect(info);
+	G->G->window->connect(info,newtab && G->G->window->subwindow("New tab"));
 	return 1;
 }
 
