@@ -10,7 +10,7 @@ int process(string param)
 	if (param=="") param=G->G->window->recon() || "minstrelhall";
 	if (!worlds[param])
 	{
-		if (sscanf(param,"%s %d",string host,int port) && port) G->G->window->connect((["host":host,"port":port,"name":sprintf("%s : %d",host,port),"recon":param]));
+		if (sscanf(param,"%s%*[ :]%d",string host,int port) && port) G->G->window->connect((["host":host,"port":port,"name":sprintf("%s : %d",host,port),"recon":param]));
 		else say("%% Connect to what?");
 		return 1;
 	}
