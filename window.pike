@@ -122,7 +122,7 @@ int paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string)
 }
 int paint(object self,object ev,mapping subw)
 {
-	int start=ev->y,end=start+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
+	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
 	display->set_background(colors[0]);
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
