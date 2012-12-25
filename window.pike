@@ -122,17 +122,18 @@ int paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string)
 }
 int paint(object self,object ev,mapping subw)
 {
+	int start=ev->y,end=start+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
 	display->set_background(colors[0]);
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
-	foreach (subw->lines,array(GTK2.GdkColor|string) line) //TODO: Only paint what's visible
+	foreach (subw->lines,array(GTK2.GdkColor|string) line)
 	{
-		paintline(display,gc,line,y);
+		if (y>=start && y<=end) paintline(display,gc,line,y);
 		y+=subw->lineheight;
 	}
-	paintline(display,gc,subw->prompt,y);
-	display->set_size_request(-1,y+=subw->lineheight);
+	if (y>=start && y<=end) paintline(display,gc,subw->prompt,y);
+	display->set_size_request(-1,y+=subw->lineheight); //CJA 20121226: Why is this done twice? Can this line be cut down to just the y+= bit?
 	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
 
