@@ -1,0 +1,74 @@
+Scripts in this directory are automatically loaded on Gypsum startup.
+
+As Gypsum is a free and open system, anything described in this document
+can be overridden or augmented, so I'll just describe the defaults and
+leave the rest to your imagination. Anything's possible.
+
+Functionality stated here is a Gypsum promise, unless marked "advisory".
+Upgrading Gypsum within the same major version should not violate any
+promised behaviour, and any departure from these promises is a bug.
+
+Every plugin has a name, which is the file name without any path or the
+".pike" extension. Plugins are loaded in directory-walk order, but once
+bootstrapping is complete, only the file name matters. Initialization
+order can thus be modified by moving scripts into subdirectories.
+
+Most plugins will be a command, a hook, or both.
+
+Commands are invoked explicitly by the user typing "/foo", where foo is
+the plugin's name. The plugin should define a function thus:
+
+int process(string param,mapping(string:mixed) subw)
+
+The 'param' parameter is the parameters to the command. (Yo dawg?) It
+may be "", but it will never be 0. The subw mapping identifies the
+subwindow (aka tab) into which the command was typed; ideally (but not
+mandatorially) this should be where messages are sent, etc.
+
+Hooks provide one or both of an input hook (monitors typed commands)
+and an output hook (monitors text from the server). Their function
+signatures are:
+
+int inputhook(string line,mapping(string:mixed) subw)
+int outputhook(string line,mapping(string:mixed) conn)
+
+An input hook is very similar to a command processor, with the following
+distinctions:
+
+* Only one command processor is ever called for a given command - the
+  one whose name matches the command entered. Every hook is called for
+  every command.
+* Command processors handle slash commands (eg "/alias"). Hooks handle
+  what would otherwise go to the MUD (those without slashes).
+* In "password mode" (where inputted text is hidden), hooks are not
+  called. Commands still will be, though.
+* A command's "param" is what comes after the command name. A hook's
+  "line" is the entire line.
+
+An output hook is similar to an input hook, but works on a different
+type of line: a line of text from the server. It therefore does not
+receive a "subw", but instead a "conn" (connection info), which will
+have a subwindow reference as conn->display - this can be used just
+like subw.
+
+All functions should return 1 if processing is "complete" - if the
+command or line has been consumed. For commands, this should be the
+normal case, and suppresses the "Unknown command" message; for hooks,
+this indicates that the line should be hidden, as though it never
+happened.
+
+ADVISORY: Commands can be synthesized directly to a subw or conn:
+subw: if (subw->connection) G->G->connection->write(subw->connection,line+"\r\n");
+conn: G->G->connection->write(conn,line+"\r\n");
+Note that a subwindow may not necessarily have a connection, though
+a connection will always have a display.
+
+ADVISORY: Additional information may be stored in subw and/or conn.
+This is not guaranteed, however, as there is no protection against
+collisions; but if you make your key begin with "plugins/pluginname/"
+(where pluginname is your plugin's name), this will most likely be
+safe.
+
+ADVISORY: The subw/conn mappings may be saved for use in callbacks.
+However, if the subwindow or connection has been closed, their
+mappings will no longer be valid.
