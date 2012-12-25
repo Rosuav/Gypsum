@@ -21,10 +21,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	return 0;
 }
 
-int process(string param)
+int process(string param,mapping(string:mixed) subw)
 {
 	foreach (indices(monitors),string kwd)
 		if (persist["wealth/first_"+kwd]) say(sprintf("%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
-			(int)replace(persist["wealth/last_"+kwd],", ","")-(int)replace(persist["wealth/first_"+kwd],", ","")));
+			(int)replace(persist["wealth/last_"+kwd],", ","")-(int)replace(persist["wealth/first_"+kwd],", ","")),subw);
 	return 1;
 }

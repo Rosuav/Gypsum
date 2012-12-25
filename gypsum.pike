@@ -71,11 +71,11 @@ int main(int argc,array(string) argv)
 	if (!globals->say) return 1;
 	bootstrap("commands.pike");
 	bootstrap_all("plugins");
-	if (sizeof(needupdate) && G->commands->update) G->commands->update("."); //Rebuild anything that needs it
+	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect && argc>1)
 	{
-		G->commands->connect(argv[1]); //Connect to the first world in the current (initial) tab.
-		foreach (argv[2..],string world) G->commands->connect(world,1);
+		G->commands->connect(argv[1],G->window->tabs[0]); //Connect to the first world in the initial tab.
+		foreach (argv[2..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
 	}
 	return -1;
 }

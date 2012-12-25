@@ -1,16 +1,16 @@
 inherit command;
 
-int process(string param)
+int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="") {say("%% Update what?"); return 1;}
+	if (param=="") {say("%% Update what?",subw); return 1;}
 	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
 	{
 		//Allow "update /blah" to update the file where /blah is coded
 		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
 		function f=G->G->commands[param[1..]];
-		if (!f) {say("%% Command not found: "+param[1..]+"\n"); return 1;}
+		if (!f) {say("%% Command not found: "+param[1..]+"\n",subw); return 1;}
 		string def=Program.defined(function_program(f)); //Don't just use Function.defined - sometimes process() is in an inherited parent.
-		if (!def) {say("%% Function origin not found: "+param[1..]+"\n"); return 1;}
+		if (!def) {say("%% Function origin not found: "+param[1..]+"\n",subw); return 1;}
 		param=def;
 	}
 	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".

@@ -5,7 +5,7 @@ mapping(string:mapping) worlds=([
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall"]),
 ]);
 
-int process(string param,int|void newtab)
+int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") param=G->G->window->recon() || "minstrelhall";
 	mapping info=worlds[param];
@@ -15,13 +15,13 @@ int process(string param,int|void newtab)
 		else {say("%% Connect to what?"); return 1;}
 	}
 	info->recon=param;
-	G->G->window->connect(info,newtab && G->G->window->subwindow("New tab"));
+	G->G->window->connect(info,subw || G->G->window->subwindow("New tab"));
 	return 1;
 }
 
-int dc(string param) {G->G->window->connect(0); return 1;}
+int dc(string param,mapping(string:mixed) subw) {G->G->window->connect(0,subw); return 1;}
 
-int listworlds(string param)
+int listworlds(string param,mapping(string:mixed) subw)
 {
 	say("%% The following worlds are recognized:");
 	say(sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"));

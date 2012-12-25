@@ -4,11 +4,11 @@ inherit command;
 
 void create(string name)
 {
-	if (!G->G->commands->ka) process(0);
+	if (!G->G->commands->ka) process(0,0);
 	::create(name);
 }
 
-int process(string|void param)
+int process(string|void param,mapping(string:mixed) subw)
 {
 	if (!param)
 	{
@@ -19,8 +19,8 @@ int process(string|void param)
 	}
 	//Command
 	int delay=(int)param;
-	if (delay<=0) {say("%% After how many seconds should keepalive be retriggered?"); return 1;}
+	if (delay<=0) {say("%% After how many seconds should keepalive be retriggered?",subw); return 1;}
 	persist["ka/delay"]=delay;
-	say("%% Will send keep-alive every "+delay+" seconds");
+	say("%% Will send keep-alive every "+delay+" seconds.",subw);
 	return 1;
 }

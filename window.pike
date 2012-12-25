@@ -202,7 +202,7 @@ int enterpressed(mapping subw)
 	{
 		redraw(subw);
 		sscanf(cmd,"/%[^ ] %s",cmd,string args);
-		if (G->G->commands[cmd] && G->G->commands[cmd](args||"")) return 0;
+		if (G->G->commands[cmd] && G->G->commands[cmd](args||"",subw)) return 0;
 		say("%% Unknown command.",subw);
 		return 0;
 	}
