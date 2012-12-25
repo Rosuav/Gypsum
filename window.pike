@@ -218,7 +218,7 @@ int enterpressed(mapping subw)
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
-void saybouncer(string msg) {G->G->window->say(msg);} //Say, Bouncer, say!
+void saybouncer(string msg,mapping|void subw) {G->G->window->say(msg,subw);} //Say, Bouncer, say!
 string recon() {return (tabs[notebook->get_current_page()]->connection||([]))->recon;}
 
 void create(string name)
