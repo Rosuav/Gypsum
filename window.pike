@@ -7,7 +7,6 @@ array(GTK2.GdkColor) colors;
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
 GTK2.Notebook notebook;
-mapping signal;
 GTK2.Button defbutton;
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
@@ -43,12 +42,12 @@ mapping(string:mixed) subwindow(string txt)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	subw->display->set_background(colors[0])->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",paint,subw);
+	subw->display->set_background(colors[0])->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",bouncer("window","paint"),subw);
 	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
 	subw->scr=subw->maindisplay->get_vadjustment();
-	subw->scr->signal_connect("changed",scrchange,subw);
+	subw->scr->signal_connect("changed",bouncer("window","scrchange"),subw);
 	//subw->scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));});
-	subw->ef->signal_connect("key_press_event",keypress,subw);
+	subw->ef->signal_connect("key_press_event",bouncer("window","keypress"),subw);
 	subw->lineheight=subw->display->create_pango_layout("asdf")->index_to_pos(3)->height/1024; //Nice little one-liner, that! :)
 	tabs+=({subw});
 	return subw;
@@ -124,10 +123,10 @@ int paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string)
 int paint(object self,object ev,mapping subw)
 {
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
-	display->set_background(colors[0]); //TODO: Leak??
+	display->set_background(colors[0]);
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
-	foreach (subw->lines,array(GTK2.GdkColor|string) line)
+	foreach (subw->lines,array(GTK2.GdkColor|string) line) //TODO: Only paint what's visible
 	{
 		paintline(display,gc,line,y);
 		y+=subw->lineheight;
@@ -230,19 +229,21 @@ void create(string name)
 		colors=({});
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
-		mainwindow->set_title("Gypsum")->set_default_size(800,500)->signal_connect("destroy",window_destroy);
-		mainwindow->signal_connect("delete_event",window_destroy);
+		function sig_exit=bouncer("window","window_destroy");
+		mainwindow->set_title("Gypsum")->set_default_size(800,500)->signal_connect("destroy",sig_exit);
+		mainwindow->signal_connect("delete_event",sig_exit);
 		mainwindow->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
 					->add(menuitem("_New Tab",addtab))
-					->add(menuitem("E_xit",window_destroy))
+					->add(menuitem("E_xit",sig_exit))
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
 			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		)->show_all();
 		defbutton->grab_default();
+		defbutton->signal_connect("clicked",bouncer("window","enterpressed_glo"));
 		addtab();
 		//mainwindow->modify_bg(GTK2.STATE_NORMAL,colors[0]);
 	}
@@ -251,14 +252,7 @@ void create(string name)
 		object other=G->G->window;
 		colors=other->colors; notebook=other->notebook; defbutton=other->defbutton; mainwindow=other->mainwindow;
 		tabs=other->tabs;
-		if (other->signal)
-		{
-			defbutton->signal_disconnect(other->signal->enter);
-		}
 	}
-	signal=([
-		"enter":defbutton->signal_connect("clicked",enterpressed_glo),
-	]);
 	G->G->window=this;
 }
 void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
