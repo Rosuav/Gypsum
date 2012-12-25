@@ -7,7 +7,7 @@ mapping(string:array) monitors=([
 	//Feel free to add others, or replace these, according to what you play.
 ]);
 
-int outputhook(string line)
+int outputhook(string line,mapping(string:mixed) conn)
 {
 	foreach (monitors;string kwd;array fmt) if (sscanf(line,fmt[0],string cur) && cur)
 	{

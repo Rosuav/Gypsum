@@ -15,8 +15,8 @@ class command
 
 class hook
 {
-	int inputhook(string line) {}
-	int outputhook(string line) {}
+	int inputhook(string line,mapping(string:mixed) subw) {}
+	int outputhook(string line,mapping(string:mixed) conn) {}
 	void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
