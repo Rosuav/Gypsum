@@ -38,13 +38,11 @@ mapping(string:mixed) subwindow(string txt)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
 			->add(subw->display=GTK2.DrawingArea())
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
-			->modify_bg(GTK2.STATE_NORMAL,colors[0])
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	subw->display->set_background(colors[0])->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",bouncer("window","paint"),subw);
+	subw->display->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",bouncer("window","paint"),subw);
 	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
-	subw->scr=subw->maindisplay->get_vadjustment();
 	subw->scr->signal_connect("changed",bouncer("window","scrchange"),subw);
 	//subw->scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));});
 	subw->ef->signal_connect("key_press_event",bouncer("window","keypress"),subw);
@@ -53,7 +51,17 @@ mapping(string:mixed) subwindow(string txt)
 	return subw;
 }
 
-void scrchange(object self,mapping subw) {subw->scr->set_value(subw->scr->get_property("upper")-subw->scr->get_property("page size"));}
+void scrchange(object self,mapping subw)
+{
+	float upper=self->get_property("upper");
+	//werror("upper %f, page %f, pos %f\n",upper,self->get_property("page size"),upper-self->get_property("page size"));
+	#ifdef __NT__
+	//On Windows, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
+	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
+	if (upper>32000.0) self->set_value(16000.0);
+	#endif
+	self->set_value(upper-self->get_property("page size"));
+}
 void say(string|array msg,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -133,7 +141,7 @@ int paint(object self,object ev,mapping subw)
 		y+=subw->lineheight;
 	}
 	if (y>=start && y<=end) paintline(display,gc,subw->prompt,y);
-	display->set_size_request(-1,y+=subw->lineheight); //CJA 20121226: Why is this done twice? Can this line be cut down to just the y+= bit?
+	y+=subw->lineheight;
 	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
 
@@ -246,7 +254,6 @@ void create(string name)
 		defbutton->grab_default();
 		defbutton->signal_connect("clicked",bouncer("window","enterpressed_glo"));
 		addtab();
-		//mainwindow->modify_bg(GTK2.STATE_NORMAL,colors[0]);
 	}
 	else
 	{
