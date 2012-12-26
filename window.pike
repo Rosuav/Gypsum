@@ -255,6 +255,7 @@ void create(string name)
 		defbutton->grab_default();
 		defbutton->signal_connect("clicked",bouncer("window","enterpressed_glo"));
 		addtab();
+		notebook->signal_connect("switch_page",bouncer("window","switchpage"));
 	}
 	else
 	{
@@ -292,4 +293,11 @@ int enterpressed_glo(object self)
 	object parent=focus->get_parent();
 	while (parent->get_name()!="GtkNotebook") parent=(focus=parent)->get_parent();
 	return enterpressed(tabs[parent->page_num(focus)]);
+}
+
+int switchpage(object|mapping subw)
+{
+	if (objectp(subw)) {call_out(switchpage,0,tabs[notebook->get_current_page()]); return 0;} //Let the signal handler return before actually doing stuff
+	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
+	subw->ef->grab_focus();
 }
