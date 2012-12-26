@@ -37,7 +37,7 @@ void textread(mapping conn,string data)
 			line-="\7";
 		}
 		conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]+line);
-		if (!dohooks(conn,utf8_to_string(conn->line+line))) G->G->window->say(conn->curmsg,conn->display);
+		if (!dohooks(conn,utf8_to_string(conn->curline+line))) G->G->window->say(conn->curmsg,conn->display);
 		conn->curmsg=({conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
