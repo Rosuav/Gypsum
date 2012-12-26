@@ -227,7 +227,7 @@ void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0)
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
 void saybouncer(string msg,mapping|void subw) {G->G->window->say(msg,subw);} //Say, Bouncer, say!
-string recon() {return (tabs[notebook->get_current_page()]->connection||([]))->recon;}
+string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
 void create(string name)
 {
@@ -245,6 +245,7 @@ void create(string name)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
 					->add(menuitem("_New Tab",addtab))
+					->add(menuitem("_Connect",connect_menu))
 					->add(menuitem("E_xit",sig_exit))
 				))
 			,0,0,0)
@@ -267,6 +268,12 @@ void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
 int window_destroy(object self)
 {
 	exit(0);
+}
+
+//Either reconnect, or give the world list.
+void connect_menu(object self)
+{
+	G->G->commands->connect("",tabs[notebook->get_current_page()]);
 }
 
 //Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.

@@ -7,7 +7,7 @@ mapping(string:mapping) worlds=([
 
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="") param=G->G->window->recon() || "minstrelhall";
+	if (param=="" && !(param=G->G->window->recon(subw))) return listworlds("",subw);
 	mapping info=worlds[param];
 	if (!info)
 	{
@@ -23,15 +23,15 @@ int dc(string param,mapping(string:mixed) subw) {G->G->window->connect(0,subw); 
 
 int listworlds(string param,mapping(string:mixed) subw)
 {
-	say("%% The following worlds are recognized:");
-	say(sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"));
+	say("%% The following worlds are recognized:",subw);
+	say(sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"),subw);
 	foreach (sort(indices(worlds)),string kwd)
 	{
 		mapping info=worlds[kwd];
-		say(sprintf("%%%%   %-14s %-20s %-20s %4d",kwd,info->name,info->host,info->port));
+		say(sprintf("%%%%   %-14s %-20s %-20s %4d",kwd,info->name,info->host,info->port),subw);
 	}
-	say("%% Connect to any of the above worlds with: /connect keyword");
-	say("%% Connect to any other MUD with: /connect host:port");
+	say("%% Connect to any of the above worlds with: /connect keyword",subw);
+	say("%% Connect to any other MUD with: /connect host:port",subw);
 	return 1;
 }
 
