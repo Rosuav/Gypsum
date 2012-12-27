@@ -377,7 +377,7 @@ void create(string name)
 	{
 		object other=G->G->window;
 		colors=other->colors; notebook=other->notebook; defbutton=other->defbutton; mainwindow=other->mainwindow;
-		tabs=other->tabs;
+		tabs=other->tabs; statusbar=other->statusbar;
 	}
 	G->G->window=this;
 }
