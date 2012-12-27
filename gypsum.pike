@@ -63,6 +63,7 @@ int main(int argc,array(string) argv)
 	add_constant("add_constant",my_add_constant); //Wheee! Override add_constant.
 	add_constant("G",this); //Let this one go with the usual add_constant.
 	my_add_constant("started",time());
+	if ((string)GTK2.version()<"\2\26") add_constant("GTK_BUGGY",1);
 
 	//Be careful of the order of these. There may be dependancies.
 	bootstrap("globals.pike");
