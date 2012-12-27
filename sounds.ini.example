@@ -1,0 +1,19 @@
+This file configures Gypsum's sound triggers.
+An entry begins with its trigger text, preceded by a colon.
+The next non-blank line is its audio file. Formats accepted depend on your SDL engine; most likely MP3, WAV, OGG, and MID will be supported.
+Subsequent line(s) specify flags/options. They can be combined onto one line or strung out in multiples.
+Recognized options:
+loop=N - number of times to loop; -1 for indefinite. Default: Play once.
+stream=kwd - which stream to play on. The default stream is separate from all nameable streams.
+noretrigger=1 - if set, this file will not be retriggered if it's already playing.
+
+:A sailor announces: We have arrived
+../sounds/foghorn.wav
+
+:Psion Library of Sagacious Knowledge
+../music/library.mp3
+loop=-1 stream=bgm noretrigger=1
+
+:Jumpin' Jehosephat's Java Junction
+../music/coffee.mp3
+loop=-1 stream=bgm noretrigger=1

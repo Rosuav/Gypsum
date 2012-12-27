@@ -72,3 +72,10 @@ safe.
 ADVISORY: The subw/conn mappings may be saved for use in callbacks.
 However, if the subwindow or connection has been closed, their
 mappings will no longer be valid.
+
+If a plugin wants a configuration file (other than what can be done
+with persist[]), it should have the same base name as the plugin,
+the extension ".ini", and be placed in the main Gypsum directory.
+No such file should exist in the repository (to avoid overwriting
+a user's config), but a ".ini.example" file should be provided if
+appropriate.
