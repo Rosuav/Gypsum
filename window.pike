@@ -8,6 +8,7 @@ array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's i
 GTK2.Window mainwindow;
 GTK2.Notebook notebook;
 GTK2.Button defbutton;
+GTK2.Label statusbar;
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -46,7 +47,12 @@ mapping(string:mixed) subwindow(string txt)
 	subw->scr->signal_connect("changed",bouncer("window","scrchange"),subw);
 	//subw->scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));});
 	subw->ef->signal_connect("key_press_event",bouncer("window","keypress"),subw);
-	subw->lineheight=subw->display->create_pango_layout("asdf")->index_to_pos(3)->height/1024; //Nice little one-liner, that! :)
+	subw->display->signal_connect("button_press_event",bouncer("window","mousedown"),subw);
+	subw->display->signal_connect("button_release_event",bouncer("window","mouseup"),subw);
+	subw->display->signal_connect("motion_notify_event",bouncer("window","mousemove"),subw);
+	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
+	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
+	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	tabs+=({subw});
 	return subw;
 }
@@ -62,6 +68,77 @@ void scrchange(object self,mapping subw)
 	#endif
 	self->set_value(upper-self->get_property("page size"));
 }
+
+//Convert (x,y) into (line,col) - yes, that switches their order.
+//Depends on the current scr->pagesize.
+//Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
+//A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
+array(int) point_to_char(mapping subw,int x,int y)
+{
+	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
+	array l;
+	if (line<0) line=0;
+	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
+	else l=subw->lines[line];
+	string str=filter(l,stringp)*"";
+	int col=(x-3)/subw->charwidth;
+	if (col<0) col=0; else if (col>sizeof(str)) col=sizeof(str);
+	return ({line,col});
+}
+
+int selstartline=-1,selstartcol,selendline,selendcol;
+void mousedown(object self,object ev,mapping subw)
+{
+	[selstartline,selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	selendline=selstartline; selendcol=selstartcol;
+}
+void mouseup(object self,object ev,mapping subw)
+{
+	if (selstartline==-1) return;
+	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	string content;
+	if (selstartline==line)
+	{
+		//Single-line selection: special-cased for simplicity.
+		if (selstartcol>col) [col,selstartcol]=({selstartcol,col});
+		content=filter((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],stringp)*""+"\n";
+		content=content[selstartcol..col-1];
+	}
+	else
+	{
+		if (selstartline>line) [line,col,selstartline,selstartcol]=({selstartline,selstartcol,line,col});
+		for (int l=selstartline;l<=line;++l)
+		{
+			string curline=filter((l==sizeof(subw->lines))?subw->prompt:subw->lines[l],stringp)*""+"\n";
+			if (l==selstartline) content=curline[selstartcol..];
+			else if (l==line) content+=curline[..col-1];
+			else content+=curline;
+		}
+	}
+	int y1= min(selstartline,line)   *subw->lineheight;
+	int y2=(max(selstartline,line)+1)*subw->lineheight;
+	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+	//subw->display->queue_draw();
+	selstartline=-1;
+	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content,sizeof(content));
+}
+void mousemove(object self,object ev,mapping subw)
+{
+	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	array l=(line==sizeof(subw->lines))?subw->prompt:subw->lines[line];
+	string str=filter(l,stringp)*""+"$";
+	str[col]='#';
+	statusbar->set_text(sprintf("Mouse %s at pos (%d,%d) which is (%d,%d) or %O",selstartcol==-1?"up":"dn",(int)ev->x,(int)ev->y,line,col,str));
+	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
+	{
+		int y1= min(selendline,line)   *subw->lineheight;
+		int y2=(max(selendline,line)+1)*subw->lineheight;
+		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+		//subw->display->queue_draw(); //Full repaint for debugging
+		selendline=line; selendcol=col;
+	}
+}
+
 void say(string|array msg,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -113,19 +190,47 @@ object mkcolor(int fg,int bg)
 	return colors[fg];
 }
 
-//Paint one line of text at the given 'y'.
-int paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y)
+//Paint one piece of text at (x,y), returns the x for the next text.
+int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
+{
+	if (txt=="") return x;
+	object layout=display->create_pango_layout(txt);
+	mapping sz=layout->index_to_pos(sizeof(txt)-1);
+	if (bg!=colors[0]) //Why can't I just set_background and then tell draw_text to cover any background pixels? Meh.
+	{
+		gc->set_foreground(bg); //(sic)
+		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
+	}
+	gc->set_foreground(fg);
+	display->draw_text(gc,x,y,txt);
+	destruct(layout);
+	return x+(sz->x+sz->width)/1024;
+}
+
+//Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
+void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y,int hlstart,int hlend)
 {
 	int x=3;
-	for (int i=0;i<sizeof(line);i+=2)
+	for (int i=0;i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
-		object killme;
-		mapping sz; if (sizeof(line[i+1])) sz=(killme=display->create_pango_layout(line[i+1]))->index_to_pos(sizeof(line[i+1])-1);
-		//else killme=display->create_pango_layout(""); //Without one of these calls for every draw_text, Pike 7.8.352 crashes.
-		gc->set_foreground(line[i] || colors[7]);
-		display->draw_text(gc,x,y,line[i+1]);
-		if (sz) x+=(sz->x+sz->width)/1024;
-		if (killme) destruct(killme);
+		string txt=replace(line[i+1],"\n","\\n");
+		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
+		if (hlstart>0)
+		{
+			//Draw the leading unhighlighted part (which might be the whole string).
+			x=painttext(display,gc,x,y,txt[..hlstart-1],line[i] || colors[7],colors[0]);
+		}
+		if (hlstart<sizeof(txt))
+		{
+			//Draw the highlighted part (which might be the whole string).
+			x=painttext(display,gc,x,y,txt[hlstart..min(hlend,sizeof(txt))],colors[0],line[i] || colors[7]);
+			if (hlend<sizeof(txt))
+			{
+				//Draw the trailing unhighlighted part.
+				x=painttext(display,gc,x,y,txt[hlend+1..],line[i] || colors[7],colors[0]);
+			}
+		}
+		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
 }
 int paint(object self,object ev,mapping subw)
@@ -135,13 +240,23 @@ int paint(object self,object ev,mapping subw)
 	display->set_background(colors[0]);
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
-	foreach (subw->lines,array(GTK2.GdkColor|string) line)
+	int ssl=selstartline,ssc=selstartcol,sel=selendline,sec=selendcol;
+	if (ssl==-1) sel=-1;
+	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
+	foreach (subw->lines+({subw->prompt});int l;array(GTK2.GdkColor|string) line)
 	{
-		if (y>=start && y<=end) paintline(display,gc,line,y);
+		if (y>=start && y<=end)
+		{
+			int hlstart=-1,hlend=-1;
+			if (l>=ssl && l<=sel)
+			{
+				if (l==ssl) hlstart=ssc;
+				if (l==sel) hlend=sec-1; else hlend=1<<30;
+			}
+			paintline(display,gc,line,y,hlstart,hlend);
+		}
 		y+=subw->lineheight;
 	}
-	if (y>=start && y<=end) paintline(display,gc,subw->prompt,y);
-	y+=subw->lineheight;
 	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
 
@@ -250,6 +365,7 @@ void create(string name)
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
+			->pack_end(GTK2.Frame()->add(statusbar=GTK2.Label((["xalign":0.0])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,0)
 			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		)->show_all();
 		defbutton->grab_default();
