@@ -128,7 +128,7 @@ void mousemove(object self,object ev,mapping subw)
 	array l=(line==sizeof(subw->lines))?subw->prompt:subw->lines[line];
 	string str=filter(l,stringp)*""+"$";
 	str[col]='#';
-	statusbar->set_text(sprintf("Mouse %s at pos (%d,%d) which is (%d,%d) or %O",selstartcol==-1?"up":"dn",(int)ev->x,(int)ev->y,line,col,str));
+	statusbar->set_text(sprintf("Line %d of %d",line,sizeof(subw->lines)));
 	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
 	{
 		int y1= min(selendline,line)   *subw->lineheight;
