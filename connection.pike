@@ -69,7 +69,7 @@ void ansiread(mapping conn,string data)
 			default: werror("Unexpected: %c\n",ansi[i]); return;
 		}
 		conn->ansibuffer=ansi;
-	}) {werror("ERROR in ansiread: %s\n",describe_backtrace(ex)); return;}
+	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
 	textread(conn,conn->ansibuffer); conn->ansibuffer="";
 }
 
@@ -125,7 +125,7 @@ void sockread(mapping conn,string data)
 			default: break;
 		}
 		conn->readbuffer=iac;
-	}) {werror("ERROR in sockread: %s\n",describe_backtrace(ex)); return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
+	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
 	ansiread(conn,conn->readbuffer); conn->readbuffer="";
 }
 
