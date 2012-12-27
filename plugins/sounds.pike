@@ -27,7 +27,6 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 void create(string name)
 {
-	::create(name);
 	string curtrig;
 	foreach (Stdio.read_file("sounds.ini")/"\n",string line)
 	{
@@ -46,4 +45,5 @@ void create(string name)
 		G->G->sounds_playing=([]);
 	}
 	else G->G->sounds_playing&=values(triggers)->stream; //Mute any streams that no longer exist
+	::create(name);
 }

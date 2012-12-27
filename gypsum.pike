@@ -49,12 +49,12 @@ void tell(string msg) {werror(msg);}
 
 void bootstrap_all(string dir) //Recursively bootstrap all .pike files in dir and its subdirectories
 {
-	foreach (sort(get_dir(dir)),string cur)
+	foreach (sort(get_dir(dir)),string cur) catch
 	{
 		string c=dir+"/"+cur;
 		if (file_stat(c)->isdir) bootstrap_all(c);
 		else if (c[strlen(c)-5..]==".pike") bootstrap(c);
-	}
+	};
 }
 
 int main(int argc,array(string) argv)
