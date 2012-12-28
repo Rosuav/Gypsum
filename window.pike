@@ -341,14 +341,13 @@ int enterpressed(mapping subw)
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
-void saybouncer(string msg,mapping|void subw) {G->G->window->say(msg,subw);} //Say, Bouncer, say!
 string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
 void create(string name)
 {
 	if (!G->G->window)
 	{
-		add_constant("say",saybouncer);
+		add_constant("say",bouncer("window","say")); //Say, Bouncer, say!
 		GTK2.setup_gtk();
 		colors=({});
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
