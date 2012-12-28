@@ -361,6 +361,7 @@ void create(string name)
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum")->set_default_size(800,500);
+		if (array pos=persist["window/winpos"]) mainwindow->move(pos[0],pos[1]);
 		mainwindow->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
@@ -425,6 +426,20 @@ int switchpage(object|mapping subw)
 	subw->ef->grab_focus();
 }
 
+mapping(string:int) pos;
+void configevent(object self,object ev)
+{
+	if (ev->type!="configure") return; //This wouldn't be needed if I could hook configure_event
+	if (!pos) call_out(savepos,2); //Save 2 seconds after the window moved. "Sweep" movement creates a spew of these events, don't keep saving.
+	pos=self->get_position(); //Will return x and y
+}
+
+void savepos()
+{
+	persist["window/winpos"]=({pos->x,pos->y});
+	pos=0;
+}
+
 void mainwsignals()
 {
 	signals=({
@@ -432,5 +447,6 @@ void mainwsignals()
 		gtksignal(mainwindow,"delete_event",window_destroy),
 		gtksignal(defbutton,"clicked",enterpressed_glo),
 		gtksignal(notebook,"switch_page",switchpage),
+		gtksignal(mainwindow,"event",configevent), //Should be configure_event but not working
 	});
 }
