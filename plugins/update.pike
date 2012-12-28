@@ -43,3 +43,5 @@ void build(string param)
 	if (has_prefix(param,"globals.pike")) compiled(param,param2);
 	else compiled(param);
 }
+
+void create(string name) {::create(name);}

@@ -1,4 +1,5 @@
-inherit commandhook;
+inherit command;
+inherit hook;
 
 mapping(string:array) monitors=([
 	//Monitors for Threshold RPG
@@ -28,3 +29,5 @@ int process(string param,mapping(string:mixed) subw)
 			(int)replace(persist["wealth/last_"+kwd],", ","")-(int)replace(persist["wealth/first_"+kwd],", ","")),subw);
 	return 1;
 }
+
+void create(string name) {::create(name);}

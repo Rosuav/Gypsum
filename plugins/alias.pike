@@ -1,6 +1,7 @@
 //Simple aliases. Uses persist["aliases/simple"] to allow future expansion eg regex aliases.
 
-inherit commandhook;
+inherit command;
+inherit hook;
 
 int process(string param,mapping(string:mixed) subw)
 {
@@ -52,3 +53,5 @@ int inputhook(string line,mapping(string:mixed) subw)
 	if (subw->connection) G->G->connection->write(subw->connection,line+"\r\n");
 	return 1;
 }
+
+void create(string name) {::create(name);}

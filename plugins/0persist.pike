@@ -23,6 +23,7 @@ void create(string name)
 		mixed decode=decode_value(raw);
 		if (mappingp(decode)) data=decode;
 	};
+	//NOTE: Does not call ::create(name) as it has no inherits.
 }
 
 mixed `[](string idx) {return data[idx];}

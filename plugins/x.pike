@@ -21,3 +21,4 @@ mixed foo()
 	say(sprintf("%O\n",ret),subw);
 	return 1;
 }
+void create(string name) {::create(name);}
