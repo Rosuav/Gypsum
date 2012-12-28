@@ -9,7 +9,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 void makewindow()
 {
-	win->mainwindow=GTK2.Window(([]))->set_transient_for(G->G->window->mainwindow)->set_type_hint(GTK2.GDK_WINDOW_TYPE_HINT_SPLASHSCREEN);
+	win->mainwindow=GTK2.Window(([]))->set_transient_for(G->G->window->mainwindow);
 	win->mainwindow->set_title("Threshold time");
 	win->mainwindow->add(
 		win->display=GTK2.Label("Twilight 26th, 379 at 13:30")
