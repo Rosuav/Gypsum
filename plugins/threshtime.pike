@@ -27,7 +27,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	int th_year,th_mon,th_day,th_hour,th_min;
 	int sync=0;
 	if (sscanf(line,"%*[ ]The Clock displays: %s %d, %d - %d:%d",th_monname,th_day,th_year,th_hour,th_min)==6) sync=1;
-	if (sscanf(line,"%*[ ]::	  %d:%d	 ::=-  ",th_hour,th_min)==3) {halfsync=1; halfsync_hour=th_hour; halfsync_min=th_min; halfsync_rl=time(); return 0;}
+	if (sscanf(line,"%*[ ]::%*[ ]%d:%d%*[ ]::=-",th_hour,th_min)==5) {halfsync=1; halfsync_hour=th_hour; halfsync_min=th_min; halfsync_rl=time(); return 0;}
 	if (sscanf(line,"%*[ ]It is the %d%*s of %s in the year %d.",th_day,halfsync_monname,th_year)==5)
 	{
 		halfsync_day=th_day; halfsync_year=th_year; halfsync_rl=time();
