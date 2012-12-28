@@ -21,13 +21,25 @@ class hook
 	}
 }
 
+class window
+{
+	mapping(string:mixed) win=([]);
+	void makewindow() {}
+	void dosignals() {m_delete(win,"signals");}
+	void create(string name)
+	{
+		if (G->G->windows[name]) win=G->G->windows[name];
+		else {G->G->windows[name]=win; makewindow();}
+		dosignals();
+	}
+}
+
 void create(string name)
 {
-	if (!G->G->commands)
-	{
-		G->G->commands=([]);
-		G->G->hooks=([]);
-	}
+	if (!G->G->commands) G->G->commands=([]);
+	if (!G->G->hooks) G->G->hooks=([]);
+	if (!G->G->windows) G->G->windows=([]);
 	add_constant("command",command);
 	add_constant("hook",hook);
+	add_constant("window",window);
 }

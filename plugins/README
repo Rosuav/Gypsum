@@ -1,3 +1,6 @@
+Gypsum Plugins
+==============
+
 Scripts in this directory are automatically loaded on Gypsum startup.
 
 As Gypsum is a free and open system, anything described in this document
@@ -13,7 +16,10 @@ Every plugin has a name, which is the file name without any path or the
 bootstrapping is complete, only the file name matters. Initialization
 order can thus be modified by moving scripts into subdirectories.
 
-Most plugins will be a command, a hook, or both.
+A plugin may be a command, a hook, a window, or any combination thereof.
+
+Commands
+--------
 
 Commands are invoked explicitly by the user typing "/foo", where foo is
 the plugin's name. The plugin should define a function thus:
@@ -24,6 +30,9 @@ The 'param' parameter is the parameters to the command. (Yo dawg?) It
 may be "", but it will never be 0. The subw mapping identifies the
 subwindow (aka tab) into which the command was typed; ideally (but not
 mandatorially) this should be where messages are sent, etc.
+
+Hooks
+-----
 
 Hooks provide one or both of an input hook (monitors typed commands)
 and an output hook (monitors text from the server). Their function
@@ -51,7 +60,32 @@ receive a "subw", but instead a "conn" (connection info), which will
 have a subwindow reference as conn->display - this can be used just
 like subw.
 
-All functions should return 1 if processing is "complete" - if the
+Windows
+-------
+
+Rather than manually creating a window, inherit window to ensure that
+your subwindow is well-behaved. Provide the following functions:
+
+void makewindow()
+Called when your plugin is first loaded, and not called when it is
+reloaded. Should store all GTK object references etc inside win[].
+A window should be set_transient_for(G->G->window->mainwindow).
+
+void dosignals()
+Connect signals to callback functions. Will be called on reload.
+Should look up GTK objects from win[] and use gtksignal() thus:
+	win->signals=({
+		gtksignal(win->someobj,"some_event",callback),
+		//... as many as needed
+	});
+
+Generic storage space is in mapping(string:mixed) win, which is
+retained across reloads.
+
+General notes
+-------------
+
+All handlers should return 1 if processing is "complete" - if the
 command or line has been consumed. For commands, this should be the
 normal case, and suppresses the "Unknown command" message; for hooks,
 this indicates that the line should be hidden, as though it never

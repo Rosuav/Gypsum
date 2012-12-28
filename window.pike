@@ -376,6 +376,7 @@ void create(string name)
 		)->show_all();
 		defbutton->grab_default();
 		addtab();
+		call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 	}
 	else
 	{
