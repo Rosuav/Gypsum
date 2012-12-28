@@ -381,7 +381,7 @@ void create(string name)
 		object other=G->G->window;
 		colors=other->colors; notebook=other->notebook; defbutton=other->defbutton; mainwindow=other->mainwindow;
 		tabs=other->tabs; statusbar=other->statusbar;
-		other->signals=0; //Clear them out, just in case.
+		if (other->signals) other->signals=0; //Clear them out, just in case.
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	G->G->window=this;
