@@ -136,9 +136,6 @@ void mouseup(object self,object ev,mapping subw)
 void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
-	array l=(line==sizeof(subw->lines))?subw->prompt:subw->lines[line];
-	string str=filter(l,stringp)*""+"$";
-	str[col]='#';
 	statusbar->set_text(sprintf("Line %d of %d",line,sizeof(subw->lines)));
 	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
 	{
