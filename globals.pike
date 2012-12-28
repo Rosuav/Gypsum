@@ -14,3 +14,13 @@ class bouncer(string ... keys)
 		return func(@args);
 	}
 }
+
+//Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
+//Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
+//When it expires, the signal is removed. obj should be a GTK2.G.Object or similar.
+class gtksignal(object obj)
+{
+	int signal_id;
+	void create(mixed ... args) {signal_id=obj->signal_connect(@args);}
+	void destroy() {obj->signal_disconnect(signal_id);}
+}

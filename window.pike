@@ -9,6 +9,7 @@ GTK2.Window mainwindow;
 GTK2.Notebook notebook;
 GTK2.Button defbutton;
 GTK2.Label statusbar;
+array(object) signals;
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -30,6 +31,7 @@ GTK2.Label statusbar;
 	mapping connection;
 	string tabtext;
 	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
+	array(object) signals; //Collection of gtksignal objects - replaced after code reload
 */
 mapping(string:mixed) subwindow(string txt)
 {
@@ -42,19 +44,28 @@ mapping(string:mixed) subwindow(string txt)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	subw->display->modify_font(GTK2.PangoFontDescription("Courier Bold 10"))->signal_connect("expose_event",bouncer("window","paint"),subw);
+	subw->display->modify_font(GTK2.PangoFontDescription("Courier Bold 10"));
 	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
-	subw->scr->signal_connect("changed",bouncer("window","scrchange"),subw);
-	//subw->scr->signal_connect("value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));});
-	subw->ef->signal_connect("key_press_event",bouncer("window","keypress"),subw);
-	subw->display->signal_connect("button_press_event",bouncer("window","mousedown"),subw);
-	subw->display->signal_connect("button_release_event",bouncer("window","mouseup"),subw);
-	subw->display->signal_connect("motion_notify_event",bouncer("window","mousemove"),subw);
-	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
+	subwsignals(subw);
 	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	tabs+=({subw});
 	return subw;
+}
+
+//Load up the new signals and expire all the old ones
+void subwsignals(mapping(string:mixed) subw)
+{
+	subw->signals=({
+		gtksignal(subw->display,"expose_event",paint,subw),
+		gtksignal(subw->scr,"changed",scrchange,subw),
+		//gtksignal(subw->scr,"value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));}),
+		gtksignal(subw->ef,"key_press_event",keypress,subw),
+		gtksignal(subw->display,"button_press_event",mousedown,subw),
+		gtksignal(subw->display,"button_release_event",mouseup,subw),
+		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
+	});
+	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
 void scrchange(object self,mapping subw)
@@ -352,15 +363,13 @@ void create(string name)
 		colors=({});
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
-		function sig_exit=bouncer("window","window_destroy");
-		mainwindow->set_title("Gypsum")->set_default_size(800,500)->signal_connect("destroy",sig_exit);
-		mainwindow->signal_connect("delete_event",sig_exit);
+		mainwindow->set_title("Gypsum")->set_default_size(800,500);
 		mainwindow->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
-					->add(menuitem("_New Tab",addtab))
-					->add(menuitem("_Connect",connect_menu))
-					->add(menuitem("E_xit",sig_exit))
+					->add(menuitem("_New Tab",bouncer("window","addtab")))
+					->add(menuitem("_Connect",bouncer("window","connect_menu")))
+					->add(menuitem("E_xit",bouncer("window","window_destroy")))
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
@@ -368,17 +377,18 @@ void create(string name)
 			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		)->show_all();
 		defbutton->grab_default();
-		defbutton->signal_connect("clicked",bouncer("window","enterpressed_glo"));
 		addtab();
-		notebook->signal_connect("switch_page",bouncer("window","switchpage"));
 	}
 	else
 	{
 		object other=G->G->window;
 		colors=other->colors; notebook=other->notebook; defbutton=other->defbutton; mainwindow=other->mainwindow;
 		tabs=other->tabs; statusbar=other->statusbar;
+		other->signals=0; //Clear them out, just in case.
+		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	G->G->window=this;
+	mainwsignals();
 }
 void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
 int window_destroy(object self)
@@ -393,6 +403,7 @@ void connect_menu(object self)
 }
 
 //Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.
+//Note: This should possibly be changed to tie in with mainwsignals() - somehow.
 GTK2.MenuItem menuitem(mixed content,function event)
 {
 	GTK2.MenuItem ret=GTK2.MenuItem(content);
@@ -415,4 +426,14 @@ int switchpage(object|mapping subw)
 	if (objectp(subw)) {call_out(switchpage,0,tabs[notebook->get_current_page()]); return 0;} //Let the signal handler return before actually doing stuff
 	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
 	subw->ef->grab_focus();
+}
+
+void mainwsignals()
+{
+	signals=({
+		gtksignal(mainwindow,"destroy",window_destroy),
+		gtksignal(mainwindow,"delete_event",window_destroy),
+		gtksignal(defbutton,"clicked",enterpressed_glo),
+		gtksignal(notebook,"switch_page",switchpage),
+	});
 }
