@@ -37,6 +37,22 @@ object persist=class(string savefn)
 	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - especially if your code is itself happening on the backend thread.
 	 **/
 
+	/* Idea: Encrypt the file with a password.
+	string pwd;
+	string key=Crypto.SHA256.hash("Gypsum"+string_to_utf8(pwd)+"Gypsum");
+	string content=encode_value(data);
+	int pad=16-sizeof(content)%16; //Will always add at least 1 byte of padding; if the data happens to be a multiple of 16 bytes, will add an entire leading block of padding.
+	content=(string)allocate(pad,pad)+content;
+	string enc=Crypto.AES.encrypt(key,content);
+
+	if (catch {
+		string dec=Crypto.AES.decrypt(key,enc);
+		if (dec[0]>16) throw(1); //Must be incorrect password - the padding signature is damaged.
+		dec=dec[dec[0]..]; //Trim off the padding
+		data=decode_value(dec);
+	}) error("Incorrect password.");
+	*/
+
 	mapping(string:mixed) data=([]);
 	int saving;
 
