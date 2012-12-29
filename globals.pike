@@ -33,10 +33,12 @@ object persist=class(string savefn)
 	 * persist["some/string/identifier"]=any_value;
 	 * retrieved_value=persist["some/string/identifier"];
 	 * old_value=m_delete(persist,"some/string/identifier");
-	 * Saves to disk on every change. Loads from disk only on initialization - /update this file to reload.
+	 * Saves to disk after every change. Loads from disk only on initialization - /update this file to reload.
+	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - especially if your code is itself happening on the backend thread.
 	 **/
 
 	mapping(string:mixed) data=([]);
+	int saving;
 
 	void create()
 	{
@@ -49,20 +51,21 @@ object persist=class(string savefn)
 			mixed decode=decode_value(raw);
 			if (mappingp(decode)) data=decode;
 		};
-		//NOTE: Does not call ::create(name) as it has no inherits.
 	}
-
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
-		data[idx]=val;
-		Stdio.File(savefn,"wct")->write(encode_value(data));
-		return val;
+		if (!saving) {saving=1; call_out(save,0);}
+		return data[idx]=val;
 	}
 	mixed _m_delete(string idx)
 	{
-		mixed val=m_delete(data,idx);
+		if (!saving) {saving=1; call_out(save,0);}
+		return m_delete(data,idx);
+	}
+	void save()
+	{
+		saving=0;
 		Stdio.File(savefn,"wct")->write(encode_value(data));
-		return val;
 	}
 }(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
