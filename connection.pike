@@ -168,13 +168,13 @@ void connected(int ok,mapping conn)
 		return;
 	}
 	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
-	conn->curmsg=({0,""}); conn->readbuffer=conn->ansibuffer=conn->curline=conn->writeme="";
+	conn->curmsg=({0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
 }
 
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"recon":info->recon]);
+	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"writeme":info->writeme||""]);
 	G->G->window->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
