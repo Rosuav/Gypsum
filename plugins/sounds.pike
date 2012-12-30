@@ -27,16 +27,19 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 void create(string name)
 {
-	string curtrig;
-	foreach (Stdio.read_file("sounds.ini")/"\n",string line)
+	catch //If errors, no triggers, no problem.
 	{
-		if (line=="") continue;
-		if (line[0]==':') {triggers[curtrig=line[1..]]=([]); continue;}
-		else if (!curtrig) continue;
-		if (!triggers[curtrig]->file) {triggers[curtrig]->file=line; continue;}
-		sscanf(line,"%{%[^= ]=%[^ ]%*[ ]%}",array info);
-		triggers[curtrig]+=((mapping)info)&(<"loop","stream","noretrigger">);
-	}
+		string curtrig;
+		foreach (Stdio.read_file("sounds.ini")/"\n",string line)
+		{
+			if (line=="") continue;
+			if (line[0]==':') {triggers[curtrig=line[1..]]=([]); continue;}
+			else if (!curtrig) continue;
+			if (!triggers[curtrig]->file) {triggers[curtrig]->file=line; continue;}
+			sscanf(line,"%{%[^= ]=%[^ ]%*[ ]%}",array info);
+			triggers[curtrig]+=((mapping)info)&(<"loop","stream","noretrigger">);
+		}
+	};
 	foreach (indices(triggers),string trig) if (!triggers[trig]->file) m_delete(triggers,trig); //Malformed config file - no file name against a trigger. Drop those entries.
 	if (!G->G->sounds_playing)
 	{
