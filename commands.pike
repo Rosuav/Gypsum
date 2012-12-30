@@ -28,9 +28,15 @@ class window
 	void dosignals() {m_delete(win,"signals");}
 	void create(string name)
 	{
-		if (G->G->windows[name]) win=G->G->windows[name];
-		else {G->G->windows[name]=win; makewindow();}
+		if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;
+		if (!win->mainwindow) makewindow();
+		win->mainwindow->show_all();
 		dosignals();
+	}
+	void showwindow()
+	{
+		if (!win->mainwindow) {makewindow(); dosignals();}
+		win->mainwindow->set_no_show_all(0)->show_all();
 	}
 }
 

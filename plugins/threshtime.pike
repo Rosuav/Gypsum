@@ -87,8 +87,7 @@ void makewindow()
 {
 	win->mainwindow=GTK2.Window((["title":"Threshold time","transient-for":G->G->window->mainwindow]))
 		->add(win->display=GTK2.Label());
-	showtime(); //Set the initial text, to avoid flicker
-	win->mainwindow->show_all();
+	showtime();
 	int x,y; catch {[x,y]=persist["threshtime/winpos"];}; //If errors, let 'em sit at the defaults (0,0 since I haven't set any other default)
 	win->x=1; call_out(lambda() {m_delete(win,"x");},1);
 	win->mainwindow->move(x,y);

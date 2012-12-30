@@ -398,7 +398,7 @@ int window_destroy(object self)
 //Either reconnect, or give the world list.
 void connect_menu(object self)
 {
-	G->G->commands->connect("",tabs[notebook->get_current_page()]);
+	G->G->commands->connect("dlg",tabs[notebook->get_current_page()]);
 }
 
 //Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.
