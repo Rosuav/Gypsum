@@ -7,10 +7,10 @@ inherit hook;
 //NOTE: Halt all sounds with G->G->sounds_playing=([]);
 
 //Options available:
-//file: File name. Mandatory. Everything else is optional.
+//file: File name. If omitted, will cut off any other sound but not start another.
 //loop: Number of times to loop; -1 for indefinite. Default: Play once.
 //stream: Which stream to play on. May be an integer or a string. Default: the integer 0 (not the same as the string "0").
-//noretrigger: If nonzero, this file will not be retriggered if it's already playing. Currently assumes infinite looping.
+//noretrigger: If nonzero, this file will not be retriggered if it's already playing.
 mapping(string:mapping) triggers=([]);
 
 int outputhook(string line,mapping(string:mixed) conn)
@@ -21,7 +21,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 			&& G->G->sounds_playing[info->stream][0]==info->file
 			&& G->G->sounds_playing[info->stream][1]->playing()
 		) continue;
-		G->G->sounds_playing[info->stream]=({info->file,SDL.Music(info->file)->play((int)info->loop || 1)});
+		G->G->sounds_playing[info->stream]=info->file!="-" && ({info->file,SDL.Music(info->file)->play((int)info->loop || 1)});
 	};
 }
 
