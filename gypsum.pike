@@ -74,7 +74,7 @@ int main(int argc,array(string) argv)
 	if (G->commands->connect)
 	{
 		G->commands->connect((argv+({""}))[1],G->window->tabs[0]); //Connect to the first world, or give world list, in the initial tab.
-		foreach (argv[2..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
+		if (argc>2) foreach (argv[2..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
 	}
 	return -1;
 }
