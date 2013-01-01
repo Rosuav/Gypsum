@@ -44,7 +44,9 @@ mapping(string:mixed) subwindow(string txt)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	subw->display->modify_font(GTK2.PangoFontDescription("Courier Bold 10"));
+	object font=GTK2.PangoFontDescription("Courier Bold 10");
+	subw->display->modify_font(font);
+	subw->ef->modify_font(font);
 	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
 	subwsignals(subw);
 	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
