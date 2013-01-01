@@ -353,6 +353,18 @@ void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1)
 
 string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
+void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
+
+void closetab()
+{
+	if (sizeof(tabs)<2) return;
+	int removeme=notebook->get_current_page();
+	tabs[removeme]->signals=0; connect(0,tabs[removeme]);
+	tabs=tabs[..removeme-1]+tabs[removeme+1..];
+	notebook->remove_page(removeme);
+	if (!sizeof(tabs)) addtab();
+}
+
 void create(string name)
 {
 	if (!G->G->window)
@@ -364,10 +376,12 @@ void create(string name)
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum")->set_default_size(800,500);
 		if (array pos=persist["window/winpos"]) mainwindow->move(pos[0],pos[1]);
-		mainwindow->add(GTK2.Vbox(0,0)
+		GTK2.AccelGroup accel=GTK2.AccelGroup();
+		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
-					->add(menuitem("_New Tab",bouncer("window","addtab")))
+					->add(menuitem("_New Tab",bouncer("window","addtab"))->add_accelerator("activate",accel,'n',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
+					->add(menuitem("Close tab",bouncer("window","closetab"))->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("_Connect",bouncer("window","connect_menu")))
 					->add(menuitem("E_xit",bouncer("window","window_destroy")))
 				))
@@ -391,7 +405,7 @@ void create(string name)
 	G->G->window=this;
 	mainwsignals();
 }
-void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
+
 int window_destroy(object self)
 {
 	exit(0);
