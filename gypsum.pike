@@ -69,6 +69,7 @@ int main(int argc,array(string) argv)
 	bootstrap("window.pike");
 	if (!globals->say) return 1;
 	bootstrap("commands.pike");
+	if (!globals->command) return 1;
 	bootstrap_all("plugins");
 	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect)
