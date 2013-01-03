@@ -85,3 +85,28 @@ object persist=class(string savefn)
 		Stdio.File(savefn,"wct")->write(encode_value(data));
 	}
 }(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
+
+//Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
+//Recognizes a subset of strftime(3)'s formatting codes - notably not the locale-based ones.
+//Month/day names are not localized.
+string strftime(string format,int|mapping(string:int) tm)
+{
+	if (intp(tm)) tm=gmtime(tm);
+	return replace(format,([
+		"%%":"%",
+		"%a":({"Sun","Mon","Tue","Wed","Thu","Fri","Sat"})[tm->wday],
+		"%A":({"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"})[tm->wday],
+		"%b":({"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"})[tm->mon],
+		"%B":({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"})[tm->mon],
+		"%C":sprintf("%02d",tm->year/100+19),
+		"%d":sprintf("%02d",tm->mday),
+		"%H":sprintf("%02d",tm->hour),
+		"%I":sprintf("%02d",tm->hour%12),
+		"%m":sprintf("%02d",tm->mon+1),
+		"%M":sprintf("%02d",tm->min),
+		"%p":({"AM","PM"})[tm->hour>=12], //So tell me, why is %p in uppercase...
+		"%P":({"am","pm"})[tm->hour>=12], //... and %P in lowercase?
+		"%y":sprintf("%02d",tm->year%100),
+		"%Y":sprintf("%04d",tm->year+1900),
+	]));
+}
