@@ -100,7 +100,7 @@ class configdlg
 	{
 		object ls=GTK2.ListStore(({"string"}));
 		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
-		ls->set_value(ls->append(),0,"-- New --");
+		object new=ls->append(); ls->set_value(new,0,"-- New --");
 		win->mainwindow=GTK2.Window(windowprops+(["transient-for":G->G->window->mainwindow]))
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
@@ -118,7 +118,7 @@ class configdlg
 					->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])))
 				,0,0,0)
 			);
-		win->sel=win->list->get_selection();
+		win->sel=win->list->get_selection()->select_iter(new);
 	}
 
 	void dosignals()
