@@ -50,6 +50,7 @@ void save_content(mapping(string:mixed) info)
 	info->name=win->name->get_text();
 	info->host=win->hostname->get_text();
 	info->port=(int)win->port->get_text();
+	info->logfile=win->logfile->get_text();
 	info->descr=get_text(win->descr);
 	info->writeme=get_text(win->writeme);
 	persist["worlds"]=worlds;
@@ -60,6 +61,7 @@ void load_content(mapping(string:mixed) info)
 	win->name->set_text(info->name || "");
 	win->hostname->set_text(info->host || "");
 	win->port->set_text((string)(info->port||"23"));
+	win->logfile->set_text(info->logfile || "");
 	win->descr->get_buffer()->set_text(info->descr || "",-1);
 	win->writeme->get_buffer()->set_text(info->writeme || "",-1);
 }
@@ -78,7 +80,7 @@ void action_callback()
 GTK2.Widget make_content()
 {
 	return GTK2.Vbox(0,10)
-		->pack_start(GTK2.Table(4,2,0)
+		->pack_start(GTK2.Table(5,2,0)
 			->attach(GTK2.Label((["label":"Keyword","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
 			->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
 			->attach(GTK2.Label((["label":"Name","xalign":1.0])),0,1,1,2,GTK2.Fill,GTK2.Fill,5,0)
@@ -87,6 +89,8 @@ GTK2.Widget make_content()
 			->attach_defaults(win->hostname=GTK2.Entry(),1,2,2,3)
 			->attach(GTK2.Label((["label":"Port","xalign":1.0])),0,1,3,4,GTK2.Fill,GTK2.Fill,5,0)
 			->attach_defaults(win->port=GTK2.Entry(),1,2,3,4)
+			->attach(GTK2.Label((["label":"Auto-log","xalign":1.0])),0,1,4,5,GTK2.Fill,GTK2.Fill,5,0)
+			->attach_defaults(win->logfile=GTK2.Entry(),1,2,4,5)
 		,0,0,0)
 		->pack_start(GTK2.Frame("Description")->add(
 			win->descr=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)

@@ -9,3 +9,4 @@
 * Client-side aliases
 * Wrapping of text, particularly input
 * Multi-line paste
+* /log command to control logging (currently only auto-log works)

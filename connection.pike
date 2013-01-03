@@ -14,6 +14,7 @@ int conn_port;
 string readbuffer="",ansibuffer="",curline=""; //Read buffers, at various levels - normally empty except during input processing, but will retain data if there's an incomplete TELNET or ANSI sequence
 int lastcr; //Set to 1 if the last textread ended with \r - if the next one starts \n, the extra blank line is suppressed (it's a \r\n sequence broken over two socket reads)
 string writeme=""; //Write buffer
+Stdio.File logfile; //If non-zero, all text will be logged to this file, after TELNET/ANSI codes and prompts are removed.
 
 */
 
@@ -37,7 +38,12 @@ void textread(mapping conn,string data)
 			line-="\7";
 		}
 		conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]+line);
-		if (!dohooks(conn,utf8_to_string(conn->curline+line))) G->G->window->say(conn->curmsg,conn->display);
+		line=utf8_to_string(conn->curline+line);
+		if (!dohooks(conn,line))
+		{
+			G->G->window->say(conn->curmsg,conn->display);
+			if (conn->logfile) conn->logfile->write("%s\n",line);
+		}
 		conn->curmsg=({conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
@@ -180,5 +186,11 @@ mapping connect(object display,mapping info)
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->async_connect(conn->host,conn->port,connected,conn);
+	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
+	if (info->logfile && info->logfile!="")
+	{
+		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) G->G->window->say(sprintf("%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex)));
+		else G->G->window->say(sprintf("%%%% Logging to %O",fn));
+	}
 	return conn;
 }
