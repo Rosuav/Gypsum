@@ -4,7 +4,7 @@ inherit window;
 
 mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 
-int resolution=10; //Higher numbers for more stable results, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
+int resolution=10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
 
 //Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
 string format_time(int delay,int base)
