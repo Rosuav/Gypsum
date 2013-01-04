@@ -365,6 +365,43 @@ void closetab()
 	if (!sizeof(tabs)) addtab();
 }
 
+class advoptions
+{
+	inherit configdlg;
+	mapping(string:mapping(string:mixed)) items=([
+		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. (Not currently working.)","type":"int"]),
+	]);
+	constant allow_new=0;
+	constant allow_rename=0;
+	constant allow_delete=0;
+	mapping(string:mixed) windowprops=(["title":"Advanced Options"]);
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10)
+			->pack_start(win->kwd=GTK2.Label((["yalign":1.0])),0,0,0)
+			->pack_start(win->value=GTK2.Entry(),0,0,0)
+			->pack_end(win->desc=GTK2.Label((["xalign":0.0,"yalign":0.0]))->set_size_request(250,75)->set_line_wrap(1),1,1,0)
+		;
+	}
+	void save_content(mapping(string:mixed) info)
+	{
+		mixed value=win->value->get_text();
+		if (info->type=="int") value=(int)value;
+		persist[info->path]=value;
+	}
+	void load_content(mapping(string:mixed) info)
+	{
+		win->value->set_text((string)(persist[info->path] || info->default));
+		win->desc->set_text(info->desc);
+	}
+}
+
+//Any reference to this function is by definition a TODO, though this itself isn't.
+void TODO()
+{
+	say("%% Sorry, that function isn't implemented yet.");
+}
+
 void create(string name)
 {
 	if (!G->G->window)
@@ -384,6 +421,14 @@ void create(string name)
 					->add(menuitem("Close tab",bouncer("window","closetab"))->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("_Connect",bouncer("window","connect_menu")))
 					->add(menuitem("E_xit",bouncer("window","window_destroy")))
+				))
+				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
+					->add(menuitem("_Font (TODO)",TODO))
+					->add(menuitem("_Colors (TODO)",TODO))
+					->add(menuitem("_Wrap/Display (TODO)",TODO))
+					->add(menuitem("_Search (TODO)",TODO))
+					->add(menuitem("_Keyboard (TODO)",TODO))
+					->add(menuitem("Ad_vanced options",bouncer("window","advoptions")))
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
