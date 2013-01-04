@@ -10,13 +10,13 @@ GTK2.Window mw=G->G->window->mainwindow;
 object window=G->G->window;
 //Add any other 'convenience names' here
 
-mixed foo()
+mixed foo(mapping(string:mixed) subw)
 {
 	mixed ret="+param+#";
 	return ret;
 }",".exec",this);};
 	if (err) {say(sprintf("Error in compilation: %O\n",err),subw); return 1;}
-	err=catch {ret=tmp()->foo();};
+	err=catch {ret=tmp()->foo(subw);};
 	if (err) {say(sprintf("Error in execution: %O\n",err),subw); return 1;}
 	say(sprintf("%O\n",ret),subw);
 	return 1;
