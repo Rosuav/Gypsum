@@ -33,7 +33,7 @@ class window
 	{
 		if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;
 		if (!win->mainwindow) makewindow();
-		win->mainwindow->show_all();
+		win->mainwindow->set_skip_taskbar_hint(1)->set_skip_pager_hint(1)->show_all();
 		dosignals();
 	}
 	void showwindow()
