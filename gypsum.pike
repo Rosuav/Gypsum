@@ -61,10 +61,17 @@ int main(int argc,array(string) argv)
 	add_constant("add_constant",my_add_constant); //Wheee! Override add_constant.
 	add_constant("G",this); //Let this one go with the usual add_constant.
 	my_add_constant("started",time());
-	if ((string)GTK2.version()<"\2\26") add_constant("GTK_BUGGY",1);
+	bootstrap("globals.pike"); //Note that compat options are NOT set when globals is loaded. If this is a problem, break out persist into its own file.
+	mapping(string:int) compat=([
+		"scroll":(string)GTK2.version()<"\2\26", //Scroll bug - seems to have been fixed somewhere between 2.12 and 2.22 (\2\26 being octal for 2.22)
+	]);
+	foreach (compat;string kwd;int dflt)
+	{
+		int config=globals->persist["compat/"+kwd];
+		if (config==1 || (!config && dflt)) add_constant("COMPAT_"+upper_case(kwd),1);
+	}
 
-	//Be careful of the order of these. There may be dependancies.
-	bootstrap("globals.pike");
+	//Be careful of the order of these. There may be dependencies.
 	bootstrap("connection.pike");
 	bootstrap("window.pike");
 	if (!globals->say) return 1;

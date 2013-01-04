@@ -74,7 +74,7 @@ void scrchange(object self,mapping subw)
 {
 	float upper=self->get_property("upper");
 	//werror("upper %f, page %f, pos %f\n",upper,self->get_property("page size"),upper-self->get_property("page size"));
-	#if constant(GTK_BUGGY)
+	#if constant(COMPAT_SCROLL)
 	//On Windows, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
 	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
 	if (upper>32000.0) self->set_value(16000.0);
@@ -370,6 +370,8 @@ class advoptions
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. (Not currently working.)","type":"int"]),
+		#define COMPAT "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode","type":"int","default":0
+		"Compat: Scroll":(["path":"compat/scroll","desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar. Requires restart."COMPAT]),
 	]);
 	constant allow_new=0;
 	constant allow_rename=0;
