@@ -7,7 +7,9 @@ array(GTK2.GdkColor) colors;
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
 GTK2.Notebook notebook;
+#if constant(COMPAT_SIGNAL)
 GTK2.Button defbutton;
+#endif
 GTK2.Label statusbar;
 array(object) signals;
 
@@ -47,7 +49,10 @@ mapping(string:mixed) subwindow(string txt)
 	object font=GTK2.PangoFontDescription("Courier Bold 10");
 	subw->display->modify_font(font);
 	subw->ef->modify_font(font);
-	subw->ef->grab_focus(); subw->ef->set_activates_default(1);
+	subw->ef->grab_focus();
+	#if constant(COMPAT_SIGNAL)
+	subw->ef->set_activates_default(1);
+	#endif
 	subwsignals(subw);
 	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
@@ -62,7 +67,11 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"expose_event",paint,subw),
 		gtksignal(subw->scr,"changed",scrchange,subw),
 		//gtksignal(subw->scr,"value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));}),
+		#if constant(COMPAT_SIGNAL)
 		gtksignal(subw->ef,"key_press_event",keypress,subw),
+		#else
+		gtksignal(subw->ef,"key_press_event",keypress,subw,UNDEFINED,1),
+		#endif
 		gtksignal(subw->display,"button_press_event",mousedown,subw),
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
@@ -281,7 +290,7 @@ int keypress(object self,array|object ev,mapping subw)
 	if (arrayp(ev)) ev=ev[0];
 	switch (ev->keyval)
 	{
-		case 0xFFC1: enterpressed(subw); return 1; //F4 - hack.
+		case 0xFF0D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
 		case 0xFF52: //Up arrow
 		{
 			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
@@ -313,12 +322,14 @@ int keypress(object self,array|object ev,mapping subw)
 			subw->ef->set_position(subw->ef->insert_text("\t",1,subw->ef->get_position()));
 			return 1;
 		}
+		#if constant(DEBUG)
 		case 0xFFE1: case 0xFFE2: //Shift
 		case 0xFFE3: case 0xFFE4: //Ctrl
 		case 0xFFE7: case 0xFFE8: //Windows keys
 		case 0xFFE9: case 0xFFEA: //Alt
 			break;
 		default: say(sprintf("%%%% keypress: %X",ev->keyval),subw); break;
+		#endif
 	}
 }
 int enterpressed(mapping subw)
@@ -372,6 +383,7 @@ class advoptions
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. (Not currently working.)","type":"int"]),
 		#define COMPAT "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode","type":"int","default":0
 		"Compat: Scroll":(["path":"compat/scroll","desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar. Requires restart."COMPAT]),
+		"Compat: Events":(["path":"compat/signal","desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success. Requires restart."COMPAT])
 	]);
 	constant allow_new=0;
 	constant allow_rename=0;
@@ -435,16 +447,23 @@ void create(string name)
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
 			->pack_end(GTK2.Frame()->add(statusbar=GTK2.Label((["xalign":0.0])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,0)
+			#if constant(COMPAT_SIGNAL)
 			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
+			#endif
 		)->show_all();
+		#if constant(COMPAT_SIGNAL)
 		defbutton->grab_default();
+		#endif
 		addtab();
 		call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 	}
 	else
 	{
 		object other=G->G->window;
-		colors=other->colors; notebook=other->notebook; defbutton=other->defbutton; mainwindow=other->mainwindow;
+		colors=other->colors; notebook=other->notebook; mainwindow=other->mainwindow;
+		#if constant(COMPAT_SIGNAL)
+		defbutton=other->defbutton;
+		#endif
 		tabs=other->tabs; statusbar=other->statusbar;
 		if (other->signals) other->signals=0; //Clear them out, just in case.
 		foreach (tabs,mapping subw) subwsignals(subw);
@@ -493,7 +512,9 @@ int switchpage(object|mapping subw)
 mapping(string:int) pos;
 void configevent(object self,object ev)
 {
+	#if constant(COMPAT_SIGNAL)
 	if (ev->type!="configure") return; //This wouldn't be needed if I could hook configure_event
+	#endif
 	if (!pos) call_out(savepos,2); //Save 2 seconds after the window moved. "Sweep" movement creates a spew of these events, don't keep saving.
 	pos=self->get_position(); //Will return x and y
 }
@@ -509,8 +530,12 @@ void mainwsignals()
 	signals=({
 		gtksignal(mainwindow,"destroy",window_destroy),
 		gtksignal(mainwindow,"delete_event",window_destroy),
-		gtksignal(defbutton,"clicked",enterpressed_glo),
 		gtksignal(notebook,"switch_page",switchpage),
-		gtksignal(mainwindow,"event",configevent), //Should be configure_event but not working
+		#if constant(COMPAT_SIGNAL)
+		gtksignal(defbutton,"clicked",enterpressed_glo),
+		gtksignal(mainwindow,"event",configevent),
+		#else
+		gtksignal(mainwindow,"configure_event",configevent,0,UNDEFINED,1),
+		#endif
 	});
 }
