@@ -7,7 +7,7 @@ mapping(string:mapping) worlds=persist["worlds"] || ([
 ]);
 mapping(string:mixed) items=worlds;
 mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);
-string actionbtn="Save and _Connect";
+string actionbtn="Save and C_onnect";
 
 int process(string param,mapping(string:mixed) subw)
 {
