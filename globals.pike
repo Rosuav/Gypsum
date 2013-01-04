@@ -164,7 +164,7 @@ class configdlg
 	//Provide me...
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
 	GTK2.Widget make_content() { } //Create and return a widget (most likely a layout widget) representing all the custom content. Must assign to win->kwd a GTK2.Entry for editing the keyword.
-	mapping(string:mixed) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
+	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
 	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
 	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping. The mapping is already inside items[], so this is also a good place to trigger a persist[] save.
