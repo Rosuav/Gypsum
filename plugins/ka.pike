@@ -13,6 +13,7 @@ int process(string|void param,mapping(string:mixed) subw)
 	if (!param)
 	{
 		//Call-out
+		//TODO: Currently broken, fix it to actually work. And drop the 'command' status now that it can be controlled through Options|Advanced.
 		if (G->G->sock && G->G->sock->is_open()) G->G->sock->write("\xFF\xF9");
 		call_out(G->G->commands->ka,persist["ka/delay"] || 240);
 		return 0;
