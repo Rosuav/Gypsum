@@ -163,12 +163,19 @@ class configdlg
 	inherit window;
 	//Provide me...
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
-	GTK2.Widget make_content() { } //Create and return a widget (most likely a layout widget) representing all the custom content. Must assign to win->kwd a GTK2.Entry for editing the keyword.
+	//Create and return a widget (most likely a layout widget) representing all the custom content.
+	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
+	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or it may be a GTK2.Label, or it may be omitted altogether).
+	GTK2.Widget make_content() { }
 	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
-	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
-	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping. The mapping is already inside items[], so this is also a good place to trigger a persist[] save.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
+	//... optionally provide me...
+	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
+	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
+	constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
+	constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
+	constant allow_rename=1; //Set to 0 to ignore changes to keywords
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -189,10 +196,13 @@ class configdlg
 	void pb_save()
 	{
 		string oldkwd=selecteditem();
-		string newkwd=win->kwd->get_text();
+		string newkwd=allow_rename?win->kwd->get_text():oldkwd;
 		if (newkwd=="") return; //TODO: Be a tad more courteous.
-		mapping info=m_delete(items,oldkwd) || ([]);
-		items[newkwd]=info;
+		mapping info;
+		if (allow_rename) info=m_delete(items,oldkwd); else info=items[oldkwd];
+		if (!info)
+			if (allow_new) info=([]); else return;
+		if (allow_rename) items[newkwd]=info;
 		save_content(info);
 		if (newkwd!=oldkwd)
 		{
@@ -206,7 +216,7 @@ class configdlg
 	{
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
-		win->kwd->set_text(kwd || "");
+		if (win->kwd) win->kwd->set_text(kwd || "");
 		load_content(info);
 	}
 
@@ -214,7 +224,7 @@ class configdlg
 	{
 		object ls=GTK2.ListStore(({"string"}));
 		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
-		object new=ls->append(); ls->set_value(new,0,"-- New --");
+		object new; if (allow_new) ls->set_value(new=ls->append(),0,"-- New --");
 		win->mainwindow=GTK2.Window(windowprops+(["transient-for":G->G->window->mainwindow]))
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
@@ -228,11 +238,11 @@ class configdlg
 					->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
 					:GTK2.Hbox(0,10))
 					->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
-					->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1])))
+					->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1,"sensitive":allow_delete])))
 					->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])))
 				,0,0,0)
 			);
-		win->sel=win->list->get_selection()->select_iter(new);
+		win->sel=win->list->get_selection(); if (allow_new) win->sel->select_iter(new);
 	}
 
 	void dosignals()
