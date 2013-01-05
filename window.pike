@@ -172,14 +172,14 @@ void say(string|array msg,mapping|void subw)
 		subw->lines+=({msg});
 	}
 	subw->activity=1;
+	switch (persist["notif/activity"])
+	{
+		case 1: if (tabs[notebook->get_current_page()]!=subw) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
+		case 2: mainwindow->present();
+	}
 	redraw(subw);
 }
-void say_color(mapping subw,int col,string msg)
-{
-	subw->lines+=({({colors[col],msg})});
-	subw->activity=1;
-	redraw(subw);
-}
+
 void connect(mapping info,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -380,6 +380,7 @@ class advoptions
 {
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
+		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. (Not currently working.)","type":"int"]),
 		#define COMPAT "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode","type":"int","default":0
 		"Compat: Scroll":(["path":"compat/scroll","desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar. Requires restart."COMPAT]),
