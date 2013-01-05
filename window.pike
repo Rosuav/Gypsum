@@ -394,7 +394,7 @@ class advoptions
 		return GTK2.Vbox(0,10)
 			->pack_start(win->kwd=GTK2.Label((["yalign":1.0])),0,0,0)
 			->pack_start(win->value=GTK2.Entry(),0,0,0)
-			->pack_end(win->desc=GTK2.Label((["xalign":0.0,"yalign":0.0]))->set_size_request(250,75)->set_line_wrap(1),1,1,0)
+			->pack_end(win->desc=GTK2.Label((["xalign":0.0,"yalign":0.0]))->set_size_request(300,150)->set_line_wrap(1),1,1,0)
 		;
 	}
 	void save_content(mapping(string:mixed) info)
