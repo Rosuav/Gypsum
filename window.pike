@@ -356,7 +356,7 @@ int enterpressed(mapping subw)
 		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
 		foreach (hooks,object h) if (h->inputhook(cmd,subw)) return 1;
 	}
-	if (subw->connection) G->G->connection->write(subw->connection,cmd+"\r\n");
+	if (subw->connection) G->G->connection->write(subw->connection,string_to_utf8(cmd)+"\r\n");
 	return 1;
 }
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
