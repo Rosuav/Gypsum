@@ -4,7 +4,6 @@
 * Logging to file
 * Clickable URLs
 * URL shortener
-* Idle killer as per RosMud
 * Timers (triggered text starts/resets the timer, ticks down until time expires)
 * Client-side aliases
 * Wrapping of text, particularly input
