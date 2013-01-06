@@ -4,6 +4,7 @@
 string defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
 array(GTK2.GdkColor) colors;
 
+mapping(string:mapping(string:mixed)) channels=persist["color/channels"] || ([]);
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
 GTK2.Notebook notebook;
@@ -57,6 +58,7 @@ mapping(string:mixed) subwindow(string txt)
 	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	tabs+=({subw});
+	colorcheck(subw->ef,subw);
 	return subw;
 }
 
@@ -75,6 +77,7 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"button_press_event",mousedown,subw),
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
+		gtksignal(subw->ef,"changed",colorcheck,subw),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
@@ -411,6 +414,49 @@ class advoptions
 	}
 }
 
+class channelsdlg
+{
+	inherit configdlg;
+	mapping(string:mapping(string:mixed)) items=channels;
+	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
+	GTK2.Widget make_content()
+	{
+		return GTK2.Table(2,2,0)
+			->attach(GTK2.Label((["label":"Channel name","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
+			->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
+			->attach(GTK2.Label((["label":"Color (0-255)","xalign":1.0])),0,1,1,2,GTK2.Fill,GTK2.Fill,5,0)
+			->attach_defaults(GTK2.Hbox(0,10)
+				->add(GTK2.Label("Red"))
+				->add(win->r=GTK2.Entry()->set_size_request(40,-1))
+				->add(GTK2.Label("Green"))
+				->add(win->g=GTK2.Entry()->set_size_request(40,-1))
+				->add(GTK2.Label("Blue"))
+				->add(win->b=GTK2.Entry()->set_size_request(40,-1))
+			,1,2,1,2)
+		;
+	}
+	void save_content(mapping(string:mixed) info)
+	{
+		foreach (({"r","g","b"}),string c) info[c]=(int)win[c]->get_text();
+		persist["color/channels"]=channels;
+	}
+	void load_content(mapping(string:mixed) info)
+	{
+		if (zero_type(info["r"])) info->r=info->g=info->b=255;
+		foreach (({"r","g","b"}),string c) win[c]->set_text((string)info[c]);
+	}
+}
+
+void colorcheck(object self,mapping subw)
+{
+	array(int) col=({255,255,255});
+	if (mapping c=channels[(self->get_text()/" ")[0]]) col=({c->r,c->g,c->b});
+	if (equal(subw->cur_fg,col)) return;
+	subw->cur_fg=col;
+	self->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
+	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
+}
+
 //Any reference to this function is by definition a TODO, though this itself isn't.
 void TODO()
 {
@@ -439,7 +485,7 @@ void create(string name)
 				))
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
 					->add(menuitem("_Font (TODO)",TODO))
-					->add(menuitem("_Colors (TODO)",TODO))
+					->add(menuitem("_Colors",bouncer("window","channelsdlg")))
 					->add(menuitem("_Wrap/Display (TODO)",TODO))
 					->add(menuitem("_Search (TODO)",TODO))
 					->add(menuitem("_Keyboard (TODO)",TODO))
