@@ -147,6 +147,7 @@ int sockclosed(mapping conn)
 	G->G->window->say("%%% Disconnected from server.",conn->display);
 	conn->display->prompt=({ });
 	conn->sock=0; //Break refloop
+	if (conn->ka) remove_call_out(conn->ka);
 }
 
 void sockwrite(mapping conn)
@@ -177,11 +178,18 @@ void connected(int ok,mapping conn)
 	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
 	conn->curmsg=({0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
+	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
+}
+
+void ka(mapping conn)
+{
+	write(conn,"\xFF\xF9");
+	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"writeme":info->writeme||""]);
+	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka,"writeme":info->writeme||""]);
 	G->G->window->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop

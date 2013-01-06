@@ -53,6 +53,7 @@ void save_content(mapping(string:mixed) info)
 	info->logfile=win->logfile->get_text();
 	info->descr=get_text(win->descr);
 	info->writeme=get_text(win->writeme);
+	info->use_ka=win->use_ka->get_active();
 	persist["worlds"]=worlds;
 }
 
@@ -64,6 +65,7 @@ void load_content(mapping(string:mixed) info)
 	win->logfile->set_text(info->logfile || "");
 	win->descr->get_buffer()->set_text(info->descr || "",-1);
 	win->writeme->get_buffer()->set_text(info->writeme || "",-1);
+	win->use_ka->set_active(info->use_ka || zero_type(info->use_ka));
 }
 
 void action_callback()
@@ -80,7 +82,7 @@ void action_callback()
 GTK2.Widget make_content()
 {
 	return GTK2.Vbox(0,10)
-		->pack_start(GTK2.Table(5,2,0)
+		->pack_start(GTK2.Table(6,2,0)
 			->attach(GTK2.Label((["label":"Keyword","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
 			->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
 			->attach(GTK2.Label((["label":"Name","xalign":1.0])),0,1,1,2,GTK2.Fill,GTK2.Fill,5,0)
@@ -91,6 +93,7 @@ GTK2.Widget make_content()
 			->attach_defaults(win->port=GTK2.Entry(),1,2,3,4)
 			->attach(GTK2.Label((["label":"Auto-log","xalign":1.0])),0,1,4,5,GTK2.Fill,GTK2.Fill,5,0)
 			->attach_defaults(win->logfile=GTK2.Entry(),1,2,4,5)
+			->attach(win->use_ka=GTK2.CheckButton("Use keep-alive"),1,2,5,6,GTK2.Fill,GTK2.Fill,5,0) //No separate label
 		,0,0,0)
 		->pack_start(GTK2.Frame("Description")->add(
 			win->descr=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)
