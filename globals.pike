@@ -250,7 +250,7 @@ class configdlg
 		win->signals=({
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
 			gtksignal(win->pb_save,"clicked",pb_save),
-			gtksignal(win->pb_close,"clicked",win->mainwindow->hide),
+			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}), //Has to be done with a lambda, I think to dispose of the args
 			gtksignal(win->sel,"changed",selchanged),
 		});
 	}

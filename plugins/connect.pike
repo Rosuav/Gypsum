@@ -76,7 +76,7 @@ void action_callback()
 	mapping info=worlds[kwd];
 	info->recon=kwd;
 	G->G->window->connect(info,0);
-	win->mainwindow->hide();
+	win->mainwindow->destroy();
 }
 
 GTK2.Widget make_content()
