@@ -14,9 +14,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 	{
 		string last=persist["wealth/last_"+kwd] || "";
 		string first=persist["wealth/first_"+kwd];
-		if (first) last+=sprintf(" -> %d",(int)replace(cur,", ","")-(int)replace(last || "",", ",""));
+		if (first) last+=sprintf(" -> %d",(int)(cur-","-" ")-(int)((last||"")-","-" "));
 		else persist["wealth/first_"+kwd]=first=cur;
-		say(sprintf(fmt[1],first,last));
+		say(sprintf(fmt[1],first,last)+" "+(int)(cur-","-" "));
 		persist["wealth/last_"+kwd]=cur;
 	}
 	return 0;
@@ -26,7 +26,7 @@ int process(string param,mapping(string:mixed) subw)
 {
 	foreach (indices(monitors),string kwd)
 		if (persist["wealth/first_"+kwd]) say(sprintf("%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
-			(int)replace(persist["wealth/last_"+kwd],", ","")-(int)replace(persist["wealth/first_"+kwd],", ","")),subw);
+			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" ")),subw);
 	return 1;
 }
 
