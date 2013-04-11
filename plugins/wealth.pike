@@ -16,7 +16,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		string first=persist["wealth/first_"+kwd];
 		if (first) last+=sprintf(" -> %d",(int)(cur-","-" ")-(int)((last||"")-","-" "));
 		else persist["wealth/first_"+kwd]=first=cur;
-		say(sprintf(fmt[1],first,last)+" "+(int)(cur-","-" "));
+		say(sprintf(fmt[1],first,last));
 		persist["wealth/last_"+kwd]=cur;
 	}
 	return 0;
