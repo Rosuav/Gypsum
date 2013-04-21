@@ -1,13 +1,11 @@
 Gypsum is a MUD/Telnet client written in Pike. It's built like a
 server, but it's a client.
 
-This is *extremely* skeletal at present. It's also hopelessly poor
-performing. But it does color, telnet codes, and prompts...
+This is fairly skeletal at present, but it does all the basics.
 
 The main routine is in gypsum.pike; it loads all the other modules.
 Needs a MUD server to connect to - I use Threshold RPG and Minstrel
-Hall myself, but any will do. Currently you have to hack it to pick
-servers - see plugins/connect.pike for IPs/ports.
+Hall myself, but any will do.
 
 You will need a Pike interpreter - see http://pike.lysator.liu.se/
 
