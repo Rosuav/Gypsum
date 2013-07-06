@@ -43,7 +43,7 @@ void create(string name)
 	foreach (indices(triggers),string trig) if (!triggers[trig]->file) m_delete(triggers,trig); //Malformed config file - no file name against a trigger. Drop those entries.
 	if (!G->G->sounds_playing)
 	{
-		SDL.init(SDL.INIT_AUDIO);
+		SDL.init(SDL.INIT_AUDIO); atexit(SDL.quit);
 		SDL.open_audio(22050,SDL.AUDIO_S16SYS,2,1024);
 		G->G->sounds_playing=([]);
 	}
