@@ -85,7 +85,7 @@ object persist=class(string savefn)
 	void save()
 	{
 		saving=0;
-		Stdio.File(savefn,"wct")->write(encode_value(data));
+		Stdio.write_file(savefn,encode_value(data));
 	}
 }(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
 
