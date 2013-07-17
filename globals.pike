@@ -242,7 +242,7 @@ class configdlg
 					->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])))
 				,0,0,0)
 			);
-		win->sel=win->list->get_selection(); if (allow_new) win->sel->select_iter(new);
+		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); selchanged();
 	}
 
 	void dosignals()
