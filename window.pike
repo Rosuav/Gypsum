@@ -5,6 +5,9 @@ string defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F
 array(GTK2.GdkColor) colors;
 
 mapping(string:mapping(string:mixed)) channels=persist["color/channels"] || ([]);
+constant deffont="Monospace 10";
+mapping(string:mapping(string:mixed)) fonts=persist["window/font"] || (["display":(["name":deffont]),"input":(["name":deffont])]);
+mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
 GTK2.Notebook notebook;
@@ -47,9 +50,7 @@ mapping(string:mixed) subwindow(string txt)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
-	object font=GTK2.PangoFontDescription("Courier Bold 10");
-	subw->display->modify_font(font);
-	subw->ef->modify_font(font);
+	setfonts(subw);
 	subw->ef->grab_focus();
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
@@ -60,6 +61,18 @@ mapping(string:mixed) subwindow(string txt)
 	tabs+=({subw});
 	colorcheck(subw->ef,subw);
 	return subw;
+}
+
+GTK2.PangoFontDescription getfont(string category)
+{
+	string fontname=fonts[category]->name;
+	return fontdesc[fontname] || (fontdesc[fontname]=GTK2.PangoFontDescription(fontname));
+}
+
+void setfonts(mapping(string:mixed) subw)
+{
+	subw->display->modify_font(getfont("display"));
+	subw->ef->modify_font(getfont("input"));
 }
 
 //Load up the new signals and expire all the old ones
@@ -447,6 +460,35 @@ class channelsdlg
 	}
 }
 
+class fontdlg
+{
+	inherit configdlg;
+	mapping(string:mapping(string:mixed)) items=fonts;
+	constant allow_new=0;
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,0)
+			->add(win->kwd=GTK2.Label((["label":"Section","xalign":0.5])))
+			->add(win->fontsel=GTK2.FontSelection())
+		;
+	}
+	void save_content(mapping(string:mixed) info)
+	{
+		string name=win->fontsel->get_font_name();
+		if (info->name==name) return; //No change, no need to dump the cached object
+		info->name=name;
+		m_delete(fontdesc,name);
+		persist["window/font"]=fonts;
+		setfonts(tabs[*]);
+		redraw(tabs[*]);
+		tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
+	}
+	void load_content(mapping(string:mixed) info)
+	{
+		win->fontsel->set_font_name(info->name);
+	}
+}
+
 void colorcheck(object self,mapping subw)
 {
 	array(int) col=({255,255,255});
@@ -484,7 +526,7 @@ void create(string name)
 					->add(menuitem("E_xit",bouncer("window","window_destroy")))
 				))
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
-					->add(menuitem("_Font (TODO)",TODO))
+					->add(menuitem("_Font",bouncer("window","fontdlg")))
 					->add(menuitem("_Colors",bouncer("window","channelsdlg")))
 					->add(menuitem("_Wrap/Display (TODO)",TODO))
 					->add(menuitem("_Search (TODO)",TODO))
