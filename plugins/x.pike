@@ -18,7 +18,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 	if (!subw->hilfe_saved_prompt)
 	{
 		if (!has_prefix(line,"x ")) return 0; //Normal input
-		line=line[2..]; //Command starting "exec " - skip the prefix.
+		line=line[2..]; //Command starting "x " - skip the prefix.
 	}
 	//else this is a continuation; the whole line goes to Hilfe.
 	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {G->G->window->say(l,subw);};
