@@ -9,6 +9,11 @@ Hall myself, but any will do.
 
 You will need a Pike interpreter - see http://pike.lysator.liu.se/
 
+To keep up-to-date with changes in Gypsum, add this to your RSS reader:
+https://github.com/Rosuav/Gypsum/commits/master.atom
+
+License: MIT
+
 Copyright (c) 2011-2013, Chris Angelico
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
