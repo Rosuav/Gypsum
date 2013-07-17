@@ -509,7 +509,7 @@ void create(string name)
 {
 	if (!G->G->window)
 	{
-		add_constant("say",bouncer("window","say")); //Say, Bouncer, say!
+		add_gypsum_constant("say",bouncer("window","say")); //Say, Bouncer, say!
 		GTK2.setup_gtk();
 		colors=({});
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});

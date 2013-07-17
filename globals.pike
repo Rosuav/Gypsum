@@ -2,7 +2,7 @@ void create(string n,string which)
 {
 	array(string) arr=indices(this);
 	if (which && which!="") arr=which/" ";
-	foreach (arr,string f) if (f!="create") add_constant(f,this[f]);
+	foreach (arr,string f) if (f!="create") add_gypsum_constant(f,this[f]);
 	if (!G->G->commands) G->G->commands=([]);
 	if (!G->G->hooks) G->G->hooks=([]);
 	if (!G->G->windows) G->G->windows=([]);

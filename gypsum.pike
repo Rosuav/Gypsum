@@ -35,7 +35,7 @@ void bootstrap(string c)
 	werror("Bootstrapped "+c+"\n");
 }
 
-void my_add_constant(string name,mixed val) //Hooks all add_constant calls and allows for inheritance checks.
+void add_gypsum_constant(string name,mixed val) //Adds a constant, similar to add_constant, but allows for inheritance checks.
 {
 	globals[name]=val;
 	if (globalusage[name])
@@ -58,9 +58,9 @@ void bootstrap_all(string dir) //Recursively bootstrap all .pike files in dir an
 int main(int argc,array(string) argv)
 {
 	replace_master(mymaster());
-	add_constant("add_constant",my_add_constant); //Wheee! Override add_constant.
+	add_constant("add_gypsum_constant",add_gypsum_constant);
 	add_constant("G",this); //Let this one go with the usual add_constant.
-	my_add_constant("started",time());
+	add_constant("started",time());
 	bootstrap("globals.pike"); //Note that compat options are NOT set when globals is loaded. If this is a problem, break out persist into its own file.
 	mapping(string:int) compat=([
 		"scroll":(string)GTK2.version()<"\2\26", //Scroll bug - seems to have been fixed somewhere between 2.12 and 2.22 (\2\26 being octal for 2.22)
