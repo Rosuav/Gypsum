@@ -8,17 +8,17 @@ Has two distinct modes, similar but with a few different operations. In the futu
 Classic mode is convenient as a calculator and so on; it is primarily designed for a simple expression, and must handle but a single line of input. It is accessed by the "/x" command.
 
 Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode), and can handle multi-line expressions/commands, but is less convenient for simple actions as it requires
-the input to be properly terminated (usually that means adding a semicolon). It is accessed by the "x" command, eg "x 1+1;", and will consume all input if it believes that more is
+the input to be properly terminated (usually that means adding a semicolon). It is accessed by the "pike" command, eg "pike 1+1;", and will consume all input if it believes that more is
 needed to complete the current command.
 */
 
-//Hilfe mode: "x 1+1;" - allows full Pike syntax under Hilfe rules.
+//Hilfe mode: "pike 1+1;" - allows full Pike syntax under Hilfe rules.
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (!subw->hilfe_saved_prompt)
 	{
-		if (!has_prefix(line,"x ")) return 0; //Normal input
-		line=line[2..]; //Command starting "x " - skip the prefix.
+		if (!has_prefix(line,"pike ")) return 0; //Normal input
+		line=line[5..]; //Command starting "pike " - skip the prefix.
 	}
 	//else this is a continuation; the whole line goes to Hilfe.
 	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {G->G->window->say(l,subw);};
