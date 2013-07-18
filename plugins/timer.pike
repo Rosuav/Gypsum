@@ -83,7 +83,8 @@ void showtimes()
 void makelabels()
 {
 	win->display->resize(2,sizeof(timers)+1,0);
-	win->labels=GTK2.Label(indices(timers)[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
+	if (win->labels) win->labels->destroy();
+	win->labels=GTK2.Label(sort(indices(timers))[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
 		->attach_defaults(win->timers[i]=GTK2.Label(""),1,2,i,i+1);
