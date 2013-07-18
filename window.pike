@@ -542,6 +542,7 @@ void create(string name)
 					->add(menuitem("_New Tab",bouncer("window","addtab"))->add_accelerator("activate",accel,'n',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("Close tab",bouncer("window","closetab"))->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("_Connect",bouncer("window","connect_menu")))
+					->add(menuitem("_Disconnect",bouncer("window","disconnect_menu")))
 					->add(menuitem("E_xit",bouncer("window","window_destroy")))
 				))
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
@@ -590,6 +591,8 @@ void connect_menu(object self)
 {
 	G->G->commands->connect("dlg",tabs[notebook->get_current_page()]);
 }
+
+void disconnect_menu(object self) {connect(0);}
 
 //Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.
 //Note: This should possibly be changed to tie in with mainwsignals() - somehow.
