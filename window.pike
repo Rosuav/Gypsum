@@ -379,12 +379,12 @@ int enterpressed(mapping subw)
 		say("%% Unknown command.",subw);
 		return 0;
 	}
-	subw->prompt=({([])}); redraw(subw);
 	if (!subw->passwordmode)
 	{
 		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-		foreach (hooks,object h) if (h->inputhook(cmd,subw)) return 1;
+		foreach (hooks,object h) if (h->inputhook(cmd,subw)) {redraw(subw); return 1;}
 	}
+	subw->prompt=({([])}); redraw(subw);
 	if (subw->connection) G->G->connection->write(subw->connection,string_to_utf8(cmd)+"\r\n");
 	return 1;
 }
