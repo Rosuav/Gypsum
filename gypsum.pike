@@ -51,7 +51,7 @@ void bootstrap_all(string dir) //Recursively bootstrap all .pike files in dir an
 	{
 		string c=dir+"/"+cur;
 		if (file_stat(c)->isdir) bootstrap_all(c);
-		else if (c[strlen(c)-5..]==".pike") bootstrap(c);
+		else if (has_suffix(c,".pike")) bootstrap(c);
 	}) werror("Error bootstrapping %s: %s\n",cur,describe_backtrace(ex)); //If error, report it and move on - plugins can happily be reloaded later.
 }
 
