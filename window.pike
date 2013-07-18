@@ -56,8 +56,6 @@ mapping(string:mixed) subwindow(string txt)
 	subw->ef->set_activates_default(1);
 	#endif
 	subwsignals(subw);
-	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
-	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	tabs+=({subw});
 	colorcheck(subw->ef,subw);
 	return subw;
@@ -73,6 +71,8 @@ void setfonts(mapping(string:mixed) subw)
 {
 	subw->display->modify_font(getfont("display"));
 	subw->ef->modify_font(getfont("input"));
+	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
+	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 }
 
 //Load up the new signals and expire all the old ones
