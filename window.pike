@@ -528,8 +528,13 @@ void create(string name)
 		colors=({});
 		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
-		mainwindow->set_title("Gypsum")->set_default_size(800,500);
-		if (array pos=persist["window/winpos"]) mainwindow->move(pos[0],pos[1]);
+		mainwindow->set_title("Gypsum");
+		if (array pos=persist["window/winpos"])
+		{
+			pos+=({800,600}); mainwindow->set_default_size(pos[2],pos[3]);
+			mainwindow->move(pos[0],pos[1]);
+		}
+		else mainwindow->set_default_size(800,500);
 		GTK2.AccelGroup accel=GTK2.AccelGroup();
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
@@ -624,7 +629,8 @@ void configevent(object self,object ev)
 
 void savepos()
 {
-	persist["window/winpos"]=({pos->x,pos->y});
+	mapping sz=mainwindow->get_size();
+	persist["window/winpos"]=({pos->x,pos->y,sz->width,sz->height});
 	pos=0;
 }
 
