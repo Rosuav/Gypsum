@@ -1,7 +1,8 @@
 //GUI handler.
 
 //First color must be black.
-string defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
+constant defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
+constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
 array(GTK2.GdkColor) colors;
 
 mapping(string:mapping(string:mixed)) channels=persist["color/channels"] || ([]);
@@ -163,7 +164,16 @@ void mouseup(object self,object ev,mapping subw)
 void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
-	statusbar->set_text(sprintf("Line %d of %d",line,sizeof(subw->lines)));
+	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
+	catch
+	{
+		mapping meta=subw->lines[line][0];
+		if (!mappingp(meta)) break;
+		if (meta->timestamp) txt+="  "+System.TM(meta->timestamp)->strftime(persist["window/timestamp"]||default_ts_fmt); //TODO: Show this in the user's local time rather than UTC
+		//Add further meta-information display here
+	}; //Ignore errors
+	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
+	statusbar->set_text(txt);
 	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
 	{
 		int y1= min(selendline,line)   *subw->lineheight;
@@ -180,12 +190,13 @@ void say(string|array msg,mapping|void subw)
 	if (stringp(msg))
 	{
 		if (msg[-1]=='\n') msg=msg[..<1];
-		foreach (msg/"\n",string line) subw->lines+=({({([]),colors[7],line})});
+		foreach (msg/"\n",string line) subw->lines+=({({(["timestamp":time(1)]),colors[7],line})});
 	}
 	else
 	{
 		for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
 		if (!mappingp(msg[0])) msg=({([])})+msg;
+		msg[0]->timestamp=time(1);
 		subw->lines+=({msg});
 	}
 	subw->activity=1;
@@ -353,6 +364,7 @@ int enterpressed(mapping subw)
 {
 	string cmd=subw->ef->get_text(); subw->ef->set_text("");
 	subw->histpos=-1;
+	subw->prompt[0]->timestamp=time(1);
 	if (!subw->passwordmode)
 	{
 		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
@@ -399,6 +411,7 @@ class advoptions
 	mapping(string:mapping(string:mixed)) items=([
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
+		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
 		#define COMPAT "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode","type":"int","default":0
 		"Compat: Scroll":(["path":"compat/scroll","desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar. Requires restart."COMPAT]),
 		"Compat: Events":(["path":"compat/signal","desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success. Requires restart."COMPAT])
