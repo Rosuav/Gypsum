@@ -145,7 +145,7 @@ int dohooks(mapping conn,string line)
 int sockclosed(mapping conn)
 {
 	G->G->window->say("%%% Disconnected from server.",conn->display);
-	conn->display->prompt=({ });
+	conn->display->prompt=({([])});
 	conn->sock=0; //Break refloop
 	if (conn->ka) remove_call_out(conn->ka);
 }
