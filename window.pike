@@ -21,9 +21,9 @@ array(object) signals;
 
 	//Each 'line' represents one line that came from the MUD. In theory, they might be wrapped for display, which would
 	//mean taking up more than one display line, though currently this is not implemented.
-	//Each entry must alternate between color and string, in that order.
-	array(array(GTK2.GdkColor|string)) lines=({ });
-	array(GTK2.GdkColor|string) prompt=({ });
+	//Each entry must begin with a metadata mapping and then alternate between color and string, in that order.
+	array(array(mapping|GTK2.GdkColor|string)) lines=({ });
+	array(mapping|GTK2.GdkColor|string) prompt=({([])});
 	GTK2.DrawingArea display;
 	GTK2.ScrolledWindow maindisplay;
 	GTK2.Adjustment scr;
@@ -41,7 +41,7 @@ array(object) signals;
 */
 mapping(string:mixed) subwindow(string txt)
 {
-	mapping(string:mixed) subw=(["lines":({ }),"prompt":({ }),"cmdhist":({ }),"histpos":-1]);
+	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
 	//Build the window
 	notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
@@ -180,11 +180,12 @@ void say(string|array msg,mapping|void subw)
 	if (stringp(msg))
 	{
 		if (msg[-1]=='\n') msg=msg[..<1];
-		foreach (msg/"\n",string line) subw->lines+=({({colors[7],line})});
+		foreach (msg/"\n",string line) subw->lines+=({({([]),colors[7],line})});
 	}
 	else
 	{
 		for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
+		if (!mappingp(msg[0])) msg=({([])})+msg;
 		subw->lines+=({msg});
 	}
 	subw->activity=1;
@@ -243,10 +244,10 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
-void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(GTK2.GdkColor|string) line,int y,int hlstart,int hlend)
+void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColor|string) line,int y,int hlstart,int hlend)
 {
 	int x=3;
-	for (int i=0;i<sizeof(line);i+=2) if (sizeof(line[i+1]))
+	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
@@ -278,7 +279,7 @@ int paint(object self,object ev,mapping subw)
 	int ssl=selstartline,ssc=selstartcol,sel=selendline,sec=selendcol;
 	if (ssl==-1) sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
-	foreach (subw->lines+({subw->prompt});int l;array(GTK2.GdkColor|string) line)
+	foreach (subw->lines+({subw->prompt});int l;array(mapping|GTK2.GdkColor|string) line)
 	{
 		if (y>=start && y<=end)
 		{
@@ -366,7 +367,7 @@ int enterpressed(mapping subw)
 		say("%% Unknown command.",subw);
 		return 0;
 	}
-	subw->prompt=({ }); redraw(subw);
+	subw->prompt=({([])}); redraw(subw);
 	if (!subw->passwordmode)
 	{
 		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency

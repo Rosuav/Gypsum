@@ -44,7 +44,7 @@ void textread(mapping conn,string data)
 			G->G->window->say(conn->curmsg,conn->display);
 			if (conn->logfile) conn->logfile->write("%s\n",line);
 		}
-		conn->curmsg=({conn->curcolor,conn->curline=""});
+		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
 }
@@ -125,7 +125,7 @@ void sockread(mapping conn,string data)
 				//Prompt! Woot!
 				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
 				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
-				conn->curmsg=({conn->curcolor,conn->curline=""});
+				conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 				iac=iac[1..];
 				break;
 			}
@@ -176,7 +176,7 @@ void connected(int ok,mapping conn)
 		return;
 	}
 	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
-	conn->curmsg=({0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
+	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
 }
