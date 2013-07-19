@@ -1,10 +1,6 @@
-* Pressing Enter needs to instantly clear the Entry, ready for more text.
 * [20111129] Gypsum has now been used in combat.
-* Global activity alert (mainwindow->present() maybe?)
 * Logging to file
 * Clickable URLs
-* URL shortener
-* Timers (triggered text starts/resets the timer, ticks down until time expires)
 * Client-side aliases
 * Wrapping of text, particularly input
 * Multi-line paste
