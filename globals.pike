@@ -143,9 +143,9 @@ class window
 	mapping(string:mixed) win=([]);
 	void makewindow() {}
 	void dosignals() {m_delete(win,"signals");}
-	void create(string name)
+	void create(string|void name)
 	{
-		if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;
+		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
 		if (!win->mainwindow) makewindow();
 		win->mainwindow->set_skip_taskbar_hint(1)->set_skip_pager_hint(1)->show_all();
 		dosignals();
