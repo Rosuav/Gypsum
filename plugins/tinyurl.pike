@@ -66,7 +66,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		if (i<=0)
 		{
 			i=G->G->lasturl;
-			if (!i) {say("%% No URLs received this session.",1); return 1;}
+			if (!i) {say("%% No URLs received this session.",subw); return 1;}
 		}
 		else --i; //We're 0-based, the user is 1-based :)
 		if (i>=sizeof(recvurl))
