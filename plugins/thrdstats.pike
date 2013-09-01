@@ -9,5 +9,5 @@ void showthreads()
 
 void create(string name)
 {
-	signal(signum("SIGHUP"),showthreads);
+	catch {signal(signum("SIGHUP"),showthreads);}; //This doesn't work on Windows. Quietly suppress the error and abandon the feature.
 }
