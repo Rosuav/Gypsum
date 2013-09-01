@@ -350,6 +350,29 @@ int keypress(object self,array|object ev,mapping subw)
 			subw->ef->set_position(subw->ef->insert_text("\t",1,subw->ef->get_position()));
 			return 1;
 		}
+		case 0xFF55: //PgUp
+		{
+			if (ev->state&GTK2.GDK_CONTROL_MASK)
+			{
+				//TODO: Scroll up to last activity
+				return 1;
+			}
+			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
+			return 1;
+		}
+		case 0xFF56: //PgUp
+		{
+			object scr=subw->scr;
+			if (ev->state&GTK2.GDK_CONTROL_MASK)
+			{
+				//Snap down to the bottom. Currently this is done by scrchange so let's call that;
+				//but later on, that might change, so the code will need to be transferred into here.
+				scrchange(scr,subw);
+				return 1;
+			}
+			scr->set_value(scr->get_value()+scr->get_property("page size"));
+			return 1;
+		}
 		#if constant(DEBUG)
 		case 0xFFE1: case 0xFFE2: //Shift
 		case 0xFFE3: case 0xFFE4: //Ctrl
