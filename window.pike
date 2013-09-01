@@ -318,7 +318,7 @@ int keypress(object self,array|object ev,mapping subw)
 	if (arrayp(ev)) ev=ev[0];
 	switch (ev->keyval)
 	{
-		case 0xFF0D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
+		case 0xFF0D: case 0xFF8D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
 		case 0xFF52: //Up arrow
 		{
 			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
