@@ -169,7 +169,11 @@ void mousemove(object self,object ev,mapping subw)
 	{
 		mapping meta=subw->lines[line][0];
 		if (!mappingp(meta)) break;
+		#if constant(System.TM)
 		if (meta->timestamp) txt+="  "+System.TM(meta->timestamp)->strftime(persist["window/timestamp"]||default_ts_fmt); //TODO: Show this in the user's local time rather than UTC
+		#else
+		//TODO: Provide timestamps somehow (maybe less efficiently) w/o System.TM
+		#endif
 		//Add further meta-information display here
 	}; //Ignore errors
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
