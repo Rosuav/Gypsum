@@ -166,19 +166,20 @@ void write(mapping conn,string data)
 void sockreadb(mapping conn,string data) {G->G->connection->sockread(conn,data);}
 void sockwriteb(mapping conn) {G->G->connection->sockwrite(conn);}
 void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
-void connected(int ok,mapping conn)
+void connected(mapping conn)
 {
-	if (!ok)
-	{
-		G->G->window->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
-		conn->sock->close(); //Probably unnecessary
-		sockclosed(conn);
-		return;
-	}
 	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
 	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
+}
+
+void connfailed(mapping conn)
+{
+	G->G->window->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
+	conn->sock->close();
+	sockclosed(conn);
+	return;
 }
 
 void ka(mapping conn)
@@ -193,7 +194,9 @@ mapping connect(object display,mapping info)
 	G->G->window->say("Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
-	conn->sock->async_connect(conn->host,conn->port,connected,conn);
+	conn->sock->open_socket();
+	conn->sock->set_nonblocking(connected,connected,connfailed);
+	conn->sock->connect(conn->host,conn->port);
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
 	{
