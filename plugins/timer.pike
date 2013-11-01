@@ -15,7 +15,7 @@ string format_time(int delay,int base)
 	{
 		case 0..60: return sprintf("%02d",delay);
 		case 61..3599: return sprintf("%02d:%02d",delay/60,delay%60); //1 minute can be shown as 60 seconds, even though 1 hour is 01:00:00.
-		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%3600);
+		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
 	}
 }
 
