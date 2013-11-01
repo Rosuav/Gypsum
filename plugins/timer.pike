@@ -2,6 +2,15 @@ inherit hook;
 inherit command;
 inherit window;
 
+/* TODO: Document me properly somewhere.
+
+To set up for Threshold RPG regeneration timers, create three timers with the
+special keywords " HP", " SP" (yes, they begin with a space each), and ".EP"
+(yes, that's a period/full stop). Set their times to your corresponding regen
+rates, and leave the text blank. Then let the magic happen. :) */
+
+int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
+
 mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 
 int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
@@ -11,7 +20,7 @@ string format_time(int delay,int base)
 {
 	delay-=delay%resolution;
 	if (delay<=0) return "";
-	switch (base)
+	switch (max(delay,base))
 	{
 		case 0..60: return sprintf("%02d",delay);
 		case 61..3599: return sprintf("%02d:%02d",delay/60,delay%60); //1 minute can be shown as 60 seconds, even though 1 hour is 01:00:00.
@@ -61,10 +70,23 @@ int process(string param,mapping(string:mixed) subw)
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
+	if (sscanf(line,"%sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",string prefix,int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
+	{
+		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
+		int t=time(1);
+		int ofs=22-(t-regenclick)%22;
+		if (ofs==22 && (prefix=="" || has_suffix(prefix,": "))) ofs=0; //When in battle, the spam comes up before regen kicks in. So in the precise tick when the regen happens, Timer will show regen times 22 seconds too high.
+		if (hp?->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
+		if (sp?->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
+		if (ep?->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+		showtimes();
+		return 0;
+	}
+	if ((<"Your body has recuperated.","You are completely healed.","You sizzle with mystical energy.">)[line]) regenclick=time(1);
 	foreach (sort(indices(timers));int i;string kwd)
 	{
 		mapping tm=timers[kwd];
-		if (has_value(line,tm->trigger))
+		if (tm->trigger!="" && has_value(line,tm->trigger))
 		{
 			tm->next=time(1)+tm->time;
 			win->timers[i]->set_text(format_time(tm->next-time(1),tm->time));
