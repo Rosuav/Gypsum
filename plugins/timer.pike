@@ -106,7 +106,7 @@ void configevent(object self,object ev)
 {
 	if (ev->type!="configure") return;
 	if (!has_index(win,"x")) call_out(savepos,2);
-	win+=self->get_position();
+	mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
 }
 
 void savepos()
