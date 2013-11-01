@@ -82,12 +82,12 @@ void showtimes()
 
 void makelabels()
 {
-	win->display->resize(2,sizeof(timers)+1,0);
+	win->display->resize(sizeof(timers)+1,2,0);
 	if (win->labels) ({win->labels,win->timers,win->dblclk})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
 	win->labels=GTK2.Label(sort(indices(timers))[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
-		->attach_defaults(win->timers[i]=GTK2.Label(""),1,2,i,i+1);
+		->attach_defaults(win->timers[i]=GTK2.Label("")->set_alignment(1.0,0.0),1,2,i,i+1);
 	win->display->attach_defaults(win->dblclk=GTK2.Label("(Dbl-click to set)"),0,2,sizeof(timers),sizeof(timers)+1)->show_all();
 	showtimes();
 }
@@ -95,7 +95,7 @@ void makelabels()
 void makewindow()
 {
 	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow]))
-		->add(win->display=GTK2.Table(2,1,0));
+		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":5])));
 	makelabels();
 	int x,y=150; catch {[x,y]=persist["timer/winpos"];};
 	win->x=1; call_out(lambda() {m_delete(win,"x");},1);
