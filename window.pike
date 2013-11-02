@@ -194,15 +194,37 @@ void say(string|array msg,mapping|void subw)
 	if (stringp(msg))
 	{
 		if (msg[-1]=='\n') msg=msg[..<1];
-		foreach (msg/"\n",string line) subw->lines+=({({(["timestamp":time(1)]),colors[7],line})});
+		foreach (msg/"\n",string line) say(({colors[7],line}),subw);
+		return;
 	}
-	else
+	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
+	if (!mappingp(msg[0])) msg=({([])})+msg;
+	msg[0]->timestamp=time(1);
+	array lines=({ });
+	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
+	//it'll wrap at any color change as if it were a space. This is unideal, but it
+	//simplifies the code a bit.
+	int wrap=persist["window/wrap"]; string wrapindent=persist["window/wrapindent"]||"";
+	int pos=0;
+	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
 	{
-		for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
-		if (!mappingp(msg[0])) msg=({([])})+msg;
-		msg[0]->timestamp=time(1);
-		subw->lines+=({msg});
+		int end=pos+sizeof(msg[i]);
+		if (end<=wrap) {pos=end; continue;}
+		array cur=msg[..i];
+		string part=msg[i];
+		end=wrap-pos;
+		if (sizeof(part)>end)
+		{
+			int wrappos=end;
+			while (wrappos && part[wrappos]!=' ') --wrappos;
+			if (!wrappos && !pos) wrappos=wrap; //If there are no spaces, break at the color change (if there's text before it), or just break where there's no space.
+			cur[-1]=part[..wrappos-1];
+			msg=({msg[0]+([]),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
+		}
+		lines+=({cur});
+		i=0;
 	}
+	subw->lines+=lines+({msg});
 	subw->activity=1;
 	switch (persist["notif/activity"])
 	{
@@ -395,7 +417,7 @@ int enterpressed(mapping subw)
 	if (!subw->passwordmode)
 	{
 		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-		subw->lines+=({subw->prompt+({colors[6],cmd})});
+		say(subw->prompt+({colors[6],cmd}),subw);
 	}
 	else subw->lines+=({subw->prompt});
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
@@ -439,6 +461,8 @@ class advoptions
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
+		"Wrap":(["path":"window/wrap","default":0,"desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
+		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text - a number of spaces works well."]),
 		#define COMPAT(x) "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode"+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive."),"type":"int","default":0,"path":"compat/"+x
 		"Compat: Scroll":(["desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar. Requires restart."COMPAT("scroll")]),
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success. Requires restart."COMPAT("signal")])
@@ -575,7 +599,6 @@ void create(string name)
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
 					->add(menuitem("_Font",bouncer("window","fontdlg")))
 					->add(menuitem("_Colors",bouncer("window","channelsdlg")))
-					->add(menuitem("_Wrap/Display (TODO)",TODO))
 					->add(menuitem("_Search (TODO)",TODO))
 					->add(menuitem("_Keyboard (TODO)",TODO))
 					->add(menuitem("Ad_vanced options",bouncer("window","advoptions")))
