@@ -76,9 +76,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 		int t=time(1);
 		int ofs=22-(t-regenclick)%22;
 		if (ofs==22 && (prefix=="" || has_suffix(prefix,": "))) ofs=0; //When in battle, the spam comes up before regen kicks in. So in the precise tick when the regen happens, Timer will show regen times 22 seconds too high.
-		if (hp?->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
-		if (sp?->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
-		if (ep?->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
+		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
+		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
 		showtimes();
 		return 0;
 	}
