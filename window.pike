@@ -554,6 +554,33 @@ class fontdlg
 	}
 }
 
+class aboutdlg
+{
+	inherit window;
+	void create() {::create("help/about");}
+	void makewindow()
+	{
+		string ver=gypsum_version();
+		if (ver!=INIT_GYPSUM_VERSION) ver=sprintf("%s (upgraded from %s)",ver,INIT_GYPSUM_VERSION);
+		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+			->add(GTK2.Label(#"Pike MUD client for Windows/Linux/Mac (and others)
+
+Free software - see README for license terms
+
+By Chris Angelico, rosuav@gmail.com
+
+Version "+ver+", as far as can be ascertained :)"))
+			->add(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))))
+		);
+	}
+	void dosignals()
+	{
+		win->signals=({
+			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}),
+		});
+	}
+}
+
 void colorcheck(object self,mapping subw)
 {
 	array(int) col=({255,255,255});
@@ -602,6 +629,9 @@ void create(string name)
 					->add(menuitem("_Search (TODO)",TODO))
 					->add(menuitem("_Keyboard (TODO)",TODO))
 					->add(menuitem("Ad_vanced options",bouncer("window","advoptions")))
+				))
+				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
+					->add(menuitem("_About",bouncer("window","aboutdlg")))
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())

@@ -255,3 +255,8 @@ class configdlg
 		});
 	}
 }
+
+string gypsum_version()
+{
+	return String.trim_all_whites(Stdio.read_file("VERSION"));
+}

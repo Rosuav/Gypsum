@@ -12,6 +12,13 @@ You will need a Pike interpreter - see http://pike.lysator.liu.se/
 To keep up-to-date with changes in Gypsum, add this to your RSS reader:
 https://github.com/Rosuav/Gypsum/commits/master.atom
 
+Gypsum follows Semantic Versioning v2.0.0; other than explicitly tagged
+versions, the given version number will have the tag "-git". Versioning a
+complex and multi-component project like this is nearly impossible, so the
+number should be considered advisory at best. The version number for any
+state should be marked in the file VERSION, as it exists in git.
+
+
 License: MIT
 
 Copyright (c) 2011-2013, Chris Angelico
