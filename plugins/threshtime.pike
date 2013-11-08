@@ -115,6 +115,7 @@ void dosignals()
 	win->signals=({
 		gtksignal(win->mainwindow,"event",configevent),
 		gtksignal(win->mainwindow,"button_press_event",mousedown),
+		gtksignal(win->mainwindow,"delete_event",hidewindow),
 	});
 	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }

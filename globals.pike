@@ -151,6 +151,11 @@ class window
 		if (!win->mainwindow) {makewindow(); dosignals();}
 		win->mainwindow->set_no_show_all(0)->show_all();
 	}
+	int hidewindow()
+	{
+		win->mainwindow->hide();
+		return 1; //Allow this to be used as a delete_event (suppressing window destruction)
+	}
 }
 
 //Base class for a configuration dialog. Permits the setup of anything where you have a list of keyworded items, can create/retrieve/update/delete them by keyword.
