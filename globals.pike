@@ -63,11 +63,7 @@ object persist=class(string savefn)
 	{
 		catch //Ignore any errors, just have no saved data.
 		{
-			Stdio.File f=Stdio.File(savefn);
-			if (!f) return;
-			string raw=f->read();
-			if (!raw) return;
-			mixed decode=decode_value(raw);
+			mixed decode=decode_value(Stdio.read_file(savefn));
 			if (mappingp(decode)) data=decode;
 		};
 	}
