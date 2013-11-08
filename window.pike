@@ -222,7 +222,7 @@ void say(string|array msg,mapping|void subw)
 			msg=({msg[0]+([]),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
 		}
 		lines+=({cur});
-		i=0;
+		i=pos=0;
 	}
 	subw->lines+=lines+({msg});
 	subw->activity=1;
