@@ -80,7 +80,10 @@ void showtime()
 	th_day=threshtime%30; threshtime/=30;
 	th_mon=threshtime%12; threshtime/=12;
 	th_year=threshtime;
-	win->display->set_text(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
+	if(win->display)
+	{
+		win->display->set_text(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
+	}
 }
 
 void makewindow()
