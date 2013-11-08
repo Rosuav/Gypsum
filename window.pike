@@ -420,6 +420,7 @@ int enterpressed(mapping subw)
 		say(subw->prompt+({colors[6],cmd}),subw);
 	}
 	else subw->lines+=({subw->prompt});
+	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
 		redraw(subw);
