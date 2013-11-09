@@ -17,7 +17,18 @@ int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (!subw->hilfe_saved_prompt)
 	{
-		if (!has_prefix(line,"pike ")) return 0; //Normal input
+		if (!has_prefix(line,"pike ")) //Normal input
+		{
+			//Check for the special "calculator notation"
+			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
+			{
+				int val=compile_string("int _() {return "+expr+";}")()->_();
+				if (before) G->G->connection->write(subw->connection,before+val+(after||"")+"\r\n"); //Command with embedded expression
+				else say("%% "+val,subw); //"calc" command
+				return 1;
+			};
+			return 0;
+		}
 		line=line[5..]; //Command starting "pike " - skip the prefix.
 	}
 	//else this is a continuation; the whole line goes to Hilfe.
