@@ -25,8 +25,8 @@ array(object) signals;
 	//Each entry must begin with a metadata mapping and then alternate between color and string, in that order.
 	array(array(mapping|GTK2.GdkColor|string)) lines=({ });
 	array(mapping|GTK2.GdkColor|string) prompt=({([])});
-	GTK2.DrawingArea display;
-	GTK2.ScrolledWindow maindisplay;
+	GTK2.TextBuffer buffer;
+	GTK2.TextView display;
 	GTK2.Adjustment scr;
 	GTK2.Entry ef;
 	GTK2.Widget page;
@@ -46,13 +46,22 @@ mapping(string:mixed) subwindow(string txt)
 	//Build the window
 	notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
-			->add(subw->display=GTK2.DrawingArea())
+			->add(subw->display=GTK2.TextView(subw->buffer=GTK2.TextBuffer()))
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt));
 	setfonts(subw);
 	subw->ef->grab_focus();
+	subw->display->modify_base(GTK2.STATE_NORMAL,colors[0]);
+	foreach (colors;int i;object col)
+	{
+		string rgb=sprintf("#%02x%02x%02x",@col->rgb());
+		subw->buffer->create_tag("fg"+i,(["foreground":rgb]));
+		subw->buffer->insert_with_tags_by_name(subw->buffer->get_end_iter(),"Foreground "+rgb,-1,({"fg"+i}));
+		subw->buffer->create_tag("bg"+i,(["background":rgb]));
+		subw->buffer->insert_with_tags_by_name(subw->buffer->get_end_iter(),"    Background "+rgb+"\n",-1,({"bg"+i}));
+	}
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
 	#endif
@@ -80,20 +89,20 @@ void setfonts(mapping(string:mixed) subw)
 void subwsignals(mapping(string:mixed) subw)
 {
 	subw->signals=({
-		gtksignal(subw->display,"expose_event",paint,subw),
-		gtksignal(subw->scr,"changed",scrchange,subw),
+		//gtksignal(subw->display,"expose_event",paint,subw),
+		//gtksignal(subw->scr,"changed",scrchange,subw),
 		//gtksignal(subw->scr,"value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));}),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(subw->ef,"key_press_event",keypress,subw),
 		#else
 		gtksignal(subw->ef,"key_press_event",keypress,subw,UNDEFINED,1),
 		#endif
-		gtksignal(subw->display,"button_press_event",mousedown,subw),
+		/*gtksignal(subw->display,"button_press_event",mousedown,subw),
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
-		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
+		gtksignal(subw->display,"motion_notify_event",mousemove,subw),*/
 		gtksignal(subw->ef,"changed",colorcheck,subw),
 	});
-	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
+	//subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
 void scrchange(object self,mapping subw)
@@ -106,6 +115,8 @@ void scrchange(object self,mapping subw)
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	self->set_value(upper-self->get_property("page size"));
+	//werror("step-increment: %O\n",self->get_property("step-increment"));
+	//subw->scr->set_property("step-increment",subw->lineheight);
 }
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
@@ -188,6 +199,12 @@ void mousemove(object self,object ev,mapping subw)
 	}
 }
 
+array colortr(mixed col)
+{
+	if (arrayp(col)) return col;
+	return ({"fg7","bg0"});
+}
+
 void say(string|array msg,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -224,6 +241,11 @@ void say(string|array msg,mapping|void subw)
 		lines+=({cur});
 		i=pos=0;
 	}
+	foreach (lines+({msg}),array msg)
+	{
+		for (int i=1;i<sizeof(msg);i+=2) subw->buffer->insert_with_tags_by_name(subw->buffer->get_end_iter(),msg[i+1],-1,colortr(msg[i]));
+		subw->buffer->insert(subw->buffer->get_end_iter(),"\n",-1);
+	}
 	subw->lines+=lines+({msg});
 	subw->activity=1;
 	switch (persist["notif/activity"])
@@ -251,18 +273,20 @@ void connect(mapping info,mapping|void subw)
 
 void redraw(mapping subw)
 {
-	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
-	if (height!=subw->totheight) subw->display->set_size_request(-1,subw->totheight=height);
+	//int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
+	//if (height!=subw->totheight) subw->display->set_size_request(-1,subw->totheight=height);
 	if (tabs[notebook->get_current_page()]==subw) subw->activity=0;
 	notebook->set_tab_label_text(subw->page,"* "*subw->activity+subw->tabtext);
-	subw->maindisplay->queue_draw();
+	subw->display->queue_draw();
+	call_out(lambda() {subw->scr->set_value(subw->scr->get_property("upper")-subw->scr->get_property("page size"));},0.1);
 }
 
-object mkcolor(int fg,int bg)
+mixed mkcolor(int fg,int bg)
 {
-	return colors[fg];
+	return ({"fg"+fg,"bg"+bg});
 }
 
+/*
 //Paint one piece of text at (x,y), returns the x for the next text.
 int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
@@ -332,7 +356,7 @@ int paint(object self,object ev,mapping subw)
 	}
 	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
-
+*/
 void settext(mapping subw,string text)
 {
 	subw->ef->set_text(text);
@@ -645,7 +669,7 @@ void create(string name)
 		defbutton->grab_default();
 		#endif
 		addtab();
-		call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
+		call_out(mainwindow->present,1); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 	}
 	else
 	{
