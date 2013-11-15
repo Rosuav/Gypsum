@@ -1,29 +1,41 @@
 //Connection handler.
 
-/* Everything works with a mapping(string:mixed) conn; some of its handy elements include:
+/**
+ * Everything works with a mapping(string:mixed) conn; some of its handy elements include:
+ * 
+ * Stdio.File sock;
+ * object sockthrd;
+ * array curmsg=({0,""});
+ * int fg,bg,bold; //Current color, in original ANSI form
+ * object curcolor;
+ * string worldname;
+ * object display; //References the subwindow object (see window.pike)
+ * string conn_host;
+ * int conn_port;
+ * string readbuffer="",ansibuffer="",curline=""; //Read buffers, at various levels - normally empty except during input processing, but will retain data if there's an incomplete TELNET or ANSI sequence
+ * int lastcr; //Set to 1 if the last textread ended with \r - if the next one starts \n, the extra blank line is suppressed (it's a \r\n sequence broken over two socket reads)
+ * string writeme=""; //Write buffer
+ * Stdio.File logfile; //If non-zero, all text will be logged to this file, after TELNET/ANSI codes and prompts are removed.
+ * 
+ */
 
-Stdio.File sock;
-object sockthrd;
-array curmsg=({0,""});
-int fg,bg,bold; //Current color, in original ANSI form
-object curcolor;
-string worldname;
-object display; //References the subwindow object (see window.pike)
-string conn_host;
-int conn_port;
-string readbuffer="",ansibuffer="",curline=""; //Read buffers, at various levels - normally empty except during input processing, but will retain data if there's an incomplete TELNET or ANSI sequence
-int lastcr; //Set to 1 if the last textread ended with \r - if the next one starts \n, the extra blank line is suppressed (it's a \r\n sequence broken over two socket reads)
-string writeme=""; //Write buffer
-Stdio.File logfile; //If non-zero, all text will be logged to this file, after TELNET/ANSI codes and prompts are removed.
-
-*/
-
+/**
+ * Establishes an instance of this class.
+ *
+ * @param name	(Unused) 
+ */
 void create(string name)
 {
 	G->G->connection=this;
 }
 
-//Handles a block of text after ANSI processing.
+
+/**
+ * Handles a block of text after ANSI processing.
+ *
+ * @param conn	the current connection
+ * @param data that data processed via ANSI
+ */
 void textread(mapping conn,string data)
 {
 	//werror("textread: %O\n",data);
@@ -49,7 +61,12 @@ void textread(mapping conn,string data)
 	conn->curmsg[-1]+=data; conn->curline+=data;
 }
 
-//Handles a block of text after TELNET processing.
+/**
+ * Handles a block of text after TELNET processing.
+ *
+ * @param conn	The current connection
+ * @param data The data after telnet processing
+ */
 void ansiread(mapping conn,string data)
 {
 	//werror("ansiread: %O\n",data);
@@ -81,7 +98,13 @@ void ansiread(mapping conn,string data)
 }
 
 enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
-//Socket read callback. Handles TELNET protocol, then passes actual socket text along to ansiread().
+
+/**
+ * Socket read callback. Handles TELNET protocol, then passes actual socket text along to ansiread().
+ *
+ * @param conn The current connection
+ * @param data The data recv from the socket
+ */
 void sockread(mapping conn,string data)
 {
 	//werror("sockread: %O\n",data);
@@ -136,12 +159,21 @@ void sockread(mapping conn,string data)
 	ansiread(conn,conn->readbuffer); conn->readbuffer="";
 }
 
+/**
+ * Name: 	dohooks
+ * Purpose:	
+ */
 int dohooks(mapping conn,string line)
 {
 	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
 	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) G->G->window->say("Error in hook: "+describe_error(ex),conn->display);
 }
 
+/**
+ * Closes the socket connection for the provided connection.
+ *
+ * @param Conn The connection for which the socket should be closed.
+ */
 int sockclosed(mapping conn)
 {
 	G->G->window->say("%%% Disconnected from server.",conn->display);
@@ -150,12 +182,24 @@ int sockclosed(mapping conn)
 	if (conn->ka) remove_call_out(conn->ka);
 }
 
+/**
+ * Writes the data to socket, then if successful clears the data buffer. (Writeme is a global buffer)
+ *
+ * @param conn	The connection holding the socket to which to write the data.
+ * 
+ */
 void sockwrite(mapping conn)
 {
 	if (!conn->sock) return;
 	if (conn->writeme!="") conn->writeme=conn->writeme[conn->sock->write(conn->writeme)..];
 }
 
+/**
+ * Wrapper method for writing a string value to the provided connection's socket.
+ *
+ * @param conn	The connection and socket to which to write the string data.
+ * @param data The data to be written to the socket.
+ */
 void write(mapping conn,string data)
 {
 	if (data) conn->writeme+=data;
@@ -166,6 +210,12 @@ void write(mapping conn,string data)
 void sockreadb(mapping conn,string data) {G->G->connection->sockread(conn,data);}
 void sockwriteb(mapping conn) {G->G->connection->sockwrite(conn);}
 void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
+
+/**
+ * Callback for when a connection is successfully established.
+ *
+ * @param conn Mapping containing the connection information 
+ */
 void connected(mapping conn)
 {
 	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
@@ -174,6 +224,11 @@ void connected(mapping conn)
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
+/**
+ * Callback for when the connection fails. Displays the disconnection error details.
+ *
+ * @param conn Mappings detailing the connection information for the world whose connection failed 
+ */
 void connfailed(mapping conn)
 {
 	G->G->window->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
@@ -182,12 +237,24 @@ void connfailed(mapping conn)
 	return;
 }
 
+/**
+ * Sends a keep telent keep alive packet over the provided connection.
+ *
+ * @param conn The connection over which to send the keep alive packet.
+ */
 void ka(mapping conn)
 {
 	write(conn,"\xFF\xF9");
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
+/**
+ * Establishes a connection with with the provided world and links it to a display
+ *
+ * @param display 	The display to which the connection should  be linked
+ * @param info	  	The information about the world to which the connection should be established
+ * @return mapping	Returns a mapping detailing the connection
+ */
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka,"writeme":info->writeme||""]);

@@ -24,6 +24,13 @@ array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
 int maxlen=persist["tinyurl/maxlen"]||64;
 
+/**
+ * Collects and parses a line of output from the connected world.
+ *
+ * @param 	line 	the line of collected input to be processed
+ * @param 	conn	the connection from which the line was collected
+ * @return 	int		always returns zero
+ */
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	string url; int https;
@@ -35,6 +42,13 @@ int outputhook(string line,mapping(string:mixed) conn)
 	if (persist["tinyurl/announce"]) say(sprintf("%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1),conn->display);
 }
 
+/**
+ * Collects and parses a line of input from the sub window.
+ *
+ * @param 	line 	the line of collected input to be processed
+ * @param 	subw	the sub window from which the line was collected
+ * @return 	int		always returns 1
+ */
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (line=="url" || sscanf(line,"url %s",string param))
@@ -125,6 +139,13 @@ int inputhook(string line,mapping(string:mixed) subw)
 	return 1; //Suppress the line (for now)
 }
 
+/**
+ * Takes a url and processes it through tinyurl, then saves and displays the tiny url.
+ *
+ * @param self		The window in which the url was collected
+ * @param response	The user's response to whether the url should be converted
+ * @param args		A collection of arguments, such as url before, portol to be used, url, url after conversion, and sub window.
+ */
 void tinify(object self,int response,array args)
 {
 	[string before,string protocol,string url,string after,mapping(string:mixed) subw]=args;
@@ -191,6 +212,10 @@ void tinify(object self,int response,array args)
 class config
 {
 	inherit window;
+	/**
+	 * Creates the plugin configuration window.
+	 *
+	 */ 
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Configure URL shortener","transient-for":G->G->window->mainwindow]))

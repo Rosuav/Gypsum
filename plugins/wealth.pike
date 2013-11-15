@@ -1,6 +1,10 @@
 inherit command;
 inherit hook;
 
+/**
+ * The strings for which to monitor.
+ *
+ */
 mapping(string:array) monitors=([
 	//Monitors for Threshold RPG
 	"wealth":({" Total Wealth: %[0-9,]","%9s Prv: %s"}),
@@ -8,6 +12,13 @@ mapping(string:array) monitors=([
 	//Feel free to add others, or replace these, according to what you play.
 ]);
 
+/**
+ * Collects a line of output from the connection and parses it.
+ *
+ * @param 	line 	The line to be parsed
+ * @param 	conn	The connection from which the line was collected
+ * @return	int		Always returns 0	
+ */
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	foreach (monitors;string kwd;array fmt) if (sscanf(line,fmt[0],string cur) && cur)
@@ -22,6 +33,13 @@ int outputhook(string line,mapping(string:mixed) conn)
 	return 0;
 }
 
+/**
+ * Outputs the provided monitors with the persistant values.
+ *
+ * @param  param 	Unused
+ * @param  subw		The sub window which to display the output.
+ * @return int		Always returns 1
+ */
 int process(string param,mapping(string:mixed) subw)
 {
 	foreach (indices(monitors),string kwd)
@@ -30,4 +48,9 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
+/**
+ * Creates an instance of the class
+ *
+ * @param name	the name of this instance of the class 
+ */
 void create(string name) {::create(name);}

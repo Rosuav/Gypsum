@@ -15,7 +15,13 @@ mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 
 int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
 
-//Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
+/**
+ * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
+ *
+ * @param 	delay 	the integet to be formated
+ * @param 	base	a value that determines if the integet is formated to sec, min, hour
+ * @return 	string	the formated integer value	
+ */
 string format_time(int delay,int base)
 {
 	delay-=delay%resolution;
@@ -28,11 +34,24 @@ string format_time(int delay,int base)
 	}
 }
 
+
 class config
 {
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
+	
+	/**
+	 * Loads the contents to be configured
+	 *
+	 * @param info	The information to be loaded
+	 */ 
 	void create() {items=timers; ::create("plugins/timer"); showwindow();}
+	
+	/**
+	 * Loads the contents to be configured
+	 *
+	 * @param info	The information to be loaded
+	 */ 
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
@@ -48,11 +67,23 @@ class config
 				win->trigger=GTK2.TextView((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);
 	}
+	
+	/**
+	 * Loads the contents to be configured
+	 *
+	 * @param info	The information to be loaded
+	 */ 
 	void load_content(mapping(string:mixed) info)
 	{
 		win->time->set_text(format_time(info->time,info->time));
 		win->trigger->get_buffer()->set_text(info->trigger || "");
 	}
+	
+	/**
+	 * Saves the configured values
+	 *
+	 * @param info	 mapping to which timer values are saved. (Also saved to persist)
+	 */	
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
@@ -62,12 +93,23 @@ class config
 	}
 }
 
+/**
+ * TODO: Finish function
+ *
+ */
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg") {config(); return 1;}
 	//TODO: Way to explicitly trigger a timer
 }
 
+/**
+ * Collects and parses the output from a connected world
+ *
+ * @param 	line 	The line to be parsed
+ * @param 	conn	The connection to which the line has been collected.
+ * @return 	int		always returns zero
+ */
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	if (sscanf(line,"%sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",string prefix,int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
@@ -95,6 +137,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
+/**
+ * Updates the window with and in doing so refeshes the timer values.
+ *
+ */
 void showtimes()
 {
 	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);
@@ -102,6 +148,10 @@ void showtimes()
 		win->timers[i]->set_text(format_time(timers[kwd]->next-time(1),timers[kwd]->time));
 }
 
+/**
+ * Creates the timer labels to be displayed on the timer window
+ *
+ */
 void makelabels()
 {
 	win->display->resize(sizeof(timers)+1,2,0);
@@ -114,6 +164,10 @@ void makelabels()
 	showtimes();
 }
 
+/**
+ * Creates the timer window.
+ *
+ */
 void makewindow()
 {
 	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow]))
@@ -124,6 +178,10 @@ void makewindow()
 	win->mainwindow->move(x,y);
 }
 
+/**
+ * Catches events and if it is a configure event adjust the screen position of the window.
+ *
+ */
 void configevent(object self,object ev)
 {
 	if (ev->type!="configure") return;
@@ -131,17 +189,31 @@ void configevent(object self,object ev)
 	mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
 }
 
+/**
+ * Saves the adjusted window potion to persist.
+ *
+ */
 void savepos()
 {
 	persist["timer/winpos"]=({m_delete(win,"x"),m_delete(win,"y")});
 }
 
+/**
+ * Catches the mouse down event, and if it is a 2-button moust down event begins moves the window.
+ *
+ * @param self	the object to be moved
+ * @param ev	the event that has occured.
+ */
 void mousedown(object self,object ev)
 {
 	if (ev->type=="2button_press") config(); //aka double-click (not right-click, not chord)
 	else self->begin_move_drag(ev->button,ev->x_root,ev->y_root,ev->time);
 }
 
+/**
+ * Establishes event handlers for the event, and button_press_event events.
+ *
+ */
 void dosignals()
 {
 	win->signals=({
@@ -151,6 +223,11 @@ void dosignals()
 	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }
 
+/**
+ * Creates and instance of this class.
+ *
+ * @param name	The name of the instance of this class.
+ */
 void create(string name)
 {
 	::create(name);

@@ -19,6 +19,14 @@ int halfsync_hour,halfsync_min;
 int halfsync_day,halfsync_year;
 int halfsync_rl=0;
 string halfsync_monname;
+
+/**
+ * Collects and parses output from the connect world.
+ *
+ * @param 	line	The line of text to be processed
+ * @param 	conn	The connection over which the line of text is recv
+ * @return	int		retuns zero always (appears to be used for early exit from function)
+ */
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	//Look for Timepiece of Phzult or Chronos's clock
@@ -70,6 +78,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
+/**
+ * Refreshes the time window as to maintain updated game time.
+ *
+ */
 void showtime()
 {
 	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);
@@ -86,6 +98,10 @@ void showtime()
 	}
 }
 
+/*
+ * Creates and displays the threshtime window.
+ *
+ */
 void makewindow()
 {
 	win->mainwindow=GTK2.Window((["title":"Threshold time","transient-for":G->G->window->mainwindow]))
@@ -96,6 +112,12 @@ void makewindow()
 	win->mainwindow->move(x,y);
 }
 
+/**
+ * Catches a configuration event and saves the updats to the window's position changes if applicable.
+ *
+ * @param self	The object being moved
+ * @param ef	The event configuration event that has occured
+ */
 void configevent(object self,object ev)
 {
 	if (ev->type!="configure") return;
@@ -103,16 +125,28 @@ void configevent(object self,object ev)
 	mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
 }
 
+/**
+ * Saves the windows x,p postion to persistant storaged
+ *
+ */ 
 void savepos()
 {
 	persist["threshtime/winpos"]=({m_delete(win,"x"),m_delete(win,"y")});
 }
 
+/**
+ * Catches the mouse down event, and begins moving the window.
+ *
+ */
 void mousedown(object self,object ev)
 {
 	self->begin_move_drag(ev->button,ev->x_root,ev->y_root,ev->time);
 }
 
+/**
+ * Add signal handler callbacks for event and button_press_event
+ *
+ */
 void dosignals()
 {
 	win->signals=({
@@ -122,6 +156,11 @@ void dosignals()
 	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }
 
+/**
+ * Creates an instance of this class
+ *
+ * @param name	The name for the instance of this class.
+ */
 void create(string name)
 {
 	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1356712257; persist["threshtime/sync_th"]=196948184;}

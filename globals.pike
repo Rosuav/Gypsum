@@ -1,3 +1,9 @@
+/**
+ * Creates an instance of this class and establishes the global collections.
+ *
+ * @param	n		Unused
+ * @param	which	constants to be added (space delimated)
+ */
 void create(string n,string which)
 {
 	array(string) arr=indices(this);
@@ -9,6 +15,10 @@ void create(string n,string which)
 }
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
+/**
+ * 
+ *
+ */
 class bouncer(string ... keys)
 {
 	mixed `()(mixed ... args)
@@ -59,6 +69,10 @@ object persist=class(string savefn)
 	mapping(string:mixed) data=([]);
 	int saving;
 
+	/**
+	 * creates an instance of this class.
+	 *
+	 */
 	void create()
 	{
 		catch //Ignore any errors, just have no saved data.
@@ -77,11 +91,21 @@ object persist=class(string savefn)
 		if (!saving) {saving=1; call_out(save,0);}
 		return data[idx]=val;
 	}
+	
+	/**
+	 * 
+	 *
+	 */
 	mixed _m_delete(string idx)
 	{
 		if (!saving) {saving=1; call_out(save,0);}
 		return m_delete(data,idx);
 	}
+	
+	/**
+	 * 
+	 *
+	 */
 	void save()
 	{
 		saving=0;
@@ -92,6 +116,10 @@ object persist=class(string savefn)
 //Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
 //Recognizes a subset of strftime(3)'s formatting codes - notably not the locale-based ones.
 //Month/day names are not localized.
+/**
+ * 
+ *
+ */
 string strftime(string format,int|mapping(string:int) tm)
 {
 	if (intp(tm)) tm=gmtime(tm);

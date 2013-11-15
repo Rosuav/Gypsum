@@ -1,5 +1,12 @@
 inherit command;
 
+/**
+ * Recompiles the provided plugin
+ *
+ * @param param The plugin to be updated
+ * @param subw	The sub window which is updating the plugin
+ * @return int	always returns 1
+ */
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say("%% Update what?",subw); return 1;}
@@ -27,9 +34,29 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
+/**
+ * Displays all errors created during compile
+ *
+ * @param fn 	unused
+ * @param l		the line which caused the compile error.
+ * @param msg	the compile error
+ */
 void compile_error(string fn,int l,string msg) {say("Compilation error on line "+l+": "+msg+"\n");}
+
+/**
+ * Displays all warnings created during compile
+ *
+ * @param fn 	unused
+ * @param l		the line which caused the compile warning.
+ * @param msg	the compile warning
+ */
 void compile_warning(string fn,int l,string msg) {say("Compilation warning on line "+l+": "+msg+"\n");}
 
+/**
+ * Compiles the provided pike file and adds the commands to the globals list.
+ *
+ * @param param 	the pike file to be compiled.
+ */
 void build(string param)
 {
 	string param2;
@@ -44,4 +71,9 @@ void build(string param)
 	else compiled(param);
 }
 
+/**
+ * Creates an instance of this class.
+ *
+ * @param name	The name of the instance of this class.
+ */
 void create(string name) {::create(name);}
