@@ -175,9 +175,9 @@ void tinify(object self,int response,array args)
 	}
 	//TODO: Proxy
 	Stdio.File sock=Stdio.File();
-	sock->async_connect(tinyurl_hostname,80,lambda(int ok)
+	sock->open_socket();
+	sock->set_nonblocking(0,lambda()
 	{
-		if (!ok) {say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(sock->errno()),sock->errno()),subw); sock->close(); return;}
 		//NOTE: This may block or fail if the URL is ridiculously large. I don't really care; that's pretty unlikely.
 		sock->write("GET /create.php?url=%s HTTP/1.0\r\nHost: tinyurl.com\r\n\r\n",url); //TODO: URL-encode the URL?
 		string response="";
@@ -191,7 +191,11 @@ void tinify(object self,int response,array args)
 				response=0;
 			}
 		});
+	},lambda()
+	{
+		say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(sock->errno()),sock->errno()),subw);
 	});
+	sock->connect(tinyurl_hostname,80);
 }
 
 //TODO: Provide a standardized way to configure plugins (and possibly to enable/disable them, too), and then flesh this out.
