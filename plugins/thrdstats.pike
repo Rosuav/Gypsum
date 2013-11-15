@@ -2,7 +2,6 @@
 
 /**
  * Provides information about currently running threads.
- *
  */
 void showthreads()
 {

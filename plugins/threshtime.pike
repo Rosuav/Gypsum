@@ -72,8 +72,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 }
 
 /**
- * Refreshes the time window as to maintain updated game time.
- *
+ * Update the display with the current Thresh time
  */
 void showtime()
 {

@@ -12,16 +12,6 @@ the input to be properly terminated (usually that means adding a semicolon). It 
 needed to complete the current command.
 */
 
-
-/**
- * parses the input line from a sub window and passes it to the pike Hilfe
- *
- * Hilfe mode: "pike 1+1;" - allows full Pike syntax under Hilfe rules.
- *
- * @param 	line 	The line to be processed
- * @param 	subw	The sub window from which the line was collected a where to direct all output.
- * @return	int		Always returns 1
- */
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (!subw->hilfe_saved_prompt)
@@ -54,30 +44,15 @@ int inputhook(string line,mapping(string:mixed) subw)
 
 //Direct compilation mode - the original. Convenient for single expressions.
 /**
- * Displays all errors created during compile
+ * Catch compilation errors and warnings and send them to the current subwindow
  *
  * @param fn 	unused
  * @param l		the line which caused the compile error.
  * @param msg	the compile error
  */
 void compile_error(string fn,int l,string msg) {say("Compilation error on line "+l+": "+msg+"\n");}
-
-/**
- * Displays all warnings created during compile
- *
- * @param fn 	unused
- * @param l		the line which caused the compile warning.
- * @param msg	the compile warning
- */
 void compile_warning(string fn,int l,string msg) {say("Compilation warning on line "+l+": "+msg+"\n");}
 
-/**
- * Processes the string and displays the resulting output to the sub window provided.
- *
- * @param 	param	unused
- * @param 	subw	the sub window which to send all output
- * @return 	int		always returns 1
- */
 int process(string param,mapping(string:mixed) subw)
 {
 	program tmp; mixed err,ret;

@@ -35,27 +35,19 @@ int process(string param,mapping(string:mixed) subw)
 }
 
 /**
- * Displays all errors created during compile
+ * Catch compilation errors and warnings and send them to the current subwindow
  *
  * @param fn 	unused
  * @param l		the line which caused the compile error.
  * @param msg	the compile error
  */
 void compile_error(string fn,int l,string msg) {say("Compilation error on line "+l+": "+msg+"\n");}
-
-/**
- * Displays all warnings created during compile
- *
- * @param fn 	unused
- * @param l		the line which caused the compile warning.
- * @param msg	the compile warning
- */
 void compile_warning(string fn,int l,string msg) {say("Compilation warning on line "+l+": "+msg+"\n");}
 
 /**
- * Compiles the provided pike file and adds the commands to the globals list.
+ * Compile one pike file and let it initialize itself, similar to bootstrap()
  *
- * @param param 	the pike file to be compiled.
+ * @param param	the pike file to be compiled.
  */
 void build(string param)
 {

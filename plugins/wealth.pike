@@ -3,7 +3,6 @@ inherit hook;
 
 /**
  * The strings for which to monitor.
- *
  */
 mapping(string:array) monitors=([
 	//Monitors for Threshold RPG

@@ -128,9 +128,9 @@ int inputhook(string line,mapping(string:mixed) subw)
 /**
  * Takes a url and processes it through tinyurl, then saves and displays the tiny url.
  *
- * @param self		The window in which the url was collected
+ * @param self		The dialog window
  * @param response	The user's response to whether the url should be converted
- * @param args		A collection of arguments, such as url before, portol to be used, url, url after conversion, and sub window.
+ * @param args		Input components and current subwindow
  */
 void tinify(object self,int response,array args)
 {

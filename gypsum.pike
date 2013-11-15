@@ -31,9 +31,9 @@ class mymaster /* Oh, my master! */
 }
 
 /**
- * Compiles provided pike modules thereby loading them into memory.
+ * Compile one file into memory and permit it to register itself
  *
- * @param c   File name of the pick file to be compiled.
+ * @param c   File name of the pike file to be compiled.
  */
 void bootstrap(string c)
 {
@@ -46,7 +46,7 @@ void bootstrap(string c)
 }
 
 /**
- * Searches a provided directory and sub directories for pike files to be compiled.
+ * Searches a provided directory and subdirectories for pike files to be compiled.
  *
  * @param dir Name of directory to be searched.
  */
@@ -66,12 +66,12 @@ void bootstrap_all(string dir) //Recursively bootstrap all .pike files in dir an
  * @param Name	Name of the constant
  * @param Val	Value of the contant
  */
-void add_gypsum_constant(string name,mixed val) //Adds a constant, similar to add_constant, but allows for inheritance checks.
+void add_gypsum_constant(string name,mixed val)
 {
 	globals[name]=val;
 	if (globalusage[name])
 	{
-		foreach (globalusage[name],string cur) if (!has_value(needupdate,cur)) needupdate+=({cur});
+		foreach (globalusage[name],string cur) if (!has_value(needupdate,cur)) needupdate+=({cur}); //Note: Does not use set operations; order is preserved.
 	}
 	globalusage[name]=({}); //Empty out the list, if there is one.
 }

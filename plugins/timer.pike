@@ -18,9 +18,9 @@ int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stab
 /**
  * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
  *
- * @param 	delay 	the integet to be formated
- * @param 	base	a value that determines if the integet is formated to sec, min, hour
- * @return 	string	the formated integer value	
+ * @param 	delay 	the integer to be formated
+ * @param 	base	a value that determines if the integer is formatted to sec, min, hour
+ * @return 	string	the formatted integer value
  */
 string format_time(int delay,int base)
 {
@@ -106,8 +106,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 }
 
 /**
- * Updates the window with and in doing so refeshes the timer values.
- *
+ * Update display of countdowns
  */
 void showtimes()
 {
@@ -118,7 +117,6 @@ void showtimes()
 
 /**
  * Creates the timer labels to be displayed on the timer window
- *
  */
 void makelabels()
 {

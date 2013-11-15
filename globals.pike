@@ -1,8 +1,5 @@
 /**
- * Creates an instance of this class and establishes the global collections.
- *
- * @param	n		Unused
- * @param	which	constants to be added (space delimated)
+ * Load up the globals and apply those which need changing
  */
 void create(string n,string which)
 {
@@ -70,8 +67,7 @@ object persist=class(string savefn)
 	int saving;
 
 	/**
-	 * creates an instance of this class.
-	 *
+	 * Load and decode the savefile
 	 */
 	void create()
 	{
@@ -81,27 +77,22 @@ object persist=class(string savefn)
 			if (mappingp(decode)) data=decode;
 		};
 	}
+
+	/**
+	 * Retrievals and mutations work as normal; mutations trigger a save().
+	 */
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
 		if (!saving) {saving=1; call_out(save,0);}
 		return data[idx]=val;
 	}
-	
-	/**
-	 * 
-	 *
-	 */
 	mixed _m_delete(string idx)
 	{
 		if (!saving) {saving=1; call_out(save,0);}
 		return m_delete(data,idx);
 	}
-	
-	/**
-	 * 
-	 *
-	 */
+
 	void save()
 	{
 		saving=0;

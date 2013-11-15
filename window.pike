@@ -63,11 +63,10 @@ mapping(string:mixed) subwindow(string txt)
 }
 
 /**
- * Returns a description of the font
+ * Get a suitable Pango font for a particular category. Will cache based on font name.
  *
  * @param	category	the category of font for which to collect the description
- *
- * @return	PangoFontDescritpion	the fonts description
+ * @return	PangoFontDescription	Font object suitable for GTK2
  */
 GTK2.PangoFontDescription getfont(string category)
 {
@@ -76,9 +75,9 @@ GTK2.PangoFontDescription getfont(string category)
 }
 
 /**
- * Sets the subwindow fonts, and the font line's dimensions.
+ * Set/update fonts and font metrics
  *
- * @param	subw	the subwindow for which to set the font and line deminsions
+ * @param subw Current subwindow
  */
 void setfonts(mapping(string:mixed) subw)
 {
@@ -90,9 +89,9 @@ void setfonts(mapping(string:mixed) subw)
 
 
 /**
- * Establishes event handlers for all window's events
+ * (Re)establish event handlers
  *
- * @param subw	The subwindow for which to connect the event handlers.
+ * @param subw Current subwindow
  */
 void subwsignals(mapping(string:mixed) subw)
 {
@@ -114,7 +113,7 @@ void subwsignals(mapping(string:mixed) subw)
 }
 
 /**
- *
+ * Update the scroll bar's range
  */
 void scrchange(object self,mapping subw)
 {
@@ -223,7 +222,7 @@ void mousemove(object self,object ev,mapping subw)
 }
 
 /**
- *
+ * Add a line of output (anything other than a prompt)
  */
 void say(string|array msg,mapping|void subw)
 {
@@ -272,7 +271,7 @@ void say(string|array msg,mapping|void subw)
 }
 
 /**
- *
+ * Connect to a world
  */
 void connect(mapping info,mapping|void subw)
 {
@@ -503,17 +502,13 @@ int enterpressed(mapping subw)
 }
 
 /**
- *
+ * Engage/disengage password mode
  */
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
-
-/**
- *
- */
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
 /**
- *
+ * Attempt to reconnect to the last-used world
  */
 string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
@@ -796,13 +791,10 @@ GTK2.MenuItem menuitem(mixed content,function event)
 	return ret;
 }
 
-/**
- *
- */
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
 
 /**
- *
+ * COMPAT_SIGNAL bouncer
  */
 int enterpressed_glo(object self)
 {
@@ -823,9 +815,6 @@ int switchpage(object|mapping subw)
 }
 
 mapping(string:int) pos;
-/**
- *
- */
 void configevent(object self,object ev)
 {
 	#if constant(COMPAT_SIGNAL)
@@ -835,9 +824,6 @@ void configevent(object self,object ev)
 	pos=self->get_position(); //Will return x and y
 }
 
-/**
- *
- */
 void savepos()
 {
 	mapping sz=mainwindow->get_size();

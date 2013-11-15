@@ -27,8 +27,8 @@ void create(string name)
 /**
  * Handles a block of text after ANSI processing.
  *
- * @param conn the current connection
- * @param data that data processed via ANSI
+ * @param conn Current connection
+ * @param data Bytes from socket, with newlines separating lines
  */
 void textread(mapping conn,string data)
 {
@@ -58,8 +58,8 @@ void textread(mapping conn,string data)
 /**
  * Handles a block of text after TELNET processing.
  *
- * @param conn The current connection
- * @param data The data after telnet processing
+ * @param conn Current connection
+ * @param data Bytes from socket, with ANSI codes marking colors (assumed now to be fully UTF-8 encoded)
  */
 void ansiread(mapping conn,string data)
 {
@@ -96,8 +96,8 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
 /**
  * Socket read callback. Handles TELNET protocol, then passes actual socket text along to ansiread().
  *
- * @param conn The current connection
- * @param data The data recv from the socket
+ * @param conn Current connection
+ * @param data Raw bytes received from the socket (note, assumed to be UTF-8 encoded except for TELNET codes)
  */
 void sockread(mapping conn,string data)
 {
@@ -154,8 +154,7 @@ void sockread(mapping conn,string data)
 }
 
 /**
- * Name: 	dohooks
- * Purpose:	
+ * Execute all registered plugin outputhooks
  */
 int dohooks(mapping conn,string line)
 {
@@ -166,7 +165,7 @@ int dohooks(mapping conn,string line)
 /**
  * Closes the socket connection for the provided connection.
  *
- * @param Conn The connection for which the socket should be closed.
+ * @param conn Current connection
  */
 int sockclosed(mapping conn)
 {
@@ -177,10 +176,9 @@ int sockclosed(mapping conn)
 }
 
 /**
- * Writes the data to socket, then if successful clears the data buffer. (Writeme is a global buffer)
+ * Write buffered socket text as much as possible
  *
- * @param conn	The connection holding the socket to which to write the data.
- * 
+ * @param conn Current connection
  */
 void sockwrite(mapping conn)
 {
@@ -189,9 +187,9 @@ void sockwrite(mapping conn)
 }
 
 /**
- * Wrapper method for writing a string value to the provided connection's socket.
+ * Buffered write to socket
  *
- * @param conn	The connection and socket to which to write the string data.
+ * @param conn Current connection
  * @param data The data to be written to the socket.
  */
 void write(mapping conn,string data)
@@ -208,7 +206,7 @@ void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
 /**
  * Callback for when a connection is successfully established.
  *
- * @param conn Mapping containing the connection information 
+ * @param conn Current connection
  */
 void connected(mapping conn)
 {
@@ -221,7 +219,7 @@ void connected(mapping conn)
 /**
  * Callback for when the connection fails. Displays the disconnection error details.
  *
- * @param conn Mappings detailing the connection information for the world whose connection failed 
+ * @param conn Current connection
  */
 void connfailed(mapping conn)
 {
@@ -232,9 +230,9 @@ void connfailed(mapping conn)
 }
 
 /**
- * Sends a keep telent keep alive packet over the provided connection.
+ * Sends a telnet keep alive packet.
  *
- * @param conn The connection over which to send the keep alive packet.
+ * @param conn Current connection
  */
 void ka(mapping conn)
 {
@@ -245,7 +243,7 @@ void ka(mapping conn)
 /**
  * Establishes a connection with with the provided world and links it to a display
  *
- * @param display 	The display to which the connection should  be linked
+ * @param display 	The display (subwindow) to which the connection should be linked
  * @param info	  	The information about the world to which the connection should be established
  * @return mapping	Returns a mapping detailing the connection
  */
