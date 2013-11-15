@@ -253,7 +253,9 @@ void say(string|array msg,mapping|void subw)
 		{
 			int wrappos=end;
 			while (wrappos && part[wrappos]!=' ') --wrappos;
-			if (!wrappos && !pos) wrappos=wrap; //If there are no spaces, break at the color change (if there's text before it), or just break where there's no space.
+			//If there are no spaces, break at the color change (if there's text before it), or just break where there's no space.
+			//Note that this will refuse to break at or within the wrapindent, on subsequent lines.
+			if ((!wrappos || (sizeof(lines) && wrappos<=sizeof(wrapindent))) && !pos) wrappos=wrap;
 			cur[-1]=part[..wrappos-1];
 			msg=({msg[0]+([]),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
 		}
