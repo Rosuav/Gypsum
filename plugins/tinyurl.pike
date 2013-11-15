@@ -125,6 +125,13 @@ int inputhook(string line,mapping(string:mixed) subw)
 	return 1; //Suppress the line (for now)
 }
 
+/**
+ * Takes a url and processes it through tinyurl, then saves and displays the tiny url.
+ *
+ * @param self		The window in which the url was collected
+ * @param response	The user's response to whether the url should be converted
+ * @param args		A collection of arguments, such as url before, portol to be used, url, url after conversion, and sub window.
+ */
 void tinify(object self,int response,array args)
 {
 	[string before,string protocol,string url,string after,mapping(string:mixed) subw]=args;

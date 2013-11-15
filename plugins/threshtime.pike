@@ -19,6 +19,7 @@ int halfsync_hour,halfsync_min;
 int halfsync_day,halfsync_year;
 int halfsync_rl=0;
 string halfsync_monname;
+
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	//Look for Timepiece of Phzult or Chronos's clock
@@ -70,6 +71,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
+/**
+ * Refreshes the time window as to maintain updated game time.
+ *
+ */
 void showtime()
 {
 	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);

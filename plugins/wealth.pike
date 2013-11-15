@@ -1,6 +1,10 @@
 inherit command;
 inherit hook;
 
+/**
+ * The strings for which to monitor.
+ *
+ */
 mapping(string:array) monitors=([
 	//Monitors for Threshold RPG
 	"wealth":({" Total Wealth: %[0-9,]","%9s Prv: %s"}),

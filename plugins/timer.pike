@@ -15,7 +15,13 @@ mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 
 int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
 
-//Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
+/**
+ * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
+ *
+ * @param 	delay 	the integet to be formated
+ * @param 	base	a value that determines if the integet is formated to sec, min, hour
+ * @return 	string	the formated integer value	
+ */
 string format_time(int delay,int base)
 {
 	delay-=delay%resolution;
@@ -28,11 +34,13 @@ string format_time(int delay,int base)
 	}
 }
 
+
 class config
 {
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
 	void create() {items=timers; ::create("plugins/timer"); showwindow();}
+
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
@@ -48,11 +56,13 @@ class config
 				win->trigger=GTK2.TextView((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);
 	}
+
 	void load_content(mapping(string:mixed) info)
 	{
 		win->time->set_text(format_time(info->time,info->time));
 		win->trigger->get_buffer()->set_text(info->trigger || "");
 	}
+
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
@@ -95,6 +105,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
+/**
+ * Updates the window with and in doing so refeshes the timer values.
+ *
+ */
 void showtimes()
 {
 	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);
@@ -102,6 +116,10 @@ void showtimes()
 		win->timers[i]->set_text(format_time(timers[kwd]->next-time(1),timers[kwd]->time));
 }
 
+/**
+ * Creates the timer labels to be displayed on the timer window
+ *
+ */
 void makelabels()
 {
 	win->display->resize(sizeof(timers)+1,2,0);

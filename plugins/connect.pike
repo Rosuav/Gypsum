@@ -1,14 +1,24 @@
 inherit command;
 inherit configdlg;
 
+/**
+ * List of worlds aviable by default.
+ */
 mapping(string:mapping(string:mixed)) worlds=persist["worlds"] || ([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
 ]);
+
 mapping(string:mapping(string:mixed)) items=worlds;
 mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);
 string actionbtn="Save and C_onnect";
 
+/**
+ * Displays the connection window dialog or attempts a connection to a world.
+ *
+ * @param 	param The world to which to connect, or dlg option.
+ * @return 	always returns 1
+ */
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg")
@@ -28,8 +38,19 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
+/**
+ * 
+ *
+ */
 int dc(string param,mapping(string:mixed) subw) {G->G->window->connect(0,subw); return 1;}
 
+/**
+ * List all the worlds in the global list to the provided sub window
+ *
+ * @param param Unused
+ * @param subw	The window in which to print the world list.
+ * @return 		always returns 1
+ */
 int listworlds(string param,mapping(string:mixed) subw)
 {
 	say("%% The following worlds are recognized:",subw);

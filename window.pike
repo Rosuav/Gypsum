@@ -62,12 +62,24 @@ mapping(string:mixed) subwindow(string txt)
 	return subw;
 }
 
+/**
+ * Returns a description of the font
+ *
+ * @param	category	the category of font for which to collect the description
+ *
+ * @return	PangoFontDescritpion	the fonts description
+ */
 GTK2.PangoFontDescription getfont(string category)
 {
 	string fontname=fonts[category]->name;
 	return fontdesc[fontname] || (fontdesc[fontname]=GTK2.PangoFontDescription(fontname));
 }
 
+/**
+ * Sets the subwindow fonts, and the font line's dimensions.
+ *
+ * @param	subw	the subwindow for which to set the font and line deminsions
+ */
 void setfonts(mapping(string:mixed) subw)
 {
 	subw->display->modify_font(getfont("display"));
@@ -76,7 +88,12 @@ void setfonts(mapping(string:mixed) subw)
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 }
 
-//Load up the new signals and expire all the old ones
+
+/**
+ * Establishes event handlers for all window's events
+ *
+ * @param subw	The subwindow for which to connect the event handlers.
+ */
 void subwsignals(mapping(string:mixed) subw)
 {
 	subw->signals=({
@@ -96,6 +113,9 @@ void subwsignals(mapping(string:mixed) subw)
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
+/**
+ *
+ */
 void scrchange(object self,mapping subw)
 {
 	float upper=self->get_property("upper");
@@ -112,6 +132,9 @@ void scrchange(object self,mapping subw)
 //Depends on the current scr->pagesize.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
+/**
+ *
+ */
 array(int) point_to_char(mapping subw,int x,int y)
 {
 	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
@@ -126,11 +149,18 @@ array(int) point_to_char(mapping subw,int x,int y)
 }
 
 int selstartline=-1,selstartcol,selendline,selendcol;
+/**
+ *
+ */
 void mousedown(object self,object ev,mapping subw)
 {
 	[selstartline,selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	selendline=selstartline; selendcol=selstartcol;
 }
+
+/**
+ *
+ */
 void mouseup(object self,object ev,mapping subw)
 {
 	if (selstartline==-1) return;
@@ -161,6 +191,10 @@ void mouseup(object self,object ev,mapping subw)
 	selstartline=-1;
 	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content,sizeof(content));
 }
+
+/**
+ *
+ */
 void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
@@ -188,6 +222,9 @@ void mousemove(object self,object ev,mapping subw)
 	}
 }
 
+/**
+ *
+ */
 void say(string|array msg,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -234,6 +271,9 @@ void say(string|array msg,mapping|void subw)
 	redraw(subw);
 }
 
+/**
+ *
+ */
 void connect(mapping info,mapping|void subw)
 {
 	if (!subw) subw=tabs[notebook->get_current_page()];
@@ -249,6 +289,9 @@ void connect(mapping info,mapping|void subw)
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
 }
 
+/**
+ *
+ */
 void redraw(mapping subw)
 {
 	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
@@ -264,6 +307,9 @@ object mkcolor(int fg,int bg)
 }
 
 //Paint one piece of text at (x,y), returns the x for the next text.
+/**
+ *
+ */
 int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return x;
@@ -281,6 +327,9 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
+/**
+ *
+ */
 void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColor|string) line,int y,int hlstart,int hlend)
 {
 	int x=3;
@@ -306,6 +355,10 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColo
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
 }
+
+/**
+ *
+ */
 int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
@@ -333,12 +386,18 @@ int paint(object self,object ev,mapping subw)
 	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
 
+/**
+ *
+ */
 void settext(mapping subw,string text)
 {
 	subw->ef->set_text(text);
 	subw->ef->set_position(sizeof(text));
 }
 
+/**
+ *
+ */
 int keypress(object self,array|object ev,mapping subw)
 {
 	if (arrayp(ev)) ev=ev[0];
@@ -409,6 +468,10 @@ int keypress(object self,array|object ev,mapping subw)
 		#endif
 	}
 }
+
+/**
+ *
+ */
 int enterpressed(mapping subw)
 {
 	string cmd=subw->ef->get_text(); subw->ef->set_text("");
@@ -438,13 +501,30 @@ int enterpressed(mapping subw)
 	if (subw->connection) G->G->connection->write(subw->connection,string_to_utf8(cmd)+"\r\n");
 	return 1;
 }
+
+/**
+ *
+ */
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
+
+/**
+ *
+ */
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
+/**
+ *
+ */
 string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
+/**
+ *
+ */
 void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
 
+/**
+ *
+ */
 void closetab()
 {
 	if (sizeof(tabs)<2) return;
@@ -472,6 +552,7 @@ class advoptions
 	constant allow_rename=0;
 	constant allow_delete=0;
 	mapping(string:mixed) windowprops=(["title":"Advanced Options"]);
+
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
@@ -480,12 +561,14 @@ class advoptions
 			->pack_end(win->desc=GTK2.Label((["xalign":0.0,"yalign":0.0]))->set_size_request(300,150)->set_line_wrap(1),1,1,0)
 		;
 	}
+
 	void save_content(mapping(string:mixed) info)
 	{
 		mixed value=win->value->get_text();
 		if (info->type=="int") value=(int)value;
 		persist[info->path]=value;
 	}
+
 	void load_content(mapping(string:mixed) info)
 	{
 		win->value->set_text((string)(persist[info->path] || info->default));
@@ -498,6 +581,7 @@ class channelsdlg
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=channels;
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
+
 	GTK2.Widget make_content()
 	{
 		return GTK2.Table(2,2,0)
@@ -514,11 +598,13 @@ class channelsdlg
 			,1,2,1,2)
 		;
 	}
+
 	void save_content(mapping(string:mixed) info)
 	{
 		foreach (({"r","g","b"}),string c) info[c]=(int)win[c]->get_text();
 		persist["color/channels"]=channels;
 	}
+
 	void load_content(mapping(string:mixed) info)
 	{
 		if (zero_type(info["r"])) info->r=info->g=info->b=255;
@@ -531,6 +617,7 @@ class fontdlg
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=fonts;
 	constant allow_new=0;
+
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,0)
@@ -538,6 +625,7 @@ class fontdlg
 			->add(win->fontsel=GTK2.FontSelection())
 		;
 	}
+
 	void save_content(mapping(string:mixed) info)
 	{
 		string name=win->fontsel->get_font_name();
@@ -549,6 +637,7 @@ class fontdlg
 		redraw(tabs[*]);
 		tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
 	}
+
 	void load_content(mapping(string:mixed) info)
 	{
 		win->fontsel->set_font_name(info->name);
@@ -559,6 +648,7 @@ class aboutdlg
 {
 	inherit window;
 	void create() {::create("help/about");}
+
 	void makewindow()
 	{
 		string ver=gypsum_version();
@@ -574,6 +664,7 @@ Version "+ver+", as far as can be ascertained :)"))
 			->add(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))))
 		);
 	}
+
 	void dosignals()
 	{
 		win->signals=({
@@ -582,6 +673,9 @@ Version "+ver+", as far as can be ascertained :)"))
 	}
 }
 
+/**
+ *
+ */
 void colorcheck(object self,mapping subw)
 {
 	array(int) col=({255,255,255});
@@ -593,11 +687,17 @@ void colorcheck(object self,mapping subw)
 }
 
 //Any reference to this function is by definition a TODO, though this itself isn't.
+/**
+ *
+ */
 void TODO()
 {
 	say("%% Sorry, that function isn't implemented yet.");
 }
 
+/**
+ *
+ */
 void create(string name)
 {
 	if (!G->G->window)
@@ -662,21 +762,33 @@ void create(string name)
 	mainwsignals();
 }
 
+/**
+ *
+ */
 int window_destroy(object self)
 {
 	exit(0);
 }
 
 //Either reconnect, or give the world list.
+/**
+ *
+ */
 void connect_menu(object self)
 {
 	G->G->commands->connect("dlg",tabs[notebook->get_current_page()]);
 }
 
+/**
+ *
+ */
 void disconnect_menu(object self) {connect(0);}
 
 //Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.
 //Note: This should possibly be changed to tie in with mainwsignals() - somehow.
+/**
+ *
+ */
 GTK2.MenuItem menuitem(mixed content,function event)
 {
 	GTK2.MenuItem ret=GTK2.MenuItem(content);
@@ -684,8 +796,14 @@ GTK2.MenuItem menuitem(mixed content,function event)
 	return ret;
 }
 
+/**
+ *
+ */
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
 
+/**
+ *
+ */
 int enterpressed_glo(object self)
 {
 	object focus=mainwindow->get_focus();
@@ -694,6 +812,9 @@ int enterpressed_glo(object self)
 	return enterpressed(tabs[parent->page_num(focus)]);
 }
 
+/**
+ *
+ */
 int switchpage(object|mapping subw)
 {
 	if (objectp(subw)) {call_out(switchpage,0,tabs[notebook->get_current_page()]); return 0;} //Let the signal handler return before actually doing stuff
@@ -702,6 +823,9 @@ int switchpage(object|mapping subw)
 }
 
 mapping(string:int) pos;
+/**
+ *
+ */
 void configevent(object self,object ev)
 {
 	#if constant(COMPAT_SIGNAL)
@@ -711,6 +835,9 @@ void configevent(object self,object ev)
 	pos=self->get_position(); //Will return x and y
 }
 
+/**
+ *
+ */
 void savepos()
 {
 	mapping sz=mainwindow->get_size();
