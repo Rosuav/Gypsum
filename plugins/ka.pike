@@ -2,12 +2,24 @@
 //Does not reset a MUD's idea of your idle time (confirmed with Threshold RPG and Minstrel Hall).
 inherit command;
 
+/**
+ * Instantiates the ka class.
+ *
+ * @param name Name of the class instance.
+ */
 void create(string name)
 {
 	if (!G->G->commands->ka) process(0,0);
 	::create(name);
 }
 
+/**
+ * Updates the keep alive time.
+ *
+ * @param param The time to which to update the keep alive time value
+ * @param subw 	The subwindow whose keepalive time is being updated and the window which all statues messages are displayed
+ * @return int 	1 if the value was successfully updated, zero if it wasn't and instead set back to the default value of 240. 
+ */
 int process(string|void param,mapping(string:mixed) subw)
 {
 	if (!param)

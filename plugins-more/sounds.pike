@@ -13,6 +13,12 @@ inherit hook;
 //noretrigger: If nonzero, this file will not be retriggered if it's already playing.
 mapping(string:mapping) triggers=([]);
 
+/**
+ * Collects and parses a line of output from the provided connection
+ *
+ * @param	line	The line to be parsed
+ * @param	conn	The connection from which the line was collected
+ */
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	foreach (triggers;string text;mapping info) if (has_value(line,text)) catch
@@ -25,6 +31,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 	};
 }
 
+/**
+ * Creates an instance of this class
+ *
+ * @param name	The name for the instance of this class.
+ */
 void create(string name)
 {
 	catch //If errors, no triggers, no problem.

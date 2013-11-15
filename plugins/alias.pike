@@ -3,6 +3,12 @@
 inherit command;
 inherit hook;
 
+/**
+ * Process input from a subwindow to see if the string should be replaced with an alias
+ *
+ * @param param 	the potential string to be replaced
+ * @param subw		the subwindow to which to send the replaced text
+ */
 int process(string param,mapping(string:mixed) subw)
 {
 	mapping(string:string) aliases=persist["aliases/simple"];
@@ -42,6 +48,12 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
+/**
+ * Parses the provided line of text and outputs to the provided subwindow
+ *
+ * @param 	line	the line to be processed
+ * @param 	subw	the subwindow to which to direct all output
+ */
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	mapping(string:string) aliases=persist["aliases/simple"];
@@ -55,4 +67,9 @@ int inputhook(string line,mapping(string:mixed) subw)
 	return 1;
 }
 
+/**
+ * Creates an instance of this class
+ *
+ * @param 	name 	the name of this class instance
+ */
 void create(string name) {::create(name);}
