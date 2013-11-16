@@ -141,6 +141,7 @@ void sockread(mapping conn,string data)
 			{
 				//Prompt! Woot!
 				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
+				conn->curmsg[0]->timestamp=time(1);
 				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 				conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 				iac=iac[1..];

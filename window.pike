@@ -200,7 +200,7 @@ void mousemove(object self,object ev,mapping subw)
 	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
 	catch
 	{
-		mapping meta=subw->lines[line][0];
+		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
 		if (!mappingp(meta)) break;
 		#if constant(System.TM)
 		if (meta->timestamp) txt+="  "+System.TM(meta->timestamp)->strftime(persist["window/timestamp"]||default_ts_fmt); //TODO: Show this in the user's local time rather than UTC
