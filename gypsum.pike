@@ -95,7 +95,7 @@ int main(int argc,array(string) argv)
 	
 	mapping(string:int) compat=([
 		"scroll":(string)GTK2.version()<"\2\26", //Scroll bug - seems to have been fixed somewhere between 2.12 and 2.22 (\2\26 being octal for 2.22)
-		"signal":__REAL_VERSION__<7.9 || __REAL_BUILD__<=5, //Inability to connect 'before' a signal (fixed by Pike commit b29c8c so some 7.9.5 builds will have it and others won't)
+		"signal":__REAL_VERSION__<7.9 || (__REAL_VERSION__==7.9 && __REAL_BUILD__<=5), //Inability to connect 'before' a signal (fixed by Pike commit b29c8c so some 7.9.5 builds will have it and others won't)
 	]);
 	
 	foreach (compat;string kwd;int dflt)
