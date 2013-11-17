@@ -25,6 +25,21 @@ void create(string name)
 }
 
 /**
+ * Convert a stream of 8-bit data into Unicode
+ * May eventually need to be given the conn, and thus be able to negotiate an
+ * encoding with the server; currently tries UTF-8 first, and if that fails,
+ * falls back on Latin-1, statelessly.
+ *
+ * @param bytes Incoming data, 8-bit string
+ * @return string Resulting data, now to be treated as Unicode
+ */
+protected string bytes_to_string(string bytes)
+{
+	catch {return utf8_to_string(bytes);}; //Normal case: Decode as UTF-8
+	return bytes; //Failure case: Decode as Latin-1, which in Pike is the identity function
+}
+
+/**
  * Handles a block of text after ANSI processing.
  *
  * @param conn Current connection
@@ -43,8 +58,8 @@ void textread(mapping conn,string data)
 			//TODO: Beep. (Maybe once for each \7 in the line; maybe not.)
 			line-="\7";
 		}
-		conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]+line);
-		line=utf8_to_string(conn->curline+line);
+		conn->curmsg[-1]+=line;
+		line=conn->curline+line;
 		if (!dohooks(conn,line))
 		{
 			G->G->window->say(conn->curmsg,conn->display);
@@ -59,7 +74,7 @@ void textread(mapping conn,string data)
  * Handles a block of text after TELNET processing.
  *
  * @param conn Current connection
- * @param data Bytes from socket, with ANSI codes marking colors (assumed now to be fully UTF-8 encoded)
+ * @param data Unicode data from socket, with ANSI codes marking colors
  */
 void ansiread(mapping conn,string data)
 {
@@ -80,7 +95,7 @@ void ansiread(mapping conn,string data)
 			case '2': conn->bold=0; break;
 			case ';': break;
 			case 'm':
-				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
+				conn->curmsg[-1]=conn->curmsg[-1];
 				conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
 				ansi=ansi[i+1..];
 				break colorloop;
@@ -105,7 +120,7 @@ void sockread(mapping conn,string data)
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
-		ansiread(conn,data); conn->readbuffer="\xff"+iac;
+		ansiread(conn,bytes_to_string(data)); conn->readbuffer="\xff"+iac;
 		switch (iac[0])
 		{
 			case IAC: data+="\xFF"; iac=iac[1..]; break;
@@ -140,7 +155,7 @@ void sockread(mapping conn,string data)
 			case GA:
 			{
 				//Prompt! Woot!
-				conn->curmsg[-1]=utf8_to_string(conn->curmsg[-1]);
+				conn->curmsg[-1]=bytes_to_string(conn->curmsg[-1]);
 				conn->curmsg[0]->timestamp=time(1);
 				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 				conn->curmsg=({([]),conn->curcolor,conn->curline=""});
@@ -151,7 +166,7 @@ void sockread(mapping conn,string data)
 		}
 		conn->readbuffer=iac;
 	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
-	ansiread(conn,conn->readbuffer); conn->readbuffer="";
+	ansiread(conn,bytes_to_string(conn->readbuffer)); conn->readbuffer="";
 }
 
 /**
