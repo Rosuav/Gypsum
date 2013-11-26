@@ -370,21 +370,18 @@ int paint(object self,object ev,mapping subw)
 	int ssl=selstartline,ssc=selstartcol,sel=selendline,sec=selendcol;
 	if (ssl==-1) sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
-	foreach (subw->lines+({subw->prompt});int l;array(mapping|GTK2.GdkColor|string) line)
+	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
+	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
 	{
-		if (y>=start && y<=end)
+		array(mapping|GTK2.GdkColor|string) line=(l==sizeof(subw->lines)?subw->prompt:subw->lines[l]);
+		int hlstart=-1,hlend=-1;
+		if (l>=ssl && l<=sel)
 		{
-			int hlstart=-1,hlend=-1;
-			if (l>=ssl && l<=sel)
-			{
-				if (l==ssl) hlstart=ssc;
-				if (l==sel) hlend=sec-1; else hlend=1<<30;
-			}
-			paintline(display,gc,line,y,hlstart,hlend);
+			if (l==ssl) hlstart=ssc;
+			if (l==sel) hlend=sec-1; else hlend=1<<30;
 		}
-		y+=subw->lineheight;
+		paintline(display,gc,line,y+l*subw->lineheight,hlstart,hlend);
 	}
-	if (y!=subw->totheight) display->set_size_request(-1,subw->totheight=y);
 }
 
 /**
