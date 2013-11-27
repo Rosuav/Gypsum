@@ -49,8 +49,8 @@ class config
 				->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
 				->attach(GTK2.Label((["label":"Time","xalign":1.0])),0,1,2,3,GTK2.Fill,GTK2.Fill,5,0)
 				->attach_defaults(win->time=GTK2.Entry(),1,2,2,3)
-				/*->attach(GTK2.Label((["label":"Options","xalign":1.0])),0,1,3,4,GTK2.Fill,GTK2.Fill,5,0)
-				->attach_defaults(win->some_checkbox=GTK2.CheckButton(),1,2,3,4)*/
+				//->attach(GTK2.Label((["label":"Options","xalign":1.0])),0,1,3,4,GTK2.Fill,GTK2.Fill,5,0)
+				->attach_defaults(win->present=GTK2.CheckButton("Present when done"),1,2,3,4)
 			,0,0,0)
 			->pack_start(GTK2.Frame("Trigger text")->add(
 				win->trigger=GTK2.TextView((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
@@ -61,12 +61,14 @@ class config
 	{
 		win->time->set_text(format_time(info->time,info->time));
 		win->trigger->get_buffer()->set_text(info->trigger || "");
+		win->present->set_active(info->present);
 	}
 
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
 		info->trigger=get_text(win->trigger);
+		info->present=win->present->get_active();
 		persist["timer/timers"]=timers;
 		makelabels();
 	}
@@ -112,7 +114,12 @@ void showtimes()
 {
 	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);
 	foreach (sort(indices(timers));int i;string kwd)
-		win->timers[i]->set_text(format_time(timers[kwd]->next-time(1),timers[kwd]->time));
+	{
+		mapping tm=timers[kwd]; if (!tm->next) continue;
+		string time=format_time(tm->next-time(1),tm->time);
+		win->timers[i]->set_text(time);
+		if (time=="") {tm->next=0; if (tm->present) G->G->window->mainwindow->present();}
+	}
 }
 
 /**
