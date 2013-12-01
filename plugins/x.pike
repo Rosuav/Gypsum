@@ -38,7 +38,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 	int nowfinished=subw->hilfe->state->finishedp();
 	if (wasfinished==nowfinished) return 1;
 	if (nowfinished) subw->prompt=m_delete(subw,"hilfe_saved_prompt");
-	else {subw->hilfe_saved_prompt=subw->prompt; subw->prompt=({G->G->window->colors[7],"hilfe> "});}
+	else {subw->hilfe_saved_prompt=subw->prompt; subw->prompt=({([]),G->G->window->colors[7],"hilfe> "});}
 	return 1;
 }
 
