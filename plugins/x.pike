@@ -21,7 +21,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 			//Check for the special "calculator notation"
 			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
 			{
-				int val=compile_string("int _() {return "+expr+";}")()->_();
+				int val=compile_string("int _() {return "+expr+";}",0,this)()->_();
 				if (before) G->G->connection->write(subw->connection,before+val+(after||"")+"\r\n"); //Command with embedded expression
 				else say("%% "+val,subw); //"calc" command
 				return 1;
