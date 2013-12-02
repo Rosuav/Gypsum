@@ -82,12 +82,11 @@ int process(string param,mapping(string:mixed) subw)
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
-	if (sscanf(line,"%sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",string prefix,int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
+	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
 	{
 		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
 		int t=time(1);
-		int ofs=22-(t-regenclick)%22;
-		if (ofs==22 && (prefix=="" || has_suffix(prefix,": "))) ofs=0; //When in battle, the spam comes up before regen kicks in. So in the precise tick when the regen happens, Timer will show regen times 22 seconds too high.
+		int ofs=(regenclick-t)%22;
 		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
 		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
 		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
