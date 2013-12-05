@@ -270,6 +270,7 @@ mapping connect(object display,mapping info)
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
+	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike patch not in trunk as of 20131206)
 	conn->sock->set_nonblocking(0,connected,connfailed);
 	conn->sock->connect(conn->host,conn->port);
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
