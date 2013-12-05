@@ -17,6 +17,7 @@ GTK2.Button defbutton;
 #endif
 GTK2.Label statusbar;
 array(object) signals;
+int paused; //TODO: Show this visually somewhere, not just in hover text
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -124,7 +125,7 @@ void scrchange(object self,mapping subw)
 	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
-	self->set_value(upper-self->get_property("page size"));
+	if (!paused) self->set_value(upper-self->get_property("page size"));
 }
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
@@ -198,6 +199,7 @@ void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
+	if (paused) txt+=" <PAUSED>";
 	catch
 	{
 		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
@@ -448,12 +450,16 @@ int keypress(object self,array|object ev,mapping subw)
 			object scr=subw->scr;
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
-				//Snap down to the bottom. Currently this is done by scrchange so let's call that;
-				//but later on, that might change, so the code will need to be transferred into here.
-				scrchange(scr,subw);
+				//Snap down to the bottom.
+				self->set_value(scr->get_property("upper")-scr->get_property("page size"));
 				return 1;
 			}
 			scr->set_value(scr->get_value()+scr->get_property("page size"));
+			return 1;
+		}
+		case 0xFF13: //Pause
+		{
+			paused=!paused;
 			return 1;
 		}
 		#if constant(DEBUG)
