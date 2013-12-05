@@ -445,7 +445,7 @@ int keypress(object self,array|object ev,mapping subw)
 			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
 			return 1;
 		}
-		case 0xFF56: //PgUp
+		case 0xFF56: //PgDn
 		{
 			object scr=subw->scr;
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
