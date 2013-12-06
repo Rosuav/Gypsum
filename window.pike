@@ -520,19 +520,36 @@ string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page(
 /**
  *
  */
-void addtab() {subwindow("Tab "+(1+sizeof(tabs)));}
+void addtab() {subwindow("New tab");}
 
 /**
- *
+ * Actually close a tab - that is, assume the user has confirmed the closing or doesn't need to
  */
-void closetab()
+void real_closetab(int removeme)
 {
-	if (sizeof(tabs)<2) return;
-	int removeme=notebook->get_current_page();
+	if (sizeof(tabs)<2) addtab();
 	tabs[removeme]->signals=0; connect(0,tabs[removeme]);
 	tabs=tabs[..removeme-1]+tabs[removeme+1..];
 	notebook->remove_page(removeme);
 	if (!sizeof(tabs)) addtab();
+}
+
+void closetab_response(object self,int response,int removeme)
+{
+	self->destroy();
+	if (response==GTK2.RESPONSE_OK) real_closetab(removeme);
+}
+
+/**
+ * First-try at closing a tab. May call real_closetab() or raise a prompt.
+ */
+void closetab()
+{
+	int removeme=notebook->get_current_page();
+	if (!tabs[removeme]->connection) {real_closetab(removeme); return;}
+	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have an active connection, really close this tab?",mainwindow)
+		->show()
+		->signal_connect("response",closetab_response,removeme);
 }
 
 class advoptions
