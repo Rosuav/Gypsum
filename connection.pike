@@ -36,7 +36,12 @@ void create(string name)
 protected string bytes_to_string(string bytes)
 {
 	catch {return utf8_to_string(bytes);}; //Normal case: Decode as UTF-8
-	return bytes; //Failure case: Decode as Latin-1, which in Pike is the identity function
+	//Failure case: Decode as Latin-1 with a bit of CP-1252.
+	//Use Latin-1 (the decoder for which in Pike is the identity function), but
+	//replace a handful of byte values that have no meaning in Unicode anyway.
+	//Seems to work well for Threshold RPG, and isn't incompatible with the
+	//normal handling of UTF-8.
+	return replace(bytes,({"\x91","\x92","\x93","\x94"}),({"\u2018","\u2019","\u201c","\u201d"}));
 }
 
 /**
