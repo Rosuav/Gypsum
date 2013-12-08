@@ -739,7 +739,7 @@ void create(string name)
 					->add(menuitem("Close tab",bouncer("window","closetab"))->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("_Connect",bouncer("window","connect_menu")))
 					->add(menuitem("_Disconnect",bouncer("window","disconnect_menu")))
-					->add(menuitem("E_xit",bouncer("window","window_destroy")))
+					->add(menuitem("E_xit",bouncer("window","window_close")))
 				))
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
 					->add(menuitem("_Font",bouncer("window","fontdlg")))
@@ -782,9 +782,22 @@ void create(string name)
 /**
  *
  */
-int window_destroy(object self)
+int window_destroy() {exit(0);}
+
+void closewindow_response(object self,int response)
 {
-	exit(0);
+	self->destroy();
+	if (response==GTK2.RESPONSE_OK) exit(0);
+}
+
+int window_close()
+{
+	int conns=sizeof(tabs->connection-({0})); //Number of active connections
+	if (!conns) {exit(0); return 1;}
+	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have "+conns+" active connection(s), really quit?",mainwindow)
+		->show()
+		->signal_connect("response",closewindow_response);
+	return 1;
 }
 
 //Either reconnect, or give the world list.
@@ -857,7 +870,7 @@ void mainwsignals()
 {
 	signals=({
 		gtksignal(mainwindow,"destroy",window_destroy),
-		gtksignal(mainwindow,"delete_event",window_destroy),
+		gtksignal(mainwindow,"delete_event",window_close),
 		gtksignal(notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(defbutton,"clicked",enterpressed_glo),
