@@ -18,6 +18,7 @@ GTK2.Button defbutton;
 GTK2.Label statusbar;
 array(object) signals;
 int paused; //TODO: Show this visually somewhere, not just in hover text
+mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -735,21 +736,21 @@ void create(string name)
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
-					->add(menuitem("_New Tab",bouncer("window","addtab"))->add_accelerator("activate",accel,'n',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
-					->add(menuitem("Close tab",bouncer("window","closetab"))->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
-					->add(menuitem("_Connect",bouncer("window","connect_menu")))
-					->add(menuitem("_Disconnect",bouncer("window","disconnect_menu")))
-					->add(menuitem("E_xit",bouncer("window","window_close")))
+					->add(menuitem("_New Tab","addtab")->add_accelerator("activate",accel,'n',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
+					->add(menuitem("Close tab","closetab")->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
+					->add(menuitem("_Connect","connect_menu"))
+					->add(menuitem("_Disconnect","disconnect_menu"))
+					->add(menuitem("E_xit","window_close"))
 				))
 				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
-					->add(menuitem("_Font",bouncer("window","fontdlg")))
-					->add(menuitem("_Colors",bouncer("window","channelsdlg")))
-					->add(menuitem("_Search (TODO)",TODO))
-					->add(menuitem("_Keyboard (TODO)",TODO))
-					->add(menuitem("Ad_vanced options",bouncer("window","advoptions")))
+					->add(menuitem("_Font","fontdlg"))
+					->add(menuitem("_Colors","channelsdlg"))
+					->add(menuitem("_Search","search"))
+					->add(menuitem("_Keyboard","keyboard"))
+					->add(menuitem("Ad_vanced options","advoptions"))
 				))
 				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
-					->add(menuitem("_About",bouncer("window","aboutdlg")))
+					->add(menuitem("_About","aboutdlg"))
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
@@ -773,6 +774,7 @@ void create(string name)
 		#endif
 		tabs=other->tabs; statusbar=other->statusbar;
 		if (other->signals) other->signals=0; //Clear them out, just in case.
+		if (other->menu) menu=other->menu;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	G->G->window=this;
@@ -814,15 +816,13 @@ void connect_menu(object self)
  */
 void disconnect_menu(object self) {connect(0);}
 
-//Helper function to create a menu item and give it an event. Useful because signal_connect doesn't return self.
-//Note: This should possibly be changed to tie in with mainwsignals() - somehow.
 /**
- *
+ * Create a menu item and retain it for subsequent signal binding in mainwsignals()
  */
-GTK2.MenuItem menuitem(mixed content,function event)
+GTK2.MenuItem menuitem(mixed content,string func)
 {
 	GTK2.MenuItem ret=GTK2.MenuItem(content);
-	ret->signal_connect("activate",event);
+	menu[ret]=func;
 	return ret;
 }
 
@@ -879,4 +879,6 @@ void mainwsignals()
 		gtksignal(mainwindow,"configure_event",configevent,0,UNDEFINED,1),
 		#endif
 	});
+	foreach (menu;GTK2.MenuItem widget;string func)
+		signals+=({gtksignal(widget,"activate",this[func] || TODO)}); //If the function can't be found, put it through to TODO(). This is not itself a TODO.
 }
