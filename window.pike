@@ -571,6 +571,7 @@ class advoptions
 	constant allow_rename=0;
 	constant allow_delete=0;
 	mapping(string:mixed) windowprops=(["title":"Advanced Options"]);
+	void create() {::create("advoptions");}
 
 	GTK2.Widget make_content()
 	{
@@ -600,6 +601,7 @@ class channelsdlg
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=channels;
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
+	void create() {::create("channelsdlg");}
 
 	GTK2.Widget make_content()
 	{
@@ -636,6 +638,7 @@ class fontdlg
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=fonts;
 	constant allow_new=0;
+	void create() {::create("fontdlg");}
 
 	GTK2.Widget make_content()
 	{
