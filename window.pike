@@ -451,8 +451,9 @@ int keypress(object self,array|object ev,mapping subw)
 			object scr=subw->scr;
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
-				//Snap down to the bottom.
+				//Snap down to the bottom and unpause.
 				scr->set_value(scr->get_property("upper")-scr->get_property("page size"));
+				paused=0;
 				return 1;
 			}
 			scr->set_value(scr->get_value()+scr->get_property("page size"));
