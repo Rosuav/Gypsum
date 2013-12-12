@@ -1,6 +1,6 @@
 inherit hook;
-//inherit command; //TODO: Time conversions (another window, or a command, or both)
-inherit window;
+//inherit command; //TODO: Time conversions (a window, or a command, or both)
+inherit statustext;
 
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
@@ -76,7 +76,7 @@ int outputhook(string line,mapping(string:mixed) conn)
  */
 void showtime()
 {
-	remove_call_out(win->ticker); win->ticker=call_out(this_function,1);
+	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
 	int th_year,th_mon,th_day,th_hour,th_min;
 	int threshtime=persist["threshtime/sync_th"]+(time()-persist["threshtime/sync_rl"])/5;
 	th_min=threshtime%60; threshtime/=60; //Need to optimize this somehow. Each is being rendered as two duplicate divisions.
@@ -84,44 +84,7 @@ void showtime()
 	th_day=threshtime%30; threshtime/=30;
 	th_mon=threshtime%12; threshtime/=12;
 	th_year=threshtime;
-	win->display->set_text(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
-}
-
-void makewindow()
-{
-	win->mainwindow=GTK2.Window((["title":"Threshold time","transient-for":G->G->window->mainwindow]))
-		->add(win->display=GTK2.Label());
-	showtime();
-	int x,y; catch {[x,y]=persist["threshtime/winpos"];}; //If errors, let 'em sit at the defaults (0,0 since I haven't set any other default)
-	win->x=1; call_out(lambda() {m_delete(win,"x");},1);
-	win->mainwindow->move(x,y);
-}
-
-void configevent(object self,object ev)
-{
-	if (ev->type!="configure") return;
-	if (!has_index(win,"x")) call_out(savepos,2);
-	mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
-}
-
-void savepos()
-{
-	persist["threshtime/winpos"]=({m_delete(win,"x"),m_delete(win,"y")});
-}
-
-void mousedown(object self,object ev)
-{
-	self->begin_move_drag(ev->button,ev->x_root,ev->y_root,ev->time);
-}
-
-void dosignals()
-{
-	win->signals=({
-		gtksignal(win->mainwindow,"event",configevent),
-		gtksignal(win->mainwindow,"button_press_event",mousedown),
-		gtksignal(win->mainwindow,"delete_event",hidewindow),
-	});
-	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
+	setstatus(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
 }
 
 void create(string name)
