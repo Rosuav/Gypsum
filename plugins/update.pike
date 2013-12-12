@@ -66,7 +66,7 @@ void build(string param)
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	if (!file_stat(param)) {say("File not found: "+param+"\n"); return;}
 	say("%% Compiling "+param+"...");
-	program compiled=compile_file(param,this);
+	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say("%% Compilation failed.\n"); return 0;}
 	say("%% Compiled.");
 	if (has_prefix(param,"globals.pike")) compiled(param,param2);
