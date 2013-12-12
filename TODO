@@ -1,6 +1,8 @@
 * [20111129] Gypsum has now been used in combat.
-* Logging to file
 * Clickable URLs
 * Client-side aliases
 * Multi-line paste
 * /log command to control logging (currently only auto-log works)
+* Editor plugin. Designed for live editing rather than off-line work - get a real
+editor for that. MUST multiplex perfectly.
+* Search facility. May be worth retaining text-only form of line??
