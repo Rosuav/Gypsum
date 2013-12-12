@@ -27,9 +27,13 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 int process(string param,mapping(string:mixed) subw)
 {
-	foreach (indices(monitors),string kwd)
-		if (persist["wealth/first_"+kwd]) say(sprintf("%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
+	foreach (indices(monitors),string kwd) if (persist["wealth/first_"+kwd])
+	{
+		say(sprintf("%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
 			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" ")),subw);
+		if (param=="reset") persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
+	}
+	if (param=="reset") say("%% Stats reset to zero.",subw);
 	return 1;
 }
 
