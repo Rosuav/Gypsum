@@ -10,6 +10,16 @@ inherit command;
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say("%% Update what?",subw); return 1;}
+	if (param=="all")
+	{
+		//Update everything. Note that this uses G->bootstrap() so errors come up on the console instead of in subw.
+		//NOTE: Does NOT update globals.pike.
+		G->bootstrap("connection.pike");
+		G->bootstrap("window.pike");
+		G->bootstrap_all("plugins");
+		say("%% Update complete.",subw);
+		param="."; //And re-update anything that needs it.
+	}
 	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
 	{
 		//Allow "update /blah" to update the file where /blah is coded
