@@ -662,7 +662,7 @@ class fontdlg
 
 	void load_content(mapping(string:mixed) info)
 	{
-		win->fontsel->set_font_name(info->name);
+		if (info->name) win->fontsel->set_font_name(info->name);
 	}
 }
 
