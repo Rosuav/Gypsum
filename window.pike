@@ -270,7 +270,7 @@ void say(string|array msg,mapping|void subw)
 	switch (persist["notif/activity"])
 	{
 		case 1: if (tabs[notebook->get_current_page()]!=subw) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
-		case 2: mainwindow->present();
+		case 2: if (!paused) mainwindow->present(); //Present the window only if we're not paused.
 	}
 	redraw(subw);
 }
