@@ -97,6 +97,15 @@ Should look up GTK objects from win[] and use gtksignal() thus:
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
 
+Status text
+-----------
+
+Similar to the window, this allows precisely one label to be displayed
+as part of the main window's status text. May be combined with window,
+or any of the other modes. No functions need be provided; simply call
+setstatus(sbtext) any time you wish to change the currently-displayed
+text. Order of elements on the status bar is by order loaded.
+
 General notes
 -------------
 

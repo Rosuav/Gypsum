@@ -15,10 +15,11 @@ GTK2.Notebook notebook;
 #if constant(COMPAT_SIGNAL)
 GTK2.Button defbutton;
 #endif
-GTK2.Label statusbar;
+GTK2.Hbox statusbar;
 array(object) signals;
 int paused; //TODO: Show this visually somewhere, not just in hover text
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
+inherit statustext;
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -213,7 +214,7 @@ void mousemove(object self,object ev,mapping subw)
 		//Add further meta-information display here
 	}; //Ignore errors
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
-	statusbar->set_text(txt);
+	setstatus(txt);
 	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
 	{
 		int y1= min(selendline,line)   *subw->lineheight;
@@ -709,6 +710,15 @@ void colorcheck(object self,mapping subw)
 	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
+void updstatusbar()
+{
+	foreach (G->G->statustexts;;mapping(string:mixed) info)
+	{
+		if (!info->lbl) statusbar->pack_start(GTK2.Frame()->add(info->lbl=GTK2.Label((["xalign":0.0,"text":info->txt])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,1);
+	}
+	statusbar->show_all();
+}
+
 //Any reference to this function is by definition a TODO, though this itself isn't.
 /**
  *
@@ -723,6 +733,7 @@ void TODO()
  */
 void create(string name)
 {
+	::create(name);
 	if (!G->G->window)
 	{
 		add_gypsum_constant("say",bouncer("window","say")); //Say, Bouncer, say!
@@ -759,7 +770,7 @@ void create(string name)
 				))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
-			->pack_end(GTK2.Frame()->add(statusbar=GTK2.Label((["xalign":0.0])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,0)
+			->pack_end(statusbar=GTK2.Hbox(0,0),0,0,0)
 			#if constant(COMPAT_SIGNAL)
 			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 			#endif
@@ -782,6 +793,7 @@ void create(string name)
 		if (other->menu) menu=other->menu;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
+	updstatusbar();
 	G->G->window=this;
 	mainwsignals();
 }

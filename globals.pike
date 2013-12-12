@@ -9,6 +9,7 @@ void create(string n,string which)
 	if (!G->G->commands) G->G->commands=([]);
 	if (!G->G->hooks) G->G->hooks=([]);
 	if (!G->G->windows) G->G->windows=([]);
+	if (!G->G->statustexts) G->G->statustexts=([]);
 }
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
@@ -273,6 +274,26 @@ class configdlg
 			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}), //Has to be done with a lambda, I think to dispose of the args
 			gtksignal(win->sel,"changed",selchanged),
 		});
+	}
+}
+
+//Inherit this to get a spot on the main window's status bar.
+//Note: Leaving design space for a future possible "statusbar" class that this subclasses,
+//which would allow the freedom of putting something other than a single GTK2.Label onto the bar.
+class statustext
+{
+	mapping(string:mixed) statustxt=(["txt":""]);
+	void create(string name)
+	{
+		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
+		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
+		if (G->G->window) G->G->window->updstatusbar();
+	}
+	void setstatus(string txt)
+	{
+		//werror("Setting sbtext to %O\n",txt);
+		statustxt->txt=txt;
+		if (statustxt->lbl) statustxt->lbl->set_text(txt);
 	}
 }
 
