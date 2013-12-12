@@ -642,6 +642,7 @@ class fontdlg
 
 	GTK2.Widget make_content()
 	{
+		win->list->set_enable_search(0); //Disable the type-ahead search, which is pretty useless when there are this few items
 		return GTK2.Vbox(0,0)
 			->add(win->kwd=GTK2.Label((["label":"Section","xalign":0.5])))
 			->add(win->fontsel=GTK2.FontSelection())
