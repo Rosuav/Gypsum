@@ -714,7 +714,7 @@ void updstatusbar()
 {
 	foreach (G->G->statustexts;;mapping(string:mixed) info)
 	{
-		if (!info->lbl) statusbar->pack_start(GTK2.Frame()->add(info->lbl=GTK2.Label((["xalign":0.0,"text":info->txt])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,1);
+		if (!info->lbl) statusbar->pack_start(GTK2.Frame()->add(info->lbl=GTK2.Label((["xalign":0.0,"text":info->txt])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,3);
 	}
 	statusbar->show_all();
 }
