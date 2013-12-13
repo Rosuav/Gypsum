@@ -104,7 +104,7 @@ void ansiread(mapping conn,string data)
 				conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
 				ansi=ansi[i+1..];
 				break colorloop;
-			default: werror("Unexpected: %c\n",ansi[i]); return;
+			default: werror("Unparseable ANSI sequence: %O\n",ansi); return;
 		}
 		conn->ansibuffer=ansi;
 	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
