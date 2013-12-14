@@ -144,6 +144,7 @@ void makewindow()
 	int x,y=150; catch {[x,y]=persist["timer/winpos"];};
 	win->x=1; call_out(lambda() {m_delete(win,"x");},1);
 	win->mainwindow->move(x,y);
+	::makewindow();
 }
 
 void configevent(object self,object ev)

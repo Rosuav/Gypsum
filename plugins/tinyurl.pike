@@ -218,5 +218,6 @@ class config
 				))
 				->pack_end(GTK2.Button((["label":"_Close","use-underline":1])),0,0,0)
 			);
+		::makewindow();
 	}
 }

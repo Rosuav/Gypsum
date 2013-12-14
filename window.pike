@@ -687,6 +687,7 @@ By Chris Angelico, rosuav@gmail.com
 Version "+ver+", as far as can be ascertained :)"))
 			->add(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))))
 		);
+		::makewindow();
 	}
 
 	void dosignals()

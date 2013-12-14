@@ -157,6 +157,8 @@ class hook
 class window
 {
 	mapping(string:mixed) win=([]);
+
+	//Replace this and call the original after assigning to win->mainwindow.
 	void makewindow() { }
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
@@ -270,6 +272,7 @@ class configdlg
 				,0,0,0)
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); selchanged();
+		::makewindow();
 	}
 
 	void dosignals()

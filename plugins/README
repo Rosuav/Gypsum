@@ -85,6 +85,8 @@ The plugin's main window should be stored in win->mainwindow; set
 	"transient-for":G->G->window->mainwindow /* mandatory */
 	"no-show-all":1 /* to hide the window initially */
 	"modal":1 /* may be useful for config dialogs */
+After creating the window, call ::makewindow() in case further setup
+needs to be done.
 
 void dosignals()
 Connect signals to callback functions. Will be called on reload.
