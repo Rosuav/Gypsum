@@ -691,7 +691,8 @@ Version "+ver+", as far as can be ascertained :)"))
 
 	void dosignals()
 	{
-		win->signals=({
+		::dosignals();
+		win->signals+=({
 			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}),
 		});
 	}

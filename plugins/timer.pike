@@ -166,7 +166,8 @@ void mousedown(object self,object ev)
 
 void dosignals()
 {
-	win->signals=({
+	::dosignals();
+	win->signals+=({
 		gtksignal(win->mainwindow,"event",configevent),
 		gtksignal(win->mainwindow,"button_press_event",mousedown),
 		gtksignal(win->mainwindow,"delete_event",hidewindow),

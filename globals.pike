@@ -159,10 +159,8 @@ class window
 	mapping(string:mixed) win=([]);
 	void makewindow() { }
 
-	//When subclassing anything other than window itself, call ::dosignals() and append
-	//yours to win->signals afterward. This is safe to do with window, too, though it's
-	//not strictly necessary - you can simply overwrite and not call the parent. Best
-	//practice is to always call parent, though.
+	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
+	//only place where win->signals is reset.
 	void dosignals()
 	{
 		win->signals=({ });
@@ -276,7 +274,8 @@ class configdlg
 
 	void dosignals()
 	{
-		win->signals=({
+		::dosignals();
+		win->signals+=({
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
 			gtksignal(win->pb_save,"clicked",pb_save),
 			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}), //Has to be done with a lambda, I think to dispose of the args
