@@ -13,7 +13,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (param=="all")
 	{
 		//Update everything. Note that this uses G->bootstrap() so errors come up on the console instead of in subw.
-		//NOTE: Does NOT update globals.pike.
+		//NOTE: Does NOT update persist.pike or globals.pike.
 		G->bootstrap("connection.pike");
 		G->bootstrap("window.pike");
 		G->bootstrap_all("plugins");
