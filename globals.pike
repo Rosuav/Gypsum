@@ -157,8 +157,16 @@ class hook
 class window
 {
 	mapping(string:mixed) win=([]);
-	void makewindow() {}
-	void dosignals() {m_delete(win,"signals");}
+	void makewindow() { }
+
+	//When subclassing anything other than window itself, call ::dosignals() and append
+	//yours to win->signals afterward. This is safe to do with window, too, though it's
+	//not strictly necessary - you can simply overwrite and not call the parent. Best
+	//practice is to always call parent, though.
+	void dosignals()
+	{
+		win->signals=({ });
+	}
 	void create(string|void name)
 	{
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}

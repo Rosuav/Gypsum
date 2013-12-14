@@ -89,7 +89,8 @@ The plugin's main window should be stored in win->mainwindow; set
 void dosignals()
 Connect signals to callback functions. Will be called on reload.
 Should look up GTK objects from win[] and use gtksignal() thus:
-	win->signals=({
+	::dosignals();
+	win->signals+=({
 		gtksignal(win->someobj,"some_event",callback),
 		//... as many as needed
 	});
