@@ -1,6 +1,6 @@
 inherit hook;
 inherit command;
-inherit window;
+inherit movablewindow;
 
 /* TODO: Document me properly somewhere.
 
@@ -10,6 +10,7 @@ special keywords " HP", " SP" (yes, they begin with a space each), and ".EP"
 rates, and leave the text blank. Then let the magic happen. :) */
 
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
+constant pos_key="timer/winpos";
 
 mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 
@@ -141,22 +142,7 @@ void makewindow()
 	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow]))
 		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":5])));
 	makelabels();
-	int x,y=150; catch {[x,y]=persist["timer/winpos"];};
-	win->x=1; call_out(lambda() {m_delete(win,"x");},1);
-	win->mainwindow->move(x,y);
 	::makewindow();
-}
-
-void configevent(object self,object ev)
-{
-	if (ev->type!="configure") return;
-	if (!has_index(win,"x")) call_out(savepos,2);
-	mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
-}
-
-void savepos()
-{
-	persist["timer/winpos"]=({m_delete(win,"x"),m_delete(win,"y")});
 }
 
 void mousedown(object self,object ev)
@@ -169,7 +155,6 @@ void dosignals()
 {
 	::dosignals();
 	win->signals+=({
-		gtksignal(win->mainwindow,"event",configevent),
 		gtksignal(win->mainwindow,"button_press_event",mousedown),
 		gtksignal(win->mainwindow,"delete_event",hidewindow),
 	});

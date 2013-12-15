@@ -121,6 +121,49 @@ class window
 	}
 }
 
+//Subclass of window that handles save/load of position automatically.
+//TODO: Merge code with the corresponding functionality in window.pike.
+class movablewindow
+{
+	inherit window;
+	constant pos_key="foobar/winpos"; //Set this to the persist[] key in which to store and from which to retrieve the window pos
+	int x,y; //Preset x,y in create() to have a default position
+
+	void makewindow()
+	{
+		catch {[x,y]=persist[pos_key];};
+		win->x=1; call_out(lambda() {m_delete(win,"x");},1);
+		win->mainwindow->move(x,y);
+		::makewindow();
+	}
+
+	void configevent(object self,object ev)
+	{
+		#if constant(COMPAT_SIGNAL)
+		if (ev->type!="configure") return;
+		#endif
+		if (!has_index(win,"x")) call_out(savepos,2);
+		mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
+	}
+
+	void savepos()
+	{
+		persist[pos_key]=({m_delete(win,"x"),m_delete(win,"y")});
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			#if constant(COMPAT_SIGNAL)
+			gtksignal(win->mainwindow,"event",configevent),
+			#else
+			gtksignal(win->mainwindow,"configure_event",configevent,0,UNDEFINED,1),
+			#endif
+		});
+	}
+}
+
 //Base class for a configuration dialog. Permits the setup of anything where you have a list of keyworded items, can create/retrieve/update/delete them by keyword.
 class configdlg
 {
