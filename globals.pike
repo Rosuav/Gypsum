@@ -128,12 +128,16 @@ class movablewindow
 	inherit window;
 	constant pos_key="foobar/winpos"; //Set this to the persist[] key in which to store and from which to retrieve the window pos
 	int x,y; //Preset x,y in create() to have a default position
+	constant load_size=0; //If set to 1, will attempt to load the size as well as position. (It'll always be saved.)
 
 	void makewindow()
 	{
-		catch {[x,y]=persist[pos_key];};
-		win->x=1; call_out(lambda() {m_delete(win,"x");},1);
-		win->mainwindow->move(x,y);
+		if (array pos=persist[pos_key])
+		{
+			if (sizeof(pos)>2 && load_size) win->mainwindow->set_default_size(pos[2],pos[3]);
+			win->x=1; call_out(lambda() {m_delete(win,"x");},1);
+			win->mainwindow->move(pos[0],pos[1]);
+		}
 		::makewindow();
 	}
 
@@ -148,7 +152,8 @@ class movablewindow
 
 	void savepos()
 	{
-		persist[pos_key]=({m_delete(win,"x"),m_delete(win,"y")});
+		mapping sz=win->mainwindow->get_size();
+		persist[pos_key]=({m_delete(win,"x"),m_delete(win,"y"),sz->width,sz->height});
 	}
 
 	void dosignals()
