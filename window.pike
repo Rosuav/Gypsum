@@ -550,7 +550,7 @@ void closetab()
 {
 	int removeme=notebook->get_current_page();
 	if (!tabs[removeme]->connection) {real_closetab(removeme); return;}
-	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have an active connection, really close this tab?",mainwindow)
+	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have an active connection, really close this tab?")
 		->show()
 		->signal_connect("response",closetab_response,removeme);
 }
@@ -815,7 +815,7 @@ int window_close()
 {
 	int conns=sizeof(tabs->connection-({0})); //Number of active connections
 	if (!conns) {exit(0); return 1;}
-	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have "+conns+" active connection(s), really quit?",mainwindow)
+	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have "+conns+" active connection(s), really quit?")
 		->show()
 		->signal_connect("response",closewindow_response);
 	return 1;

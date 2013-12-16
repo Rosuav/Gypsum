@@ -48,7 +48,7 @@ class editor(mapping(string:mixed) conn)
 	{
 		if (win->buf->get_modified())
 		{
-			GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"File has been modified, close without sending/saving?",win->mainwindow)
+			GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"File has been modified, close without sending/saving?")
 				->show()
 				->signal_connect("response",close_response);
 			return;
