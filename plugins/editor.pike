@@ -15,7 +15,6 @@ class editor(mapping(string:mixed) conn)
 
 	void makewindow()
 	{
-		object ls=GTK2.ListStore(({"string"}));
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
