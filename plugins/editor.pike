@@ -10,12 +10,13 @@ class editor(mapping(string:mixed) conn)
 	{
 		win->initial=initial;
 		::create(); //No name. Each one should be independent.
+		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
 
 	void makewindow()
 	{
 		object ls=GTK2.ListStore(({"string"}));
-		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
 			)
