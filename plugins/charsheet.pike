@@ -62,6 +62,12 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 		return ret;
 	}
 
+	GTK2.Entry num(string kwd,int|mapping|void width_or_props)
+	{
+		GTK2.Entry ret=ef(kwd,width_or_props||2); //Smaller default width
+		return ret->set_alignment(0.5);
+	}
+
 	//Magic resolver. Any symbol at all can be resolved; it'll come through as 0, but the name
 	//will be retained. Used in the precompilation stage to capture external references.
 	multiset(string) symbols;
@@ -121,14 +127,14 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 					({({"Stat","Score","Eq","Temp","Mod"})})+
 					//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 					map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
-						stat,ef(stat),ef(stat+"_eq"),ef(stat+"_tmp"),
+						stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
 						calc(sprintf("(%s+%<s_eq+%<s_tmp-10)/2",stat),stat+"_mod")
 					});})
 				))
 				->add(GTK2Table(({
 					({"","Normal","Current"}),
-					({"HP",ef("hp"),ef("cur_hp")}),
-					({"AC",ef("ac")}),
+					({"HP",num("hp"),num("cur_hp")}),
+					({"AC",num("ac")}),
 					({"",""}),
 					({"Touch",""}),
 					({"Flat",""}),
@@ -137,9 +143,9 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 			)
 			->add(GTK2Table(({
 				({"Saves","Base","Ability","Misc","Total"}),
-				({"Fort",ef("fort_base"),calc("CON_mod"),ef("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-				({"Refl",ef("refl_base"),calc("DEX_mod"),ef("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-				({"Will",ef("will_base"),calc("WIS_mod"),ef("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+				({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+				({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+				({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
 			})))
 		);
 		::makewindow();
