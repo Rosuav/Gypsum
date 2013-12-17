@@ -64,7 +64,7 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 
 	GTK2.Entry num(string kwd,int|mapping|void width_or_props)
 	{
-		GTK2.Entry ret=ef(kwd,width_or_props||2); //Smaller default width
+		GTK2.Entry ret=ef(kwd,width_or_props||3); //Smaller default width
 		return ret->set_alignment(0.5);
 	}
 
