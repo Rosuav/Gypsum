@@ -12,7 +12,6 @@ up. So take a bit of care, and don't deploy without knowing that it's right. :)
 
 TODO: Update notifications. Register a subscription with the server, get told
 about changes. Suppress their noise, plsthx!
-TODO: Create roll aliases automatically.
 TODO: Allow the loading of other/multiple charsheets. Probably more a server
 issue than for here but same diff.
 */
@@ -136,6 +135,12 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 					({"Init",""}),
 				})))
 			)
+			->add(GTK2Table(({
+				({"Saves","Base","Ability","Misc","Total"}),
+				({"Fort",ef("fort_base"),calc("CON_mod"),ef("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+				({"Refl",ef("refl_base"),calc("DEX_mod"),ef("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+				({"Will",ef("will_base"),calc("WIS_mod"),ef("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+			})))
 		);
 		::makewindow();
 	}
