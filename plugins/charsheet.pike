@@ -1,3 +1,22 @@
+/* Pop-out character sheet renderer for Minstrel Hall
+
+Carefully matched to the corresponding code on the server, this will pop out a
+character sheet based on data stored on the server.
+
+Formulas can be entered. They reference the underlying data mapping, NOT the
+coordinates of the cell on some spreadsheet layout, so it's as simple as
+referencing the names used. Full Pike syntax is available, but please be
+aware: The code broadly assumes that the person devising the formula knows
+what s/he is doing. It is entirely possible to break things by mucking that
+up. So take a bit of care, and don't deploy without knowing that it's right. :)
+
+TODO: Update notifications. Register a subscription with the server, get told
+about changes. Suppress their noise, plsthx!
+TODO: Create roll aliases automatically.
+TODO: Allow the loading of other/multiple charsheets. Probably more a server
+issue than for here but same diff.
+*/
+
 inherit hook;
 
 class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
