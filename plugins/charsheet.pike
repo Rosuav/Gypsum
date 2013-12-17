@@ -30,6 +30,14 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
 
+	//Allow XP (and only XP) to be entered as a sum, eg 4000+1000 will be replaced with 5000
+	string fmt_xp(string val)
+	{
+		array parts=val/"+";
+		if (sizeof(parts)==1) return val;
+		return (string)`+(@(array(int))parts);
+	}
+
 	void set_value(string kwd,string val,multiset|void beenthere)
 	{
 		if (val=="0") val="";
@@ -40,7 +48,13 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet set %s %s\r\n",kwd,data[kwd]=val)));
 		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
 	}
-	void checkchanged(object self,object event,string kwd) {set_value(kwd,self->get_text());}
+
+	void checkchanged(object self,object event,string kwd)
+	{
+		string val=self->get_text();
+		if (function f=this["fmt_"+kwd]) catch {self->set_text(val=f(val));}; //See if there's a reformatter function. If there is, it MUST be idempotent.
+		set_value(kwd,val);
+	}
 
 	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
 	{
@@ -109,14 +123,12 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
 			->append_page(GTK2.Vbox(0,20)
-				->add(GTK2.Hbox(0,20)
-					->add(GTK2Table(({
-						({"Name",ef("name",12),"Race",ef("race",8)}),
-						({"Class",ef("class1",12),"Level",ef("level1")}),
-						({"Class",ef("class2",12),"Level",ef("level2")}),
-						({"Class",ef("class3",12),"Level",ef("level3")}),
-					})))
-				)
+				->add(GTK2Table(({
+					({"Name",ef("name",12),"Race",ef("race",8),"Character level",num("level",8)}),
+					({"Class",ef("class1",12),"Level",ef("level1"),"Experience",num("xp",8)}),
+					({"Class",ef("class2",12),"Level",ef("level2"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+					({"Class",ef("class3",12),"Level",ef("level3"),"Alignment",ef("alignment",12)}),
+				})))
 				->add(GTK2.Hbox(0,20)
 					->add(GTK2Table(
 						({({"Stat","Score","Eq","Temp","Mod"})})+
