@@ -107,46 +107,50 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 	
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,20)
-			->add(GTK2.Hbox(0,20)
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(GTK2.Vbox(0,20)
+				->add(GTK2.Hbox(0,20)
+					->add(GTK2Table(({
+						({"Name",ef("name",12),"Race",ef("race",8)}),
+						({"Class",ef("class1",12),"Level",ef("level1")}),
+						({"Class",ef("class2",12),"Level",ef("level2")}),
+						({"Class",ef("class3",12),"Level",ef("level3")}),
+					})))
+				)
+				->add(GTK2.Hbox(0,20)
+					->add(GTK2Table(
+						({({"Stat","Score","Eq","Temp","Mod"})})+
+						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
+						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
+							stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
+							calc(sprintf("(%s+%<s_eq+%<s_tmp-10)/2",stat),stat+"_mod")
+						});})
+					))
+					->add(GTK2Table(({
+						({"","Normal","Current"}),
+						({"HP",num("hp"),num("cur_hp")}),
+						({"AC",num("ac")}),
+						({"",""}),
+						({"Touch",""}),
+						({"Flat",""}),
+						({"Init",""}),
+					})))
+				)
 				->add(GTK2Table(({
-					({"Name",ef("name",12),"Race",ef("race",8)}),
-					({"Class",ef("class1",12),"Level",ef("level1")}),
-					({"Class",ef("class2",12),"Level",ef("level2")}),
-					({"Class",ef("class3",12),"Level",ef("level3")}),
+					({"Saves","Base","Ability","Misc","Total"}),
+					({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+					({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+					({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
 				})))
+			,GTK2.Label("Vital Stats"))
+			->append_page(GTK2.Vbox(0,20)
 				->add(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
 					({"Gender",ef("gender"),"Eyes",ef("eyes")}),
 					({"Height",ef("height"),"Hair",ef("hair")}),
 					({"Weight",ef("weight"),"Size",ef("size")}),
 				})))
-			)
-			->add(GTK2.Hbox(0,20)
-				->add(GTK2Table(
-					({({"Stat","Score","Eq","Temp","Mod"})})+
-					//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
-					map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
-						stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
-						calc(sprintf("(%s+%<s_eq+%<s_tmp-10)/2",stat),stat+"_mod")
-					});})
-				))
-				->add(GTK2Table(({
-					({"","Normal","Current"}),
-					({"HP",num("hp"),num("cur_hp")}),
-					({"AC",num("ac")}),
-					({"",""}),
-					({"Touch",""}),
-					({"Flat",""}),
-					({"Init",""}),
-				})))
-			)
-			->add(GTK2Table(({
-				({"Saves","Base","Ability","Misc","Total"}),
-				({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-				({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-				({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
-			})))
+			,GTK2.Label("Description"))
 		);
 		::makewindow();
 	}
