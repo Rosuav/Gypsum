@@ -12,13 +12,11 @@ up. So take a bit of care, and don't deploy without knowing that it's right. :)
 
 TODO: Update notifications. Register a subscription with the server, get told
 about changes. Suppress their noise, plsthx!
-TODO: Allow the loading of other/multiple charsheets. Probably more a server
-issue than for here but same diff.
 */
 
 inherit hook;
 
-class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
+class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
 	constant pos_key="charsheet/winpos";
@@ -45,7 +43,7 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
-		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet set %s %s\r\n",kwd,data[kwd]=val)));
+		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet @%s set %s %s\r\n",owner,kwd,data[kwd]=val)));
 		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
 	}
 
@@ -181,9 +179,9 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
-	if (line=="===> Charsheet <===")
+	if (sscanf(line,"===> Charsheet @%s <===",string acct))
 	{
-		conn->charsheet_eax="";
+		conn->charsheet_eax=""; conn->charsheet_acct=acct;
 		return 0;
 	}
 	if (conn->charsheet_eax)
@@ -191,7 +189,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (line=="<=== Charsheet ===>")
 		{
 			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(conn,"charsheet_eax")));};
-			if (mappingp(data)) charsheet(conn,data);
+			if (mappingp(data)) charsheet(conn,m_delete(conn,"charsheet_acct"),data);
 			return 0;
 		}
 		conn->charsheet_eax+=line+"\n";
