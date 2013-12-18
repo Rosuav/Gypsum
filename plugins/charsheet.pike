@@ -163,6 +163,10 @@ class charsheet(mapping(string:mixed) conn,mapping(string:mixed) data)
 					({"Weight",ef("weight"),"Size",ef("size")}),
 				})))
 			,GTK2.Label("Description"))
+			->append_page(GTK2.Vbox(0,20)
+				->add(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])))
+				->add(ef("perms"))
+			,GTK2.Label("Access"))
 		);
 		::makewindow();
 	}
