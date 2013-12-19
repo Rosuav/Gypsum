@@ -47,8 +47,9 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
 	}
 
-	void checkchanged(object self,object event,string kwd)
+	void checkchanged(object self,mixed ... args)
 	{
+		string kwd=args[-1];
 		string val=self->get_text();
 		if (function f=this["fmt_"+kwd]) catch {self->set_text(val=f(val));}; //See if there's a reformatter function. If there is, it MUST be idempotent.
 		set_value(kwd,val);
@@ -94,6 +95,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		object ret=win[kwd]=MultiLineEntryField(props||([]))->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
+		return ret;
+	}
+
+	SelectBox select(string kwd,array(string) options)
+	{
+		SelectBox ret=win[kwd]=SelectBox(options)->set_text(data[kwd]||"");
+		ret->signal_connect("changed",checkchanged,kwd);
 		return ret;
 	}
 
@@ -146,17 +154,30 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				->add(GTK2.Label("Weapon"))->add(ef(prefix+"_weapon",10))
 			)
 			->add(GTK2.Hbox(0,0)
+				->add(GTK2.Label("Damage"))->add(ef(prefix+"_dmgdice"))
+				->add(GTK2.Label("Crit"))->add(select(prefix+"_crittype",({"20 x2","19-20 x2","18-20 x2","20 x3","20 x4"})))
+			)
+			->add(GTK2.Hbox(0,0)
 				->add(GTK2.Label("Enchantment"))->add(num(prefix+"_ench_hit"))->add(num(prefix+"_ench_dam"))
 				->add(GTK2.Label("Other hit mod"))->add(num(prefix+"_tohit_other"))->add(ef(prefix+"_tohit_other_desc"))
 			)
-			->add(GTK2.Hbox(0,0)
-				->add(GTK2.Label("To-hit:"))
-				->add(calc(
-					"(int)bab+\" BAB+\"+(int)"+stat+"_mod+\" "+stat
+			->add(GTK2Table(({
+				({"hit:",calc(
+					"\"d20+\"+(int)bab+\" BAB+\"+(int)"+stat+"_mod+\" "+stat
 					+"+\"+(int)"+prefix+"_ench_hit+\" ench\""
 					+"+((int)"+prefix+"_tohit_other?\"+\"+(int)"+prefix+"_tohit_other+\" \"+("+prefix+"_tohit_other_desc||\"\"):\"\")",
-				prefix+"_tohit","string"))
-			)
+				prefix+"_hit","string")}),
+				({"dmg:",
+				/* This is a lot more complicated than to-hit. Do it later.
+				calc(
+					prefix+"_dmgdice",
+				prefix+"_dmg","string"))
+				*/
+				}),
+				({"crit:",
+					//Ditto and even more so.
+				}),
+			})))
 		;
 	}
 
@@ -248,9 +269,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 		conn->charsheet_eax=""; conn->charsheet_acct=acct;
 		return 0;
 	}
-	if (sscanf(line,"===> Charsheet @%s qset %s %O",string acct,string what,string towhat))
+	if (sscanf(line,"===> Charsheet @%s qset %s %O",string acct,string what,string|int towhat))
 	{
-		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat);
+		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat||"");
 		return 1; //Suppress the spam
 	}
 	if (conn->charsheet_eax)
