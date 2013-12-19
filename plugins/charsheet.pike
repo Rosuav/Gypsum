@@ -323,7 +323,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					}
 					//TODO: Synergies (including armor check penalties)
 					return ({
-						desc,stat,calc(stat+"_mod"),ef(kwd+"_rank"),calc("0",kwd+"_synergy"),ef(kwd+"_other"),
+						desc,stat,calc(stat+"_mod"),num(kwd+"_rank"),calc("0",kwd+"_synergy"),num(kwd+"_other"),
 						calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)
 					});
 				})
