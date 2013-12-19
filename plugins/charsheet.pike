@@ -43,7 +43,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
-		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet @%s set %s %s\r\n",owner,kwd,data[kwd]=val)));
+		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val)));
 		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
 	}
 
@@ -88,6 +88,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		GTK2.Entry ret=ef(kwd,width_or_props||3); //Smaller default width
 		return ret->set_alignment(0.5);
+	}
+
+	MultiLineEntryField mle(string kwd,mapping|void props)
+	{
+		object ret=win[kwd]=MultiLineEntryField(props||([]))->set_text(data[kwd]||"");
+		ret->signal_connect("focus-out-event",checkchanged,kwd);
+		return ret;
 	}
 
 	//Magic resolver. Any symbol at all can be resolved; it'll come through as 0, but the name
@@ -135,7 +142,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Name",ef("name",12),"Race",ef("race",8),"Character level",num("level",8)}),
 					({"Class",ef("class1",12),"Level",ef("level1"),"Experience",num("xp",8)}),
 					({"Class",ef("class2",12),"Level",ef("level2"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
-					({"Class",ef("class3",12),"Level",ef("level3"),"Alignment",ef("alignment",12)}),
+					({"Class",ef("class3",12),"Level",ef("level3")}),
 				})))
 				->add(GTK2.Hbox(0,20)
 					->add(GTK2Table(
@@ -169,12 +176,14 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Gender",ef("gender"),"Eyes",ef("eyes")}),
 					({"Height",ef("height"),"Hair",ef("hair")}),
 					({"Weight",ef("weight"),"Size",ef("size")}),
+					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
 				})))
 			,GTK2.Label("Description"))
 			->append_page(GTK2.Vbox(0,20)
 				->add(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])))
 				->add(ef("perms"))
 			,GTK2.Label("Access"))
+			->append_page(mle("notes"),GTK2.Label("Notes"))
 		);
 		::makewindow();
 	}
@@ -201,7 +210,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		conn->charsheet_eax=""; conn->charsheet_acct=acct;
 		return 0;
 	}
-	if (sscanf(line,"===> Charsheet @%s set %s %s",string acct,string what,string towhat))
+	if (sscanf(line,"===> Charsheet @%s qset %s %O",string acct,string what,string towhat))
 	{
 		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat);
 		return 1; //Suppress the spam
