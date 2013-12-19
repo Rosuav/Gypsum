@@ -163,8 +163,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			)
 			->add(GTK2Table(({
 				({"hit:",calc(
-					"\"d20+\"+(int)bab+\" BAB+\"+(int)"+stat+"_mod+\" "+stat
-					+"+\"+(int)"+prefix+"_ench_hit+\" ench\""
+					"\"d20+\"+(int)bab+\" BAB+\"+(int)"+stat+"_mod+\" "+stat+"\""
+					+"+((int)"+prefix+"_ench_hit?\"+\"+(int)"+prefix+"_ench_hit+\" ench\":\"\")"
 					+"+((int)"+prefix+"_tohit_other?\"+\"+(int)"+prefix+"_tohit_other+\" \"+("+prefix+"_tohit_other_desc||\"\"):\"\")",
 				prefix+"_hit","string")}),
 				({"dmg:",
