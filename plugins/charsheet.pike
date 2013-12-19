@@ -223,11 +223,18 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
 						({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
 					})))
-					->add(GTK2.Frame("Init")->add(GTK2.Hbox(0,10)
-						->add(calc("DEX_mod"))->add(GTK2.Label("DEX +"))
-						->add(num("init_misc"))
-						->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
-					))
+					->add(GTK2.Vbox(0,20)
+						->add(GTK2.Frame("Init")->add(GTK2.Hbox(0,10)
+							->add(calc("DEX_mod"))->add(GTK2.Label("DEX +"))
+							->add(num("init_misc"))
+							->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
+						))
+						->add(GTK2Table(({
+							({"Speed",num("speed")}),
+							({"BAB",num("bab")}),
+							({"Grapple",calc("bab+STR_mod")}),
+						})))
+					)
 				)
 			,GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
