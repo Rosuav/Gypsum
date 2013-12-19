@@ -15,6 +15,7 @@ about changes. Suppress their noise, plsthx!
 */
 
 inherit hook;
+mapping(string:multiset(object)) charsheets;
 
 class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) data)
 {
@@ -24,6 +25,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 
 	void create()
 	{
+		if (!charsheets[owner]) charsheets[owner]=(<>);
+		charsheets[owner][this]=1;
 		::create(); //No name. Each one should be independent.
 		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
@@ -52,6 +55,16 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		string val=self->get_text();
 		if (function f=this["fmt_"+kwd]) catch {self->set_text(val=f(val));}; //See if there's a reformatter function. If there is, it MUST be idempotent.
 		set_value(kwd,val);
+	}
+
+	void set(string what,string towhat)
+	{
+		object ef=win[what];
+		if (!ef) return; //Nothing to work with
+		string cur=ef->get_text();
+		if (cur==towhat) return; //No change
+		ef->set_text(towhat);
+		checkchanged(ef,0,what); //Pretend the user entered it and tabbed out
 	}
 
 	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
@@ -169,10 +182,17 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		::makewindow();
 	}
 
+	void window_destroy()
+	{
+		charsheets[owner][this]=0;
+		destruct();
+	}
+
 	void dosignals()
 	{
 		::dosignals();
 		win->signals+=({
+			gtksignal(win->mainwindow,"destroy",window_destroy),
 		});
 	}
 }
@@ -183,6 +203,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 	{
 		conn->charsheet_eax=""; conn->charsheet_acct=acct;
 		return 0;
+	}
+	if (sscanf(line,"===> Charsheet @%s set %s %s",string acct,string what,string towhat))
+	{
+		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat);
+		return 1; //Suppress the spam
 	}
 	if (conn->charsheet_eax)
 	{
@@ -195,4 +220,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 		conn->charsheet_eax+=line+"\n";
 		return 0;
 	}
+}
+
+void create(string|void name)
+{
+	::create(name);
+	if (!G->G->charsheets) G->G->charsheets=([]);
+	charsheets=G->G->charsheets;
 }
