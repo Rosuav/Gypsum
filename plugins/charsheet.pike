@@ -148,9 +148,9 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		prefix="attack_"+prefix;
 		string stat=(["melee":"STR","ranged":"DEX"])[type];
-		return GTK2.Vbox(0,10)
+		return GTK2.Frame(String.capitalize(type))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Hbox(0,0)
-				->add(GTK2.Label(String.capitalize(type)+":"))->add(ef(prefix,8))
+				->add(GTK2.Label("Keyword"))->add(ef(prefix,8))
 				->add(GTK2.Label("Weapon"))->add(ef(prefix+"_weapon",10))
 			)
 			->add(GTK2.Hbox(0,0)
@@ -178,7 +178,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					//Ditto and even more so.
 				}),
 			})))
-		;
+		);
 	}
 
 	void makewindow()
@@ -197,31 +197,58 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
 							stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
-							calc(sprintf("(%s+%<s_eq+%<s_tmp-10)/2",stat),stat+"_mod")
+							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod") //TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former
 						});})
 					))
+					->add(GTK2.Vbox(0,10)
+						->add(GTK2.Frame("HP")->add(GTK2Table(({
+							({"Normal","Current"}),
+							({num("hp"),num("cur_hp")}),
+						}))))
+						->add(GTK2.Frame("AC")->add(GTK2Table(({
+							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
+							({"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),num("deflection_ac"),num("size_ac"),num("misc_ac")}),
+							({
+								"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
+								"Touch",calc("10+DEX_mod+deflection_ac+size_ac","ac_touch"),"",
+								"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+size_ac+misc_ac","ac_flat"),"",
+							}),
+						}))->set_col_spacings(5)))
+					)
+				)
+				->add(GTK2.Hbox(0,20)
 					->add(GTK2Table(({
-						({"","Normal","Current"}),
-						({"HP",num("hp"),num("cur_hp")}),
-						({"AC",num("ac")}),
-						({"",""}),
-						({"Touch",""}),
-						({"Flat",""}),
-						({"Init",""}),
+						({"Saves","Base","Ability","Misc","Total"}),
+						({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+						({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+						({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+					})))
+					->add(GTK2Table(({
+						({"Init:",calc("DEX_mod"),"DEX +",num("init_misc"),"=",calc("DEX_mod+init_misc","init")}),
 					})))
 				)
-				->add(GTK2Table(({
-					({"Saves","Base","Ability","Misc","Total"}),
-					({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-					({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-					({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
-				})))
 			,GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
-				->pack_start(GTK2.Vbox(0,20)
+				->pack_start(GTK2.Vbox(0,10)
 					->add(weapon("1","melee"))
 					->add(weapon("2","melee"))
 					->add(weapon("3","ranged"))
+					->add(GTK2.Frame("Body armor")->add(GTK2.Vbox(0,0)
+						->add(GTK2.Hbox(0,0)
+							->add(GTK2.Label("Name"))->add(ef("bodyarmor"))
+							->add(GTK2.Label("Type"))->add(select("bodyarmor_type",({"Light","Medium","Heavy"})))
+						)
+						->add(GTK2.Hbox(0,0)
+							->add(GTK2.Label("AC"))->add(ef("bodyarmor_ac"))
+							->add(GTK2.Label("Max DEX"))->add(ef("DEX_max"))
+							->add(GTK2.Label("Check pen"))->add(ef("bodyarmor_acpen"))
+						)
+					))
+					->add(GTK2.Frame("Shield")->add(GTK2.Hbox(0,0)
+						->add(GTK2.Label("Name"))->add(ef("shield"))
+						->add(GTK2.Label("AC"))->add(ef("shield_ac"))
+						->add(GTK2.Label("Check pen"))->add(ef("shield_acpen"))
+					))
 				,0,0,0)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
 					({({"Item","Weight","Qty"})})
