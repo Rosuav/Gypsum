@@ -82,6 +82,24 @@ class MultiLineEntryField
 	}
 }
 
+//GTK2.ComboBox designed for text strings. Has set_text() and get_text() methods.
+//Should be able to be used like an Entry.
+class SelectBox(array(string) strings)
+{
+	inherit GTK2.ComboBox;
+	void create() {::create(""); foreach (strings,string str) append_text(str);}
+	this_program set_text(string txt)
+	{
+		set_active(search(strings,txt));
+		return this;
+	}
+	string get_text()
+	{
+		int idx=get_active();
+		return (idx>=0 && idx<sizeof(strings)) && strings[idx];
+	}
+}
+
 //Plugin that implements a command derived from its name
 class command
 {
