@@ -104,20 +104,21 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 
 	//Perform magic and return something that has a calculated value.
 	//The formula is Pike syntax. Any unexpected variable references in it become lookups
-	//into data[] and will be cast to int. (TODO: Have a way to choose either int or float.)
-	GTK2.Widget calc(string formula,string|void name)
+	//into data[] and will be cast to the specified type (default 'int').
+	GTK2.Widget calc(string formula,string|void name,string|void type)
 	{
 		object lbl=GTK2.Label();
 		catch
 		{
+			if (!type) type="int";
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols=(<>);
 			program p=compile("mixed _="+formula+";",this); //Note, p must be retained or the compile() call will be optimized out!
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
-				"int _(mapping data) {%{int %s=(int)data->%<s;%}return %s;}",
-				(array)symbols,formula
+				"%s _(mapping data) {%{"+type+" %s=("+type+")data->%<s;%}return %s;}",
+				type,(array)symbols,formula
 			))()->_;
 			//Phase two: Snapshot a few extra bits of info via a closure.
 			function f2=lambda(mapping data,multiset beenthere)
@@ -133,7 +134,32 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		};
 		return lbl;
 	}
-	
+
+	//Add a weapon block - type is "melee" or "ranged"
+	GTK2.Widget weapon(string prefix,string type)
+	{
+		prefix="attack_"+prefix;
+		string stat=(["melee":"STR","ranged":"DEX"])[type];
+		return GTK2.Vbox(0,10)
+			->add(GTK2.Hbox(0,0)
+				->add(GTK2.Label(String.capitalize(type)+":"))->add(ef(prefix,8))
+				->add(GTK2.Label("Weapon"))->add(ef(prefix+"_weapon",10))
+			)
+			->add(GTK2.Hbox(0,0)
+				->add(GTK2.Label("Enchantment"))->add(num(prefix+"_ench_hit"))->add(num(prefix+"_ench_dam"))
+				->add(GTK2.Label("Other hit mod"))->add(num(prefix+"_tohit_other"))->add(ef(prefix+"_tohit_other_desc"))
+			)
+			->add(GTK2.Hbox(0,0)
+				->add(GTK2.Label("To-hit:"))
+				->add(calc(
+					"(int)bab+\" BAB+\"+(int)"+stat+"_mod+\" "+stat
+					+"+\"+(int)"+prefix+"_ench_hit+\" ench\""
+					+"+((int)"+prefix+"_tohit_other?\"+\"+(int)"+prefix+"_tohit_other+\" \"+("+prefix+"_tohit_other_desc||\"\"):\"\")",
+				prefix+"_tohit","string"))
+			)
+		;
+	}
+
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
@@ -170,6 +196,18 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
 				})))
 			,GTK2.Label("Vital Stats"))
+			->append_page(GTK2.Hbox(0,20)
+				->pack_start(GTK2.Vbox(0,20)
+					->add(weapon("1","melee"))
+					->add(weapon("2","melee"))
+					->add(weapon("3","ranged"))
+				,0,0,0)
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(
+					({({"Item","Weight","Qty"})})
+					+map(enumerate(25),lambda(int i) {return ({ef("inven_"+i,20),num("inven_wgt_"+i),num("inven_qty_"+i)});})
+				))
+			)
+			,GTK2.Label("Gear"))
 			->append_page(GTK2.Vbox(0,20)
 				->add(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
