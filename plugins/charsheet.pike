@@ -238,6 +238,69 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
 				})))
 			,GTK2.Label("Description"))
+			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
+				({({"Name","Stat","Mod","Rank","Synergy","Other","Total"})})
+				+map(#"INT Appraise
+					DEX Balance
+					CHA Bluff
+					STR Climb
+					CON Concentration
+					INT *Craft 1
+					INT *Craft 2
+					INT *Craft 3
+					INT Decipher Script
+					CHA Diplomacy
+					INT Disable Device
+					CHA Disguise
+					DEX Escape Artist
+					INT Forgery
+					CHA Gather Info
+					CHA Handle Animal
+					WIS Heal
+					DEX Hide
+					CHA Intimidate
+					STR Jump
+					INT *Knowledge 1
+					INT *Knowledge 2
+					INT *Knowledge 3
+					INT *Knowledge 4
+					INT *Knowledge 5
+					INT *Knowledge 6
+					WIS Listen
+					DEX Move Silently
+					DEX Open Lock
+					CHA *Perform 1
+					CHA *Perform 2
+					CHA *Perform 3
+					WIS *Profession 1
+					WIS *Profession 2
+					DEX Ride
+					INT Search
+					WIS Sense Motive
+					DEX Sleight of Hand
+					INT Spellcraft
+					WIS Spot
+					WIS Survival
+					STR Swim
+					DEX Tumble
+					CHA Use Magic Device
+					DEX Use Rope"/"\n",lambda(string s)
+				{
+					sscanf(s,"%*[\t]%s %s",string stat,string|object desc);
+					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
+					if (desc[0]=='*') //Editable fields (must have unique descriptions)
+					{
+						desc=desc[1..];
+						if (!data[desc]) data[desc]=desc;
+						desc=ef(desc);
+					}
+					//TODO: Synergies (including armor check penalties)
+					return ({
+						desc,stat,calc(stat+"_mod"),ef(kwd+"_rank"),calc("0",kwd+"_synergy"),ef(kwd+"_other"),
+						calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)
+					});
+				})
+			)),GTK2.Label("Skills"))
 			->append_page(GTK2.Vbox(0,20)
 				->add(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])))
 				->add(ef("perms"))
