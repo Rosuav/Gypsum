@@ -65,6 +65,23 @@ string strftime(string format,int|mapping(string:int) tm)
 	]));
 }
 
+//Exactly the same as a GTK2.TextView but with set_text() and get_text() methods like the GTK2.Entry
+//Should be able to be used like an Entry.
+class MultiLineEntryField
+{
+	inherit GTK2.TextView;
+	this_program set_text(mixed ... args)
+	{
+		get_buffer()->set_text(@args);
+		return this;
+	}
+	string get_text()
+	{
+		object buf=get_buffer();
+		return buf->get_text(buf->get_start_iter(),buf->get_end_iter(),0);
+	}
+}
+
 //Plugin that implements a command derived from its name
 class command
 {
