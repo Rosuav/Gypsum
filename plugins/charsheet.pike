@@ -9,9 +9,6 @@ referencing the names used. Full Pike syntax is available, but please be
 aware: The code broadly assumes that the person devising the formula knows
 what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
-
-TODO: Update notifications. Register a subscription with the server, get told
-about changes. Suppress their noise, plsthx!
 */
 
 inherit hook;
