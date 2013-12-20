@@ -214,8 +214,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 							}),
 							({
 								"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
-								"Touch",calc("10+DEX_mod+deflection_ac+size_ac","ac_touch"),"",
-								"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+size_ac+misc_ac","ac_flat"),"",
+								"Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch"),"",
+								"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat"),"",
 							}),
 						}))->set_col_spacings(5)))
 					)
