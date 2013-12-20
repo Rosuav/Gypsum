@@ -270,8 +270,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					}))))
 				,0,0,0)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
-					({({"Item","Weight","Qty"})})
-					+map(enumerate(25),lambda(int i) {return ({ef("inven_"+i,20),num("inven_wgt_"+i),num("inven_qty_"+i)});})
+					({({"Item","Qty","Weight"})})
+					+map(enumerate(25),lambda(int i) {return ({ef("inven_"+i,20),num("inven_qty_"+i),num("inven_wgt_"+i)});})
 				))
 			)
 			,GTK2.Label("Gear"))
