@@ -13,7 +13,6 @@ up. So take a bit of care, and don't deploy without knowing that it's right. :)
 Still need:
 * Wealth (easy; but show a total (TODO: 4ed platinum??))
 * Feats (don't worry about their effects though, they can be done manually)
-* Languages (easy)
 * Spells (with Prepared and Cast counters for each, and totals per tier, and
   quick buttons to clear out the Prepared and Cast columns)
 */
@@ -283,13 +282,14 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			)
 			,GTK2.Label("Gear"))
 			->append_page(GTK2.Vbox(0,20)
-				->add(GTK2Table(({
+				->pack_start(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
 					({"Gender",ef("gender"),"Eyes",ef("eyes")}),
 					({"Height",ef("height"),"Hair",ef("hair")}),
 					({"Weight",ef("weight"),"Size",ef("size")}),
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
-				})))
+				})),0,0,0)
+				->add(GTK2.Frame("Languages known")->add(mle("languages")))
 			,GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total"})})
