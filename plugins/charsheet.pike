@@ -207,7 +207,11 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						}))))
 						->add(GTK2.Frame("AC")->add(GTK2Table(({
 							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
-							({"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),num("deflection_ac"),num("size_ac"),num("misc_ac")}),
+							({
+								"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
+								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
+								num("size_ac"),num("misc_ac")
+							}),
 							({
 								"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
 								"Touch",calc("10+DEX_mod+deflection_ac+size_ac","ac_touch"),"",
@@ -258,6 +262,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						->add(GTK2.Label("AC"))->add(ef("shield_ac"))
 						->add(GTK2.Label("Check pen"))->add(ef("shield_acpen"))
 					))
+					->add(GTK2.Frame("Protective gear (deflection bonuses)")->add(GTK2Table(({
+						({"Name","AC"}),
+						({ef("magicarmor_1_name",15),num("magicarmor_1_ac")}),
+						({ef("magicarmor_2_name",15),num("magicarmor_2_ac")}),
+						({ef("magicarmor_3_name",15),num("magicarmor_3_ac")}),
+					}))))
 				,0,0,0)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
 					({({"Item","Weight","Qty"})})
