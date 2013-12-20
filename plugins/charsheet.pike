@@ -9,10 +9,6 @@ referencing the names used. Full Pike syntax is available, but please be
 aware: The code broadly assumes that the person devising the formula knows
 what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
-
-Still need:
-* Spells (with Prepared and Cast counters for each, and totals per tier, and
-  quick buttons to clear out the Prepared and Cast columns)
 */
 
 inherit hook;
@@ -184,6 +180,15 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				}),
 			})))
 		);
+	}
+
+	void clear_prepared() {clear("prepared");}
+	void clear_cast() {clear("cast");}
+	void clear(string which)
+	{
+		foreach (data;string kw;string val)
+			if (sscanf(kw,"spells_t%d_%d_%s",int tier,int row,string part) && part==which)
+				set(kw,"");
 	}
 
 	void makewindow()
@@ -376,6 +381,33 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				)))
 			,GTK2.Label("Feats"))
 			->append_page(GTK2.Vbox(0,10)
+				->pack_start(GTK2.Frame("Prepared spells, by level/tier")->add(GTK2Table(({
+					({"0","1","2","3","4","5","6","7","8","9"}),
+					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_prepared",i,n[*])*"+");}),
+					({win->clear_prepared=GTK2.Button("Clear"),0,0,0,0,0,0,0,0,0}),
+				}))),0,0,0)
+				->pack_start(GTK2.Frame("Already-cast spells, by level/tier")->add(GTK2Table(({
+					({"0","1","2","3","4","5","6","7","8","9"}),
+					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_cast",i,n[*])*"+");}),
+					({win->clear_cast=GTK2.Button("Clear"),0,0,0,0,0,0,0,0,0}),
+				}))),0,0,0)
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(lambda() { //This could be done with map() but I want the index (tier) as well as the value (rowcount).
+					array ret=({ });
+					foreach (({7,10,15,15,15,15,15,15,15,8});int tier;int rowcount)
+					{
+						ret+=({({GTK2.Frame("Level/tier "+tier)->add(GTK2Table(
+							({({"Spell","Description","Prep","Cast"})})
+							+map(enumerate(rowcount),lambda(int row)
+							{
+								string pfx=sprintf("spells_t%d_%d_",tier,row);
+								return ({ef(pfx+"name"),ef(pfx+"descr"),num(pfx+"prepared"),num(pfx+"cast")});
+							})
+						))})});
+					}
+					return ret;
+				}())))
+			,GTK2.Label("Spells"))
+			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
 					->pack_start(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])),0,0,0)
 					->pack_start(ef("perms"),0,0,0)
@@ -397,6 +429,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->mainwindow,"destroy",window_destroy),
+			gtksignal(win->clear_prepared,"clicked",clear_prepared),
+			gtksignal(win->clear_cast,"clicked",clear_cast),
 		});
 	}
 }
