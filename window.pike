@@ -766,6 +766,9 @@ void create(string name)
 					->add(menuitem("_Search","search"))
 					->add(menuitem("_Keyboard","keyboard"))
 					->add(menuitem("Ad_vanced options","advoptions"))
+					#if constant(COMPAT_SIGNAL)
+					->add(menuitem("Save all window positions","savewinpos"))
+					#endif
 				))
 				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
 					->add(menuitem("_About","aboutdlg"))
@@ -859,6 +862,16 @@ int enterpressed_glo(object self)
 }
 
 /**
+ * COMPAT_SIGNAL window position saver hack
+ */
+void savewinpos()
+{
+	object ev=class {string type="configure";}();
+	configevent(mainwindow,ev);
+	foreach (G->G->windows;string name;mapping win) if (win->save_position_hook) win->save_position_hook(win->mainwindow,ev);
+}
+
+/**
  *
  */
 int switchpage(object|mapping subw)
@@ -893,7 +906,7 @@ void mainwsignals()
 		gtksignal(notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(defbutton,"clicked",enterpressed_glo),
-		gtksignal(mainwindow,"event",configevent),
+		//gtksignal(mainwindow,"event",configevent), //See equiv in globals.pike
 		#else
 		gtksignal(mainwindow,"configure_event",configevent,0,UNDEFINED,1),
 		#endif
