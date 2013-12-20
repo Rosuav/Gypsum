@@ -73,10 +73,11 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
 	{
 		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),homogenousp);
-		foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj)
+		foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
 		{
 			if (stringp(obj)) obj=GTK2.Label(obj);
-			tb->attach_defaults(obj,x,x+1,y,y+1);
+			int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
+			tb->attach_defaults(obj,x,xend,y,y+1);
 		}
 		return tb;
 	}
@@ -192,11 +193,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			->append_page(GTK2.Vbox(0,20)
 				->pack_start(GTK2.Hbox(0,10)
 					->add(GTK2Table(({
-						({"Name",ef("name",12),"Race",ef("race",8),"Character level",num("level",8)}),
-						({"Class",ef("class1",12),"Level",ef("level1"),"Experience",num("xp",8)}),
-						({"Class",ef("class2",12),"Level",ef("level2"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Name",ef("name",12),0,0,"Character level",num("level",8)}),
+						({"Race",ef("race",8),"HD",ef("race_hd"),"Experience",num("xp",8)}),
+						({"Class",ef("class1",12),"Level",ef("level1"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Class",ef("class2",12),"Level",ef("level2")}),
 						({"Class",ef("class3",12),"Level",ef("level3")}),
-					})))
+						({"Class",ef("class4",12),"Level",ef("level4")}),
+					}))->set_col_spacings(4))
 					->add(GTK2.Frame("Wealth")->add(GTK2Table(({
 						({"Platinum",num("wealth_plat",7)}),
 						({"Gold",num("wealth_gold",7)}),
