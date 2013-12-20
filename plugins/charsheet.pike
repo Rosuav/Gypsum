@@ -9,6 +9,13 @@ referencing the names used. Full Pike syntax is available, but please be
 aware: The code broadly assumes that the person devising the formula knows
 what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
+
+Still need:
+* Wealth (easy; but show a total (TODO: 4ed platinum??))
+* Feats (don't worry about their effects though, they can be done manually)
+* Languages (easy)
+* Spells (with Prepared and Cast counters for each, and totals per tier, and
+  quick buttons to clear out the Prepared and Cast columns)
 */
 
 inherit hook;
