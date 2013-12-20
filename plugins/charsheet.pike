@@ -11,7 +11,6 @@ what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
 
 Still need:
-* Feats (don't worry about their effects though, they can be done manually)
 * Spells (with Prepared and Cast counters for each, and totals per tier, and
   quick buttons to clear out the Prepared and Cast columns)
 */
@@ -366,6 +365,16 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					});
 				})
 			)),GTK2.Label("Skills"))
+			->append_page(GTK2.Vbox(0,10)
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(
+					({({"Feat name","Benefit(s)"})})
+					+map(enumerate(20),lambda(int i) {return ({ef("feat_"+i,20),ef("feat_benefit_"+i)});})
+				)))
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(
+					({({"Special ability","Benefit(s)"})})
+					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,20),ef("ability_benefit_"+i)});})
+				)))
+			,GTK2.Label("Feats"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
 					->pack_start(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])),0,0,0)
