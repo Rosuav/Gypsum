@@ -354,11 +354,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					});
 				})
 			)),GTK2.Label("Skills"))
-			->append_page(GTK2.Vbox(0,20)
-				->add(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])))
-				->add(ef("perms"))
-			,GTK2.Label("Access"))
-			->append_page(mle("notes"),GTK2.Label("Notes"))
+			->append_page(GTK2.Vbox(0,10)
+				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
+					->pack_start(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])),0,0,0)
+					->pack_start(ef("perms"),0,0,0)
+				),0,0,0)
+				->add(GTK2.Frame("Notes")->add(mle("notes")))
+			,GTK2.Label("Administrivia"))
 		);
 		::makewindow();
 	}
