@@ -65,6 +65,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		checkchanged(ef,0,what); //Pretend the user entered it and tabbed out
 	}
 
+	//Advisory note that this widget should be packed without the GTK2.Expand|GTK2.Fill options
+	//As of 8.0.1 with CJA patch, this could safely be done with wid->set_data(), but it's not
+	//safe to call get_data() with a keyword that hasn't been set (it'll segfault older Pikes).
+	//So this works with a multiset instead.
+	multiset(GTK2.Widget) noexpand=(<>);
+	GTK2.Widget noex(GTK2.Widget wid) {noexpand[wid]=1; return wid;}
+	
 	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
 	{
 		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),homogenousp);
@@ -72,7 +79,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		{
 			if (stringp(obj)) obj=GTK2.Label(obj);
 			int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
-			tb->attach_defaults(obj,x,xend,y,y+1);
+			if (noexpand[obj]) tb->attach(obj,x,xend,y,y+1,0,0,0,0);
+			else tb->attach_defaults(obj,x,xend,y,y+1);
 		}
 		return tb;
 	}
@@ -396,11 +404,11 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					foreach (({7,10,15,15,15,15,15,15,15,8});int tier;int rowcount)
 					{
 						ret+=({({GTK2.Frame("Level/tier "+tier)->add(GTK2Table(
-							({({"Spell","Description","Prep","Cast"})})
+							({({"Spell","Description",noex(GTK2.Label("Prep")),noex(GTK2.Label("Cast"))})})
 							+map(enumerate(rowcount),lambda(int row)
 							{
 								string pfx=sprintf("spells_t%d_%d_",tier,row);
-								return ({ef(pfx+"name"),ef(pfx+"descr"),num(pfx+"prepared"),num(pfx+"cast")});
+								return ({ef(pfx+"name"),ef(pfx+"descr"),noex(num(pfx+"prepared")),noex(num(pfx+"cast"))});
 							})
 						))})});
 					}
