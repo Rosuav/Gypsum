@@ -381,11 +381,11 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			->append_page(GTK2.Vbox(0,10)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
 					({({"Feat name","Benefit(s)"})})
-					+map(enumerate(20),lambda(int i) {return ({ef("feat_"+i,20),ef("feat_benefit_"+i)});})
+					+map(enumerate(20),lambda(int i) {return ({ef("feat_"+i,15),ef("feat_benefit_"+i,25)});})
 				)))
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
 					({({"Special ability","Benefit(s)"})})
-					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,20),ef("ability_benefit_"+i)});})
+					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,15),ef("ability_benefit_"+i,25)});})
 				)))
 			,GTK2.Label("Feats"))
 			->append_page(GTK2.Vbox(0,10)
