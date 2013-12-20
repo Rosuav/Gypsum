@@ -11,7 +11,6 @@ what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
 
 Still need:
-* Wealth (easy; but show a total (TODO: 4ed platinum??))
 * Feats (don't worry about their effects though, they can be done manually)
 * Spells (with Prepared and Cast counters for each, and totals per tier, and
   quick buttons to clear out the Prepared and Cast columns)
@@ -191,12 +190,22 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
 			->append_page(GTK2.Vbox(0,20)
-				->add(GTK2Table(({
-					({"Name",ef("name",12),"Race",ef("race",8),"Character level",num("level",8)}),
-					({"Class",ef("class1",12),"Level",ef("level1"),"Experience",num("xp",8)}),
-					({"Class",ef("class2",12),"Level",ef("level2"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
-					({"Class",ef("class3",12),"Level",ef("level3")}),
-				})))
+				->pack_start(GTK2.Hbox(0,10)
+					->add(GTK2Table(({
+						({"Name",ef("name",12),"Race",ef("race",8),"Character level",num("level",8)}),
+						({"Class",ef("class1",12),"Level",ef("level1"),"Experience",num("xp",8)}),
+						({"Class",ef("class2",12),"Level",ef("level2"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Class",ef("class3",12),"Level",ef("level3")}),
+					})))
+					->add(GTK2.Frame("Wealth")->add(GTK2Table(({
+						({"Platinum",num("wealth_plat",7)}),
+						({"Gold",num("wealth_gold",7)}),
+						({"Silver",num("wealth_silver",7)}),
+						({"Copper",num("wealth_copper",7)}),
+						({"3.5ed:",calc("wealth_plat*1000+wealth_gold*100+wealth_silver*10+wealth_copper")}),
+						({"4ed:",calc("wealth_plat*10000+wealth_gold*100+wealth_silver*10+wealth_copper")}),
+					}))))
+				,0,0,0)
 				->add(GTK2.Hbox(0,20)
 					->add(GTK2Table(
 						({({"Stat","Score","Eq","Temp","Mod"})})+
