@@ -314,6 +314,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Height",ef("height"),"Hair",ef("hair")}),
 					({"Weight",ef("weight"),"Size",ef("size")}),
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
+					({"Carried",calc(sprintf("inven_wgt_%d*(inven_qty_%<d||1)",enumerate(4)[*])*"+"),"",""}),
 				})),0,0,0)
 				->add(GTK2.Frame("Languages known")->add(mle("languages")))
 			,GTK2.Label("Description"))
