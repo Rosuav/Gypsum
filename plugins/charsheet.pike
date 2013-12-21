@@ -295,10 +295,10 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						->add(GTK2.Label("Check pen"))->add(ef("shield_acpen"))
 					),0,0,0)
 					->pack_start(GTK2.Frame("Protective gear (deflection bonuses)")->add(GTK2Table(({
-						({"Name","AC"}),
-						({ef("magicarmor_1_name",15),num("magicarmor_1_ac")}),
-						({ef("magicarmor_2_name",15),num("magicarmor_2_ac")}),
-						({ef("magicarmor_3_name",15),num("magicarmor_3_ac")}),
+						({"Name",noex(GTK2.Label("AC"))}),
+						({ef("magicarmor_1_name",15),noex(num("magicarmor_1_ac"))}),
+						({ef("magicarmor_2_name",15),noex(num("magicarmor_2_ac"))}),
+						({ef("magicarmor_3_name",15),noex(num("magicarmor_3_ac"))}),
 					}))),0,0,0)
 				,0,0,0)
 			,GTK2.Label("Gear"))
