@@ -10,6 +10,18 @@ inherit command;
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say("%% Update what?",subw); return 1;}
+	if (param=="git")
+	{
+		say("%% Attempting git-based update...",subw);
+		Stdio.File stdout=Stdio.File(),stderr=Stdio.File();
+		Process.create_process(({"git","pull"}),(["stdout":stdout->pipe(Stdio.PROP_IPC),"stderr":stderr->pipe(Stdio.PROP_IPC),"callback":lambda()
+		{
+			say("git-> "+replace(String.trim_all_whites(stdout->read()),"\n","\ngit-> "),subw);
+			say("git-> "+replace(String.trim_all_whites(stderr->read()),"\n","\ngit-> "),subw);
+			process("all",subw);
+		}]));
+		return 1;
+	}
 	if (param=="all")
 	{
 		//Update everything. Note that this uses G->bootstrap() so errors come up on the console instead of in subw.
