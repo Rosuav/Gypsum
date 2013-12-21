@@ -270,7 +270,7 @@ void ka(mapping conn)
  */
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka,"writeme":info->writeme||""]);
+	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
 	G->G->window->say("%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
