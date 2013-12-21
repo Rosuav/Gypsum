@@ -466,7 +466,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 			return 0;
 		}
 		conn->charsheet_eax+=line+"\n";
-		return 0;
+		return 1;
 	}
 }
 
