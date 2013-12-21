@@ -272,11 +272,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				)
 			,GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
-				->pack_start(GTK2.Vbox(0,10)
+				->add(GTK2.Vbox(0,10)
 					->add(weapon("1","melee"))
 					->add(weapon("2","melee"))
 					->add(weapon("3","ranged"))
-					->add(GTK2.Frame("Body armor")->add(GTK2.Vbox(0,0)
+				)
+				->pack_start(GTK2.Vbox(0,10)
+					->pack_start(GTK2.Frame("Body armor")->add(GTK2.Vbox(0,10)
 						->add(GTK2.Hbox(0,0)
 							->add(GTK2.Label("Name"))->add(ef("bodyarmor"))
 							->add(GTK2.Label("Type"))->add(select("bodyarmor_type",({"Light","Medium","Heavy"})))
@@ -286,25 +288,25 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 							->add(GTK2.Label("Max DEX"))->add(ef("DEX_max"))
 							->add(GTK2.Label("Check pen"))->add(ef("bodyarmor_acpen"))
 						)
-					))
-					->add(GTK2.Frame("Shield")->add(GTK2.Hbox(0,0)
+					),0,0,0)
+					->pack_start(GTK2.Frame("Shield")->add(GTK2.Hbox(0,0)
 						->add(GTK2.Label("Name"))->add(ef("shield"))
 						->add(GTK2.Label("AC"))->add(ef("shield_ac"))
 						->add(GTK2.Label("Check pen"))->add(ef("shield_acpen"))
-					))
-					->add(GTK2.Frame("Protective gear (deflection bonuses)")->add(GTK2Table(({
+					),0,0,0)
+					->pack_start(GTK2.Frame("Protective gear (deflection bonuses)")->add(GTK2Table(({
 						({"Name","AC"}),
 						({ef("magicarmor_1_name",15),num("magicarmor_1_ac")}),
 						({ef("magicarmor_2_name",15),num("magicarmor_2_ac")}),
 						({ef("magicarmor_3_name",15),num("magicarmor_3_ac")}),
-					}))))
+					}))),0,0,0)
 				,0,0,0)
-				->add(GTK2.ScrolledWindow()->add(GTK2Table(
-					({({"Item","Qty","Weight"})})
-					+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),num("inven_qty_"+i),num("inven_wgt_"+i)});})
-				))
-			)
 			,GTK2.Label("Gear"))
+			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
+				({({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})})
+				+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),noex(num("inven_qty_"+i)),noex(num("inven_wgt_"+i))});})
+			))
+			,GTK2.Label("Inven"))
 			->append_page(GTK2.Vbox(0,20)
 				->pack_start(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
