@@ -231,44 +231,44 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						});})
 					))
 					->add(GTK2.Vbox(0,10)
-						->add(GTK2.Frame("HP")->add(GTK2Table(({
-							({"Normal","Current"}),
-							({num("hp"),num("cur_hp")}),
-						}))))
-						->add(GTK2.Frame("AC")->add(GTK2Table(({
-							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
-							({
-								"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
-								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
-								num("size_ac"),num("misc_ac")
-							}),
-							({
-								"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
-								"Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch"),"",
-								"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat"),"",
-							}),
-						}))->set_col_spacings(5)))
+						->add(GTK2.Hbox(0,10)
+							->add(GTK2.Frame("HP")->add(GTK2Table(({
+								({"Normal","Current"}),
+								({num("hp"),num("cur_hp")}),
+							}))))
+							->add(GTK2.Frame("Init")->add(GTK2.Hbox(0,10)
+								->add(calc("DEX_mod"))->add(GTK2.Label("DEX +"))
+								->add(num("init_misc"))
+								->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
+							))
+						)
+						->add(GTK2Table(({
+							({"Saves","Base","Ability","Misc","Total"}),
+							({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+							({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+							({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+						})))
 					)
 				)
 				->add(GTK2.Hbox(0,20)
+					->add(GTK2.Frame("AC")->add(GTK2Table(({
+						({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
+						({
+							"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
+							calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
+							num("size_ac"),num("misc_ac")
+						}),
+						({
+							"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
+							"Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch"),"",
+							"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat"),"",
+						}),
+					}))->set_col_spacings(5)))
 					->add(GTK2Table(({
-						({"Saves","Base","Ability","Misc","Total"}),
-						({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-						({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-						({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+						({"Speed",num("speed")}),
+						({"BAB",num("bab")}),
+						({"Grapple",calc("bab+STR_mod")}),
 					})))
-					->add(GTK2.Vbox(0,20)
-						->add(GTK2.Frame("Init")->add(GTK2.Hbox(0,10)
-							->add(calc("DEX_mod"))->add(GTK2.Label("DEX +"))
-							->add(num("init_misc"))
-							->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
-						))
-						->add(GTK2Table(({
-							({"Speed",num("speed")}),
-							({"BAB",num("bab")}),
-							({"Grapple",calc("bab+STR_mod")}),
-						})))
-					)
 				)
 			,GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
