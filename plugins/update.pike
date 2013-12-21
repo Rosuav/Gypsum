@@ -18,7 +18,7 @@ int process(string param,mapping(string:mixed) subw)
 		{
 			say("git-> "+replace(String.trim_all_whites(stdout->read()),"\n","\ngit-> "),subw);
 			say("git-> "+replace(String.trim_all_whites(stderr->read()),"\n","\ngit-> "),subw);
-			process("all",subw);
+			process("all",subw); //TODO: Figure out what actually changed.
 		}]));
 		return 1;
 	}
