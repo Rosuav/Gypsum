@@ -11,4 +11,4 @@ Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
 2) Drop COMPAT_SIGNAL and possibly other COMPAT features
 3) Provide an additional arg to GTK2.MessageDialog() to bind it to a window
-4) Assuming CJA patch gets accepted, recode charsheet::noex() to use [sg]et_data()
+4) (Or when a newer 7.8 build than 805 is released) recode charsheet::noex() to use [sg]et_data()
