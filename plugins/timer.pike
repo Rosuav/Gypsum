@@ -135,11 +135,12 @@ void makelabels()
 		->attach_defaults(win->timers[i]=GTK2.Label("")->set_alignment(1.0,0.0),1,2,i,i+1);
 	win->display->attach_defaults(win->dblclk=GTK2.Label("(Dbl-click to set)"),0,2,sizeof(timers),sizeof(timers)+1)->show_all();
 	showtimes();
+	if (sizeof(timers)==1) win->mainwindow->set_no_show_all(0)->show_all();
 }
 
 void makewindow()
 {
-	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow]))
+	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow,"no-show-all":!sizeof(timers)]))
 		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":5])));
 	makelabels();
 	::makewindow();
