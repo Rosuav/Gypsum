@@ -207,10 +207,10 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					->add(GTK2Table(({
 						({"Name",ef("name",12),0,0,"Character level",num("level",8)}),
 						({"Race",ef("race",8),"HD",ef("race_hd"),"Experience",num("xp",8)}),
-						({"Class",ef("class1",12),"Level",ef("level1"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
-						({"Class",ef("class2",12),"Level",ef("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
-						({"Class",ef("class3",12),"Level",ef("level3")}),
-						({"Class",ef("class4",12),"Level",ef("level4")}),
+						({"Class",ef("class1",12),"Level",num("level1"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Class",ef("class2",12),"Level",num("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
+						({"Class",ef("class3",12),"Level",num("level3")}),
+						({"Class",ef("class4",12),"Level",num("level4")}),
 					}))->set_col_spacings(4))
 					->add(GTK2.Frame("Wealth")->add(GTK2Table(({
 						({"Platinum",num("wealth_plat",7)}),
