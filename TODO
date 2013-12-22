@@ -3,9 +3,8 @@
 * Client-side aliases
 * Multi-line paste
 * /log command to control logging (currently only auto-log works)
-* Editor plugin. Designed for live editing rather than off-line work - get a real
-editor for that. MUST multiplex perfectly.
 * Search facility. May be worth retaining text-only form of line??
+* Generic Plugins menu, which any plugin can attach itself to (maybe by inheriting something)
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
