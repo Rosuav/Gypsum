@@ -194,6 +194,7 @@ int sockclosed(mapping conn)
 	conn->display->prompt=({([])});
 	conn->sock=0; //Break refloop
 	if (conn->ka) remove_call_out(conn->ka);
+	m_delete(conn,"logfile");
 }
 
 /**
