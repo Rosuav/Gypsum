@@ -208,7 +208,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({"Name",ef("name",12),0,0,"Character level",num("level",8)}),
 						({"Race",ef("race",8),"HD",ef("race_hd"),"Experience",num("xp",8)}),
 						({"Class",ef("class1",12),"Level",ef("level1"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
-						({"Class",ef("class2",12),"Level",ef("level2")}),
+						({"Class",ef("class2",12),"Level",ef("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
 						({"Class",ef("class3",12),"Level",ef("level3")}),
 						({"Class",ef("class4",12),"Level",ef("level4")}),
 					}))->set_col_spacings(4))
@@ -256,7 +256,10 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({
 							"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
 							calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
-							num("size_ac"),num("misc_ac")
+							calc(#"(string)([
+								\"Fine\":8,\"Diminutive\":4,\"Tiny\":2,\"Small\":1,
+								\"Large\":-1,\"Huge\":-2,\"Gargantuan\":-4,\"Colossal\":-8
+							])[size]","size_ac","string"),num("misc_ac")
 						}),
 						({
 							"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
@@ -267,7 +270,11 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					->add(GTK2Table(({
 						({"Speed",num("speed")}),
 						({"BAB",num("bab")}),
-						({"Grapple",calc("bab+STR_mod")}),
+						({"Grapple",calc(#"(string)([
+							\"Fine\":-16,\"Diminutive\":-12,\"Tiny\":-8,\"Small\":-4,
+							\"Large\":4,\"Huge\":8,\"Gargantuan\":12,\"Colossal\":16
+						])[size]+\" size+\"+bab+\" BAB+\"+STR_mod+\" STR\"","grapple","string")
+						&& calc("grapple")}),
 					})))
 				)
 			,GTK2.Label("Vital Stats"))
@@ -312,9 +319,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					({"Age",ef("age"),"Skin",ef("skin")}),
 					({"Gender",ef("gender"),"Eyes",ef("eyes")}),
 					({"Height",ef("height"),"Hair",ef("hair")}),
-					({"Weight",ef("weight"),"Size",ef("size")}),
+					({"Weight",ef("weight"),"Carried",calc(sprintf("inven_wgt_%d*(inven_qty_%<d||1)",enumerate(4)[*])*"+")}),
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
-					({"Carried",calc(sprintf("inven_wgt_%d*(inven_qty_%<d||1)",enumerate(4)[*])*"+"),"",""}),
 				})),0,0,0)
 				->add(GTK2.Frame("Languages known")->add(mle("languages")))
 			,GTK2.Label("Description"))
