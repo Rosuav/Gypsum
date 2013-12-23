@@ -2,7 +2,6 @@
 * Clickable URLs
 * Client-side aliases
 * Multi-line paste
-* /log command to control logging (currently only auto-log works)
 * Search facility. May be worth retaining text-only form of line??
 * Generic Plugins menu, which any plugin can attach itself to (maybe by inheriting something)
 
