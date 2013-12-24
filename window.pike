@@ -822,7 +822,7 @@ void closewindow_response(object self,int response)
 
 int window_close()
 {
-	int conns=sizeof(tabs->connection-({0})); //Number of active connections
+	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
 	if (!conns) {exit(0); return 1;}
 	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have "+conns+" active connection(s), really quit?")
 		->show()
