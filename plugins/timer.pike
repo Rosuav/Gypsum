@@ -1,6 +1,7 @@
 inherit hook;
 inherit command;
 inherit movablewindow;
+inherit plugin_menu;
 
 /* TODO: Document me properly somewhere.
 
@@ -74,6 +75,9 @@ class config
 		makelabels();
 	}
 }
+
+constant menu_label="Timer";
+void menu_clicked() {config();}
 
 int process(string param,mapping(string:mixed) subw)
 {
