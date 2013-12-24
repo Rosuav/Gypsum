@@ -4,6 +4,7 @@ the Connect dialog); this log will pick up local messages (including its own at 
 beginning of the log, identifying the file and the timestamp).
 */
 inherit command;
+inherit plugin_menu;
 
 int process(string param,mapping(string:mixed) subw)
 {
@@ -25,3 +26,13 @@ int process(string param,mapping(string:mixed) subw)
 	}) say("%% Error opening log file:\n%% "+describe_error(ex));
 	return 1;
 }
+
+constant menu_label="Logging";
+void menu_clicked()
+{
+	say("%% To enable logging for this subwindow:");
+	say("%% > /log filename");
+	say("%% (TODO: Have a file dialog on this menu item.)");
+}
+
+void create(string name) {::create(name);}
