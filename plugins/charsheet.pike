@@ -205,11 +205,16 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			->append_page(GTK2.Vbox(0,20)
 				->pack_start(GTK2.Hbox(0,10)
 					->add(GTK2Table(({
-						({"Name",ef("name",12),0,0,"Character level",num("level",8)}),
+						({"Name",ef("name",12),0,0,"Char level",num("level",8)}),
 						({"Race",ef("race",8),"HD",ef("race_hd"),"Experience",num("xp",8)}),
-						({"Class",ef("class1",12),"Level",num("level1"),"To next level",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",calc("`+(@enumerate(level,1000,1000))-xp")}),
 						({"Class",ef("class2",12),"Level",num("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
-						({"Class",ef("class3",12),"Level",num("level3")}),
+						({"Class",ef("class3",12),"Level",num("level3"),
+							"Grapple",calc(#"(string)(([
+								\"Fine\":-16,\"Diminutive\":-12,\"Tiny\":-8,\"Small\":-4,
+								\"Large\":4,\"Huge\":8,\"Gargantuan\":12,\"Colossal\":16
+							])[size]+(int)bab+(int)STR_mod)","grapple","string")
+						}),
 						({"Class",ef("class4",12),"Level",num("level4")}),
 					}))->set_col_spacings(4))
 					->add(GTK2.Frame("Wealth")->add(GTK2Table(({
@@ -270,11 +275,6 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					->add(GTK2Table(({
 						({"Speed",num("speed")}),
 						({"BAB",num("bab")}),
-						({"Grapple",calc(#"(string)([
-							\"Fine\":-16,\"Diminutive\":-12,\"Tiny\":-8,\"Small\":-4,
-							\"Large\":4,\"Huge\":8,\"Gargantuan\":12,\"Colossal\":16
-						])[size]+\" size+\"+bab+\" BAB+\"+STR_mod+\" STR\"","grapple","string")
-						&& calc("grapple")}),
 					})))
 				)
 			,GTK2.Label("Vital Stats"))
