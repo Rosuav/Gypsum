@@ -477,7 +477,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
-void create(string|void name)
+void create(string name)
 {
 	::create(name);
 	if (!G->G->charsheets) G->G->charsheets=([]);
