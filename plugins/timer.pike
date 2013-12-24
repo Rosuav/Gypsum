@@ -131,7 +131,7 @@ void showtimes()
  */
 void makelabels()
 {
-	win->display->resize(sizeof(timers),2,0);
+	win->display->resize(sizeof(timers)||1,2,0);
 	if (win->labels) ({win->labels,win->timers})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
 	win->labels=GTK2.Label(sort(indices(timers))[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
 	foreach (win->labels;int i;object lbl)
