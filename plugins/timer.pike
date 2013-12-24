@@ -131,13 +131,13 @@ void showtimes()
  */
 void makelabels()
 {
-	win->display->resize(sizeof(timers)+1,2,0);
-	if (win->labels) ({win->labels,win->timers,win->dblclk})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
+	win->display->resize(sizeof(timers),2,0);
+	if (win->labels) ({win->labels,win->timers})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
 	win->labels=GTK2.Label(sort(indices(timers))[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
 		->attach_defaults(win->timers[i]=GTK2.Label("")->set_alignment(1.0,0.0),1,2,i,i+1);
-	win->display->attach_defaults(win->dblclk=GTK2.Label("(Dbl-click to set)"),0,2,sizeof(timers),sizeof(timers)+1)->show_all();
+	win->display->show_all();
 	showtimes();
 	if (sizeof(timers)==1) win->mainwindow->set_no_show_all(0)->show_all();
 }
