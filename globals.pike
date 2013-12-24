@@ -123,6 +123,25 @@ class hook
 	}
 }
 
+//Wants a new name... Puts this plugin into the Plugins menu.
+class plugin_menu
+{
+	//Provide:
+	constant menu_label=0; //(string) The label that goes on your menu. If not provided, will use the plugin name.
+	void menu_clicked() { }
+	//End provide.
+
+	mapping(string:mixed) mi=([]);
+	void create(string|void name)
+	{
+		if (!name) return;
+		if (G->G->plugin_menu[name]) mi=G->G->plugin_menu[name]; else G->G->plugin_menu[name]=mi;
+		if (mi->menuitem) mi->menuitem->get_child()->set_text(menu_label||name);
+		else G->G->plugin_menu[0]->add(mi->menuitem=GTK2.MenuItem(menu_label||name)->show());
+		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
+	}
+}
+
 //Generic window handler. If a plugin inherits this, it will normally show the window on startup and keep it there, though other patterns are available.
 class window
 {

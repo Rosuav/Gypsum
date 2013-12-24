@@ -752,6 +752,7 @@ void create(string name)
 		}
 		else mainwindow->set_default_size(800,500);
 		GTK2.AccelGroup accel=GTK2.AccelGroup();
+		G->G->plugin_menu=([]);
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
@@ -770,6 +771,10 @@ void create(string name)
 					#if constant(COMPAT_SIGNAL)
 					->add(menuitem("Save all window positions","savewinpos"))
 					#endif
+				))
+				->add(GTK2.MenuItem("_Plugins")->set_submenu(G->G->plugin_menu[0]=GTK2.Menu()
+					->add(menuitem("_Configure","configure_plugins"))
+					->add(GTK2.SeparatorMenuItem())
 				))
 				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
 					->add(menuitem("_About","aboutdlg"))

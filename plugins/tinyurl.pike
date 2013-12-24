@@ -5,6 +5,7 @@ Thanks Thierran for helping me test the original RosMud version, of which this i
 */
 
 inherit hook;
+inherit plugin_menu;
 
 /* persist["tinyurl/*"] contains the following:
 proxy_host/proxy_port - if 0, goes direct to Tiny, else goes via the specified HTTP proxy
@@ -198,26 +199,39 @@ void tinify(object self,int response,array args)
 	sock->connect(tinyurl_hostname,80);
 }
 
-//TODO: Provide a standardized way to configure plugins (and possibly to enable/disable them, too), and then flesh this out.
-class config
+constant menu_label="TinyURL";
+class menu_clicked
 {
 	inherit window;
+	void create() {::create();} //No args passed on
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Configure URL shortener","transient-for":G->G->window->mainwindow]))
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Frame("Proxy server")->set_sensitive(0)->add(GTK2.Hbox(0,10) //TODO: Proxy
 					->add(win->proxy_use=GTK2.CheckButton("Use"))
-					->add(GTK2.Label("Address:"))->add(win->proxy_addr=GTK2.Entry(persist["tinyurl/proxy_host"]||""))
-					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry(persist["tinyurl/proxy_port"]||""))
+					->add(GTK2.Label("Address:"))->add(win->proxy_addr=GTK2.Entry()->set_text(persist["tinyurl/proxy_host"]||""))
+					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry()->set_text(persist["tinyurl/proxy_port"]||""))
 				))
 				->add(win->announce=GTK2.CheckButton("Announce incoming URLs with an explanatory note"))
 				->add(GTK2.Frame("Default action")->add(GTK2.Hbox(0,10)
 					->add(win->default_browse=GTK2.RadioButton("Browse"))
 					->add(win->default_copy=GTK2.RadioButton("Copy to clipboard",win->default_browse))
 				))
-				->pack_end(GTK2.Button((["label":"_Close","use-underline":1])),0,0,0)
+				->pack_end(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])),0,0,0)
 			);
 		::makewindow();
 	}
+
+	void pb_close_click() {win->mainwindow->destroy();}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->pb_close,"clicked",pb_close_click),
+		});
+	}
 }
+
+void create(string name) {::create(name);}
