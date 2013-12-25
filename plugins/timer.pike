@@ -99,6 +99,7 @@ int process(string param,mapping(string:mixed) subw)
 			if (timers[kwd]) timers[kwd]->next=next;
 		persist["timer/timers"]=timers;
 		showtimes();
+		say("%% Loaded.");
 		return 1;
 	}
 }
