@@ -722,10 +722,7 @@ void updstatusbar()
 	statusbar->show_all();
 }
 
-//Any reference to this function is by definition a TODO, though this itself isn't.
-/**
- *
- */
+//Anything that calls this function is by definition a TODO, though this itself isn't.
 void TODO()
 {
 	say("%% Sorry, that function isn't implemented yet.");
