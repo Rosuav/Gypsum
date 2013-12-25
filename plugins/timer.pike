@@ -79,31 +79,6 @@ class config
 constant menu_label="Timer";
 void menu_clicked() {config();}
 
-int process(string param,mapping(string:mixed) subw)
-{
-	if (param=="dlg") {config(); return 1;}
-	//TODO: Way to explicitly trigger a timer
-	if (param=="save" || sscanf(param,"save %s",string pfx))
-	{
-		string data="";
-		foreach (timers;string kwd;mapping info) if (info->next)
-			data+=sprintf("%q=%d",kwd,info->next);
-		if (pfx) G->G->connection->write(subw->connection,pfx+" "+data+"\r\n");
-		else say("%% "+data,subw);
-		return 1;
-	}
-	if (sscanf(param,"load %s",string data))
-	{
-		sscanf(param,"%{%O=%d%}",array(array(string|int)) data);
-		foreach (data,[string kwd,int next])
-			if (timers[kwd]) timers[kwd]->next=next;
-		persist["timer/timers"]=timers;
-		showtimes();
-		say("%% Loaded.");
-		return 1;
-	}
-}
-
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
@@ -189,4 +164,28 @@ void create(string name)
 {
 	::create(name);
 	showtimes();
+}
+int process(string param,mapping(string:mixed) subw)
+{
+	if (param=="dlg") {config(); return 1;}
+	//TODO: Way to explicitly trigger a timer
+	if (param=="save" || sscanf(param,"save %s",string pfx))
+	{
+		string data="";
+		foreach (timers;string kwd;mapping info) if (info->next)
+			data+=sprintf("%q=%d",kwd,info->next);
+		if (pfx) G->G->connection->write(subw->connection,pfx+" "+data+"\r\n");
+		else say("%% "+data,subw);
+		return 1;
+	}
+	if (sscanf(param,"load %s",string data))
+	{
+		sscanf(param,"%{%O=%d%}",array(array(string|int)) data);
+		foreach (data,[string kwd,int next])
+			if (timers[kwd]) timers[kwd]->next=next;
+		persist["timer/timers"]=timers;
+		showtimes();
+		say("%% Loaded.");
+		return 1;
+	}
 }
