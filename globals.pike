@@ -349,7 +349,7 @@ class statustext
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
 		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
-		if (G->G->window) G->G->window->updstatusbar();
+		G->G->window->updstatusbar();
 	}
 	void setstatus(string txt)
 	{

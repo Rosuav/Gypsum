@@ -733,7 +733,6 @@ void TODO()
  */
 void create(string name)
 {
-	::create(name);
 	if (!G->G->window)
 	{
 		add_gypsum_constant("say",bouncer("window","say")); //Say, Bouncer, say!
@@ -801,8 +800,8 @@ void create(string name)
 		if (other->menu) menu=other->menu;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
-	updstatusbar();
 	G->G->window=this;
+	::create(name);
 	mainwsignals();
 }
 
