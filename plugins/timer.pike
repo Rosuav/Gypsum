@@ -1,3 +1,5 @@
+#!/usr/bin/env pike
+#if constant(G)
 inherit hook;
 inherit command;
 inherit movablewindow;
@@ -165,6 +167,19 @@ void create(string name)
 	::create(name);
 	showtimes();
 }
+#else
+//This file is executable, as a means of saving (to the console).
+//Reads directly from .gypsumrc so it can be used whether Gypsum's running or not.
+//Suitable for remote execution eg via SSH
+mapping G=(["G":([])]);
+mapping persist=decode_value(Stdio.read_file(combine_path(__FILE__,"..","..",".gypsumrc"))) || ([]);
+mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
+void config() {}
+void showtimes() {}
+void say(string msg,mapping|void subw) {write("%s\n",msg);}
+int main() {process("save",0);}
+#endif
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg") {config(); return 1;}
