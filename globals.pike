@@ -370,3 +370,30 @@ string gypsum_version()
 {
 	return String.trim_all_whites(Stdio.read_file("VERSION"));
 }
+
+/**
+ * Attempt to invoke a web browser. Returns 1 if it believes it did, 0 if not.
+ */
+int invoke_browser(string url)
+{
+	foreach (({
+		#ifdef __NT__
+		//Windows
+		"start",
+		#elif __APPLE__
+		//Darwin
+		"open",
+		#else
+		//Linux, various. Try the first one in the list; if it doesn't
+		//work, go on to the next, and the next. A sloppy technique. :(
+		"xdg-open",
+		"exo-open",
+		"gnome-open",
+		"kde-open",
+		#endif
+	}),string cmd) catch
+	{
+		Process.create_process(({cmd,url}));
+		return 1; //If no exception is thrown, hope that it worked.
+	};
+}

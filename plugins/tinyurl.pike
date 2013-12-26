@@ -87,8 +87,8 @@ int inputhook(string line,mapping(string:mixed) subw)
 			}
 			case 'b': case 'B':
 			{
-				//TODO! How do I do this cross-platform?
-				say("%% Browser invoked. ** NOT IMPLEMENTED **",subw);
+				if (invoke_browser(url)) say("%% Browser invoked.",subw);
+				else say("%% Unable to invoke browser on this platform - try the clipboard instead.",subw);
 				break;
 			}
 			case 'r': case 'R':
