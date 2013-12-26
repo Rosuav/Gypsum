@@ -379,21 +379,21 @@ int invoke_browser(string url)
 	foreach (({
 		#ifdef __NT__
 		//Windows
-		"start",
+		({"cmd","/c","start"}),
 		#elif __APPLE__
 		//Darwin
-		"open",
+		({"open"}),
 		#else
 		//Linux, various. Try the first one in the list; if it doesn't
 		//work, go on to the next, and the next. A sloppy technique. :(
-		"xdg-open",
-		"exo-open",
-		"gnome-open",
-		"kde-open",
+		({"xdg-open"}),
+		({"exo-open"}),
+		({"gnome-open"}),
+		({"kde-open"}),
 		#endif
-	}),string cmd) catch
+	}),array(string) cmd) catch
 	{
-		Process.create_process(({cmd,url}));
+		Process.create_process(cmd+({url}));
 		return 1; //If no exception is thrown, hope that it worked.
 	};
 }
