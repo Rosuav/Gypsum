@@ -750,7 +750,7 @@ void create(string name)
 			mainwindow->move(pos[0],pos[1]);
 		}
 		else mainwindow->set_default_size(800,500);
-		GTK2.AccelGroup accel=GTK2.AccelGroup();
+		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 		G->G->plugin_menu=([]);
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
