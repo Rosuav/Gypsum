@@ -432,7 +432,10 @@ int keypress(object self,array|object ev,mapping subw)
 			else {subw->ef->set_text(""); subw->histpos=-1;}
 			return 1;
 		}
-		case 0xFF1B: subw->ef->set_text(""); return 1; //Esc
+		case 0xFF1B: //Esc
+			if (has_index(subw,"selstartline")) {highlight(subw,-1,0,0,0); subw->mouse_down=0;}
+			else subw->ef->set_text(""); //Clear EF if there's nothing to unhighlight
+			return 1;
 		case 0xFF09: case 0xFE20: //Tab and shift-tab
 		{
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
