@@ -340,23 +340,23 @@ class configdlg
 }
 
 //Inherit this to get a spot on the main window's status bar.
-//Note: Leaving design space for a future possible "statusbar" class that this subclasses,
-//which would allow the freedom of putting something other than a single GTK2.Label onto the bar.
+//By default you get a simple GTK2.Label (hence the name "text"),
+//but this can be altered by overriding makestatus().
 class statustext
 {
-	mapping(string:mixed) statustxt=(["txt":""]);
+	mapping(string:mixed) statustxt=([]);
 	void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
 		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
-		G->G->window->updstatusbar();
+		if (!statustxt->lbl)
+			G->G->window->statusbar->pack_start(GTK2.Frame()
+				->add(statustxt->lbl=makestatus())
+				->set_shadow_type(GTK2.SHADOW_ETCHED_OUT)
+			,0,0,3)->show_all();
 	}
-	void setstatus(string txt)
-	{
-		//werror("Setting sbtext to %O\n",txt);
-		statustxt->txt=txt;
-		if (statustxt->lbl) statustxt->lbl->set_text(txt);
-	}
+	GTK2.Widget makestatus() {return GTK2.Label((["xalign":0.0]));}
+	void setstatus(string txt) {statustxt->lbl->set_text(txt);}
 }
 
 string gypsum_version()

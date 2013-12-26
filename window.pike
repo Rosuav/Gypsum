@@ -713,15 +713,6 @@ void colorcheck(object self,mapping subw)
 	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
-void updstatusbar()
-{
-	foreach (G->G->statustexts;;mapping(string:mixed) info)
-	{
-		if (!info->lbl) statusbar->pack_start(GTK2.Frame()->add(info->lbl=GTK2.Label((["xalign":0.0,"text":info->txt])))->set_shadow_type(GTK2.SHADOW_ETCHED_OUT),0,0,3);
-	}
-	statusbar->show_all();
-}
-
 //Anything that calls this function is by definition a TODO, though this itself isn't.
 void TODO()
 {
