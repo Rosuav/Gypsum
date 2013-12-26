@@ -69,7 +69,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 			i=G->G->lasturl;
 			if (!i) {say("%% No URLs received this session.",subw); return 1;}
 		}
-		else --i; //We're 0-based, the user is 1-based :)
+		--i; //We're 0-based, the user is 1-based :)
 		if (i>=sizeof(recvurl))
 		{
 			say("%% URL index invalid - we haven't received that many URLs this session.",subw);
