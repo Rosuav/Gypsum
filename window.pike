@@ -150,9 +150,11 @@ array(int) point_to_char(mapping subw,int x,int y)
 }
 
 /**
- *
+ * Clear any previous highlight, and highlight from (line1,col1) to (line2,col2)
+ * Will trigger a repaint of all affected areas.
+ * If line1==-1, will remove all highlight.
  */
-void mousedown(object self,object ev,mapping subw)
+void highlight(mapping subw,int line1,int col1,int line2,int col2)
 {
 	if (has_index(subw,"selstartline")) //There's a previous highlight. Clear it (by queuing draw for those lines).
 	{
@@ -160,8 +162,20 @@ void mousedown(object self,object ev,mapping subw)
 		int y2=(max(subw->selstartline,subw->selendline)+1)*subw->lineheight;
 		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 	}
-	[subw->selstartline,subw->selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
-	subw->selendline=subw->selstartline; subw->selendcol=subw->selstartcol;
+	if (line1==-1) {m_delete(subw,"selstartline"); return;} //Unhighlight.
+	subw->selstartline=line1; subw->selstartcol=col1; subw->selendline=line2; subw->selendcol=col2;
+	int y1= min(line1,line2)   *subw->lineheight;
+	int y2=(max(line1,line2)+1)*subw->lineheight;
+	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+}
+
+/**
+ *
+ */
+void mousedown(object self,object ev,mapping subw)
+{
+	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
 }
 
@@ -191,11 +205,7 @@ void mouseup(object self,object ev,mapping subw)
 			else content+=curline;
 		}
 	}
-	int y1= min(subw->selstartline,line)   *subw->lineheight;
-	int y2=(max(subw->selstartline,line)+1)*subw->lineheight;
-	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
-	//subw->display->queue_draw();
-	m_delete(subw,"selstartline");
+	highlight(subw,-1,0,0,0);
 	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content,sizeof(content));
 }
 
@@ -221,13 +231,7 @@ void mousemove(object self,object ev,mapping subw)
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
 	setstatus(txt);
 	if (subw->mouse_down && (line!=subw->selendline || col!=subw->selendcol))
-	{
-		int y1= min(subw->selendline,line)   *subw->lineheight;
-		int y2=(max(subw->selendline,line)+1)*subw->lineheight;
-		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
-		//subw->display->queue_draw(); //Full repaint for debugging
-		subw->selendline=line; subw->selendcol=col;
-	}
+		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
 }
 
 /**
