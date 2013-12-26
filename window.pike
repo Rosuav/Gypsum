@@ -67,6 +67,11 @@ mapping(string:mixed) subwindow(string txt)
 }
 
 /**
+ * Return the subw mapping for the currently-active tab.
+ */
+mapping(string:mixed) current_subw() {return tabs[notebook->get_current_page()];}
+
+/**
  * Get a suitable Pango font for a particular category. Will cache based on font name.
  *
  * @param	category	the category of font for which to collect the description
@@ -239,7 +244,7 @@ void mousemove(object self,object ev,mapping subw)
  */
 void say(string|array msg,mapping|void subw)
 {
-	if (!subw) subw=tabs[notebook->get_current_page()];
+	if (!subw) subw=current_subw();
 	if (stringp(msg))
 	{
 		if (msg[-1]=='\n') msg=msg[..<1];
@@ -280,7 +285,7 @@ void say(string|array msg,mapping|void subw)
 	subw->activity=1;
 	switch (persist["notif/activity"])
 	{
-		case 1: if (tabs[notebook->get_current_page()]!=subw) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
+		case 1: if (subw!=current_subw()) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
 		case 2: if (!paused) mainwindow->present(); //Present the window only if we're not paused.
 	}
 	redraw(subw);
@@ -291,7 +296,7 @@ void say(string|array msg,mapping|void subw)
  */
 void connect(mapping info,mapping|void subw)
 {
-	if (!subw) subw=tabs[notebook->get_current_page()];
+	if (!subw) subw=current_subw();
 	if (!info)
 	{
 		//Disconnect
@@ -311,7 +316,7 @@ void redraw(mapping subw)
 {
 	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
 	if (height!=subw->totheight) subw->display->set_size_request(-1,subw->totheight=height);
-	if (tabs[notebook->get_current_page()]==subw) subw->activity=0;
+	if (subw==current_subw()) subw->activity=0;
 	notebook->set_tab_label_text(subw->page,"* "*subw->activity+subw->tabtext);
 	subw->maindisplay->queue_draw();
 }
@@ -534,7 +539,7 @@ void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1)
 /**
  * Retrieve the specified (or current) subw's reconnection string
  */
-string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
+string recon(mapping|void subw) {return ((subw||current_subw())->connection||([]))->recon;}
 
 /**
  *
@@ -838,7 +843,7 @@ int window_close()
  */
 void connect_menu(object self)
 {
-	G->G->commands->connect("dlg",tabs[notebook->get_current_page()]);
+	G->G->commands->connect("dlg",current_subw());
 }
 
 /**
@@ -884,7 +889,7 @@ void savewinpos()
  */
 int switchpage(object|mapping subw)
 {
-	if (objectp(subw)) {call_out(switchpage,0,tabs[notebook->get_current_page()]); return 0;} //Let the signal handler return before actually doing stuff
+	if (objectp(subw)) {call_out(switchpage,0,current_subw()); return 0;} //Let the signal handler return before actually doing stuff
 	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
 	subw->ef->grab_focus();
 }
