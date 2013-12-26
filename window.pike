@@ -117,6 +117,7 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
 		gtksignal(subw->ef,"changed",colorcheck,subw),
+		//gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1), //Not working, see below
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
@@ -134,6 +135,17 @@ void scrchange(object self,mapping subw)
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	if (!paused) self->set_value(upper-self->get_property("page size"));
+}
+
+int paste(object self,mapping subw)
+{
+	//TODO: Handle multi-line paste.
+	//At this point, the clipboard contents haven't been put into the EF.
+	//But I don't know how to prevent the normal pasting from happening.
+	//Obviously I don't want to change what's on the clipboard! But this
+	//signal seems to be just a notification. In theory, returning 1 here
+	//should prevent the normal behaviour; but that doesn't seem to work.
+	return 1;
 }
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
