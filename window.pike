@@ -145,9 +145,7 @@ array(int) point_to_char(mapping subw,int x,int y)
 	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
 	else l=subw->lines[line];
 	string str=filter(l,stringp)*"";
-	int col=(x-3)/subw->charwidth;
-	if (col<0) col=0; else if (col>sizeof(str)) col=sizeof(str);
-	return ({line,col});
+	return ({line,limit(0,(x-3)/subw->charwidth,sizeof(str))});
 }
 
 int selstartline=-1,selstartcol,selendline,selendcol;
