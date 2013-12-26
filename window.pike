@@ -491,6 +491,9 @@ int keypress(object self,array|object ev,mapping subw)
  */
 int enterpressed(mapping subw)
 {
+	//TODO: Figure out what the return value is supposed to mean.
+	//It's used only in COMPAT_SIGNAL mode, and it seems a little inconsistent.
+	//I think this probably ought to just return void.
 	string cmd=subw->ef->get_text(); subw->ef->set_text("");
 	subw->histpos=-1;
 	subw->prompt[0]->timestamp=time(1);
