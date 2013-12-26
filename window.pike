@@ -154,6 +154,12 @@ array(int) point_to_char(mapping subw,int x,int y)
  */
 void mousedown(object self,object ev,mapping subw)
 {
+	if (has_index(subw,"selstartline")) //There's a previous highlight. Clear it (by queuing draw for those lines).
+	{
+		int y1= min(subw->selstartline,subw->selendline)   *subw->lineheight;
+		int y2=(max(subw->selstartline,subw->selendline)+1)*subw->lineheight;
+		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+	}
 	[subw->selstartline,subw->selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	subw->selendline=subw->selstartline; subw->selendcol=subw->selstartcol;
 	subw->mouse_down=1;
