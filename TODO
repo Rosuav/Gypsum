@@ -2,7 +2,6 @@
 * Clickable URLs
 * Client-side aliases
 * Multi-line paste
-* Search facility. May be worth retaining text-only form of line??
 * More generally, anything that people expect RosMud to do.
 
 Eventually, drop support for Pike 7.8. This means:
