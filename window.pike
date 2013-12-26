@@ -532,7 +532,7 @@ void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0)
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
 /**
- * Attempt to reconnect to the last-used world
+ * Retrieve the specified (or current) subw's reconnection string
  */
 string recon(mapping|void subw) {return ((subw||tabs[notebook->get_current_page()])->connection||([]))->recon;}
 
