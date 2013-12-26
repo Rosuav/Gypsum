@@ -42,6 +42,7 @@ inherit statustext;
 	string tabtext;
 	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
 	array(object) signals; //Collection of gtksignal objects - replaced after code reload
+	int selstartline,selstartcol,selendline,selendcol; //Highlight start/end positions. If no highlight, selstartline will not even exist.
 */
 mapping(string:mixed) subwindow(string txt)
 {
@@ -148,14 +149,13 @@ array(int) point_to_char(mapping subw,int x,int y)
 	return ({line,limit(0,(x-3)/subw->charwidth,sizeof(str))});
 }
 
-int selstartline=-1,selstartcol,selendline,selendcol;
 /**
  *
  */
 void mousedown(object self,object ev,mapping subw)
 {
-	[selstartline,selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
-	selendline=selstartline; selendcol=selstartcol;
+	[subw->selstartline,subw->selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	subw->selendline=subw->selstartline; subw->selendcol=subw->selstartcol;
 }
 
 /**
@@ -163,32 +163,32 @@ void mousedown(object self,object ev,mapping subw)
  */
 void mouseup(object self,object ev,mapping subw)
 {
-	if (selstartline==-1) return;
+	if (!has_index(subw,"selstartline")) return;
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string content;
-	if (selstartline==line)
+	if (subw->selstartline==line)
 	{
 		//Single-line selection: special-cased for simplicity.
-		if (selstartcol>col) [col,selstartcol]=({selstartcol,col});
+		if (subw->selstartcol>col) [col,subw->selstartcol]=({subw->selstartcol,col});
 		content=filter((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],stringp)*""+"\n";
-		content=content[selstartcol..col-1];
+		content=content[subw->selstartcol..col-1];
 	}
 	else
 	{
-		if (selstartline>line) [line,col,selstartline,selstartcol]=({selstartline,selstartcol,line,col});
-		for (int l=selstartline;l<=line;++l)
+		if (subw->selstartline>line) [line,col,subw->selstartline,subw->selstartcol]=({subw->selstartline,subw->selstartcol,line,col});
+		for (int l=subw->selstartline;l<=line;++l)
 		{
 			string curline=filter((l==sizeof(subw->lines))?subw->prompt:subw->lines[l],stringp)*""+"\n";
-			if (l==selstartline) content=curline[selstartcol..];
+			if (l==subw->selstartline) content=curline[subw->selstartcol..];
 			else if (l==line) content+=curline[..col-1];
 			else content+=curline;
 		}
 	}
-	int y1= min(selstartline,line)   *subw->lineheight;
-	int y2=(max(selstartline,line)+1)*subw->lineheight;
+	int y1= min(subw->selstartline,line)   *subw->lineheight;
+	int y2=(max(subw->selstartline,line)+1)*subw->lineheight;
 	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 	//subw->display->queue_draw();
-	selstartline=-1;
+	m_delete(subw,"selstartline");
 	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content,sizeof(content));
 }
 
@@ -213,13 +213,13 @@ void mousemove(object self,object ev,mapping subw)
 	}; //Ignore errors
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
 	setstatus(txt);
-	if (selstartline!=-1 && (line!=selendline || col!=selendcol))
+	if (has_index(subw,"selstartline") && (line!=subw->selendline || col!=subw->selendcol))
 	{
-		int y1= min(selendline,line)   *subw->lineheight;
-		int y2=(max(selendline,line)+1)*subw->lineheight;
+		int y1= min(subw->selendline,line)   *subw->lineheight;
+		int y2=(max(subw->selendline,line)+1)*subw->lineheight;
 		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 		//subw->display->queue_draw(); //Full repaint for debugging
-		selendline=line; selendcol=col;
+		subw->selendline=line; subw->selendcol=col;
 	}
 }
 
@@ -370,8 +370,8 @@ int paint(object self,object ev,mapping subw)
 	display->set_background(colors[0]);
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
-	int ssl=selstartline,ssc=selstartcol,sel=selendline,sec=selendcol;
-	if (ssl==-1) sel=-1;
+	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
+	if (zero_type(ssl)) ssl=sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
