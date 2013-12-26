@@ -156,6 +156,7 @@ void mousedown(object self,object ev,mapping subw)
 {
 	[subw->selstartline,subw->selstartcol]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	subw->selendline=subw->selstartline; subw->selendcol=subw->selstartcol;
+	subw->mouse_down=1;
 }
 
 /**
@@ -163,7 +164,7 @@ void mousedown(object self,object ev,mapping subw)
  */
 void mouseup(object self,object ev,mapping subw)
 {
-	if (!has_index(subw,"selstartline")) return;
+	if (!m_delete(subw,"mouse_down")) return;
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string content;
 	if (subw->selstartline==line)
@@ -213,7 +214,7 @@ void mousemove(object self,object ev,mapping subw)
 	}; //Ignore errors
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
 	setstatus(txt);
-	if (has_index(subw,"selstartline") && (line!=subw->selendline || col!=subw->selendcol))
+	if (subw->mouse_down && (line!=subw->selendline || col!=subw->selendcol))
 	{
 		int y1= min(subw->selendline,line)   *subw->lineheight;
 		int y2=(max(subw->selendline,line)+1)*subw->lineheight;
