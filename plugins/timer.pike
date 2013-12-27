@@ -76,6 +76,12 @@ class config
 		persist["timer/timers"]=timers;
 		makelabels();
 	}
+
+	void delete_content(string kwd,mapping(string:mixed) info)
+	{
+		persist["timer/timers"]=timers;
+		makelabels();
+	}
 }
 
 constant menu_label="Timer";

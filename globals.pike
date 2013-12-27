@@ -258,6 +258,7 @@ class configdlg
 	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping. The mapping is already inside items[], so this is also a good place to trigger a persist[] save.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
+	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword. The mapping has already been removed from items[], so as above, save here.
 	//... optionally provide me...
 	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
 	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
@@ -300,6 +301,16 @@ class configdlg
 		}
 	}
 
+	void pb_delete()
+	{
+		if (!allow_delete) return; //Shouldn't happen - allow_delete should be a constant, so the signal won't even be connected to. But check just in case.
+		[object iter,object store]=win->sel->get_selected();
+		string kwd=iter && store->get_value(iter,0);
+		if (!kwd) return;
+		store->remove(iter);
+		delete_content(kwd,m_delete(items,kwd));
+	}
+
 	void selchanged()
 	{
 		string kwd=selecteditem();
@@ -340,6 +351,7 @@ class configdlg
 		win->signals+=({
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
 			gtksignal(win->pb_save,"clicked",pb_save),
+			allow_delete && gtksignal(win->pb_delete,"clicked",pb_delete),
 			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}), //Has to be done with a lambda, I think to dispose of the args
 			gtksignal(win->sel,"changed",selchanged),
 		});
