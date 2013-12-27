@@ -201,9 +201,33 @@ void mousedown(object self,object ev,mapping subw)
  */
 void mouseup(object self,object ev,mapping subw)
 {
-	if (!m_delete(subw,"mouse_down")) return;
+	int mouse_down=m_delete(subw,"mouse_down"); //Destructive query
+	if (!mouse_down) return; //Mouse wasn't registered as down, do nothing.
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string content;
+	if (mouse_down==1)
+	{
+		//Mouse didn't move between going down and going up. Consider it a click.
+		highlight(subw,-1,0,0,0);
+		//Go through the line clicked on. Find one single word in one single color, and that's
+		//what was clicked on. TODO: Optionally permit the user to click on something with a
+		//modifier key (eg Ctrl-Click) to execute something as a command - would play well with
+		//help files highlighted in color, for instance.
+		foreach ((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
+		{
+			col-=sizeof(x); if (col>0) continue;
+			foreach (x/" ",string word)
+			{
+				col-=sizeof(word); if (col>0) continue;
+				//We now have the exact word, delimited by color boundary and blank space.
+				if (has_prefix(word,"http://") || has_prefix(word,"https://") || has_prefix(word,"www."))
+					invoke_browser(word);
+				return;
+			}
+		}
+		//Couldn't find anything to click on.
+		return;
+	}
 	if (subw->selstartline==line)
 	{
 		//Single-line selection: special-cased for simplicity.
@@ -248,7 +272,10 @@ void mousemove(object self,object ev,mapping subw)
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
 	setstatus(txt);
 	if (subw->mouse_down && (line!=subw->selendline || col!=subw->selendcol))
+	{
+		subw->mouse_down=2; //Mouse has moved.
 		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
+	}
 }
 
 /**
