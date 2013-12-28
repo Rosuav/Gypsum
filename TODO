@@ -2,6 +2,7 @@
 * Client-side aliases
 * Multi-line paste
 * More generally, anything that people expect RosMud to do.
+* Spell-checker?
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
