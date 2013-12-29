@@ -293,7 +293,7 @@ void say(string|array msg,mapping|void subw)
 	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
 	if (!mappingp(msg[0])) msg=({([])})+msg;
 	msg[0]->timestamp=time(1);
-	if (subw->logfile) subw->logfile->write(filter(msg,stringp)*""+"\n");
+	if (subw->logfile) subw->logfile->write(string_to_utf8(filter(msg,stringp)*""+"\n"));
 	array lines=({ });
 	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
 	//it'll wrap at any color change as if it were a space. This is unideal, but it
