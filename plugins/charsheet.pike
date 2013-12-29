@@ -71,6 +71,24 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	//So this works with a multiset instead.
 	multiset(GTK2.Widget) noexpand=(<>);
 	GTK2.Widget noex(GTK2.Widget wid) {noexpand[wid]=1; return wid;}
+
+	void ensurevisible(GTK2.Widget self)
+	{
+		//Scan upward until we find a GTK2.ScrolledWindow. Depends on self->allocation() returning
+		//coordinates relative to that parent, and not to the immediate parent (which might be a
+		//layout manager or a Frame or something).
+		for (GTK2.Widget par=self->get_parent();par;par=par->get_parent())
+		{
+			if (par->get_hscrollbar) //Is there a better way to detect a GTK2.ScrolledWindow?
+			//if (par->get_name()=="GtkScrolledWindow") //Is this reliable?
+			{
+				mapping alloc=self->allocation();
+				par->get_hadjustment()->clamp_page(alloc->x,alloc->x+alloc->width);
+				par->get_vadjustment()->clamp_page(alloc->y,alloc->y+alloc->height);
+				return;
+			}
+		}
+	}
 	
 	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
 	{
@@ -91,6 +109,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (intp(width_or_props)) width_or_props=(["width-chars":width_or_props]);
 		object ret=win[kwd]=GTK2.Entry(width_or_props)->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
+		ret->signal_connect("focus-in-event",ensurevisible);
 		return ret;
 	}
 
@@ -104,6 +123,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		object ret=win[kwd]=MultiLineEntryField(props||([]))->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
+		ret->signal_connect("focus-in-event",ensurevisible);
 		return ret;
 	}
 
