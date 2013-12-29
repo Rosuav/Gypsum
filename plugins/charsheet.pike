@@ -77,10 +77,10 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),homogenousp);
 		foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
 		{
-			if (stringp(obj)) obj=GTK2.Label(obj);
+			if (stringp(obj)) obj=noex(GTK2.Label(obj));
 			int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
-			if (noexpand[obj]) tb->attach(obj,x,xend,y,y+1,0,0,0,0);
-			else tb->attach_defaults(obj,x,xend,y,y+1);
+			int opt=noexpand[obj]?0:(GTK2.Fill|GTK2.Expand);
+			tb->attach(obj,x,xend,y,y+1,opt,opt,1,1);
 		}
 		return tb;
 	}
