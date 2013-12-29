@@ -222,8 +222,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({"Gold",num("wealth_gold",7)}),
 						({"Silver",num("wealth_silver",7)}),
 						({"Copper",num("wealth_copper",7)}),
-						({"3.5ed:",calc("wealth_plat*1000+wealth_gold*100+wealth_silver*10+wealth_copper")}),
-						({"4ed:",calc("wealth_plat*10000+wealth_gold*100+wealth_silver*10+wealth_copper")}),
+						({"= gp",calc("(wealth_plat*1000+wealth_gold*100+wealth_silver*10+wealth_copper)/100")}),
+						({"(4ed)",calc("(wealth_plat*10000+wealth_gold*100+wealth_silver*10+wealth_copper)/100")}),
 					}))))
 				,0,0,0)
 				->add(GTK2.Hbox(0,20)
