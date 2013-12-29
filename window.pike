@@ -216,6 +216,7 @@ void mouseup(object self,object ev,mapping subw)
 		foreach ((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
 		{
 			col-=sizeof(x); if (col>0) continue;
+			col+=sizeof(x); //Go back to the beginning of this color block - we've found something.
 			foreach (x/" ",string word)
 			{
 				col-=sizeof(word); if (col>0) continue;
