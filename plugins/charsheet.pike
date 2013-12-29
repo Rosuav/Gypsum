@@ -325,7 +325,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				->add(GTK2.Frame("Languages known")->add(mle("languages")))
 			,GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
-				({({"Name","Stat","Mod","Rank","Synergy","Other","Total"})})
+				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
 				+map(#"INT Appraise
 					DEX Balance
 					CHA Bluff
@@ -378,12 +378,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					{
 						desc=desc[1..];
 						if (!data[desc]) data[desc]=desc;
-						desc=ef(desc);
+						desc=noex(ef(desc,18));
 					}
 					//TODO: Synergies (including armor check penalties)
 					return ({
-						desc,stat,calc(stat+"_mod"),num(kwd+"_rank"),calc("0",kwd+"_synergy"),num(kwd+"_other"),
-						calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)
+						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),noex(calc("0",kwd+"_synergy")),noex(num(kwd+"_other")),
+						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
+						ef(kwd+"_notes",10),
 					});
 				})
 			)),GTK2.Label("Skills"))
