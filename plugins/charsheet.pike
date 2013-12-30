@@ -247,14 +247,14 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					}))))
 				,0,0,0)
 				->add(GTK2.Hbox(0,20)
-					->add(GTK2Table(
-						({({"Stat","Score","Eq","Temp","Mod"})})+
+					->add(GTK2.Frame("Stats")->add(GTK2Table(
+						({({"","Score","Eq","Temp","Mod"})})+
 						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
 							stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
 							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod") //TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former
 						});})
-					))
+					)))
 					->add(GTK2.Vbox(0,10)
 						->add(GTK2.Hbox(0,10)
 							->add(GTK2.Frame("HP")->add(GTK2Table(({
@@ -267,12 +267,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 								->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
 							))
 						)
-						->add(GTK2Table(({
-							({"Saves","Base","Ability","Misc","Total"}),
+						->add(GTK2.Frame("Saves")->add(GTK2Table(({
+							({"","Base","Ability","Misc","Total"}),
 							({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
 							({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
 							({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
-						})))
+						}))))
 					)
 				)
 				->add(GTK2.Hbox(0,20)
