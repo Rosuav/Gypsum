@@ -433,12 +433,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			,GTK2.Label("Feats"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Prepared spells, by level/tier")->add(GTK2Table(({
-					({"0","1","2","3","4","5","6","7","8","9"}),
+					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_prepared",i,n[*])*"+");}),
 					({win->clear_prepared=GTK2.Button("Clear"),0,0,0,0,0,0,0,0,0}),
 				}))),0,0,0)
 				->pack_start(GTK2.Frame("Already-cast spells, by level/tier")->add(GTK2Table(({
-					({"0","1","2","3","4","5","6","7","8","9"}),
+					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_cast",i,n[*])*"+");}),
 					({win->clear_cast=GTK2.Button("Clear"),0,0,0,0,0,0,0,0,0}),
 				}))),0,0,0)
