@@ -359,26 +359,30 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			,GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
-				+map(#"INT Appraise
-					DEX Balance
+				+map(#"INT Appraise	Craft 1 (if related), Craft 2 (if related), Craft 3 (if related)
+					DEX Balance	AC, Tumble
 					CHA Bluff
-					STR Climb
+					STR Climb	AC, Use Rope (if climbing rope)
 					CON Concentration
 					INT *Craft 1
 					INT *Craft 2
 					INT *Craft 3
 					INT Decipher Script
-					CHA Diplomacy
+					CHA Diplomacy	Bluff, Knowledge Local, Sense Motive
 					INT Disable Device
-					CHA Disguise
-					DEX Escape Artist
+					CHA Disguise	Bluff (if acting in character)
+					DEX Escape Artist	AC, Use Rope (if involving ropes)
 					INT Forgery
-					CHA Gather Info
+					CHA Gather Info	Knowledge Local
 					CHA Handle Animal
-					WIS Heal
+					WIS Heal	AC
 					DEX Hide
-					CHA Intimidate
-					STR Jump
+					CHA Intimidate	Bluff
+					STR Jump	AC, Tumble
+					INT Knowledge Arcana
+					INT Knowledge Local
+					INT Knowledge Nobility
+					INT Knowledge Nature	Survival
 					INT *Knowledge 1
 					INT *Knowledge 2
 					INT *Knowledge 3
@@ -386,26 +390,26 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					INT *Knowledge 5
 					INT *Knowledge 6
 					WIS Listen
-					DEX Move Silently
+					DEX Move Silently	AC
 					DEX Open Lock
 					CHA *Perform 1
 					CHA *Perform 2
 					CHA *Perform 3
 					WIS *Profession 1
 					WIS *Profession 2
-					DEX Ride
+					DEX Ride	Handle Animal
 					INT Search
 					WIS Sense Motive
-					DEX Sleight of Hand
-					INT Spellcraft
+					DEX Sleight of Hand	AC, Bluff
+					INT Spellcraft	Knowledge Arcana, Use Magic Device (if deciphering scroll)
 					WIS Spot
-					WIS Survival
-					STR Swim
-					DEX Tumble
-					CHA Use Magic Device
-					DEX Use Rope"/"\n",lambda(string s)
+					WIS Survival	Search (if following tracks)
+					STR Swim	AC, AC
+					DEX Tumble	AC, Jump
+					CHA Use Magic Device	Decipher Script (if involving scrolls), Spellcraft (if involving scrolls)
+					DEX Use Rope	Escape Artist (if involving bindings)"/"\n",lambda(string s)
 				{
-					sscanf(s,"%*[\t]%s %s",string stat,string|object desc);
+					sscanf(s,"%*[\t]%s %[^\t]\t%s",string stat,string|object desc,string syn);
 					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
@@ -413,9 +417,66 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						if (!data[desc]) data[desc]=desc;
 						desc=noex(ef(desc,18));
 					}
-					//TODO: Synergies (including armor check penalties)
+					string|GTK2.Widget synergy_desc="";
+					if (syn)
+					{
+						//Figure out two things: the formula, for the easy bits, and the description, for everything else.
+						//Keep the original syn (RFC 793 compliant pun) around for documentation purposes, just in case.
+						//The array consists of a number of tuples: ({keyword, type, description})
+						//If type == -1, it's the keyword*-1 and is an armor check penalty.
+						//If type == 2, it's typical synergy, >=5 gives +2 unconditionally.
+						//If type == 0, it's a conditional synergy, >=5 gives +2 in the description only.
+						//Note that a keyword may come up more than once, eg with different conditions.
+						array(array(string|int)) synergies=({ });
+						foreach (syn/", ",string s)
+						{
+							if (s=="AC") {synergies+=({({"bodyarmor_acpen",-1,"Armor penalty"}),({"shield_acpen",-1,"Shield penalty"})}); continue;} //Non-skill but still a synergy... of sorts.
+							sscanf(s,"%s (%s)",string kw,string cond);
+							//Simple synergy: 5 or more ranks gives +2, possibly conditionally.
+							//If there's a condition, ignore it from the normal figure (which
+							//affects the displayed rank).
+							synergies+=({({replace(lower_case(kw||s),({"*"," "}),({"","_"}))+"_rank",cond && 2,s})});
+						}
+						synergy_desc=noex(GTK2.Button(""));
+						array(array(string)) full_desc; //Shared state between the two closures, nothing more
+						function recalc=lambda(mapping data,multiset beenthere)
+						{
+							int mod=0;
+							full_desc=({({"Synergy","Value"})});
+							foreach (synergies,[string kw,int type,string desc])
+							{
+								int val=(int)data[kw];
+								switch (type)
+								{
+									case -1: if (val) {mod-=val; full_desc+=({({desc,(string)-val})});} break;
+									case 0: if (val>=5) mod+=2; //Fall through
+									case 2: if (val>=5) full_desc+=({({desc,"2"})});
+								}
+							}
+							string desc="";
+							if (sizeof(full_desc)>1)
+							{
+								desc=(string)mod;
+								synergy_desc->set_relief(GTK2.RELIEF_NORMAL)->set_sensitive(1);
+							}
+							else synergy_desc->set_relief(GTK2.RELIEF_NONE)->set_sensitive(0);
+							set_value(kwd+"_synergy",desc,beenthere);
+							synergy_desc->set_label(desc);
+						};
+						synergy_desc->signal_connect("clicked",lambda()
+						{
+							GTK2.Window((["title":"Synergies","transient-for":win->mainwindow]))
+								->add(GTK2.Frame("Synergies for "+desc)->add(GTK2Table(full_desc)))
+								->show_all()
+								->signal_connect("delete-event",lambda(object self) {self->destroy();});
+						});
+						foreach (synergies,[string dep,int type,string desc])
+							if (!depends[dep]) depends[dep]=(<recalc>);
+							else depends[dep][recalc]=1;
+						recalc(data,(<kwd+"_synergy">));
+					}
 					return ({
-						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),noex(calc("0",kwd+"_synergy")),noex(num(kwd+"_other")),
+						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),synergy_desc,noex(num(kwd+"_other")),
 						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
 						ef(kwd+"_notes",10),
 					});
