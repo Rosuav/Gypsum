@@ -331,8 +331,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					),0,0,0)
 					->pack_start(GTK2.Frame("Shield")->add(GTK2.Hbox(0,0)
 						->add(GTK2.Label("Name"))->add(ef("shield"))
-						->add(GTK2.Label("AC"))->add(ef("shield_ac"))
-						->add(GTK2.Label("Check pen"))->add(ef("shield_acpen"))
+						->add(GTK2.Label("AC"))->add(num("shield_ac"))
+						->add(GTK2.Label("Check pen"))->add(num("shield_acpen"))
 					),0,0,0)
 					->pack_start(GTK2.Frame("Protective gear (deflection bonuses)")->add(GTK2Table(({
 						({"Name",noex(GTK2.Label("AC"))}),
