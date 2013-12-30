@@ -134,6 +134,17 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
+	//Highlight an object - probably a label or ef - as something the human
+	//should be looking at (as opposed to an intermediate calculation, for
+	//instance). It will be accompanied by the specified label.
+	GTK2.Widget readme(string lbl,GTK2.Widget main)
+	{
+		return GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))
+			->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(192,192,255))
+			->add(GTK2.Hbox(0,3)->add(GTK2.Label(lbl))->add(main))
+		;
+	}
+
 	//Magic resolver. Any symbol at all can be resolved; it'll come through as 0, but the name
 	//will be retained. Used in the precompilation stage to capture external references.
 	multiset(string) symbols;
@@ -276,22 +287,24 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					)
 				)
 				->add(GTK2.Hbox(0,20)
-					->add(GTK2.Frame("AC")->add(GTK2Table(({
-						({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
-						({
-							"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
-							calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
-							calc(#"(string)([
-								\"Fine\":8,\"Diminutive\":4,\"Tiny\":2,\"Small\":1,
-								\"Large\":-1,\"Huge\":-2,\"Gargantuan\":-4,\"Colossal\":-8
-							])[size]","size_ac","string"),num("misc_ac")
-						}),
-						({
-							"Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac"),"",
-							"Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch"),"",
-							"Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat"),"",
-						}),
-					}))->set_col_spacings(5)))
+					->add(GTK2.Frame("AC")->add(GTK2.Vbox(0,0)
+						->add(GTK2Table(({
+							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
+							({
+								"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
+								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
+								calc(#"(string)([
+									\"Fine\":8,\"Diminutive\":4,\"Tiny\":2,\"Small\":1,
+									\"Large\":-1,\"Huge\":-2,\"Gargantuan\":-4,\"Colossal\":-8
+								])[size]","size_ac","string"),num("misc_ac")
+							}),
+						}))->set_col_spacings(5))
+						->add(GTK2.Hbox(0,20)
+							->add(readme("Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac")))
+							->add(readme("Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch")))
+							->add(readme("Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat")))
+						)
+					))
 					->add(GTK2Table(({
 						({"Speed",num("speed")}),
 						({"BAB",num("bab")}),
