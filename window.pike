@@ -941,9 +941,9 @@ mapping(string:int) pos;
 void configevent(object self,object ev)
 {
 	#if constant(COMPAT_SIGNAL)
-	if (ev->type!="configure") return; //This wouldn't be needed if I could hook configure_event
+	if (ev->type!="configure") return; //This check isn't needed if we can hook configure_event
 	#endif
-	if (!pos) call_out(savepos,1); //Save a second after the window moved. "Sweep" movement creates a spew of these events, don't keep saving.
+	if (!pos) call_out(savepos,0.1); //Save a moment after the window moves. "Sweep" movement creates a spew of these events, don't keep saving.
 	pos=self->get_position(); //Will return x and y
 }
 

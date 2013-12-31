@@ -207,7 +207,7 @@ class movablewindow
 		#if constant(COMPAT_SIGNAL)
 		if (ev->type!="configure") return;
 		#endif
-		if (!has_index(win,"x")) call_out(savepos,1); //TODO: Save immediately if the window's about to be destroyed.
+		if (!has_index(win,"x")) call_out(savepos,0.1);
 		mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
 	}
 
