@@ -465,8 +465,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						};
 						synergy_desc->signal_connect("clicked",lambda()
 						{
+							object cancel=GTK2.Button((["label":GTK2.STOCK_CLOSE,"use-stock":1]));
+							cancel->signal_connect("clicked",lambda(object self) {self->get_toplevel()->destroy();});
 							GTK2.Window((["title":"Synergies","transient-for":win->mainwindow]))
-								->add(GTK2.Frame("Synergies for "+desc)->add(GTK2Table(full_desc)))
+								->add(GTK2.Vbox(0,2)
+									->add(GTK2.Frame("Synergies for "+desc)->add(GTK2Table(full_desc)))
+									->add(GTK2.HbuttonBox()->add(cancel))
+								)
 								->show_all()
 								->signal_connect("delete-event",lambda(object self) {self->destroy();});
 						});
