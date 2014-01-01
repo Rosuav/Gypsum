@@ -5,6 +5,7 @@
 * Spell-checker?
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
+* Boss key
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
