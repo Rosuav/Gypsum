@@ -33,7 +33,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 		foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
 		setstatus(status[..<2]);
 	}
-	return 0;
+	if (persist["wealth/party"]) foreach (({"Orb","Crown","Danar","Slag"}),string type)
+		if (sscanf(replace(line," ",""),type+":%d%s",int val,string after)==2 && after=="")
+			persist["wealth/"+type]=val;
 }
 
 int process(string param,mapping(string:mixed) subw)
@@ -48,4 +50,70 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-void create(string name) {::create(name);}
+int party(string param,mapping(string:mixed) subw)
+{
+	if (param=="")
+	{
+		if (m_delete(persist,"wealth/party")) say("%% No longer partying.",subw);
+		else say("%% Usage: /party name1 [name2 [name3...]]",subw);
+		return 1;
+	}
+	int members=sizeof(persist["wealth/party"]=param/" ")+1;
+	say("%% Partying with "+members+" members (self included).");
+	persist["wealth/party_split"]=persist["wealth/last_wealth"];
+	return 1;
+}
+
+int split(string param,mapping(string:mixed) subw)
+{
+	int tot=diff(persist["wealth/last_wealth"],persist["wealth/party_split"]);
+	int members=sizeof(persist["wealth/party"])+1;
+	int each=tot/members;
+	say("%% Splitting "+tot+" slag between "+members+" people - "+each+" each.",subw);
+	if (tot<members) {say("%% Not enough to split.",subw); return 1;}
+	int orb=persist["wealth/Orb"];
+	int crown=persist["wealth/Crown"];
+	int danar=persist["wealth/Danar"];
+	int slag=persist["wealth/Slag"];
+	if (each*(members-1)>orb*1000+crown*100+danar*10+slag)
+	{
+		//The giving will fail. Shortcut the iterative search.
+		//It's still possible for it to fail after this (eg if you're carrying
+		//10 orb coins and need to give out 2 danar each), but there's no way
+		//it can succeed if you aren't carrying that much total wealth.
+		say("%% You aren't carrying enough money to give it all out. Giving nothing.",subw);
+		return 1;
+	}
+	string cmd="";
+	foreach (persist["wealth/party"],string giveto)
+	{
+		int left=each;
+		int o=min(orb, left/1000); left-=o*1000;  orb-=o;
+		int c=min(crown,left/100); left-=c*100; crown-=c;
+		int d=min(danar,left/10 ); left-=d*10;  danar-=d;
+		int s=min(slag, left/1  ); left-=s*1;    slag-=s;
+		say(sprintf("%%%% Give %s: %d orb, %d crown, %d danar, %d slag - total %d/%d",giveto,o,c,d,s,o*1000+c*100+d*10+s,each));
+		if (left)
+		{
+			//If the entire job can't be done, abort.
+			say("%% You aren't carrying the right coins to be able to split it.",subw);
+			return 1;
+		}
+		string pat=giveto=="drop"?"drop %d %s%.0s\r\n":"give %d %s to %s\r\n"; //For debugging, you can 'drop' a share of the money.
+		if (o) cmd+=sprintf(pat,o,"orb",giveto);
+		if (c) cmd+=sprintf(pat,c,"crown",giveto);
+		if (d) cmd+=sprintf(pat,d,"danar",giveto);
+		if (s) cmd+=sprintf(pat,s,"slag",giveto);
+	}
+	G->G->connection->write(subw->connection,cmd+"wealth\r\n");
+	int splitpoint=(int)(persist["wealth/party_split"]-","-" ");
+	persist["wealth/party_split"]=(string)(splitpoint+each); //Pretend you got your share of now-split loot prior to partying.
+	return 1;
+}
+
+void create(string name)
+{
+	::create(name);
+	G->G->commands->party=party;
+	G->G->commands->split=split;
+}
