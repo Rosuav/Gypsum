@@ -139,7 +139,7 @@ void makelabels()
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
 		->attach_defaults(win->timers[i]=GTK2.Label("")->set_alignment(1.0,0.0),1,2,i,i+1);
-	win->display->show_all();
+	win->display->set_col_spacings(4)->show_all();
 	showtimes();
 	if (sizeof(timers)==1) win->mainwindow->set_no_show_all(0)->show_all();
 }
