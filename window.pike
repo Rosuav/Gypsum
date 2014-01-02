@@ -803,10 +803,7 @@ void create(string name)
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
-					->add(menuitem("_New Tab","addtab")
-						->add_accelerator("activate",accel,'t',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE) //Ctrl-T that most people will expect
-						->add_accelerator("activate",accel,'n',GTK2.GDK_CONTROL_MASK,0) //Ctrl-N in case it's wanted.
-					)
+					->add(menuitem("_New Tab","addtab")->add_accelerator("activate",accel,'t',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("Close tab","closetab")->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
 					->add(menuitem("_Connect","connect_menu"))
 					->add(menuitem("_Disconnect","disconnect_menu"))
