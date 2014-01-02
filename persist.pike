@@ -58,8 +58,11 @@ object persist=class(string savefn)
 
 	void save()
 	{
-		saving=0;
-		Stdio.write_file(savefn,encode_value(data));
+		if (mixed ex=catch {Stdio.write_file(savefn,encode_value(data)); saving=0;})
+		{
+			werror("Unable to save .gypsumrc: %s\nWill retry in 60 seconds.\n",describe_error(ex));
+			call_out(save,60);
+		}
 	}
 }(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
 
