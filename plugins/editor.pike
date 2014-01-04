@@ -70,7 +70,10 @@ class editor(mapping(string:mixed) conn)
 		win->signals+=({
 			gtksignal(win->pb_send,"clicked",pb_send_click),
 			gtksignal(win->pb_close,"clicked",pb_close_click),
-			gtksignal(win->buf,"mark_set",cursorpos),
+			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
+			//(whatever it is). See the shim in the function definition, which shouldn't be
+			//necessary. Am disabling this code until a patch or workaround is deployed.
+			//gtksignal(win->buf,"mark_set",cursorpos),
 		});
 	}
 }
