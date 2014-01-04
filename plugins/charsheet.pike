@@ -414,8 +414,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
 						desc=desc[1..];
-						if (!data[desc]) data[desc]=desc;
-						desc=noex(ef(desc,18));
+						if (!data[kwd]) data[kwd]=desc;
+						desc=noex(ef(kwd,18));
 					}
 					string|GTK2.Widget synergy_desc="";
 					if (syn)
