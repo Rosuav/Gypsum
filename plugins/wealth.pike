@@ -105,7 +105,10 @@ int split(string param,mapping(string:mixed) subw)
 		if (d) cmd+=sprintf(pat,d,"danar",giveto);
 		if (s) cmd+=sprintf(pat,s,"slag",giveto);
 	}
-	G->G->connection->write(subw->connection,cmd+"wealth\r\n");
+	//For compliance with the rules of Threshold RPG, by default does not actually execute the commands, but merely shows/suggests them.
+	//Set this option only if you understand the implications, and (eg) are using this with another server. There is no UI way to do so.
+	if (persist["wealth/autosplit"]) G->G->connection->write(subw->connection,cmd+"wealth\r\n");
+	else say("%% This will give you a perfect split:\n"+replace(cmd,"\r","")+"wealth\n%% End of perfect split.",subw);
 	int splitpoint=(int)(persist["wealth/party_split"]-","-" ");
 	persist["wealth/party_split"]=(string)(splitpoint+each); //Pretend you got your share of now-split loot prior to partying.
 	return 1;
