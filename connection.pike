@@ -40,8 +40,9 @@ protected string bytes_to_string(string bytes)
 	//Use Latin-1 (the decoder for which in Pike is the identity function), but
 	//replace a handful of byte values that have no meaning in Unicode anyway.
 	//Seems to work well for Threshold RPG, and isn't incompatible with the
-	//normal handling of UTF-8.
-	return replace(bytes,({"\x91","\x92","\x93","\x94"}),({"\u2018","\u2019","\u201c","\u201d"}));
+	//normal handling of UTF-8. (I ought to use an actual CP-1252 decoder, but
+	//the Charset module isn't available on Windows Pike 7.8.700.)
+	return replace(bytes,({"\x80","\x91","\x92","\x93","\x94"}),({"\u20ac","\u2018","\u2019","\u201c","\u201d"}));
 }
 
 /**
