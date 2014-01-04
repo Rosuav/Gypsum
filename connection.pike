@@ -121,7 +121,7 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
  */
 void sockread(mapping conn,string data)
 {
-	//werror("sockread: %O\n",data);
+	if (has_value(data,7)) werror("sockread: %O\n",data);
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
@@ -180,7 +180,7 @@ void sockread(mapping conn,string data)
 int dohooks(mapping conn,string line)
 {
 	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) G->G->window->say("Error in hook: "+describe_error(ex),conn->display);
+	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) G->G->window->say("Error in hook: "+describe_backtrace(ex),conn->display);
 }
 
 /**
