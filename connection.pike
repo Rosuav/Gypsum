@@ -56,13 +56,13 @@ void textread(mapping conn,string data)
 	if (sizeof(data) && data[0]=='\n' && conn->lastcr) data=data[1..];
 	conn->lastcr=sizeof(data) && data[-1]=='\r';
 	data=replace(data,({"\r\n","\n\r","\r"}),"\n");
+	if (has_value(data,7))
+	{
+		//TODO: Beep. (Maybe once for each \7 in the text; maybe not.)
+		data-="\7";
+	}
 	while (sscanf(data,"%s\n%s",string line,data))
 	{
-		if (has_value(line,7))
-		{
-			//TODO: Beep. (Maybe once for each \7 in the line; maybe not.)
-			line-="\7";
-		}
 		conn->curmsg[-1]+=line;
 		line=conn->curline+line;
 		if (!dohooks(conn,line))
@@ -121,7 +121,7 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
  */
 void sockread(mapping conn,string data)
 {
-	if (has_value(data,7)) werror("sockread: %O\n",data);
+	//werror("sockread: %O\n",data);
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
