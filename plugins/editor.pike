@@ -21,6 +21,7 @@ class editor(mapping(string:mixed) conn)
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
+				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
 				->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1,"focus-on-click":0])))
 			,0,0,0)
 		);
@@ -56,12 +57,20 @@ class editor(mapping(string:mixed) conn)
 		win->mainwindow->destroy();
 	}
 
+	void cursorpos(mixed unknown,object self,object mark,mixed foo)
+	{
+		if (mark->get_name()!="insert") return;
+		GTK2.TextIter iter=win->buf->get_iter_at_mark(mark);
+		win->curpos->set_text(iter->get_line()+","+iter->get_line_offset());
+	}
+
 	void dosignals()
 	{
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->pb_send,"clicked",pb_send_click),
 			gtksignal(win->pb_close,"clicked",pb_close_click),
+			gtksignal(win->buf,"mark_set",cursorpos),
 		});
 	}
 }
