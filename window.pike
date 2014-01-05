@@ -518,7 +518,8 @@ int keypress(object self,array|object ev,mapping subw)
 			scr->set_value(scr->get_value()+scr->get_property("page size"));
 			return 1;
 		}
-		case 0xFF13: //Pause
+		case 0xFF13: //Pause (GTK/Linux)
+		case 0xFFFFFF: //Pause (Windows)
 		{
 			paused=!paused;
 			return 1;
