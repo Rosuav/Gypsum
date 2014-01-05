@@ -463,12 +463,21 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF0D: case 0xFF8D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
 		case 0xFF52: //Up arrow
 		{
+			if (ev->state&GTK2.GDK_CONTROL_MASK)
+			{
+				//TODO: Search based on the current cursor position
+				//Must then set_position to the same spot.
+			}
 			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
 			if (subw->histpos) settext(subw,subw->cmdhist[--subw->histpos]);
 			return 1;
 		}
 		case 0xFF54: //Down arrow
 		{
+			if (ev->state&GTK2.GDK_CONTROL_MASK)
+			{
+				//TODO: As above.
+			}
 			if (subw->histpos==-1)
 			{
 				//Optionally clear the EF
