@@ -463,27 +463,30 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF0D: case 0xFF8D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
 		case 0xFF52: //Up arrow
 		{
-			if (ev->state&GTK2.GDK_CONTROL_MASK)
-			{
-				//TODO: Search based on the current cursor position
-				//Must then set_position to the same spot.
-			}
 			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
-			if (subw->histpos) settext(subw,subw->cmdhist[--subw->histpos]);
+			else if (!subw->histpos) return 1;
+			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
+			string pfx = subw->ef->get_text()[..pos-1];
+			int hp=subw->histpos;
+			while (hp && !has_prefix(subw->cmdhist[--hp],pfx));
+			if (has_prefix(subw->cmdhist[hp],pfx)) settext(subw,subw->cmdhist[subw->histpos=hp]);
+			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
 			return 1;
 		}
 		case 0xFF54: //Down arrow
 		{
-			if (ev->state&GTK2.GDK_CONTROL_MASK)
-			{
-				//TODO: As above.
-			}
 			if (subw->histpos==-1)
 			{
 				//Optionally clear the EF
+				return 1;
 			}
-			else if (subw->histpos<sizeof(subw->cmdhist)-1) settext(subw,subw->cmdhist[++subw->histpos]);
-			else {subw->ef->set_text(""); subw->histpos=-1;}
+			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
+			string pfx = subw->ef->get_text()[..pos-1];
+			int hp=subw->histpos;
+			while (hp<sizeof(subw->cmdhist)-1 && !has_prefix(subw->cmdhist[++hp],pfx));
+			if (hp<sizeof(subw->cmdhist)-1) settext(subw,subw->cmdhist[subw->histpos=hp]);
+			else {subw->ef->set_text(pfx); subw->histpos=-1;}
+			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
 			return 1;
 		}
 		case 0xFF1B: //Esc
