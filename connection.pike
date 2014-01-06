@@ -69,7 +69,7 @@ void textread(mapping conn,string data)
 		if (!dohooks(conn,line))
 		{
 			G->G->window->say(conn->curmsg,conn->display);
-			if (conn->logfile) conn->logfile->write("%s\n",line);
+			if (conn->logfile) conn->logfile->write("%s\n",string_to_utf8(line));
 		}
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
