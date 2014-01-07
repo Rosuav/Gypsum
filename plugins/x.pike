@@ -31,7 +31,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		line=line[5..]; //Command starting "pike " - skip the prefix.
 	}
 	//else this is a continuation; the whole line goes to Hilfe.
-	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {G->G->window->say(l,subw);};
+	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {say(l,subw);};
 	int wasfinished=subw->hilfe->state->finishedp();
 	mapping vars=subw->hilfe->variables; vars->subw=subw; vars->mw=(vars->window=G->G->window)->mainwindow;
 	subw->hilfe->add_input_line(line);

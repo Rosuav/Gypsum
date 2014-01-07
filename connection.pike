@@ -68,7 +68,7 @@ void textread(mapping conn,string data)
 		line=conn->curline+line;
 		if (!dohooks(conn,line))
 		{
-			G->G->window->say(conn->curmsg,conn->display);
+			say(conn->curmsg,conn->display);
 			if (conn->logfile) conn->logfile->write("%s\n",string_to_utf8(line));
 		}
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
@@ -181,7 +181,7 @@ void sockread(mapping conn,string data)
 int dohooks(mapping conn,string line)
 {
 	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) G->G->window->say("Error in hook: "+describe_backtrace(ex),conn->display);
+	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) say("Error in hook: "+describe_backtrace(ex),conn->display);
 }
 
 /**
@@ -191,7 +191,7 @@ int dohooks(mapping conn,string line)
  */
 int sockclosed(mapping conn)
 {
-	G->G->window->say("%%% Disconnected from server.",conn->display);
+	say("%%% Disconnected from server.",conn->display);
 	conn->display->prompt=({([])});
 	conn->sock=0; //Break refloop
 	if (conn->ka) remove_call_out(conn->ka);
@@ -233,7 +233,7 @@ void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
  */
 void connected(mapping conn)
 {
-	G->G->window->say("%%% Connected to "+conn->worldname+".",conn->display);
+	say("%%% Connected to "+conn->worldname+".",conn->display);
 	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
@@ -246,7 +246,7 @@ void connected(mapping conn)
  */
 void connfailed(mapping conn)
 {
-	G->G->window->say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
+	say(sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()),conn->display);
 	conn->sock->close();
 	sockclosed(conn);
 	return;
@@ -273,7 +273,7 @@ void ka(mapping conn)
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
-	G->G->window->say("%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
+	say("%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...",conn->display);
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
@@ -283,8 +283,8 @@ mapping connect(object display,mapping info)
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
 	{
-		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) G->G->window->say(sprintf("%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex)));
-		else G->G->window->say(sprintf("%%%% Logging to %O",fn));
+		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(sprintf("%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex)));
+		else say(sprintf("%%%% Logging to %O",fn));
 	}
 	return conn;
 }
