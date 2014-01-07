@@ -23,7 +23,7 @@ array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 #define tinyurl_hostname "tinyurl.com"
 
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
-int maxlen=persist["tinyurl/maxlen"]||64;
+int maxlen=persist["tinyurl/maxlen"]||63;
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
@@ -114,7 +114,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		return 1;
 	}
 	if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) outputhook(line,(["display":subw])); //NOTE: Don't use subw->conn for the last arg; if there's no connection, it should still be safe to use /tiny.
-	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*)http(s?)://([^ ]{"+(maxlen-6)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long. Note that HTTPS consumes one character more than allowed for.
+	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long. Note that HTTPS consumes one character more than allowed for.
 	array parts=longurl->split(line);
 	if (!parts) return 0; //No match? Nothing needing tinification.
 	object dlg=GTK2.MessageDialog(0,GTK2.MESSAGE_QUESTION,GTK2.BUTTONS_NONE,"You're posting a long URL - shorten it?");
