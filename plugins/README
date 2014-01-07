@@ -148,4 +148,4 @@ with persist[]), it should have the same base name as the plugin,
 the extension ".ini", and be placed in the main Gypsum directory.
 No such file should exist in the repository (to avoid overwriting
 a user's config), but a ".ini.example" file should be provided if
-appropriate.
+appropriate. BEST PRACTICE: Use a configdlg instead.
