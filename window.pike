@@ -483,8 +483,8 @@ int keypress(object self,array|object ev,mapping subw)
 			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
 			string pfx = subw->ef->get_text()[..pos-1];
 			int hp=subw->histpos;
-			while (hp<sizeof(subw->cmdhist)-1 && !has_prefix(subw->cmdhist[++hp],pfx));
-			if (hp<sizeof(subw->cmdhist)-1) settext(subw,subw->cmdhist[subw->histpos=hp]);
+			while (++hp<sizeof(subw->cmdhist) && !has_prefix(subw->cmdhist[hp],pfx));
+			if (hp<sizeof(subw->cmdhist)) settext(subw,subw->cmdhist[subw->histpos=hp]);
 			else {subw->ef->set_text(pfx); subw->histpos=-1;}
 			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
 			return 1;
