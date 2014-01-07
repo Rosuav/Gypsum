@@ -22,7 +22,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
 			{
 				int|float val=compile_string("int|float _() {return "+expr+";}",0,this)()->_();
-				if (before) G->G->connection->write(subw->connection,before+val+(after||"")+"\r\n"); //Command with embedded expression
+				if (before) send(subw->connection,before+val+(after||"")+"\r\n"); //Command with embedded expression
 				else say("%% "+val,subw); //"calc" command
 				return 1;
 			};

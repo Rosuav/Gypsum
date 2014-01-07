@@ -9,12 +9,13 @@
  * int fg,bg,bold; //Current color, in original ANSI form
  * object curcolor;
  * string worldname;
- * object display; //References the subwindow object (see window.pike)
+ * mapping display; //References the subwindow data (see window.pike)
  * string conn_host;
  * int conn_port;
- * string readbuffer="",ansibuffer="",curline=""; //Read buffers, at various levels - normally empty except during input processing, but will retain data if there's an incomplete TELNET or ANSI sequence
+ * string readbuffer=""; //Raw socket read buffer (bytes) - normally empty except during input processing, but will retain data if there's an incomplete TELNET sequence
+ * string ansibuffer="",curline=""; //Read buffers (text) at other levels - ditto (will retain if incomplete ANSI sequence, or partial line).
  * int lastcr; //Set to 1 if the last textread ended with \r - if the next one starts \n, the extra blank line is suppressed (it's a \r\n sequence broken over two socket reads)
- * string writeme=""; //Write buffer
+ * string writeme=""; //Write buffer (bytes)
  * Stdio.File logfile; //If non-zero, all text will be logged to this file, after TELNET/ANSI codes and prompts are removed.
  * 
  */
@@ -22,6 +23,7 @@
 void create(string name)
 {
 	G->G->connection=this;
+	add_gypsum_constant("send",bouncer("connection","send"));
 }
 
 /**
@@ -135,8 +137,8 @@ void sockread(mapping conn,string data)
 				switch (iac[1])
 				{
 					case ECHO: if (iac[0]==WILL) G->G->window->password(conn->display); else G->G->window->unpassword(conn->display); break; //Password mode on/off
-					case NAWS: if (iac[0]==DO) write(conn,(string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
-					case TERMTYPE: if (iac[0]==DO) write(conn,(string)({IAC,WILL,TERMTYPE})); break;
+					case NAWS: if (iac[0]==DO) send_bytes(conn,(string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
+					case TERMTYPE: if (iac[0]==DO) send_bytes(conn,(string)({IAC,WILL,TERMTYPE})); break;
 					case SUPPRESSGA: break; //Do we need this?
 					default: break;
 				}
@@ -153,7 +155,7 @@ void sockread(mapping conn,string data)
 				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do. (Actually, omitting this line will have the same effect, because the subscripting will throw an exception. So this is optional, and redundant, just like this sentence is redundant.)
 				switch (subneg[1])
 				{
-					case TERMTYPE: if (subneg[2]==SEND) write(conn,(string)({IAC,SB,TERMTYPE,IS})+"Gypsum"+(string)({IAC,SE})); break;
+					case TERMTYPE: if (subneg[2]==SEND) send_bytes(conn,(string)({IAC,SB,TERMTYPE,IS})+"Gypsum"+(string)({IAC,SE})); break;
 					default: break;
 				}
 			}
@@ -199,7 +201,7 @@ int sockclosed(mapping conn)
 }
 
 /**
- * Write buffered socket text as much as possible
+ * Write buffered socket data as much as possible
  *
  * @param conn Current connection
  */
@@ -213,11 +215,23 @@ void sockwrite(mapping conn)
  * Buffered write to socket
  *
  * @param conn Current connection
- * @param data The data to be written to the socket.
+ * @param text Text to be written to the socket - will be encoded UTF-8.
  */
-void write(mapping conn,string data)
+void send(mapping conn,string text)
 {
-	if (data) conn->writeme+=data;
+	if (!conn) return;
+	if (conn->lines && !(conn=conn->connection)) return; //Allow sending to a subw (quietly ignoring if it's not connected)
+	if (text) conn->writeme+=string_to_utf8(text);
+	sockwrite(conn);
+}
+
+/**
+ * Send raw bytes to the socket
+ * Do not use for text - this is for TELNET sequences etc.
+ */
+void send_bytes(mapping conn,string data)
+{
+	conn->writeme+=data;
 	sockwrite(conn);
 }
 
@@ -259,7 +273,7 @@ void connfailed(mapping conn)
  */
 void ka(mapping conn)
 {
-	write(conn,"\xFF\xF9");
+	send_bytes(conn,"\xFF\xF9");
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 

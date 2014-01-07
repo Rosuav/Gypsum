@@ -50,7 +50,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 	string expansion=aliases[line];
 	if (!expansion) return 0;
 	line=replace(expansion,"%*",args);
-	if (subw->connection) G->G->connection->write(subw->connection,line+"\r\n");
+	send(subw->connection,line+"\r\n");
 	subw->prompt=({([])});
 	return 1;
 }

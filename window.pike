@@ -579,7 +579,7 @@ int enterpressed(mapping subw)
 		foreach (hooks,object h) if (mixed ex=catch {if (h->inputhook(cmd,subw)) {redraw(subw); return 1;}}) say("Error in input hook: "+describe_backtrace(ex),subw);
 	}
 	subw->prompt=({([])}); redraw(subw);
-	if (subw->connection) G->G->connection->write(subw->connection,string_to_utf8(cmd)+"\r\n");
+	send(subw->connection,cmd+"\r\n");
 	return 1;
 }
 

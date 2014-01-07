@@ -195,7 +195,7 @@ int process(string param,mapping(string:mixed) subw)
 		string data="";
 		foreach (timers;string kwd;mapping info) if (info->next)
 			data+=sprintf("%q=%d",kwd,info->next);
-		if (pfx) G->G->connection->write(subw->connection,pfx+" "+data+"\r\n");
+		if (pfx) send(subw->connection,pfx+" "+data+"\r\n");
 		else say("%% "+data,subw);
 		return 1;
 	}

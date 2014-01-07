@@ -119,10 +119,11 @@ this indicates that the line should be hidden, as though it never
 happened.
 
 ADVISORY: Commands can be synthesized directly to a subw or conn:
-subw: if (subw->connection) G->G->connection->write(subw->connection,line+"\r\n");
-conn: G->G->connection->write(conn,line+"\r\n");
+send(conn,line+"\r\n");
 Note that a subwindow may not necessarily have a connection, though
-a connection will always have a display.
+a connection will always have a display. (If you know that it's a
+subw, you can gain a little efficiency by explicitly sending to
+subw->connection, but this is optional. Sending to subw works.)
 
 ADVISORY: Additional information may be stored in subw and/or conn.
 This is not guaranteed, however, as there is no protection against

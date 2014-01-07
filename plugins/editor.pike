@@ -32,9 +32,9 @@ class editor(mapping(string:mixed) conn)
 
 	void pb_send_click()
 	{
-		G->G->connection->write(conn,string_to_utf8(replace(String.trim_all_whites(
+		send(conn,replace(String.trim_all_whites(
 			win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0)
-		),"\n","\r\n"))+"\r\n");
+		),"\n","\r\n")+"\r\n");
 		win->buf->set_modified(0);
 	}
 

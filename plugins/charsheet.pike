@@ -43,7 +43,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
-		G->G->connection->write(conn,string_to_utf8(sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val)));
+		send(conn,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val));
 		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
 	}
 
