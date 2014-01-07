@@ -194,7 +194,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (param=="save" || sscanf(param,"save %s",string pfx))
 	{
 		string data="";
-		foreach (timers;string kwd;mapping info) if (info->next)
+		foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
 			data+=sprintf("%q=%d",kwd,info->next);
 		if (pfx) send(subw->connection,pfx+" "+data+"\r\n");
 		else say("%% "+data,subw);
