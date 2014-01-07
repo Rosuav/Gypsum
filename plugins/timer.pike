@@ -183,6 +183,7 @@ mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 void config() {}
 void showtimes() {}
 void say(string msg,mapping|void subw) {write("%s\n",msg);}
+void send(mapping dest,string msg) {/* Not needed */}
 int main() {process("save",0);}
 #endif
 
