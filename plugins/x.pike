@@ -21,7 +21,9 @@ int inputhook(string line,mapping(string:mixed) subw)
 			//Check for the special "calculator notation"
 			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
 			{
-				int|float val=compile_string("int|float _() {return "+expr+";}",0,this)()->_();
+				int explain=has_prefix(expr,"#");
+				int|float|string val=compile_string("int|float _() {return "+expr[explain..]+";}",0,this)()->_();
+				if (explain) val=expr[1..]+" = "+val;
 				if (before) nexthook(subw,before+val+(after||"")); //Command with embedded expression
 				else say("%% "+val,subw); //"calc" command
 				return 1;
