@@ -31,8 +31,8 @@ may be "", but it will never be 0. The subw mapping identifies the
 subwindow (aka tab) into which the command was typed; ideally (but not
 mandatorially) this should be where messages are sent, etc.
 
-If a command triggers some command being sent to the connection (this
-applies also to input hooks, see below), it is courteous to clear the
+If a command triggers some command being sent to the connection (except
+with the nexthook() function, see below), it is courteous to clear the
 prompt prior to returning:
 
 subw->prompt=({([])});
@@ -63,6 +63,20 @@ distinctions:
   called. Commands still will be, though.
 * A command's "param" is what comes after the command name. A hook's
   "line" is the entire line.
+
+An input hook can feed a replacement command into the system with:
+nexthook(line, subw);
+This can be either before or after returning 1 from the hook function.
+If nexthook is successful, it will return 1, so modifying the command
+can be done by simply:
+return nexthook(modified_line, subw);
+Returning from the hook function and subsequently calling nexthook
+will work so long as the subw still exists. (Note that nexthook will
+not call the current hook function, and thus cannot create an infinite
+loop.)
+ADVISORY: If this is called and 0 is returned, both commands will be
+executed, but this is not the normal form of processing and is not
+formally supported.
 
 An output hook is similar to an input hook, but works on a different
 type of line: a line of text from the server. It therefore does not
@@ -131,8 +145,11 @@ Note that a subwindow may not necessarily have a connection, though
 a connection will always have a display. (If you know that it's a
 subw, you can gain a little efficiency by explicitly sending to
 subw->connection, but this is optional. Sending to subw works.)
-As with the above, this is ADVISORY because the exact name and args
-may be changed as this API settles.
+This should be considered abnormal for an input hook, however, as
+it bypasses other hooks - use nexthook() instead. Alternatively,
+call G->G->window->execcommand() to send past all current hooks,
+as though the user had just typed the command. None of this is
+supported, however.
 
 ADVISORY: Additional information may be stored in subw and/or conn.
 This is not guaranteed, however, as there is no protection against

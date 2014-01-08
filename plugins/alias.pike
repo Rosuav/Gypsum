@@ -49,10 +49,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 	sscanf(line,"%s %s",line,string args);
 	string expansion=aliases[line];
 	if (!expansion) return 0;
-	line=replace(expansion,"%*",args);
-	send(subw->connection,line+"\r\n");
-	subw->prompt=({([])});
-	return 1;
+	return nexthook(subw,replace(expansion,"%*",args||""));
 }
 
 void create(string name) {::create(name);}

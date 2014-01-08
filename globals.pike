@@ -116,10 +116,15 @@ class hook
 {
 	int inputhook(string line,mapping(string:mixed) subw) {}
 	int outputhook(string line,mapping(string:mixed) conn) {}
+	string hookname;
 	void create(string name)
 	{
-		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
-		if (cmdname) G->G->hooks[cmdname]=this;
+		sscanf(explode_path(name)[-1],"%s.pike",hookname);
+		if (hookname) G->G->hooks[hookname]=this;
+	}
+	int nexthook(mapping(string:mixed) subw,string line)
+	{
+		if (hookname) {G->G->window->execcommand(subw,line,hookname); return 1;}
 	}
 }
 

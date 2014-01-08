@@ -141,7 +141,7 @@ void tinify(object self,int response,array args)
 	url=sprintf("http%s://%s",protocol,url);
 	if (response!=GTK2.RESPONSE_YES) //Clicking No, or closing the dialog, will transmit the line as-is.
 	{
-		send(subw->connection,sprintf("%s%s%s",before,url,after)+"\r\n"); //TODO: Provide a non-hackish way to inject a line back in - after the current hook
+		nexthook(subw,sprintf("%s%s%s",before,url,after));
 		return;
 	}
 	//Tinify it!
@@ -171,7 +171,7 @@ void tinify(object self,int response,array args)
 	}
 	if (sizeof(url)<=maxlen) //We've managed a "simple shortening"!
 	{
-		send(subw->connection,sprintf("%s%s%s",before,url,after)+"\r\n"); //TODO: As above.
+		nexthook(subw,sprintf("%s%s%s",before,url,after));
 		return;
 	}
 	//TODO: Proxy
@@ -187,7 +187,7 @@ void tinify(object self,int response,array args)
 			if (response && sscanf(response+=data,"%*shttp://preview.%s<%s",string url,string rest) && rest)
 			{
 				//We have a response!
-				send(subw->connection,sprintf("%shttp://%s%s",before,url,after)+"\r\n"); //TODO: As above.
+				nexthook(subw,sprintf("%shttp://%s%s",before,url,after));
 				sock->close();
 				response=0;
 			}

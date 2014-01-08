@@ -573,14 +573,25 @@ int enterpressed(mapping subw)
 		say("%% Unknown command.",subw);
 		return 0;
 	}
+	execcommand(subw,cmd,0);
+	return 1;
+}
+
+/**
+ * Execute a command, passing it via hooks
+ * If skiphook is nonzero, will skip all hooks up to and including that name.
+ * If the subw is in password mode, hooks will not be called at all.
+ */
+void execcommand(mapping subw,string cmd,string|void skiphook)
+{
 	if (!subw->passwordmode)
 	{
-		array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
-		foreach (hooks,object h) if (mixed ex=catch {if (h->inputhook(cmd,subw)) {redraw(subw); return 1;}}) say("Error in input hook: "+describe_backtrace(ex),subw);
+		array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks); //Sort by name for consistency
+		for (int i=0;i<sizeof(hooks);++i) if (!skiphook || skiphook<names[i])
+			if (mixed ex=catch {if (hooks[i]->inputhook(cmd,subw)) {redraw(subw); return;}}) say("Error in input hook: "+describe_backtrace(ex),subw);
 	}
 	subw->prompt=({([])}); redraw(subw);
 	send(subw->connection,cmd+"\r\n");
-	return 1;
 }
 
 /**
