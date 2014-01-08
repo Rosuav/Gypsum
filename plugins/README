@@ -118,12 +118,21 @@ normal case, and suppresses the "Unknown command" message; for hooks,
 this indicates that the line should be hidden, as though it never
 happened.
 
+ADVISORY: Local output can be produced on any subw:
+say("message",subw);
+Note that the order of the arguments is likely to be switched in the
+near future (hence this is ADVISORY), but otherwise, the facility is
+promised. A subw of 0 means "whichever is current" and is appropriate
+when no subw reference is available.
+
 ADVISORY: Commands can be synthesized directly to a subw or conn:
 send(conn,line+"\r\n");
 Note that a subwindow may not necessarily have a connection, though
 a connection will always have a display. (If you know that it's a
 subw, you can gain a little efficiency by explicitly sending to
 subw->connection, but this is optional. Sending to subw works.)
+As with the above, this is ADVISORY because the exact name and args
+may be changed as this API settles.
 
 ADVISORY: Additional information may be stored in subw and/or conn.
 This is not guaranteed, however, as there is no protection against
