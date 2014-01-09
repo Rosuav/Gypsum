@@ -8,11 +8,6 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Importing of settings from RosMud
 * Numeric keypad navigation
-* Command search:
-Rosuav [trivia] Suppose I were to code it, it'd be something like this:
-     Some key - maybe Ctrl-Up or Alt-Up, or maybe Alt-P like IDLE has -
-     will cause the command-history search to look only at those commands
-     that begin with the content up to the cursor.
 * Case insensitive Ctrl-F search
 * Passive mode? I was never truly happy with the window-spawning in RM but it might be cleaner now.
 
