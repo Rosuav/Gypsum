@@ -12,7 +12,7 @@ void find_string(string findme,mapping(string:mixed) subw)
 	while (--pos>0)
 	{
 		array line=subw->lines[pos];
-		string text=line[0]->text; if (!text) line[0]->text=text=filter(line,stringp)*"";
+		string text=line[0]->text; if (!text) line[0]->text=text=lower_case(filter(line,stringp)*"");
 		int col=search(text,findme);
 		if (col!=-1)
 		{
@@ -37,7 +37,7 @@ int keypress(object self,array|object ev)
 	if (arrayp(ev)) ev=ev[0];
 	switch (ev->keyval)
 	{
-		case 0xFF0D: case 0xFF8D: find_string(self->get_text(),G->G->window->current_subw()); return 1; //Enter
+		case 0xFF0D: case 0xFF8D: find_string(lower_case(self->get_text()),G->G->window->current_subw()); return 1; //Enter
 		case 0xFF1B: G->G->window->current_subw()->ef->grab_focus(); return 1; //Esc - put focus back in the main EF
 		default: break;
 	}
