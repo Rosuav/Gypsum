@@ -160,6 +160,7 @@ void tinify(object self,int response,array args)
 	{
 		say("%% NotAlways: "+url,subw);
 		//Trim the middle section by taking the last path component (which should be the numeric part) and taking the first part and that, up to maxlen characters.
+		sscanf(url,"%s?%*s",url); //Dispose of any querystring, eg RSS feed source info
 		string tail=(url/"/")[-1];
 		if (sizeof(tail)<maxlen-30) url=url[..maxlen-sizeof(tail)-2]+"/"+tail;
 		say("%% NotAlways: "+url,subw);
