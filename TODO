@@ -14,6 +14,7 @@ Rosuav [trivia] Suppose I were to code it, it'd be something like this:
      will cause the command-history search to look only at those commands
      that begin with the content up to the cursor.
 * Case insensitive Ctrl-F search
+* Passive mode? I was never truly happy with the window-spawning in RM but it might be cleaner now.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
