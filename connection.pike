@@ -293,7 +293,12 @@ mapping connect(object display,mapping info)
 	conn->sock->open_socket();
 	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike patch not in trunk as of 20131206)
 	conn->sock->set_nonblocking(0,connected,connfailed);
-	conn->sock->connect(conn->host,conn->port);
+	if (mixed ex=catch {conn->sock->connect(conn->host,conn->port);})
+	{
+		say("%%% "+describe_error(ex),conn->display);
+		sockclosed(conn);
+		return 0;
+	}
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
 	{
