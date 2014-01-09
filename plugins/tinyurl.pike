@@ -175,6 +175,7 @@ void tinify(object self,int response,array args)
 		return;
 	}
 	//TODO: Proxy
+	//TODO: Use Protocols.HTTP rather than this, which is ported directly from the C++ code :)
 	Stdio.File sock=Stdio.File();
 	sock->open_socket();
 	sock->set_nonblocking(0,lambda()
