@@ -26,6 +26,11 @@ void create(string name)
 	add_gypsum_constant("send",bouncer("connection","send"));
 }
 
+//On first load, there won't be a global say, so use a local bouncer.
+#if !constant(say)
+mixed say(mixed ... args) {return G->G->window->say(@args);}
+#endif
+
 /**
  * Convert a stream of 8-bit data into Unicode
  * May eventually need to be given the conn, and thus be able to negotiate an
