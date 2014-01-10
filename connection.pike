@@ -23,7 +23,9 @@
 void create(string name)
 {
 	G->G->connection=this;
+	#if !constant(send)
 	add_gypsum_constant("send",bouncer("connection","send"));
+	#endif
 }
 
 //On first load, there won't be a global say, so use a local bouncer.
