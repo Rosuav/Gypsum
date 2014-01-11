@@ -8,7 +8,7 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Importing of settings from RosMud
 * Numeric keypad navigation
-* Passive mode? I was never truly happy with the window-spawning in RM but it might be cleaner now.
+* Passive mode? Creation of new tabs/subwindows should be much cheaper and cleaner now.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
