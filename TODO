@@ -1,6 +1,6 @@
 * [20111129] Gypsum has now been used in combat.
 * Client-side aliases
-* Multi-line paste
+* Multi-line paste (current behaviour of pasting U+000A is considered a bug)
 * More generally, anything that people expect RosMud to do.
 * Spell-checker?
 * OOCBox?
