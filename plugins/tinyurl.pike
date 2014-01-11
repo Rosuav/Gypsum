@@ -145,6 +145,9 @@ void tinify(object self,int response,array args)
 		return;
 	}
 	//Tinify it!
+	//TODO: Handle multiple URLs on one line. Might mean not using nexthook(), or maybe
+	//there needs to be a parameter to nexthook() to say "call me", or maybe it should be
+	//looped right here - in fact, it might be worth spawning them all in parallel.
 	say("%% Shortening URL:",subw);
 	say(url,subw);
 	//CJA 20110302: Attempt some other forms of shortening first. (Ported to Pike with the original date-of-implementation.)
