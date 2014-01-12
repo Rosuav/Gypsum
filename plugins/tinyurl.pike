@@ -17,6 +17,7 @@ G->G->lasturl=0 - last-received URL, index into recvurl[] (not saved across shut
 */
 
 //Options: Retain URL array across reloads of the plugin, or across shutdown? If using persist[], also uncomment the assignment inside outputhook().
+//Note that this isn't actually working (since array append overwrites, and nothing ever sets it in G->G-> anyway), so it doesn't retain at all.
 array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 //array(string) recvurl=persist["tinyurl/recvurl"];
 
@@ -114,7 +115,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		return 1;
 	}
 	if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) outputhook(line,(["display":subw])); //NOTE: Don't use subw->conn for the last arg; if there's no connection, it should still be safe to use /tiny.
-	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long. Note that HTTPS consumes one character more than allowed for.
+	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*?)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long. Note that HTTPS consumes one character more than allowed for.
 	array parts=longurl->split(line);
 	if (!parts) return 0; //No match? Nothing needing tinification.
 	object dlg=GTK2.MessageDialog(0,GTK2.MESSAGE_QUESTION,GTK2.BUTTONS_NONE,"You're posting a long URL - shorten it?");
@@ -138,70 +139,78 @@ void tinify(object self,int response,array args)
 	[string before,string protocol,string url,string after,mapping(string:mixed) subw]=args;
 	self->destroy();
 	if (response==GTK2.RESPONSE_CANCEL) return; //Suppress the line completely.
-	url=sprintf("http%s://%s",protocol,url);
 	if (response!=GTK2.RESPONSE_YES) //Clicking No, or closing the dialog, will transmit the line as-is.
 	{
-		nexthook(subw,sprintf("%s%s%s",before,url,after));
+		nexthook(subw,sprintf("%shttp%s://%s%s",before,protocol,url,after));
 		return;
 	}
 	//Tinify it!
 	//TODO: Handle multiple URLs on one line. Might mean not using nexthook(), or maybe
 	//there needs to be a parameter to nexthook() to say "call me", or maybe it should be
 	//looped right here - in fact, it might be worth spawning them all in parallel.
-	say("%% Shortening URL:",subw);
-	say(url,subw);
-	//CJA 20110302: Attempt some other forms of shortening first. (Ported to Pike with the original date-of-implementation.)
-	//   http://www.thinkgeek.com/gadgets/watches/e6be/  -->  http://www.thinkgeek.com/e6be
-	//   http://notalwaysright.com/not-the-only-thing-in-need-of-maintenance/8820 --> http://notalwaysright.com/not-the-only-thing-in-need-of-maint/8820
-	//   http://www.youtube.com/watch?v=RwBA_tNaItg&feature=related --> http://www.youtube.com/watch?v=RwBA_tNaItg
-	if (has_prefix(url,"http://www.thinkgeek.com/"))
+	array(string|int) lineparts=({ });
+	while (1)
 	{
-		//Take the tail end (the hex ID) and discard the rest.
-		url="http://www.thinkgeek.com/"+((url/"?")[0]/"/"-({""}))[-1]; //Pick the last non-empty path component, ignoring any querystring
-	}
-	else if (has_prefix(url,"http://notalwaysright.com/") || has_prefix(url,"http://notalwaysrelated.com/") || has_prefix(url,"http://notalwaysromantic.com/") || has_prefix(url,"http://notalwaysworking.com/") || has_prefix(url,"http://notalwayslearning.com/"))
-	{
-		say("%% NotAlways: "+url,subw);
-		//Trim the middle section by taking the last path component (which should be the numeric part) and taking the first part and that, up to maxlen characters.
-		sscanf(url,"%s?%*s",url); //Dispose of any querystring, eg RSS feed source info
-		string tail=(url/"/")[-1];
-		if (sizeof(tail)<maxlen-30) url=url[..maxlen-sizeof(tail)-2]+"/"+tail;
-		say("%% NotAlways: "+url,subw);
-	}
-	else if (has_prefix(url,"http://www.youtube.com/watch?v="))
-	{
-		//Cut it down to just "v=" and no parameters
-		url=(url/"&")[0]; //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
-	}
-	if (sizeof(url)<=maxlen) //We've managed a "simple shortening"!
-	{
-		nexthook(subw,sprintf("%s%s%s",before,url,after));
-		return;
-	}
-	//TODO: Proxy
-	//TODO: Use Protocols.HTTP rather than this, which is ported directly from the C++ code :)
-	Stdio.File sock=Stdio.File();
-	sock->open_socket();
-	sock->set_nonblocking(0,lambda()
-	{
-		//NOTE: This may block or fail if the URL is ridiculously large. I don't really care; that's pretty unlikely.
-		sock->write("GET /create.php?url=%s HTTP/1.0\r\nHost: tinyurl.com\r\n\r\n",url); //TODO: URL-encode the URL?
-		string response="";
-		sock->set_read_callback(lambda(mixed id,string data)
+		lineparts+=({before});
+		url=sprintf("http%s://%s",protocol,url);
+		say("%% Shortening URL:",subw);
+		say(url,subw);
+		//CJA 20110302: Attempt some other forms of shortening first. (Ported to Pike with the original date-of-implementation.)
+		//   http://www.thinkgeek.com/gadgets/watches/e6be/  -->  http://www.thinkgeek.com/e6be
+		//   http://notalwaysright.com/not-the-only-thing-in-need-of-maintenance/8820 --> http://notalwaysright.com/not-the-only-thing-in-need-of-maint/8820
+		//   http://www.youtube.com/watch?v=RwBA_tNaItg&feature=related --> http://www.youtube.com/watch?v=RwBA_tNaItg
+		if (has_prefix(url,"http://www.thinkgeek.com/"))
 		{
-			if (response && sscanf(response+=data,"%*shttp://preview.%s<%s",string url,string rest) && rest)
+			//Take the tail end (the hex ID) and discard the rest.
+			url="http://www.thinkgeek.com/"+((url/"?")[0]/"/"-({""}))[-1]; //Pick the last non-empty path component, ignoring any querystring
+		}
+		else if (has_prefix(url,"http://notalwaysright.com/") || has_prefix(url,"http://notalwaysrelated.com/") || has_prefix(url,"http://notalwaysromantic.com/") || has_prefix(url,"http://notalwaysworking.com/") || has_prefix(url,"http://notalwayslearning.com/"))
+		{
+			//Trim the middle section by taking the last path component (which should be the numeric part) and taking the first part and that, up to maxlen characters.
+			sscanf(url,"%s?%*s",url); //Dispose of any querystring, eg RSS feed source info
+			string tail=(url/"/")[-1];
+			if (sizeof(tail)<maxlen-30) url=url[..maxlen-sizeof(tail)-2]+"/"+tail;
+		}
+		else if (has_prefix(url,"http://www.youtube.com/watch?v="))
+		{
+			//Cut it down to just "v=" and no parameters
+			url=(url/"&")[0]; //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
+		}
+		if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
+		else lambda(int pos,string url) //Create a new closure scope so we can have multiple of these in flight simultaneously. (May be simpler with a class-based approach eg Protocols.HTTP.)
+		{
+			lineparts+=({0}); //Add a spot for the shorter URL.
+			//TODO: Proxy
+			//TODO: Use Protocols.HTTP rather than this, which is ported directly from the C++ code :)
+			Stdio.File sock=Stdio.File();
+			sock->open_socket();
+			sock->set_nonblocking(0,lambda()
 			{
-				//We have a response!
-				nexthook(subw,sprintf("%shttp://%s%s",before,url,after));
-				sock->close();
-				response=0;
-			}
-		});
-	},lambda()
-	{
-		say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(sock->errno()),sock->errno()),subw);
-	});
-	sock->connect(tinyurl_hostname,80);
+				//NOTE: This may block or fail if the URL is ridiculously large. I don't really care; that's pretty unlikely.
+				sock->write("GET /create.php?url=%s HTTP/1.0\r\nHost: tinyurl.com\r\n\r\n",url); //TODO: URL-encode the URL?
+				string response="";
+				sock->set_read_callback(lambda(mixed id,string data)
+				{
+					if (response && sscanf(response+=data,"%*shttp://preview.%s<%s",string url,string rest) && rest)
+					{
+						//We have a response!
+						lineparts[pos]="http://"+url;
+						sock->close();
+						response=0;
+						if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
+					}
+				});
+			},lambda()
+			{
+				say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(sock->errno()),sock->errno()),subw);
+			});
+			sock->connect(tinyurl_hostname,80);
+		}(sizeof(lineparts),url);
+		array parts=longurl->split(after);
+		if (!parts) {lineparts+=({after}); break;} //No more long URLs to shorten.
+		[before,protocol,url,after]=parts;
+	}
+	if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 }
 
 constant menu_label="TinyURL";
