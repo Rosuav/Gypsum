@@ -21,8 +21,6 @@ G->G->lasturl=0 - last-received URL, index into recvurl[] (not saved across shut
 array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 //array(string) recvurl=persist["tinyurl/recvurl"];
 
-#define tinyurl_hostname "tinyurl.com"
-
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
 int maxlen=persist["tinyurl/maxlen"]||63;
 
@@ -177,35 +175,22 @@ void tinify(object self,int response,array args)
 			url=(url/"&")[0]; //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
 		}
 		if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
-		else lambda(int pos,string url) //Create a new closure scope so we can have multiple of these in flight simultaneously. (May be simpler with a class-based approach eg Protocols.HTTP.)
+		else
 		{
 			lineparts+=({0}); //Add a spot for the shorter URL.
-			//TODO: Proxy
-			//TODO: Use Protocols.HTTP rather than this, which is ported directly from the C++ code :)
-			Stdio.File sock=Stdio.File();
-			sock->open_socket();
-			sock->set_nonblocking(0,lambda()
+			Protocols.HTTP.Query query=Protocols.HTTP.Query();
+			query->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
 			{
-				//NOTE: This may block or fail if the URL is ridiculously large. I don't really care; that's pretty unlikely.
-				sock->write("GET /create.php?url=%s HTTP/1.0\r\nHost: tinyurl.com\r\n\r\n",url); //TODO: URL-encode the URL?
-				string response="";
-				sock->set_read_callback(lambda(mixed id,string data)
-				{
-					if (response && sscanf(response+=data,"%*shttp://preview.%s<%s",string url,string rest) && rest)
-					{
-						//We have a response!
-						lineparts[pos]="http://"+url;
-						sock->close();
-						response=0;
-						if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
-					}
-				});
-			},lambda()
+				sscanf(query->unicode_data(),"%*shttp://preview.%s<",string url);
+				//We have a response!
+				lineparts[pos]="http://"+url;
+				if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
+			});},lambda()
 			{
-				say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(sock->errno()),sock->errno()),subw);
-			});
-			sock->connect(tinyurl_hostname,80);
-		}(sizeof(lineparts),url);
+				say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno),subw);
+			},sizeof(lineparts)-1);
+			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,query);
+		}
 		array parts=longurl->split(after);
 		if (!parts) {lineparts+=({after}); break;} //No more long URLs to shorten.
 		[before,protocol,url,after]=parts;
