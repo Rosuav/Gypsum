@@ -340,6 +340,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({ef("magicarmor_2_name",15),noex(num("magicarmor_2_ac"))}),
 						({ef("magicarmor_3_name",15),noex(num("magicarmor_3_ac"))}),
 					}))),0,0,0)
+					->pack_start(GTK2.Frame("Other magical or significant gear")->add(GTK2.Vbox(0,2)
+						->add(ef("gear_1_name",15))
+						->add(ef("gear_2_name",15))
+						->add(ef("gear_3_name",15))
+						->add(ef("gear_4_name",15))
+					),0,0,0)
 				,0,0,0)
 			,GTK2.Label("Gear"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
