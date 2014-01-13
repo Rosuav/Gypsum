@@ -69,10 +69,10 @@ int process(string param,mapping(string:mixed) subw)
 		return ret;
 	}",".exec",this);};
 	
-	if (err) {say(subw,sprintf("Error in compilation: %O\n",err)); return 1;}
+	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
 	err=catch {ret=tmp()->foo(subw);};
-	if (err) {say(subw,sprintf("Error in execution: %O\n",err)); return 1;}
-	say(subw,sprintf("%O\n",ret));
+	if (err) {say(subw,"Error in execution: %O\n",err); return 1;}
+	say(subw,"%O\n",ret);
 	return 1;
 }
 

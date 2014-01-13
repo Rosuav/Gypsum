@@ -32,7 +32,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	int i=search(recvurl,url);
 	if (i==-1) {i=sizeof(recvurl+=({url}))-1; /* persist["tinyurl/recvurl"]=recvurl; */ }
 	G->G->lasturl=i+1; //Which means that if a duplicate URL is received, it'll still become the one accessed by "url" on its own.
-	if (persist["tinyurl/announce"]) say(conn->display,sprintf("%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1));
+	if (persist["tinyurl/announce"]) say(conn->display,"%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1);
 }
 
 int inputhook(string line,mapping(string:mixed) subw)
@@ -43,8 +43,8 @@ int inputhook(string line,mapping(string:mixed) subw)
 		{
 			say(subw,"%% URLs received this session:");
 			int lasturl=G->G->lasturl;
-			foreach (recvurl;int i;string url) say(subw,sprintf("%%%% %d: %s%s",i+1,url,(i+1==lasturl)?" <== latest":""));
-			say(subw,sprintf("%%%% Total URLs saved: %d",sizeof(recvurl)));
+			foreach (recvurl;int i;string url) say(subw,"%%%% %d: %s%s",i+1,url,(i+1==lasturl)?" <== latest":"");
+			say(subw,"%%%% Total URLs saved: %d",sizeof(recvurl));
 			return 1;
 		}
 		int i;
@@ -97,7 +97,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 				Protocols.HTTP.do_async_method("GET",url,0,0,Protocols.HTTP.Query()->set_callbacks(lambda(Protocols.HTTP.Query q)
 				{
 					if (q->status<300 || q->status>=400 || !q->headers->location) say(subw,"%% Cannot render URL - server returned a non-redirection response");
-					else say(subw,sprintf("%%%% Rendered URL %s: actual location is %s",url,q->headers->location));
+					else say(subw,"%%%% Rendered URL %s: actual location is %s",url,q->headers->location);
 				},lambda()
 				{
 					say(subw,"%% Unable to render URL - HTTP query failed"); //TODO: Give more info
@@ -187,7 +187,7 @@ void tinify(object self,int response,array args)
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 				});},lambda(object query)
 				{
-					say(subw,sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno));
+					say(subw,"%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno);
 				},sizeof(lineparts)-1)
 			);
 		}

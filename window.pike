@@ -281,12 +281,15 @@ void mousemove(object self,object ev,mapping subw)
 
 /**
  * Add a line of output (anything other than a prompt)
+ * If msg is an array, it is assumed to be alternating colors and text.
+ * Otherwise, additional arguments will be processed with sprintf().
  */
-void say(mapping|void subw,string|array msg)
+void say(mapping|void subw,string|array msg,mixed ... args)
 {
 	if (!subw) subw=current_subw();
 	if (stringp(msg))
 	{
+		if (sizeof(args)) msg=sprintf(msg,@args);
 		if (msg[-1]=='\n') msg=msg[..<1];
 		foreach (msg/"\n",string line) say(subw,({colors[7],line}));
 		return;
@@ -542,7 +545,7 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFFE7: case 0xFFE8: //Windows keys
 		case 0xFFE9: case 0xFFEA: //Alt
 			break;
-		default: say(subw,sprintf("%%%% keypress: %X",ev->keyval)); break;
+		default: say(subw,"%%%% keypress: %X",ev->keyval); break;
 		#endif
 	}
 }

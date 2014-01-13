@@ -267,7 +267,7 @@ void connected(mapping conn)
  */
 void connfailed(mapping conn)
 {
-	say(conn->display,sprintf("%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno()));
+	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
 	conn->sock->close();
 	sockclosed(conn);
 	return;
@@ -309,8 +309,8 @@ mapping connect(object display,mapping info)
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
 	{
-		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,sprintf("%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex)));
-		else say(conn->display,sprintf("%%%% Logging to %O",fn));
+		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
+		else say(conn->display,"%%%% Logging to %O",fn);
 	}
 	return conn;
 }

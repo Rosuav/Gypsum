@@ -26,7 +26,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		string first=persist["wealth/first_"+kwd];
 		if (first) last+=sprintf(" -> %d",diff(cur,last));
 		else persist["wealth/first_"+kwd]=first=cur;
-		say(conn->display,sprintf(fmt[1],first,last));
+		say(conn->display,fmt[1],first,last);
 		persist["wealth/last_"+kwd]=cur;
 		persist["wealth/diff_"+kwd]=diff(cur,first);
 		string status="";
@@ -42,8 +42,8 @@ int process(string param,mapping(string:mixed) subw)
 {
 	foreach (indices(monitors),string kwd) if (persist["wealth/first_"+kwd])
 	{
-		say(subw,sprintf("%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
-			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" ")));
+		say(subw,"%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
+			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" "));
 		if (param=="reset") persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
 	}
 	if (param=="reset") say(subw,"%% Stats reset to zero.");
@@ -92,7 +92,7 @@ int split(string param,mapping(string:mixed) subw)
 		int c=min(crown,left/100); left-=c*100; crown-=c;
 		int d=min(danar,left/10 ); left-=d*10;  danar-=d;
 		int s=min(slag, left/1  ); left-=s*1;    slag-=s;
-		say(subw,sprintf("%%%% Give %s: %d orb, %d crown, %d danar, %d slag - total %d/%d",giveto,o,c,d,s,o*1000+c*100+d*10+s,each));
+		say(subw,"%%%% Give %s: %d orb, %d crown, %d danar, %d slag - total %d/%d",giveto,o,c,d,s,o*1000+c*100+d*10+s,each);
 		if (left)
 		{
 			//If the entire job can't be done, abort.

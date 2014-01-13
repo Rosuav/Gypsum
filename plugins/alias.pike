@@ -11,7 +11,7 @@ int process(string param,mapping(string:mixed) subw)
 		if (!aliases || !sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
 		say(subw,"%% You have the following aliases set:");
 		foreach (sort(indices(aliases)),string from)
-			say(subw,sprintf("%%%% %-20s %=55s",from,aliases[from]));
+			say(subw,"%%%% %-20s %=55s",from,aliases[from]);
 		say(subw,"%% See '/alias help' for more information.");
 		return 1;
 	}
@@ -30,7 +30,7 @@ int process(string param,mapping(string:mixed) subw)
 	sscanf(param,"%s %s",param,string expansion);
 	if (!expansion || expansion=="") //Unalias
 	{
-		if (string exp=m_delete(aliases,param)) say(subw,sprintf("%%%% Removing alias '%s', was: %s",param,exp));
+		if (string exp=m_delete(aliases,param)) say(subw,"%%%% Removing alias '%s', was: %s",param,exp);
 		else say(subw,"%% No alias '"+param+"' to remove.");
 	}
 	else
