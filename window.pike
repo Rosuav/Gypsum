@@ -282,13 +282,13 @@ void mousemove(object self,object ev,mapping subw)
 /**
  * Add a line of output (anything other than a prompt)
  */
-void say(string|array msg,mapping|void subw)
+void say(mapping|void subw,string|array msg)
 {
 	if (!subw) subw=current_subw();
 	if (stringp(msg))
 	{
 		if (msg[-1]=='\n') msg=msg[..<1];
-		foreach (msg/"\n",string line) say(({colors[7],line}),subw);
+		foreach (msg/"\n",string line) say(subw,({colors[7],line}));
 		return;
 	}
 	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
@@ -344,7 +344,7 @@ void connect(mapping info,mapping|void subw)
 		subw->connection->sock->close(); G->G->connection->sockclosed(subw->connection);
 		return;
 	}
-	if (subw->connection && subw->connection->sock) {say("%% Already connected."); return;}
+	if (subw->connection && subw->connection->sock) {say(subw,"%% Already connected."); return;}
 	subw->connection=G->G->connection->connect(subw,info);
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
 }
@@ -542,7 +542,7 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFFE7: case 0xFFE8: //Windows keys
 		case 0xFFE9: case 0xFFEA: //Alt
 			break;
-		default: say(sprintf("%%%% keypress: %X",ev->keyval),subw); break;
+		default: say(subw,sprintf("%%%% keypress: %X",ev->keyval)); break;
 		#endif
 	}
 }
@@ -561,7 +561,7 @@ int enterpressed(mapping subw)
 	if (!subw->passwordmode)
 	{
 		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-		say(subw->prompt+({colors[6],cmd}),subw);
+		say(subw,subw->prompt+({colors[6],cmd}));
 	}
 	else subw->lines+=({subw->prompt});
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
@@ -570,7 +570,7 @@ int enterpressed(mapping subw)
 		redraw(subw);
 		sscanf(cmd,"/%[^ ] %s",cmd,string args);
 		if (G->G->commands[cmd] && G->G->commands[cmd](args||"",subw)) return 0;
-		say("%% Unknown command.",subw);
+		say(subw,"%% Unknown command.");
 		return 0;
 	}
 	execcommand(subw,cmd,0);
@@ -588,7 +588,7 @@ void execcommand(mapping subw,string cmd,string|void skiphook)
 	{
 		array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks); //Sort by name for consistency
 		for (int i=0;i<sizeof(hooks);++i) if (!skiphook || skiphook<names[i])
-			if (mixed ex=catch {if (hooks[i]->inputhook(cmd,subw)) {redraw(subw); return;}}) say("Error in input hook: "+describe_backtrace(ex),subw);
+			if (mixed ex=catch {if (hooks[i]->inputhook(cmd,subw)) {redraw(subw); return;}}) say(subw,"Error in input hook: "+describe_backtrace(ex));
 	}
 	subw->prompt=({([])}); redraw(subw);
 	send(subw->connection,cmd+"\r\n");
@@ -800,7 +800,7 @@ void colorcheck(object self,mapping subw)
 //Anything that calls this function is by definition a TODO, though this itself isn't.
 void TODO()
 {
-	say("%% Sorry, that function isn't implemented yet.");
+	say(0,"%% Sorry, that function isn't implemented yet.");
 }
 
 /**

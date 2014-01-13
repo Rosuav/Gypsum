@@ -182,7 +182,7 @@ mapping persist=decode_value(Stdio.read_file(combine_path(__FILE__,"..","..",".g
 mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 void config() {}
 void showtimes() {}
-void say(string msg,mapping|void subw) {write("%s\n",msg);}
+void say(mapping|void subw,string msg) {write("%s\n",msg);}
 void send(mapping dest,string msg) {/* Not needed */}
 int main() {process("save",0);}
 #endif
@@ -197,7 +197,7 @@ int process(string param,mapping(string:mixed) subw)
 		foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
 			data+=sprintf("%q=%d",kwd,info->next);
 		if (pfx) send(subw->connection,pfx+" "+data+"\r\n");
-		else say("%% "+data,subw);
+		else say(subw,"%% "+data);
 		return 1;
 	}
 	if (sscanf(param,"load %s",string data))
@@ -207,7 +207,7 @@ int process(string param,mapping(string:mixed) subw)
 			if (timers[kwd]) timers[kwd]->next=next;
 		persist["timer/timers"]=timers;
 		showtimes();
-		say("%% Loaded.");
+		say(subw,"%% Loaded.");
 		return 1;
 	}
 }

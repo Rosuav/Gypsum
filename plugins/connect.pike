@@ -31,7 +31,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (!info)
 	{
 		if (sscanf(param,"%s%*[ :]%d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
-		else {say("%% Connect to what?"); return 1;}
+		else {say(subw,"%% Connect to what?"); return 1;}
 	}
 	info->recon=param;
 	G->G->window->connect(info,subw || G->G->window->subwindow("New tab"));
@@ -51,15 +51,15 @@ int dc(string param,mapping(string:mixed) subw) {G->G->window->connect(0,subw); 
  */
 int listworlds(string param,mapping(string:mixed) subw)
 {
-	say("%% The following worlds are recognized:",subw);
-	say(sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"),subw);
+	say(subw,"%% The following worlds are recognized:");
+	say(subw,sprintf("%%%%   %-14s %-20s %-20s %4s","Keyword","Name","Host","Port"));
 	foreach (sort(indices(worlds)),string kwd)
 	{
 		mapping info=worlds[kwd];
-		say(sprintf("%%%%   %-14s %-20s %-20s %4d",kwd,info->name,info->host,info->port),subw);
+		say(subw,sprintf("%%%%   %-14s %-20s %-20s %4d",kwd,info->name,info->host,info->port));
 	}
-	say("%% Connect to any of the above worlds with: /connect keyword",subw);
-	say("%% Connect to any other MUD with: /connect host:port",subw);
+	say(subw,"%% Connect to any of the above worlds with: /connect keyword");
+	say(subw,"%% Connect to any other MUD with: /connect host:port");
 	return 1;
 }
 

@@ -25,7 +25,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 				int|float|string val=compile_string("int|float _() {return "+expr[explain..]+";}",0,this)()->_();
 				if (explain) val=expr[1..]+" = "+val;
 				if (before) nexthook(subw,before+val+(after||"")); //Command with embedded expression
-				else say("%% "+val,subw); //"calc" command
+				else say(subw,"%% "+val); //"calc" command
 				return 1;
 			};
 			return 0;
@@ -33,7 +33,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		line=line[5..]; //Command starting "pike " - skip the prefix.
 	}
 	//else this is a continuation; the whole line goes to Hilfe.
-	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {say(l,subw);};
+	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {say(subw,l);};
 	int wasfinished=subw->hilfe->state->finishedp();
 	mapping vars=subw->hilfe->variables; vars->subw=subw; vars->mw=(vars->window=G->G->window)->mainwindow;
 	subw->hilfe->add_input_line(line);
@@ -52,8 +52,8 @@ int inputhook(string line,mapping(string:mixed) subw)
  * @param l		the line which caused the compile error.
  * @param msg	the compile error
  */
-void compile_error(string fn,int l,string msg) {say("Compilation error on line "+l+": "+msg+"\n");}
-void compile_warning(string fn,int l,string msg) {say("Compilation warning on line "+l+": "+msg+"\n");}
+void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
+void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 
 int process(string param,mapping(string:mixed) subw)
 {
@@ -69,10 +69,10 @@ int process(string param,mapping(string:mixed) subw)
 		return ret;
 	}",".exec",this);};
 	
-	if (err) {say(sprintf("Error in compilation: %O\n",err),subw); return 1;}
+	if (err) {say(subw,sprintf("Error in compilation: %O\n",err)); return 1;}
 	err=catch {ret=tmp()->foo(subw);};
-	if (err) {say(sprintf("Error in execution: %O\n",err),subw); return 1;}
-	say(sprintf("%O\n",ret),subw);
+	if (err) {say(subw,sprintf("Error in execution: %O\n",err)); return 1;}
+	say(subw,sprintf("%O\n",ret));
 	return 1;
 }
 

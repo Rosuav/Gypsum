@@ -132,12 +132,10 @@ normal case, and suppresses the "Unknown command" message; for hooks,
 this indicates that the line should be hidden, as though it never
 happened.
 
-ADVISORY: Local output can be produced on any subw:
-say("message",subw);
-Note that the order of the arguments is likely to be switched in the
-near future (hence this is ADVISORY), but otherwise, the facility is
-promised. A subw of 0 means "whichever is current" and is appropriate
-when no subw reference is available.
+Local output can be produced on any subw:
+say(subw,"message");
+A subw of 0 means "whichever is current" and is appropriate when no
+subw reference is available.
 
 ADVISORY: Commands can be synthesized directly to a subw or conn:
 send(conn,line+"\r\n");

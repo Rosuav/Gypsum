@@ -10,29 +10,29 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" && !subw->logfile)
 	{
-		say("%% Usage: /log filename",subw);
-		say("%% Will log all text to this subwindow to the specified file.",subw);
+		say(subw,"%% Usage: /log filename");
+		say(subw,"%% Will log all text to this subwindow to the specified file.");
 		return 1;
 	}
 	if (subw->logfile)
 	{
-		say("%% Closing log file at "+ctime(time()),subw);
+		say(subw,"%% Closing log file at "+ctime(time()));
 		m_delete(subw,"logfile")->close();
 	}
 	if (mixed ex=param!="" && catch
 	{
 		subw->logfile=Stdio.File(param,"wac");
-		say("%% Logging to "+param+" - "+ctime(time()));
-	}) say("%% Error opening log file:\n%% "+describe_error(ex));
+		say(subw,"%% Logging to "+param+" - "+ctime(time()));
+	}) say(subw,"%% Error opening log file:\n%% "+describe_error(ex));
 	return 1;
 }
 
 constant menu_label="Logging";
 void menu_clicked()
 {
-	say("%% To enable logging for this subwindow:");
-	say("%% > /log filename");
-	say("%% (TODO: Have a file dialog on this menu item.)");
+	say(0,"%% To enable logging for this subwindow:");
+	say(0,"%% > /log filename");
+	say(0,"%% (TODO: Have a file dialog on this menu item.)");
 }
 
 void create(string name) {::create(name);}

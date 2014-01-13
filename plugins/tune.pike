@@ -58,16 +58,16 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" || has_value(param," "))
 	{
-		if (sizeof(tuned)) say("%% The following persons are tuned: "+sort(indices(tuned))*", ",subw);
-		say("%% To tune someone out: /tune name",subw);
-		say("%% Repeat to tune them back in.",subw);
-		//say("%% Stats are kept since the last tuning out.",subw); //TODO: Implement. (Maybe.)
+		if (sizeof(tuned)) say(subw,"%% The following persons are tuned: "+sort(indices(tuned))*", ");
+		say(subw,"%% To tune someone out: /tune name");
+		say(subw,"%% Repeat to tune them back in.");
+		//say(subw,"%% Stats are kept since the last tuning out."); //TODO: Implement. (Maybe.)
 	}
 	else
 	{
 		param=lower_case(param);
-		if (tuned[param]) say("%% Tuning back in.",subw);
-		else say("%% Tuning out.",subw);
+		if (tuned[param]) say(subw,"%% Tuning back in.");
+		else say(subw,"%% Tuning out.");
 		tuned[param]=!tuned[param];
 		persist["tune/thresholdrpg"]=tuned;
 	}

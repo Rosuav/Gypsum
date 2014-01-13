@@ -8,35 +8,35 @@ int process(string param,mapping(string:mixed) subw)
 	mapping(string:string) aliases=persist["aliases/simple"];
 	if (param=="")
 	{
-		if (!aliases || !sizeof(aliases)) {say("%% You have no aliases set ('/alias help' for usage)",subw); return 1;}
-		say("%% You have the following aliases set:",subw);
+		if (!aliases || !sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
+		say(subw,"%% You have the following aliases set:");
 		foreach (sort(indices(aliases)),string from)
-			say(sprintf("%%%% %-20s %=55s",from,aliases[from]),subw);
-		say("%% See '/alias help' for more information.",subw);
+			say(subw,sprintf("%%%% %-20s %=55s",from,aliases[from]));
+		say(subw,"%% See '/alias help' for more information.");
 		return 1;
 	}
 	else if (param=="help")
 	{
-		say("%% Create/replace an alias: /alias keyword expansion",subw);
-		say("%% Remove an alias: /alias keyword",subw);
-		say("%% Enumerate aliases: /alias",subw);
-		say("%% In an alias, the marker %* will be replaced by all arguments:",subw);
-		say("%%   /alias speak say Sir! %s Sir!",subw);
-		say("%%   speak Hello!",subw);
-		say("%%   --> say Sir! Hello! Sir!",subw);
+		say(subw,"%% Create/replace an alias: /alias keyword expansion");
+		say(subw,"%% Remove an alias: /alias keyword");
+		say(subw,"%% Enumerate aliases: /alias");
+		say(subw,"%% In an alias, the marker %* will be replaced by all arguments:");
+		say(subw,"%%   /alias speak say Sir! %s Sir!");
+		say(subw,"%%   speak Hello!",subw);
+		say(subw,"%%   --> say Sir! Hello! Sir!");
 		return 1;
 	}
 	if (!aliases) persist["aliases/simple"]=aliases=([]);
 	sscanf(param,"%s %s",param,string expansion);
 	if (!expansion || expansion=="") //Unalias
 	{
-		if (string exp=m_delete(aliases,param)) say(sprintf("%%%% Removing alias '%s', was: %s",param,exp),subw);
-		else say("%% No alias '"+param+"' to remove.",subw);
+		if (string exp=m_delete(aliases,param)) say(subw,sprintf("%%%% Removing alias '%s', was: %s",param,exp));
+		else say(subw,"%% No alias '"+param+"' to remove.");
 	}
 	else
 	{
 		aliases[param]=expansion;
-		say("%% Aliased.",subw);
+		say(subw,"%% Aliased.");
 		persist["aliases/simple"]=aliases; //Force persist to save
 	}
 	return 1;

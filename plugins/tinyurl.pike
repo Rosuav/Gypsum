@@ -32,7 +32,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	int i=search(recvurl,url);
 	if (i==-1) {i=sizeof(recvurl+=({url}))-1; /* persist["tinyurl/recvurl"]=recvurl; */ }
 	G->G->lasturl=i+1; //Which means that if a duplicate URL is received, it'll still become the one accessed by "url" on its own.
-	if (persist["tinyurl/announce"]) say(sprintf("%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1),conn->display);
+	if (persist["tinyurl/announce"]) say(conn->display,sprintf("%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1));
 }
 
 int inputhook(string line,mapping(string:mixed) subw)
@@ -41,10 +41,10 @@ int inputhook(string line,mapping(string:mixed) subw)
 	{
 		if (param=="list")
 		{
-			say("%% URLs received this session:",subw);
+			say(subw,"%% URLs received this session:");
 			int lasturl=G->G->lasturl;
-			foreach (recvurl;int i;string url) say(sprintf("%%%% %d: %s%s",i+1,url,(i+1==lasturl)?" <== latest":""),subw);
-			say(sprintf("%%%% Total URLs saved: %d",sizeof(recvurl)),subw);
+			foreach (recvurl;int i;string url) say(subw,sprintf("%%%% %d: %s%s",i+1,url,(i+1==lasturl)?" <== latest":""));
+			say(subw,sprintf("%%%% Total URLs saved: %d",sizeof(recvurl)));
 			return 1;
 		}
 		int i;
@@ -52,27 +52,27 @@ int inputhook(string line,mapping(string:mixed) subw)
 		if (!param || param=="") param=persist["tinyurl/defaultaction"]||"b";
 		if (param[0]=='h')
 		{
-			say("%% Monitored URLs are given sequential numbers starting from 1.",subw);
-			say("%% Type 'url 42 (action)' to use a URL. Only the first letter is significant:",subw);
-			say("%%   >> 'url 42 b(rowse)' to invoke your default browser.",subw);
-			say("%%   >> 'url 42 c(opy)' to copy the URL to the clipboard.",subw);
-			say("%%   >> 'url 42 r(ender)' to render a redirection URL (works with TinyURLs and some others).",subw);
-			if (persist["tinyurl/defaultaction"]=="c") say("%% Omit the action ('url 42') to execute the default action, currently to put it on the clipboard.",subw);
-			else say("%% Omit the action ('url 42') to execute the default action, currently to invoke your browser.",subw);
-			say("%% Omit the index ('url c/b/r' or just 'url') to use the most recently received URL.",subw);
-			say("%% Type 'url list' to generate a full list of this session's URLs.",subw);
+			say(subw,"%% Monitored URLs are given sequential numbers starting from 1.");
+			say(subw,"%% Type 'url 42 (action)' to use a URL. Only the first letter is significant:");
+			say(subw,"%%   >> 'url 42 b(rowse)' to invoke your default browser.");
+			say(subw,"%%   >> 'url 42 c(opy)' to copy the URL to the clipboard.");
+			say(subw,"%%   >> 'url 42 r(ender)' to render a redirection URL (works with TinyURLs and some others).");
+			if (persist["tinyurl/defaultaction"]=="c") say(subw,"%% Omit the action ('url 42') to execute the default action, currently to put it on the clipboard.");
+			else say(subw,"%% Omit the action ('url 42') to execute the default action, currently to invoke your browser.");
+			say(subw,"%% Omit the index ('url c/b/r' or just 'url') to use the most recently received URL.");
+			say(subw,"%% Type 'url list' to generate a full list of this session's URLs.");
 			return 1;
 		}
 		if (i<=0)
 		{
 			i=G->G->lasturl;
-			if (!i) {say("%% No URLs received this session.",subw); return 1;}
+			if (!i) {say(subw,"%% No URLs received this session."); return 1;}
 		}
 		--i; //We're 0-based, the user is 1-based :)
 		if (i>=sizeof(recvurl))
 		{
-			say("%% URL index invalid - we haven't received that many URLs this session.",subw);
-			say("%% Type 'url list' to get a full list.",subw);
+			say(subw,"%% URL index invalid - we haven't received that many URLs this session.");
+			say(subw,"%% Type 'url list' to get a full list.");
 			return 1;
 		}
 		string url=recvurl[i];
@@ -81,32 +81,32 @@ int inputhook(string line,mapping(string:mixed) subw)
 			case 'c': case 'C':
 			{
 				subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(url,sizeof(url));
-				say("%% Copied to clipboard.",subw);
+				say(subw,"%% Copied to clipboard.");
 				break;
 			}
 			case 'b': case 'B':
 			{
-				if (invoke_browser(url)) say("%% Browser invoked.",subw);
-				else say("%% Unable to invoke browser on this platform - try the clipboard instead.",subw);
+				if (invoke_browser(url)) say(subw,"%% Browser invoked.");
+				else say(subw,"%% Unable to invoke browser on this platform - try the clipboard instead.");
 				break;
 			}
 			case 'r': case 'R':
 			{
-				say("%% Rendering URL...",subw);
+				say(subw,"%% Rendering URL...");
 				//TODO: Proxy
 				Protocols.HTTP.do_async_method("GET",url,0,0,Protocols.HTTP.Query()->set_callbacks(lambda(Protocols.HTTP.Query q)
 				{
-					if (q->status<300 || q->status>=400 || !q->headers->location) say("%% Cannot render URL - server returned a non-redirection response",subw);
-					else say(sprintf("%%%% Rendered URL %s: actual location is %s",url,q->headers->location),subw);
+					if (q->status<300 || q->status>=400 || !q->headers->location) say(subw,"%% Cannot render URL - server returned a non-redirection response");
+					else say(subw,sprintf("%%%% Rendered URL %s: actual location is %s",url,q->headers->location));
 				},lambda()
 				{
-					say("%% Unable to render URL - HTTP query failed",subw); //TODO: Give more info
+					say(subw,"%% Unable to render URL - HTTP query failed"); //TODO: Give more info
 				}));
 				break;
 			}
 			default:
 			{
-				say("%% Unknown URL action - 'url help' for help",subw);
+				say(subw,"%% Unknown URL action - 'url help' for help");
 				break;
 			}
 		}
@@ -151,8 +151,8 @@ void tinify(object self,int response,array args)
 	{
 		lineparts+=({before});
 		url=sprintf("http%s://%s",protocol,url);
-		say("%% Shortening URL:",subw);
-		say(url,subw);
+		say(subw,"%% Shortening URL:");
+		say(subw,url);
 		//CJA 20110302: Attempt some other forms of shortening first. (Ported to Pike with the original date-of-implementation.)
 		//   http://www.thinkgeek.com/gadgets/watches/e6be/  -->  http://www.thinkgeek.com/e6be
 		//   http://notalwaysright.com/not-the-only-thing-in-need-of-maintenance/8820 --> http://notalwaysright.com/not-the-only-thing-in-need-of-maint/8820
@@ -187,7 +187,7 @@ void tinify(object self,int response,array args)
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 				});},lambda(object query)
 				{
-					say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno),subw);
+					say(subw,sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno));
 				},sizeof(lineparts)-1)
 			);
 		}
