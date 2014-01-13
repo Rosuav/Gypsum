@@ -178,18 +178,18 @@ void tinify(object self,int response,array args)
 		else
 		{
 			lineparts+=({0}); //Add a spot for the shorter URL.
-			Protocols.HTTP.Query query=Protocols.HTTP.Query();
-			query->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
-			{
-				sscanf(query->unicode_data(),"%*shttp://preview.%s<",string url);
-				//We have a response!
-				lineparts[pos]="http://"+url;
-				if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
-			});},lambda()
-			{
-				say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno),subw);
-			},sizeof(lineparts)-1);
-			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,query);
+			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,
+				Protocols.HTTP.Query()->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
+				{
+					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string url);
+					//We have a response!
+					lineparts[pos]="http://"+url;
+					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
+				});},lambda(object query)
+				{
+					say(sprintf("%%%% Error connecting to %s: %s (%d)",/*proxy_host?"proxy":*/"TinyURL",strerror(query->errno),query->errno),subw);
+				},sizeof(lineparts)-1)
+			);
 		}
 		array parts=longurl->split(after);
 		if (!parts) {lineparts+=({after}); break;} //No more long URLs to shorten.
