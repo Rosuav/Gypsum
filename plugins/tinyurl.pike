@@ -143,11 +143,8 @@ void tinify(object self,int response,array args)
 		return;
 	}
 	//Tinify it!
-	//TODO: Handle multiple URLs on one line. Might mean not using nexthook(), or maybe
-	//there needs to be a parameter to nexthook() to say "call me", or maybe it should be
-	//looped right here - in fact, it might be worth spawning them all in parallel.
 	array(string|int) lineparts=({ });
-	while (1)
+	while (1) //Look for multiple URLs (and shorten them all - one prompt is enough).
 	{
 		lineparts+=({before});
 		url=sprintf("http%s://%s",protocol,url);
