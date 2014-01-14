@@ -34,7 +34,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		setstatus(status[..<2]);
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
-		if (sscanf(replace(line," ",""),type+":%d%s",int val,string after)==2 && after=="")
+		if (sscanf(replace(line,({" ",","}),""),type+":%d%s",int val,string after)==2 && after=="")
 			persist["wealth/"+type]=val;
 }
 
