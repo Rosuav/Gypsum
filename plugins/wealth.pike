@@ -33,7 +33,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
 		setstatus(status[..<2]);
 	}
-	if (persist["wealth/party"]) foreach (({"Orb","Crown","Danar","Slag"}),string type)
+	foreach (({"Orb","Crown","Danar","Slag"}),string type)
 		if (sscanf(replace(line," ",""),type+":%d%s",int val,string after)==2 && after=="")
 			persist["wealth/"+type]=val;
 }
