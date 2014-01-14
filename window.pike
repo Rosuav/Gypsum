@@ -148,6 +148,13 @@ int paste(object self,mapping subw)
 	return 1;
 }
 
+GTK2.Widget makestatus()
+{
+	statustxt->paused=GTK2.Label("<PAUSED>");
+	statustxt->paused->set_size_request(statustxt->paused->size_request()->width,-1)->set_text(""); //Have it consume space for the PAUSED message even without having it
+	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label(""))->add(statustxt->paused);
+}
+
 //Convert (x,y) into (line,col) - yes, that switches their order.
 //Depends on the current scr->pagesize.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
@@ -258,7 +265,6 @@ void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
-	if (paused) txt+=" <PAUSED>";
 	catch
 	{
 		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
@@ -528,6 +534,7 @@ int keypress(object self,array|object ev,mapping subw)
 				//Snap down to the bottom and unpause.
 				scr->set_value(scr->get_property("upper")-scr->get_property("page size"));
 				paused=0;
+				statustxt->paused->set_text("");
 				return 1;
 			}
 			scr->set_value(scr->get_value()+scr->get_property("page size"));
@@ -537,6 +544,7 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFFFFFF: //Pause (Windows)
 		{
 			paused=!paused;
+			statustxt->paused->set_text("<PAUSED>"*paused);
 			return 1;
 		}
 		#if constant(DEBUG)
