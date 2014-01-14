@@ -365,7 +365,9 @@ class configdlg
 
 //Inherit this to get a spot on the main window's status bar.
 //By default you get a simple GTK2.Label (hence the name "text"),
-//but this can be altered by overriding makestatus().
+//but this can be altered by overriding makestatus(), which
+//should normally set statustxt->lbl (but might wrap it in some
+//other object if it wishes).
 class statustext
 {
 	mapping(string:mixed) statustxt=([]);
@@ -375,11 +377,11 @@ class statustext
 		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
 		if (!statustxt->lbl)
 			G->G->window->statusbar->pack_start(GTK2.Frame()
-				->add(statustxt->lbl=makestatus())
+				->add(makestatus())
 				->set_shadow_type(GTK2.SHADOW_ETCHED_OUT)
 			,0,0,3)->show_all();
 	}
-	GTK2.Widget makestatus() {return GTK2.Label((["xalign":0.0]));}
+	GTK2.Widget makestatus() {return statustxt->lbl=GTK2.Label((["xalign":0.0]));}
 	void setstatus(string txt) {statustxt->lbl->set_text(txt);}
 }
 
