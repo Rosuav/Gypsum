@@ -164,6 +164,7 @@ GTK2.Widget makestatus()
  */
 array(int) point_to_char(mapping subw,int x,int y)
 {
+	//TODO: Mishandles tabs currently.
 	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
 	array l;
 	if (line<0) line=0;
