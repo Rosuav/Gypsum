@@ -164,14 +164,23 @@ GTK2.Widget makestatus()
  */
 array(int) point_to_char(mapping subw,int x,int y)
 {
-	//TODO: Mishandles tabs currently.
 	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
 	array l;
 	if (line<0) line=0;
 	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
 	else l=subw->lines[line];
 	string str=filter(l,stringp)*"";
-	return ({line,limit(0,(x-3)/subw->charwidth,sizeof(str))});
+	int pos=limit(0,(x-3)/subw->charwidth,sizeof(str));
+	if (has_value(str[..pos-2],'\t')) //There are tabs in the line, figure out where we really are.
+	{
+		int realpos=0;
+		for (int i=0;i<pos;++i)
+		{
+			if (str[i]=='\t') realpos+=8-realpos%8; else ++realpos;
+			if (realpos>pos) return ({line,i});
+		}
+	}
+	return ({line,pos});
 }
 
 /**
