@@ -162,7 +162,12 @@ void sockread(mapping conn,string data)
 				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do. (Actually, omitting this line will have the same effect, because the subscripting will throw an exception. So this is optional, and redundant, just like this sentence is redundant.)
 				switch (subneg[1])
 				{
-					case TERMTYPE: if (subneg[2]==SEND) send_bytes(conn,(string)({IAC,SB,TERMTYPE,IS})+"Gypsum"+(string)({IAC,SE})); break;
+					case TERMTYPE:
+						if (subneg[2]==SEND) send_bytes(conn,
+							(string)({IAC,SB,TERMTYPE,IS})
+							+sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
+							+(string)({IAC,SE}));
+						break;
 					default: break;
 				}
 			}

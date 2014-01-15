@@ -390,6 +390,24 @@ string gypsum_version()
 	return String.trim_all_whites(Stdio.read_file("VERSION"));
 }
 
+string pike_version()
+{
+	return sprintf("%d.%d.%d %s",
+		__REAL_MAJOR__,__REAL_MINOR__,__REAL_BUILD__,
+		#ifdef __NT__
+		"Win",
+		#elif defined(__OS2__)
+		"OS/2",
+		#elif defined(__APPLE__)
+		"Mac",
+		#elif defined(__amigaos__)
+		"Amiga",
+		#else
+		"Linux",
+		#endif
+	);
+}
+
 /**
  * Attempt to invoke a web browser. Returns 1 if it believes it did, 0 if not.
  */
@@ -399,7 +417,7 @@ int invoke_browser(string url)
 		#ifdef __NT__
 		//Windows
 		({"cmd","/c","start"}),
-		#elif __APPLE__
+		#elif defined(__APPLE__)
 		//Darwin
 		({"open"}),
 		#else
