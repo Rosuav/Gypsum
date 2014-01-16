@@ -45,10 +45,10 @@ int keypress(object self,array|object ev)
 
 GTK2.Widget makestatus()
 {
-	GTK2.Label lbl=GTK2.Label("Search: ");
+	statustxt->lbl=GTK2.Label("Search: ");
 	return GTK2.Table(2,1,0)
-		->attach_defaults(lbl,0,1,0,1)
-		->attach_defaults(statustxt->ef=GTK2.Entry()->set_has_frame(0)->set_size_request(-1,lbl->size_request()->height),1,2,0,1);
+		->attach_defaults(statustxt->lbl,0,1,0,1)
+		->attach_defaults(statustxt->ef=GTK2.Entry()->set_has_frame(0)->set_size_request(-1,statustxt->lbl->size_request()->height),1,2,0,1);
 }
 
 constant menu_label="Search";
