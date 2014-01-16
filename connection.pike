@@ -309,7 +309,7 @@ mapping connect(object display,mapping info)
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
-		return 0;
+		return conn;
 	}
 	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
