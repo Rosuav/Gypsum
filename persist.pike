@@ -58,7 +58,12 @@ object persist=class(string savefn)
 
 	void save()
 	{
-		if (mixed ex=catch {Stdio.write_file(savefn,encode_value(data)); saving=0;})
+		if (mixed ex=catch
+		{
+			Stdio.write_file(savefn+".1",encode_value(data));
+			mv(savefn+".1",savefn);
+			saving=0;
+		})
 		{
 			werror("Unable to save .gypsumrc: %s\nWill retry in 60 seconds.\n",describe_error(ex));
 			call_out(save,60);
