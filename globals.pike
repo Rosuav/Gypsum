@@ -122,7 +122,7 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 	foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
 	{
 		int opt;
-		if (stringp(obj)) obj=GTK2.Label(label_opts+(["label":obj]));
+		if (stringp(obj)) {obj=GTK2.Label(label_opts+(["label":obj])); opt=GTK2.Fill;}
 		else if (noexpand[obj]) noexpand[obj]=0; //Remove it from the set so we don't hang onto references to stuff we don't need
 		else opt=GTK2.Fill|GTK2.Expand;
 		int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
