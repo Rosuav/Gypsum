@@ -90,9 +90,9 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		}
 	}
 	
-	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,int|void homogenousp)
+	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents)
 	{
-		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),homogenousp);
+		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),0);
 		foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
 		{
 			if (stringp(obj)) obj=noex(GTK2.Label(obj));
