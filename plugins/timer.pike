@@ -28,12 +28,19 @@ int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stab
  */
 string format_time(int delay,int base)
 {
+	/*
+	Open question: Is it better to show 60 seconds as "60" or as "01:00"?
+	Previously, this would show it as 60 (unless it's ticking down from a longer time, of course),
+	but this makes HP/SP/EP display - which can't know what they're ticking down from - to look
+	a bit odd. Changing it 20140117 to show as 01:00. Question is still open as to how it ought
+	best to be done. There are arguments on both sides.
+	*/
 	delay-=delay%resolution;
 	if (delay<=0) return "";
 	switch (max(delay,base))
 	{
-		case 0..60: return sprintf("%02d",delay);
-		case 61..3599: return sprintf("%02d:%02d",delay/60,delay%60); //1 minute can be shown as 60 seconds, even though 1 hour is 01:00:00.
+		case 0..59: return sprintf("%02d",delay);
+		case 60..3599: return sprintf("%02d:%02d",delay/60,delay%60);
 		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
 	}
 }
