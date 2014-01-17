@@ -251,6 +251,25 @@ void send_bytes(mapping conn,string data)
 void sockreadb(mapping conn,string data) {G->G->connection->sockread(conn,data);}
 void sockwriteb(mapping conn) {G->G->connection->sockwrite(conn);}
 void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
+void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
+
+//Socket accept callback - creates a new subw with the connected socket.
+//NOTE: This is a pile of hacks. Changes to other parts of Gypsum (eg in
+//window.pike) may break this badly. TODO: Make it not hacks. Somehow. :|
+void sockaccept(mapping conn)
+{
+	while (object sock=conn->sock->accept())
+	{
+		mapping display=G->G->window->subwindow(conn->display->tabtext+" #"+(++conn->conncount));
+		sock->set_id(display->connection=([
+			"display":display,"sock":sock,
+			"writeme":"","readbuffer":"","ansibuffer":"","curline":"",
+			"curmsg":({([]),0,""}),
+		]));
+		say(conn->display,"%%% Connection from "+sock->query_address()+" at "+ctime(time()));
+		sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
+	}
+}
 
 /**
  * Callback for when a connection is successfully established.
@@ -299,6 +318,21 @@ void ka(mapping conn)
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
+	if ((<"0.0.0.0","::">)[info->host])
+	{
+		//Passive mode. (Currently hacked in by the specific IPs; may
+		//later make a flag but that means people need to know about it.)
+		//Note: Does not currently respect autolog. Should it? It would have to interleave all connections.
+		if (mixed ex=catch
+		{
+			conn->sock=Stdio.Port(conn->port=(int)info->port,sockacceptb,conn->host=info->host);
+			conn->sock->set_id(conn);
+			if (!conn->sock->errno()) {say(conn->display,"%%% Bound to "+conn->host+" : "+conn->port); return conn;}
+			say(conn->display,"%%% Error binding to "+conn->host+" : "+conn->port+" - "+strerror(conn->sock->errno()));
+		}) say(conn->display,"%%% "+describe_error(ex));
+		sockclosed(conn);
+		return conn;
+	}
 	say(conn->display,"%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop

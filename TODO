@@ -8,7 +8,6 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Importing of settings from RosMud
 * Numeric keypad navigation
-* Passive mode? Creation of new tabs/subwindows should be much cheaper and cleaner now.
 * A plugins-more plugin that loads additional plugins from plugins-more/ and keeps track of which to load (no unload, just load - restart to unload)
 
 Eventually, drop support for Pike 7.8. This means:
