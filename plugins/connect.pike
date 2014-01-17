@@ -101,19 +101,14 @@ void action_callback()
 GTK2.Widget make_content()
 {
 	return GTK2.Vbox(0,10)
-		->pack_start(GTK2.Table(6,2,0)
-			->attach(GTK2.Label((["label":"Keyword","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
-			->attach(GTK2.Label((["label":"Name","xalign":1.0])),0,1,1,2,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->name=GTK2.Entry(),1,2,1,2)
-			->attach(GTK2.Label((["label":"Host name","xalign":1.0])),0,1,2,3,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->hostname=GTK2.Entry(),1,2,2,3)
-			->attach(GTK2.Label((["label":"Port","xalign":1.0])),0,1,3,4,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->port=GTK2.Entry(),1,2,3,4)
-			->attach(GTK2.Label((["label":"Auto-log","xalign":1.0])),0,1,4,5,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->logfile=GTK2.Entry(),1,2,4,5)
-			->attach(win->use_ka=GTK2.CheckButton("Use keep-alive"),1,2,5,6,GTK2.Fill,GTK2.Fill,5,0) //No separate label
-		,0,0,0)
+		->pack_start(GTK2Table(({
+			({"Keyword",win->kwd=GTK2.Entry()}),
+			({"Name",win->name=GTK2.Entry()}),
+			({"Host name",win->hostname=GTK2.Entry()}),
+			({"Port",win->port=GTK2.Entry()}),
+			({"Auto-log",win->logfile=GTK2.Entry()}),
+			({"",win->use_ka=GTK2.CheckButton("Use keep-alive")}), //No separate label
+		}),(["xalign":1.0])),0,0,0)
 		->pack_start(GTK2.Frame("Description")->add(
 			win->descr=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)
 		),1,1,0)
