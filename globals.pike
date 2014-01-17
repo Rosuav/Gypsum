@@ -107,6 +107,14 @@ class SelectBox(array(string) strings)
 multiset(GTK2.Widget) noexpand=(<>);
 GTK2.Widget noex(GTK2.Widget wid) {noexpand[wid]=1; return wid;}
 
+/** Create a GTK2.Table based on a 2D array of widgets
+ * The contents will be laid out on the grid. Put a 0 in a cell to span
+ * across multiple cells (the object preceding the 0 will span both cells).
+ * Use noex(widget) to make a widget not expand (usually will want to do
+ * this for a whole column). Shortcut: Labels can be included by simply
+ * including a string - it will be turned into a label, expansion off, and
+ * with options as set by the second parameter (if any).
+ */
 GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void label_opts)
 {
 	if (!label_opts) label_opts=([]);
