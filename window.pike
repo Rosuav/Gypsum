@@ -712,19 +712,16 @@ class channelsdlg
 
 	GTK2.Widget make_content()
 	{
-		return GTK2.Table(2,2,0)
-			->attach(GTK2.Label((["label":"Channel name","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
-			->attach(GTK2.Label((["label":"Color (0-255)","xalign":1.0])),0,1,1,2,GTK2.Fill,GTK2.Fill,5,0)
-			->attach_defaults(GTK2.Hbox(0,10)
+		return two_column(({
+			"Channel name",win->kwd=GTK2.Entry(),
+			"Color (0-255)",GTK2.Hbox(0,10)
 				->add(GTK2.Label("Red"))
 				->add(win->r=GTK2.Entry()->set_size_request(40,-1))
 				->add(GTK2.Label("Green"))
 				->add(win->g=GTK2.Entry()->set_size_request(40,-1))
 				->add(GTK2.Label("Blue"))
 				->add(win->b=GTK2.Entry()->set_size_request(40,-1))
-			,1,2,1,2)
-		;
+		}));
 	}
 
 	void save_content(mapping(string:mixed) info)

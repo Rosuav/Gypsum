@@ -55,14 +55,11 @@ class config
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
-			->pack_start(GTK2.Table(2,2,0)
-				->attach(GTK2.Label((["label":"Keyword","xalign":1.0])),0,1,0,1,GTK2.Fill,GTK2.Fill,5,0)
-				->attach_defaults(win->kwd=GTK2.Entry(),1,2,0,1)
-				->attach(GTK2.Label((["label":"Time","xalign":1.0])),0,1,2,3,GTK2.Fill,GTK2.Fill,5,0)
-				->attach_defaults(win->time=GTK2.Entry(),1,2,2,3)
-				//->attach(GTK2.Label((["label":"Options","xalign":1.0])),0,1,3,4,GTK2.Fill,GTK2.Fill,5,0)
-				->attach_defaults(win->present=GTK2.CheckButton("Present when done"),1,2,3,4)
-			,0,0,0)
+			->pack_start(two_column(({
+				"Keyword",win->kwd=GTK2.Entry(),
+				"Time",win->time=GTK2.Entry(),
+				"",win->present=GTK2.CheckButton("Present when done"),
+			})),0,0,0)
 			->pack_start(GTK2.Frame("Trigger text")->add(
 				win->trigger=GTK2.TextView((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);

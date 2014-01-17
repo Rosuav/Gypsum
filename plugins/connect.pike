@@ -101,14 +101,14 @@ void action_callback()
 GTK2.Widget make_content()
 {
 	return GTK2.Vbox(0,10)
-		->pack_start(GTK2Table(({
-			({"Keyword",win->kwd=GTK2.Entry()}),
-			({"Name",win->name=GTK2.Entry()}),
-			({"Host name",win->hostname=GTK2.Entry()}),
-			({"Port",win->port=GTK2.Entry()}),
-			({"Auto-log",win->logfile=GTK2.Entry()}),
-			({"",win->use_ka=GTK2.CheckButton("Use keep-alive")}), //No separate label
-		}),(["xalign":1.0])),0,0,0)
+		->pack_start(two_column(({
+			"Keyword",win->kwd=GTK2.Entry(),
+			"Name",win->name=GTK2.Entry(),
+			"Host name",win->hostname=GTK2.Entry(),
+			"Port",win->port=GTK2.Entry(),
+			"Auto-log",win->logfile=GTK2.Entry(),
+			"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
+		})),0,0,0)
 		->pack_start(GTK2.Frame("Description")->add(
 			win->descr=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)
 		),1,1,0)
