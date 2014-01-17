@@ -8,6 +8,7 @@ inherit plugin_menu;
 
 void find_string(string findme,mapping(string:mixed) subw)
 {
+	if (findme=="") return; //Searching for nothing is... not particularly useful. And it can be confusing. :)
 	int pos=(subw->search_last==findme && subw->search_pos) || sizeof(subw->lines);
 	while (--pos>0)
 	{
