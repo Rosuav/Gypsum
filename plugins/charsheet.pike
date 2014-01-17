@@ -65,13 +65,6 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		checkchanged(ef,0,what); //Pretend the user entered it and tabbed out
 	}
 
-	//Advisory note that this widget should be packed without the GTK2.Expand|GTK2.Fill options
-	//As of 8.0.1 with CJA patch, this could safely be done with wid->set_data(), but it's not
-	//safe to call get_data() with a keyword that hasn't been set (it'll segfault older Pikes).
-	//So this works with a multiset instead.
-	multiset(GTK2.Widget) noexpand=(<>);
-	GTK2.Widget noex(GTK2.Widget wid) {noexpand[wid]=1; return wid;}
-
 	void ensurevisible(GTK2.Widget self)
 	{
 		//Scan upward until we find a GTK2.ScrolledWindow. Depends on self->allocation() returning
@@ -88,19 +81,6 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				return;
 			}
 		}
-	}
-	
-	GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents)
-	{
-		GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),0);
-		foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
-		{
-			if (stringp(obj)) obj=noex(GTK2.Label(obj));
-			int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
-			int opt=noexpand[obj]?0:(GTK2.Fill|GTK2.Expand);
-			tb->attach(obj,x,xend,y,y+1,opt,opt,1,1);
-		}
-		return tb;
 	}
 
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
