@@ -292,7 +292,8 @@ class configdlg
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
 	//Create and return a widget (most likely a layout widget) representing all the custom content.
 	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
-	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or it may be a GTK2.Label, or it may be omitted altogether).
+	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
+	//it may be a GTK2.Label, or it may be omitted altogether).
 	GTK2.Widget make_content() { }
 	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping. The mapping is already inside items[], so this is also a good place to trigger a persist[] save.
