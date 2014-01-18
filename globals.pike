@@ -55,9 +55,10 @@ string strftime(string format,int|mapping(string:int) tm)
 		"%C":sprintf("%02d",tm->year/100+19),
 		"%d":sprintf("%02d",tm->mday),
 		"%H":sprintf("%02d",tm->hour),
-		"%I":sprintf("%02d",tm->hour%12),
+		"%I":sprintf("%02d",tm->hour%12 || 12),
 		"%m":sprintf("%02d",tm->mon+1),
 		"%M":sprintf("%02d",tm->min),
+		"%S":sprintf("%02d",tm->sec),
 		"%p":({"AM","PM"})[tm->hour>=12], //So tell me, why is %p in uppercase...
 		"%P":({"am","pm"})[tm->hour>=12], //... and %P in lowercase?
 		"%y":sprintf("%02d",tm->year%100),
