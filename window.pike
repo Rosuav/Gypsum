@@ -47,6 +47,7 @@ inherit statustext;
 mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
+	tabs+=({subw});
 	//Build the window
 	notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
@@ -54,15 +55,14 @@ mapping(string:mixed) subwindow(string txt)
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
-	->show_all(),GTK2.Label(subw->tabtext=txt));
+	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(tabs)-1);
 	setfonts(subw);
-	subw->ef->grab_focus();
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
 	#endif
 	subwsignals(subw);
-	tabs+=({subw});
 	colorcheck(subw->ef,subw);
+	call_out(redraw,0,subw);
 	return subw;
 }
 
