@@ -279,7 +279,11 @@ void mousemove(object self,object ev,mapping subw)
 	{
 		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
 		if (!mappingp(meta)) break;
-		if (meta->timestamp) txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,meta->timestamp); //TODO: Show this in the user's local time rather than UTC
+		if (meta->timestamp)
+		{
+			mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
+			txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
+		}
 		//Add further meta-information display here
 	}; //Ignore errors
 	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
@@ -661,9 +665,11 @@ class advoptions
 {
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
+		//TODO: Have a "type":"boolean" for flags, or maybe a "type":({"option","other option"}) to make a drop-down.
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
+		"Timestamp localtime":(["path":"window/timestamp_local","default":0,"desc":"Display line timestamps in local time (1) rather than in UTC (0).","type":"int"]),
 		"Wrap":(["path":"window/wrap","default":0,"desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
 		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text - a number of spaces works well."]),
 		#define COMPAT(x) "\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode"+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive."),"type":"int","default":0,"path":"compat/"+x
