@@ -16,10 +16,11 @@ Every plugin has a name, which is the file name without any path or the
 bootstrapping is complete, only the file name matters. Initialization
 order can thus be modified by moving scripts into subdirectories.
 
-A plugin may be a command, a hook, a window, or any combination thereof.
+A plugin may inherit any combination of the following, to gain access
+to Gypsum facilities and to implement its functionality:
 
-Commands
---------
+Command - 'inherit command'
+---------------------------
 
 Commands are invoked explicitly by the user typing "/foo", where foo is
 the plugin's name. The plugin should define a function thus:
@@ -31,9 +32,8 @@ may be "", but it will never be 0. The subw mapping identifies the
 subwindow (aka tab) into which the command was typed; ideally (but not
 mandatorially) this should be where messages are sent, etc.
 
-If a command triggers some command being sent to the connection (except
-with the nexthook() function, see below), it is courteous to clear the
-prompt prior to returning:
+If a command triggers some command being sent to the connection, it is
+courteous to clear the prompt prior to returning:
 
 subw->prompt=({([])});
 
@@ -41,8 +41,8 @@ This maintains the behaviour of normal command entry. Otherwise, the
 prompt (if any) will be retained, which is normal behaviour for local
 operations.
 
-Hooks
------
+Hook - 'inherit hook'
+---------------------
 
 Hooks provide one or both of an input hook (monitors typed commands)
 and an output hook (monitors text from the server). Their function
@@ -84,8 +84,8 @@ receive a "subw", but instead a "conn" (connection info), which will
 have a subwindow reference as conn->display - this can be used just
 like subw.
 
-Windows
--------
+Window - 'inherit window'
+-------------------------
 
 Rather than manually creating a window, inherit window to ensure that
 your subwindow is well-behaved. Provide the following functions:
@@ -114,14 +114,39 @@ Should look up GTK objects from win[] and use gtksignal() thus:
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
 
-Status text
------------
+Movable window - 'inherit movablewindow'
+----------------------------------------
 
-Similar to the window, this allows precisely one label to be displayed
-as part of the main window's status text. May be combined with window,
-or any of the other modes. No functions need be provided; simply call
+The same as 'inherit window' in usage, but gives automatic saving
+and loading of the window position. Provide one additional constant:
+
+constant pos_key="plugins/plugin_name/winpos";
+
+This will be used as the persist[] key in which the window position
+is stored. Optionally also provide:
+
+constant load_size=1; //To resize on startup to the last saved size
+int x,y; //Set the default position (for when there's no saved pos)
+
+Otherwise is identical to window above.
+
+Status text - 'inherit statustext'
+----------------------------------
+
+Allows precisely one label (by default) to be displayed as part of the
+main window's status text. No functions need be provided; simply call
 setstatus(sbtext) any time you wish to change the currently-displayed
 text. Order of elements on the status bar is by order loaded.
+
+Instead of a single label, some other widget can be placed on the bar.
+Be careful with this, though - avoid expanding the statusbar's height.
+Override this:
+
+GTK2.Widget makestatus() {return statustxt->lbl=....;}
+
+It must both set statustxt->lbl to something, and return something,
+though they need not necessarily be the same object (eg the returned
+label might be wrapped inside something else for structure).
 
 General notes
 -------------
