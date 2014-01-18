@@ -253,3 +253,8 @@ the extension ".ini", and be placed in the main Gypsum directory.
 No such file should exist in the repository (to avoid overwriting
 a user's config), but a ".ini.example" file should be provided if
 appropriate. BEST PRACTICE: Use a configdlg instead.
+
+ADVISORY: Everything in globals.pike can be used simply by referencing
+its name. Explore the file for what can be used; most of it is stable,
+even if not explicitly part of this file's pledge. They're omitted for
+brevity and to avoid duplicating documentation more than necessary.
