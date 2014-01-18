@@ -17,7 +17,7 @@ bootstrapping is complete, only the file name matters. Initialization
 order can thus be modified by moving scripts into subdirectories.
 
 A plugin may inherit any combination of the following, to gain access
-to Gypsum facilities and to implement its functionality:
+to Gypsum facilities and to implement the hook's functionality:
 
 Command - 'inherit command'
 ---------------------------
