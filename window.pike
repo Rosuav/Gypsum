@@ -17,7 +17,7 @@ GTK2.Button defbutton;
 #endif
 GTK2.Hbox statusbar;
 array(object) signals;
-int paused; //TODO: Show this visually somewhere, not just in hover text
+int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 inherit statustext;
 
