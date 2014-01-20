@@ -550,8 +550,8 @@ int keypress(object self,array|object ev,mapping subw)
 			scr->set_value(scr->get_value()+scr->get_property("page size"));
 			return 1;
 		}
-		case 0xFF13: //Pause (GTK/Linux)
-		case 0xFFFFFF: //Pause (Windows)
+		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
+		case 0xFFFFFF: //GDK_KEY_VoidSymbol; Windows produces this instead of FF13, for some reason
 		{
 			paused=!paused;
 			statustxt->paused->set_text("<PAUSED>"*paused);
