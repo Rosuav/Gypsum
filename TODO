@@ -15,3 +15,10 @@ Eventually, drop support for Pike 7.8. This means:
 2) Drop COMPAT_SIGNAL and possibly other COMPAT features
 3) Provide an additional arg to GTK2.MessageDialog() to bind it to a window
 4) (Or when a newer 7.8 build than 805 is released) recode charsheet::noex() to use [sg]et_data()
+
+There are a few places around the code where magic happens. Ideally they should
+become less magical... but for now, their documentation here will give them at
+least some chance of being found.
+* Creating timers (plugins/timer.pike) with names " HP", " SP", and ".EP" will handle them with Threshold RPG semantics.
+* Creating a world (plugins/connect.pike) with an IP address of "0.0.0.0" or "::" will put it in passive mode (IPv4 or IPv6).
+* Setting persist["wealth/autosplit"] (plugins/wealth.pike) will send, rather than displaying, the split commands.
