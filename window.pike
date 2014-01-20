@@ -539,15 +539,16 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF56: //PgDn
 		{
 			object scr=subw->scr;
+			float pg=scr->get_property("page size");
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
 				//Snap down to the bottom and unpause.
-				scr->set_value(scr->get_property("upper")-scr->get_property("page size"));
+				scr->set_value(scr->get_property("upper")-pg);
 				paused=0;
 				statustxt->paused->set_text("");
 				return 1;
 			}
-			scr->set_value(scr->get_value()+scr->get_property("page size"));
+			scr->set_value(scr->get_value()+pg);
 			return 1;
 		}
 		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
