@@ -548,7 +548,7 @@ int keypress(object self,array|object ev,mapping subw)
 				statustxt->paused->set_text("");
 				return 1;
 			}
-			scr->set_value(scr->get_value()+pg);
+			scr->set_value(min(scr->get_value()+pg,scr->get_property("upper")-pg));
 			return 1;
 		}
 		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
