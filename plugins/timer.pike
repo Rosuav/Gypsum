@@ -61,7 +61,7 @@ class config
 				"",win->present=GTK2.CheckButton("Present when done"),
 			})),0,0,0)
 			->pack_start(GTK2.Frame("Trigger text")->add(
-				win->trigger=GTK2.TextView((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
+				win->trigger=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);
 	}
 
@@ -75,7 +75,7 @@ class config
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
-		info->trigger=get_text(win->trigger);
+		info->trigger=win->trigger->get_text();
 		info->present=win->present->get_active();
 		persist["timer/timers"]=timers;
 		makelabels();

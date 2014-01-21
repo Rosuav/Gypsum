@@ -316,13 +316,6 @@ class configdlg
 		return (kwd!="-- New --") && kwd; //TODO: Recognize the "New" entry by something other than its text
 	}
 
-	//Is there no simpler way to do this?
-	string get_text(GTK2.TextView mle)
-	{
-		object buf=mle->get_buffer();
-		return buf->get_text(buf->get_start_iter(),buf->get_end_iter(),0);
-	}
-
 	void pb_save()
 	{
 		string oldkwd=selecteditem();

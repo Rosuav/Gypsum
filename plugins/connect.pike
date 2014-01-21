@@ -70,8 +70,8 @@ void save_content(mapping(string:mixed) info)
 	info->host=win->hostname->get_text();
 	info->port=(int)win->port->get_text();
 	info->logfile=win->logfile->get_text();
-	info->descr=get_text(win->descr);
-	info->writeme=get_text(win->writeme);
+	info->descr=win->descr->get_text();
+	info->writeme=win->writeme->get_text();
 	info->use_ka=win->use_ka->get_active();
 	persist["worlds"]=worlds;
 }
@@ -110,10 +110,10 @@ GTK2.Widget make_content()
 			"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
 		})),0,0,0)
 		->pack_start(GTK2.Frame("Description")->add(
-			win->descr=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)
+			win->descr=MultiLineEntryField()->set_size_request(250,70)
 		),1,1,0)
 		->pack_start(GTK2.Frame("Text to output upon connect")->add(
-			win->writeme=GTK2.TextView(GTK2.TextBuffer())->set_size_request(250,70)
+			win->writeme=MultiLineEntryField()->set_size_request(250,70)
 		),1,1,0);
 }
 
