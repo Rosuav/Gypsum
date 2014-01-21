@@ -463,3 +463,29 @@ int invoke_browser(string url)
 		return 1; //If no exception is thrown, hope that it worked.
 	};
 }
+
+/**
+ * Attempt to beep, if the user hasn't disabled it
+ * Currently ignores the 'times' parameter and just beeps once.
+ */
+int beep(int|void times)
+{
+	if (!times) times=1;
+	switch (persist["notif/beep"])
+	{
+		default: //Try everything.
+			int fallthrough=1;
+		case 1: //Attempt to call on an external program (which is probably setuid root on Linux)
+			//On Debian-based Linuxes, this may require 'apt-get install beep' to get one
+			//by Johnathan Nightingale, which seems to work well on my system.
+			catch {Process.create_process(({"beep","-f800"})); return 1;};
+			//If that throws, fall through in Default mode.
+			if (!fallthrough) break;
+		case 2: //Attempt a GTK beep
+			catch {GTK2.GdkDisplay()->beep(); return 1;};
+			//That might succeed without actually doing anything, so it's kept last.
+			break;
+		case 99: //Suppress altogether
+			return 1; //Always succeeds.
+	}
+}

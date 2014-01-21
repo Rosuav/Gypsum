@@ -68,8 +68,8 @@ void textread(mapping conn,string data)
 	data=replace(data,({"\r\n","\n\r","\r"}),"\n");
 	if (has_value(data,7))
 	{
-		//TODO: Beep. (Maybe once for each \7 in the text; maybe not.)
 		data-="\7";
+		beep();
 	}
 	while (sscanf(data,"%s\n%s",string line,data))
 	{
