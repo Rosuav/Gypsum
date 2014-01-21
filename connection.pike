@@ -23,6 +23,8 @@
 void create(string name)
 {
 	G->G->connection=this;
+	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
+	else G->G->sockets=(<>);
 	#if !constant(send)
 	add_gypsum_constant("send",bouncer("connection","send"));
 	#endif
@@ -207,6 +209,7 @@ int sockclosed(mapping conn)
 {
 	say(conn->display,"%%% Disconnected from server.");
 	conn->display->prompt=({([])});
+	G->G->sockets[conn->sock]=0;
 	conn->sock=0; //Break refloop
 	if (conn->ka) remove_call_out(conn->ka);
 	m_delete(conn,"logfile");
@@ -247,10 +250,8 @@ void send_bytes(mapping conn,string data)
 	sockwrite(conn);
 }
 
-//Callback bouncers. TODO: Replace the callbacks rather than using these
-void sockreadb(mapping conn,string data) {G->G->connection->sockread(conn,data);}
-void sockwriteb(mapping conn) {G->G->connection->sockwrite(conn);}
-void sockclosedb(mapping conn) {G->G->connection->sockclosed(conn);}
+//Socket accept callback bouncer, because there's no documented way to
+//change the callback on a Stdio.Port().
 void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
 
 //Socket accept callback - creates a new subw with the connected socket.
@@ -267,7 +268,7 @@ void sockaccept(mapping conn)
 			"curmsg":({([]),0,""}),
 		]));
 		say(conn->display,"%%% Connection from "+sock->query_address()+" at "+ctime(time()));
-		sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
+		sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	}
 }
 
@@ -280,7 +281,9 @@ void connected(mapping conn)
 {
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
-	conn->sock->set_nonblocking(sockreadb,sockwriteb,sockclosedb);
+	//Note: When setting the callbacks, always use G->G->connection->x instead of just x, in case this is the old callback.
+	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
+	G->G->sockets[conn->sock]=1;
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
