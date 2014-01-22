@@ -270,7 +270,7 @@ void sockaccept(mapping conn)
 			"curmsg":({([]),0,""}),
 		]));
 		say(conn->display,"%%% Connection from "+sock->query_address()+" at "+ctime(time()));
-		sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
+		sock->set_nonblocking(sockread,sockwrite,sockclosed);
 	}
 }
 
@@ -283,7 +283,7 @@ void connected(mapping conn)
 {
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
-	//Note: When setting the callbacks, always use G->G->connection->x instead of just x, in case this is the old callback.
+	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->sockets[conn->sock]=1;
 	if (conn->use_ka) conn->ka=call_out(ka,persist["ka/delay"] || 240,conn);
