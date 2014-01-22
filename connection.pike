@@ -251,7 +251,9 @@ void send_bytes(mapping conn,string data)
 }
 
 //Socket accept callback bouncer, because there's no documented way to
-//change the callback on a Stdio.Port().
+//change the callback on a Stdio.Port(). Changing sock->_accept_callback
+//does work, but since it's undocumented (and since passive mode accept
+//is neither time-critical nor common), I'm sticking with the bouncer.
 void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
 
 //Socket accept callback - creates a new subw with the connected socket.
