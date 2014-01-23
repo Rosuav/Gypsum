@@ -367,7 +367,7 @@ class configdlg
 					->add(make_content())
 				)
 				->pack_end(
-					(actionbtn?GTK2.Hbox(0,10)
+					win->buttonbox=(actionbtn?GTK2.Hbox(0,10)
 					->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
 					:GTK2.Hbox(0,10))
 					->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
