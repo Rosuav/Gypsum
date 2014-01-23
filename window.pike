@@ -8,6 +8,8 @@ array(GTK2.GdkColor) colors;
 mapping(string:mapping(string:mixed)) channels=persist["color/channels"] || ([]);
 constant deffont="Monospace 10";
 mapping(string:mapping(string:mixed)) fonts=persist["window/font"] || (["display":(["name":deffont]),"input":(["name":deffont])]);
+mapping(string:mapping(string:mixed)) numpadnav=persist["window/numpadnav"] || ([]); //Technically doesn't have to be restricted to numpad.
+multiset(string) numpadspecial=persist["window/numpadspecial"] || (<"look", "glance", "l", "gl">); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
@@ -558,10 +560,6 @@ int keypress(object self,array|object ev,mapping subw)
 			statustxt->paused->set_text("<PAUSED>"*paused);
 			return 1;
 		}
-		//For numpad nav, might be worth having a "standard set" that
-		//puts north on 0xFFB8 and southeast 0xFFB3, etc, but permit
-		//any 'go X' command on any key.
-		//case 0xFFB0..0xFFB9:
 		#if constant(DEBUG)
 		case 0xFFE1: case 0xFFE2: //Shift
 		case 0xFFE3: case 0xFFE4: //Ctrl
@@ -570,6 +568,13 @@ int keypress(object self,array|object ev,mapping subw)
 			break;
 		default: say(subw,"%%%% keypress: %X",ev->keyval); break;
 		#endif
+	}
+	if (mapping numpad=numpadnav[sprintf("%x",ev->keyval)])
+	{
+		string cmd=numpad->cmd;
+		if (!numpadspecial[cmd] && !has_prefix(cmd,"go ")) cmd="go "+cmd;
+		send(subw->connection,cmd+"\r\n");
+		return 1;
 	}
 }
 
@@ -776,6 +781,92 @@ class fontdlg
 	void load_content(mapping(string:mixed) info)
 	{
 		if (info->name) win->fontsel->set_font_name(info->name);
+	}
+}
+
+class keyboard
+{
+	inherit configdlg;
+	mapping(string:mapping(string:mixed)) items=numpadnav;
+	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
+	void create() {::create("keyboard");}
+
+	GTK2.Widget make_content()
+	{
+		return two_column(({
+			"Key (hex code)",win->kwd=GTK2.Entry(),
+			"Press key here ->",win->key=GTK2.Entry(),
+			"Command",win->cmd=GTK2.Entry(),
+		}));
+	}
+
+	void makewindow()
+	{
+		::makewindow();
+		//Add a button to the bottom row
+		win->buttonbox->add(win->pb_std=GTK2.Button((["label":"Standard","use-underline":1])));
+	}
+
+	int keypress(object self,array|object ev)
+	{
+		if (arrayp(ev)) ev=ev[0];
+		switch (ev->keyval) //Let some keys through untouched
+		{
+			case 0xFFE1..0xFFEE: //Modifier keys
+			case 0xFF09: case 0xFE20: //Tab/shift-tab
+				return 0;
+		}
+		win->kwd->set_text(sprintf("%x",ev->keyval));
+		return 1;
+	}
+
+	void stdkeys_response(object self,int response)
+	{
+		self->destroy();
+		if (response!=GTK2.RESPONSE_OK) return;
+		object store=win->list->get_model();
+		foreach (({"look","southwest","south","southeast","west","glance","east","northwest","north","northeast"});int i;string cmd)
+		{
+			if (!numpadnav["ffb"+i])
+			{
+				numpadnav["ffb"+i]=(["cmd":cmd]);
+				store->set_value(store->append(),0,"ffb"+i);
+			}
+			else numpadnav["ffb"+i]->cmd=cmd;
+		}
+		persist["window/numpadnav"]=numpadnav;
+		selchanged();
+	}
+
+	void pb_std()
+	{
+		GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"Adding/updating standard nav keys will overwrite anything you currently have on those keys. Really do it?")
+			->show()
+			->signal_connect("response",stdkeys_response);
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			#if constant(COMPAT_SIGNAL)
+			gtksignal(win->key,"key_press_event",keypress),
+			#else
+			gtksignal(win->key,"key_press_event",keypress,0,UNDEFINED,1),
+			#endif
+			gtksignal(win->pb_std,"clicked",pb_std),
+		});
+	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		info->cmd=win->cmd->get_text();
+		persist["window/numpadnav"]=numpadnav;
+	}
+
+	void load_content(mapping(string:mixed) info)
+	{
+		win->cmd->set_text(info->cmd||"");
 	}
 }
 
