@@ -558,6 +558,10 @@ int keypress(object self,array|object ev,mapping subw)
 			statustxt->paused->set_text("<PAUSED>"*paused);
 			return 1;
 		}
+		//For numpad nav, might be worth having a "standard set" that
+		//puts north on 0xFFB8 and southeast 0xFFB3, etc, but permit
+		//any 'go X' command on any key.
+		//case 0xFFB0..0xFFB9:
 		#if constant(DEBUG)
 		case 0xFFE1: case 0xFFE2: //Shift
 		case 0xFFE3: case 0xFFE4: //Ctrl
