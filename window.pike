@@ -1071,7 +1071,7 @@ int switchpage(object|mapping subw)
 {
 	if (objectp(subw)) {call_out(switchpage,0,current_subw()); return 0;} //Let the signal handler return before actually doing stuff
 	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
-	subw->ef->grab_focus();
+	if (subw==current_subw()) subw->ef->grab_focus();
 }
 
 mapping(string:int) pos;
