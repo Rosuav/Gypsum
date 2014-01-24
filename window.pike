@@ -119,7 +119,7 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
 		gtksignal(subw->ef,"changed",colorcheck,subw),
-		//gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1), //Not working, see below
+		GTK2.GObject()->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
@@ -139,15 +139,23 @@ void scrchange(object self,mapping subw)
 	if (!paused) self->set_value(upper-self->get_property("page size"));
 }
 
-int paste(object self,mapping subw)
+void paste(object self,mapping subw)
 {
 	//TODO: Handle multi-line paste.
 	//At this point, the clipboard contents haven't been put into the EF.
-	//But I don't know how to prevent the normal pasting from happening.
-	//Obviously I don't want to change what's on the clipboard! But this
-	//signal seems to be just a notification. In theory, returning 1 here
-	//should prevent the normal behaviour; but that doesn't seem to work.
-	return 1;
+	//Preventing the normal behaviour depends on the widget having a
+	//signal_stop() method, which is not available in trunk Pike as of
+	//20140124. If that method is not available, the signal will not be
+	//connected to (see above), so in this function, we assume that it
+	//exists and can be used.
+	string txt=self->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->wait_for_text();
+	if (!txt || !has_value(txt,'\n')) return; //No text? Nothing will happen. One line of text? Let it go with the default.
+	self->signal_stop("paste_clipboard"); //Prevent the full paste, we'll do it ourselves.
+	array(string) lines=txt/"\n";
+	sscanf(self->get_text(),"%"+self->get_position()+"s%s",string before,string after); //A bit hackish... get the text before and after the cursor :)
+	enterpressed(subw,before+lines[0]);
+	foreach (lines[1..<1],string l) enterpressed(subw,l);
+	self->set_text(lines[-1]+after); self->set_position(sizeof(lines[-1]));
 }
 
 GTK2.Widget makestatus()
@@ -581,12 +589,12 @@ int keypress(object self,array|object ev,mapping subw)
 /**
  *
  */
-int enterpressed(mapping subw)
+int enterpressed(mapping subw,string|void cmd)
 {
 	//TODO: Figure out what the return value is supposed to mean.
 	//It's used only in COMPAT_SIGNAL mode, and it seems a little inconsistent.
 	//I think this probably ought to just return void.
-	string cmd=subw->ef->get_text(); subw->ef->set_text("");
+	if (!cmd) {cmd=subw->ef->get_text(); subw->ef->set_text("");}
 	subw->histpos=-1;
 	subw->prompt[0]->timestamp=time(1);
 	if (!subw->passwordmode)
