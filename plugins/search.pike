@@ -3,6 +3,9 @@
 //Making it work with the enterpressed_glo bouncer is left as an exercise for
 //whoever cares to do it.
 
+//TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
+//keystroke while focus is on the Ctrl-F box).
+
 inherit statustext;
 inherit plugin_menu;
 
