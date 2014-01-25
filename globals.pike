@@ -398,6 +398,23 @@ class configdlg
 //should normally set statustxt->lbl (but might wrap it in some
 //other object if it wishes).
 //TODO: Make it possible to go onto a second row of statusbar entries.
+/* Possibility: Instead of putting them in a Vbox (see window.pike), put them into a TextView.
+
+int main()
+{
+	GTK2.setup_gtk();
+	object buf=GTK2.TextBuffer(),view=GTK2.TextView(buf)->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD)->set_cursor_visible(0);
+	view->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(240,240,240)); //Otherwise it has an ugly white background.
+	function add=lambda(GTK2.Widget wid) {view->add_child_at_anchor(wid,buf->create_child_anchor(buf->get_end_iter())); buf->insert(buf->get_end_iter(),"  ",-1);};
+	function frm=lambda(GTK2.Widget wid) {add(GTK2.Frame()->add(wid)->set_shadow_type(GTK2.SHADOW_ETCHED_OUT));};
+	foreach (({"Asdf","qwer","zxcv","Testing, testing","1, 2, 3, 4"}),string x) frm(GTK2.Label(x));
+	GTK2.Window(GTK2.WindowToplevel)->add(GTK2.Vbox(0,0)->add(GTK2.Button("This is the base width"))->add(view))->show_all()->signal_connect("delete-event",lambda() {exit(0);});
+	return -1;
+}
+
+add() and frm() would be coded here, the labels would be done by makestatus() as per current, and the rest would go in window.pike.
+*/
+
 class statustext
 {
 	mapping(string:mixed) statustxt=([]);
