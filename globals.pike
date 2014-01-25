@@ -397,6 +397,7 @@ class configdlg
 //but this can be altered by overriding makestatus(), which
 //should normally set statustxt->lbl (but might wrap it in some
 //other object if it wishes).
+//TODO: Make it possible to go onto a second row of statusbar entries.
 class statustext
 {
 	mapping(string:mixed) statustxt=([]);
