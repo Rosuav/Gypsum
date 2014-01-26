@@ -561,7 +561,9 @@ int keypress(object self,array|object ev,mapping subw)
 			return 1;
 		}
 		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
-		case 0xFFFFFF: //GDK_KEY_VoidSymbol; Windows produces this instead of FF13, for some reason
+		#if constant(COMPAT_SIGNAL)
+		case 0xFFFFFF: //GDK_KEY_VoidSymbol; Windows produces this instead of FF13, for some reason (but also produces it for other keys eg Caps Lock)
+		#endif
 		{
 			paused=!paused;
 			statustxt->paused->set_text("<PAUSED>"*paused);
