@@ -563,6 +563,7 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
 		#if constant(COMPAT_SIGNAL)
 		case 0xFFFFFF: //GDK_KEY_VoidSymbol; Windows produces this instead of FF13, for some reason (but also produces it for other keys eg Caps Lock)
+		//TODO: Figure out if this is a Windows issue, a GTK version issue, or something else, and then bracket it appropriately.
 		#endif
 		{
 			paused=!paused;
