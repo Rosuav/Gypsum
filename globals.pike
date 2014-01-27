@@ -416,6 +416,9 @@ add() and frm() would be coded here, the labels would be done by makestatus() as
 
 TODO: Figure out how to change the base color to be "whatever the base color for a window is", rather than
 hard-coding F0F0F0. Or how to make the TextView simply not draw a bg. Have emailed gtk-app-devel for ideas.
+
+NOTE: This does not appear to work on Windows. GTK version is the same, and Pike 7.8.700 on Linux works,
+but for some reason it's failing me on Windows. Weird weird weird, and very annoying.
 */
 
 class statustext
