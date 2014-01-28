@@ -6,7 +6,6 @@
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Importing of settings from RosMud
-* A plugins-more plugin that loads additional plugins from plugins-more/ (or elsewhere) and keeps track of which to load (no unload, just load - restart to unload)
 * A means of unloading a plugin - would probably mean searching all the mappings for anything whose Object.defined(function_object(x)) is the plugin
 
 Eventually, drop support for Pike 7.8. This means:
