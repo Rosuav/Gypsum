@@ -7,6 +7,7 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Importing of settings from RosMud
 * A means of unloading a plugin - would probably mean searching all the mappings for anything whose Object.defined(function_object(x)) is the plugin
+* Variant of the above: Clean-up - search for anything with Object.defined() as above but function_object is *not* this plugin
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
