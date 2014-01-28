@@ -75,7 +75,7 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
 void build(string param)
 {
 	string param2;
-	if (has_prefix(param,"globals.pike")) sscanf(param,"%s %s",param,param2);
+	if (has_prefix(param,"globals")) sscanf(param,"%s %s",param,param2);
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return;}
 	say(0,"%% Compiling "+param+"...");
