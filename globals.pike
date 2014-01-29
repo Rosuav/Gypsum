@@ -178,6 +178,9 @@ class plugin_menu
 	{
 		if (!name) return;
 		if (G->G->plugin_menu[name]) mi=G->G->plugin_menu[name]; else G->G->plugin_menu[name]=mi;
+		/* If plugin unloading is ever implemented, this will need to retain a self-ref
+		somewhere (probably mi->handler=this; or something). There's no way, AFAIK, to
+		retrieve the callback function based on a widget and a signal handler. */
 		if (mi->menuitem) mi->menuitem->get_child()->set_text(menu_label||name);
 		else
 		{
@@ -206,6 +209,7 @@ class window
 	void create(string|void name)
 	{
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
+		/* As with plugin_menu, this would need to retain a self-ref to enable unloading. */
 		if (!win->mainwindow) makewindow();
 		win->mainwindow->set_skip_taskbar_hint(1)->set_skip_pager_hint(1)->show_all();
 		dosignals();
@@ -428,6 +432,7 @@ class statustext
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
 		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
+		/* Once again, would need to retain itself somewhere to allow plugin unloading. */
 		if (!statustxt->lbl)
 			G->G->window->statusbar->pack_start(GTK2.Frame()
 				->add(makestatus())
