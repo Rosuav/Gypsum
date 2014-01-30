@@ -13,7 +13,6 @@
   but function_object is *not* this plugin. (Maybe even do that all the time? But not
   actually destructing anything, as that would disrupt stuff badly.)
 * Ctrl-Z to Undo in the input box
-* Prevention of auto-select when focus moves from tab to tab
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?

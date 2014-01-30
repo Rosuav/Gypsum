@@ -120,9 +120,13 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
 		gtksignal(subw->ef,"changed",colorcheck,subw),
 		GTK2.GObject()->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
+		gtksignal(subw->ef,"focus_in_event",focus,subw),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
+
+//Snapshot the selection bounds so the switchpage handler can reset them
+int focus(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
 
 /**
  * Update the scroll bar's range
@@ -1081,7 +1085,13 @@ int switchpage(object|mapping subw)
 {
 	if (objectp(subw)) {call_out(switchpage,0,current_subw()); return 0;} //Let the signal handler return before actually doing stuff
 	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
-	if (subw==current_subw()) subw->ef->grab_focus();
+	if (subw==current_subw())
+	{
+		if (!subw->ef->is_focus()) subw->ef->grab_focus();
+		//Reset the cursor pos. Currently this makes for some flicker, untidy.
+		//TODO: Do this more smoothly - maybe by NOT letting the signal handler return before doing stuff?
+		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
+	}
 }
 
 mapping(string:int) pos;
