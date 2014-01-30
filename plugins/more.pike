@@ -35,6 +35,7 @@ class menu_clicked
 	{
 		int nowactive=win->active->get_active();
 		if (!info->active && nowactive) function_object(G->G->commands->update)->build(selecteditem());
+		info->active=nowactive;
 		persist["plugins/more/list"]=items;
 	}
 
