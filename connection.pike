@@ -20,6 +20,8 @@
  * 
  */
 
+string prompt_suffix = persist["conn/prompt_suffix"] || "==> "; //This may become conn->prompt_suffix and world-configurable.
+
 void create(string name)
 {
 	G->G->connection=this;
@@ -85,6 +87,15 @@ void textread(mapping conn,string data)
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
+	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
+	{
+		//Let's pretend this is a prompt. Unfortunately that's not guaranteed, but
+		//since it ends with the designated prompt suffix AND it's the end of a
+		//socket read, let's hope. Note that this code is duplicated from IAC GA.
+		conn->curmsg[0]->timestamp=time(1);
+		conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
+		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+	}
 }
 
 /**
