@@ -13,6 +13,7 @@
   but function_object is *not* this plugin. (Maybe even do that all the time? But not
   actually destructing anything, as that would disrupt stuff badly.)
 * Ctrl-Z to Undo in the input box
+* Pseudo-prompts, esp the Threshold RPG magic token "==> "
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
