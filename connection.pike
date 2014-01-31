@@ -95,6 +95,7 @@ void textread(mapping conn,string data)
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
+	if (conn->ansibuffer!="" || conn->readbuffer!="") return; //It's not the end of a socket-read if we have anything in buffer.
 	string prompt_suffix = persist["prompt/suffix"] || "==> "; //This may become conn->prompt_suffix and world-configurable.
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
