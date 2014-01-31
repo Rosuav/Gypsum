@@ -2,16 +2,22 @@
 
 inherit command;
 inherit hook;
+inherit plugin_menu;
+
+// Current Mapping:
+// Mapping     Mapping
+// |==========||=============================|
+// <alias key>  [expansion] <expansion value>
+mapping(string:mapping(string:mixed)) aliases=persist["aliases/simple"]||([]);
 
 int process(string param,mapping(string:mixed) subw)
 {
-	mapping(string:string) aliases=persist["aliases/simple"];
 	if (param=="")
 	{
 		if (!aliases || !sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
 		say(subw,"%% You have the following aliases set:");
 		foreach (sort(indices(aliases)),string from)
-			say(subw,"%%%% %-20s %=55s",from,aliases[from]);
+			say(subw,"%%%% %-20s %=55s",from,aliases[from]->expansion);
 		say(subw,"%% See '/alias help' for more information.");
 		return 1;
 	}
@@ -30,12 +36,12 @@ int process(string param,mapping(string:mixed) subw)
 	sscanf(param,"%s %s",param,string expansion);
 	if (!expansion || expansion=="") //Unalias
 	{
-		if (string exp=m_delete(aliases,param)) say(subw,"%%%% Removing alias '%s', was: %s",param,exp);
+		if (mapping(string:mixed) alias=m_delete(aliases,param)) say(subw,"%%%% Removing alias '%s', was: %s",param,alias->expansion);
 		else say(subw,"%% No alias '"+param+"' to remove.");
 	}
 	else
 	{
-		aliases[param]=expansion;
+		aliases[param] = (["expansion":expansion]);
 		say(subw,"%% Aliased.");
 		persist["aliases/simple"]=aliases; //Force persist to save
 	}
@@ -44,12 +50,59 @@ int process(string param,mapping(string:mixed) subw)
 
 int inputhook(string line,mapping(string:mixed) subw)
 {
-	mapping(string:string) aliases=persist["aliases/simple"];
-	if (!aliases) return 0;
 	sscanf(line,"%s %s",line,string args);
-	string expansion=aliases[line];
-	if (!expansion) return 0;
-	return nexthook(subw,replace(expansion,"%*",args||""));
+	mapping(string:mixed) alias=aliases[line];
+	if (!alias) return 0;
+	return nexthook(subw,replace(alias["expansion"],"%*",args||""));
 }
 
-void create(string name) {::create(name);}
+//Plugin menu takes us straight into the config dlg
+constant menu_label="Aliases";
+class menu_clicked
+{
+
+        inherit configdlg;
+	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
+
+	void create()
+	{
+                items=aliases;
+                ::create("Alias");
+		::showwindow();
+	}
+
+	GTK2.Widget make_content() 
+	{
+                return two_column(({
+			"Alias",win->kwd=GTK2.Entry(),
+			"Expansion",win->exp=GTK2.Entry(),
+		}));
+	}
+
+        void load_content(mapping(string:mixed) info)
+        {
+       		win->exp->set_text(info->expansion||"");
+        }
+
+        void save_content(mapping(string:mixed) info)
+        {
+                info->expansion=win->exp->get_text();
+                persist["aliases/simple"]=aliases;
+        }
+
+        void delete_content(string kwd,mapping(string:mixed) info)
+        {
+                persist["aliases/simple"]=aliases;
+                win->exp->set_text("");
+        }
+}
+
+void create(string name)
+{
+	::create(name);
+	//Compatibility: Previously, aliases were mapped directly to their expansions.
+	//Any string expansions need to get converted to mappings. 20140201, can be
+	//removed once no longer needed.
+	foreach (aliases;string keyword;string|mapping expansion)
+		if (stringp(expansion)) aliases[keyword]=(["expansion":expansion]);
+}
