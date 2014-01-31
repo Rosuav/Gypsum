@@ -73,6 +73,16 @@ void textread(mapping conn,string data)
 		data-="\7";
 		beep();
 	}
+	if (array old_prompt=m_delete(conn,"real_prompt"))
+	{
+		//There was a pseudo-prompt. If the user entered a non-local command,
+		//optionally clear it out; otherwise, reinstate the real prompt and
+		//let this go back to being part of a line of text. Note that the
+		//real_prompt stashed prompt will be removed regardless.
+		if (conn->display->prompt==conn->curmsg) conn->display->prompt=old_prompt;
+		else if (!persist["prompt/retain_pseudo"]) conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+		//else we're retaining the pseudo-prompt as lines of text, and leaving no prompt because the user typed something, so do nothing
+	}
 	while (sscanf(data,"%s\n%s",string line,data))
 	{
 		conn->curmsg[-1]+=line;
@@ -94,6 +104,18 @@ void textread(mapping conn,string data)
 		conn->curmsg[0]->timestamp=time(1);
 		conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+	}
+	else if (conn->curline!="") switch (persist["prompt/pseudo"] || ":>")
+	{
+		case "": break; //No pseudo-prompt handling.
+		default: //Only if the prompt ends with one of the specified characters (and maybe spaces).
+			string prompt=String.trim_all_whites(conn->curline);
+			if (prompt=="" || !has_value(persist["prompt/pseudo"]||":>",prompt[-1])) break; //Not one of those characters. Not a pseudo-prompt.
+			//But if it is, then fall through.
+		case 1.0: //Treat everything as a pseudo-prompt.
+			conn->real_prompt=conn->display->prompt;
+			conn->display->prompt=conn->curmsg;
+			//Since this is a pseudo-prompt, don't clear anything out - just shadow the real prompt with this.
 	}
 }
 
