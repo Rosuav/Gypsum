@@ -85,7 +85,7 @@ void textread(mapping conn,string data)
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
-	string prompt_suffix = persist["conn/prompt_suffix"] || "==> "; //This may become conn->prompt_suffix and world-configurable.
+	string prompt_suffix = persist["prompt/suffix"] || "==> "; //This may become conn->prompt_suffix and world-configurable.
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
 		//Let's pretend this is a prompt. Unfortunately that's not guaranteed, but
