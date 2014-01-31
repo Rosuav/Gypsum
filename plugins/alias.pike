@@ -14,7 +14,7 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="")
 	{
-		if (!aliases || !sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
+		if (!sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
 		say(subw,"%% You have the following aliases set:");
 		foreach (sort(indices(aliases)),string from)
 			say(subw,"%%%% %-20s %=55s",from,aliases[from]->expansion);
@@ -28,7 +28,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% Enumerate aliases: /alias");
 		say(subw,"%% In an alias, the marker %* will be replaced by all arguments:");
 		say(subw,"%%   /alias speak say Sir! %s Sir!");
-		say(subw,"%%   speak Hello!",subw);
+		say(subw,"%%   speak Hello!");
 		say(subw,"%%   --> say Sir! Hello! Sir!");
 		return 1;
 	}
@@ -51,9 +51,7 @@ int process(string param,mapping(string:mixed) subw)
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	sscanf(line,"%s %s",line,string args);
-	mapping(string:mixed) alias=aliases[line];
-	if (!alias) return 0;
-	return nexthook(subw,replace(alias["expansion"],"%*",args||""));
+	if (mapping(string:mixed) alias=aliases[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
 }
 
 //Plugin menu takes us straight into the config dlg
