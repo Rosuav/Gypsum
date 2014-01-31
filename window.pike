@@ -1081,17 +1081,27 @@ void savewinpos()
 /**
  *
  */
-int switchpage(object|mapping subw)
+int switchpage(object self,mixed segfault,int page,mixed otherarg)
 {
-	if (objectp(subw)) {call_out(switchpage,0,current_subw()); return 0;} //Let the signal handler return before actually doing stuff
-	subw->activity=0; notebook->set_tab_label_text(subw->page,subw->tabtext);
-	if (subw==current_subw())
-	{
-		if (!subw->ef->is_focus()) subw->ef->grab_focus();
-		//Reset the cursor pos. Currently this makes for some flicker, untidy.
-		//TODO: Do this more smoothly - maybe by NOT letting the signal handler return before doing stuff?
-		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
-	}
+	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and it
+	//comes through as a Pike object - which it isn't. Doing *ANYTHING* with that value
+	//is liable to segfault Pike. However, since it's a pretty much useless value anyway,
+	//ignore it and just use 'page' (which is the page index). I'm keeping this here as
+	//sort of documentation, hence it includes an 'otherarg' arg (which I'm not using -
+	//an additional argument to signal_connect/gtksignal would provide that value here)
+	//and names all the arguments. All I really need is 'page'. End caution.
+	mapping subw=tabs[page];
+	subw->activity=0;
+	//Reset the cursor pos based on where it was last time focus entered the EF. This is
+	//distinctly weird, but it prevents the annoying default behaviour of selecting all.
+	if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
+	call_out(lambda(int page,mapping subw) {
+		//NOTE: Doing this work inside the signal handler can segfault Pike, so do it
+		//on the backend. (Probably related to the above caution.) The same applies
+		//if the args are omitted (making this a closure).
+		notebook->set_tab_label_text(subw->page,subw->tabtext);
+		if (notebook->get_current_page()==page) subw->ef->grab_focus();
+	},0,page,subw);
 }
 
 mapping(string:int) pos;
