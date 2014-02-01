@@ -58,41 +58,40 @@ int inputhook(string line,mapping(string:mixed) subw)
 constant menu_label="Aliases";
 class menu_clicked
 {
-
-        inherit configdlg;
+	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
 
 	void create()
 	{
-                items=aliases;
-                ::create("Alias");
+		items=aliases;
+		::create("Alias");
 		::showwindow();
 	}
 
 	GTK2.Widget make_content() 
 	{
-                return two_column(({
+		return two_column(({
 			"Alias",win->kwd=GTK2.Entry(),
 			"Expansion",win->exp=GTK2.Entry(),
 		}));
 	}
 
-        void load_content(mapping(string:mixed) info)
-        {
-       		win->exp->set_text(info->expansion||"");
-        }
+	void load_content(mapping(string:mixed) info)
+	{
+		win->exp->set_text(info->expansion||"");
+	}
 
-        void save_content(mapping(string:mixed) info)
-        {
-                info->expansion=win->exp->get_text();
-                persist["aliases/simple"]=aliases;
-        }
+	void save_content(mapping(string:mixed) info)
+	{
+		info->expansion=win->exp->get_text();
+		persist["aliases/simple"]=aliases;
+	}
 
-        void delete_content(string kwd,mapping(string:mixed) info)
-        {
-                persist["aliases/simple"]=aliases;
-                win->exp->set_text("");
-        }
+	void delete_content(string kwd,mapping(string:mixed) info)
+	{
+		persist["aliases/simple"]=aliases;
+		win->exp->set_text("");
+	}
 }
 
 void create(string name)
