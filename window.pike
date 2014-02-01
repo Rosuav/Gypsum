@@ -1179,6 +1179,7 @@ int switchpage(object self,mixed segfault,int page,mixed otherarg)
 		//if the args are omitted (making this a closure).
 		notebook->set_tab_label_text(subw->page,subw->tabtext);
 		if (notebook->get_current_page()==page) subw->ef->grab_focus();
+		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 	},0,page,subw);
 }
 
