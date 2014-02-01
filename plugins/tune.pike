@@ -5,8 +5,10 @@ Way WAY simpler than the C++ version, though it doesn't (bother to) keep stats.
 
 inherit command;
 inherit hook;
+inherit plugin_menu;
 
-multiset(string) tuned=persist["tune/thresholdrpg"] || (<>); //Persist key permits other systems to be added.
+mapping(string:mapping(string:mixed)) tuned = ([]);
+//multiset(string) tuned=persist["tune/thresholdrpg"] || (<>); //Persist key permits other systems to be added.
 constant channels=(<"-{Citizen}-","[court]","[trivia]","[sports]">); //TODO: Make configurable, now that it's easy
 
 int outputhook(string line,mapping(string:mixed) conn)
@@ -66,12 +68,70 @@ int process(string param,mapping(string:mixed) subw)
 	else
 	{
 		param=lower_case(param);
-		if (tuned[param]) say(subw,"%% Tuning back in.");
-		else say(subw,"%% Tuning out.");
-		tuned[param]=!tuned[param];
+		if (tuned[param]) 
+		{
+			m_delete(tuned,param);
+			say(subw,"%% Tuning back in.");
+		}
+		else 
+		{
+			say(subw,"%% Tuning out.");
+			tuned[param] = ([]);
+		}
+		//tuned[param]=!tuned[param];
 		persist["tune/thresholdrpg"]=tuned;
 	}
 	return 1;
 }
 
-void create(string name) {::create(name);}
+//Plugin menu takes us straight into the config dlg
+constant menu_label="Tune";
+class menu_clicked
+{
+
+    inherit configdlg;
+	mapping(string:mixed) windowprops=(["title":"Tune","modal":1]);
+
+	void create()
+	{
+        items=tuned;
+        ::create("Tune");
+		::showwindow();
+	}
+
+	GTK2.Widget make_content() 
+	{
+                return two_column(({
+			"Character",win->kwd=GTK2.Entry(),
+		}));
+	}
+
+        void load_content(mapping(string:mixed) info)
+        {
+        }
+
+        void save_content(mapping(string:mixed) info)
+        {
+                persist["tune/thresholdrpg"]=tuned;
+        }
+
+        void delete_content(string kwd,mapping(string:mixed) info)
+        {
+                persist["tune/thresholdrpg"]=tuned;
+        }
+}
+
+void create(string name) 
+{
+	::create(name);
+	// Old collection was multiset
+	if(multisetp(persist["tune/thresholdrpg"]))
+	{
+		foreach(get_iterator(persist["tune/thresholdrpg"]); mixed character; mixed value) tuned[character] = ([]);		
+	}
+	else
+	{
+		tuned = persist["tune/thresholdrpg"] || ([]);
+	}
+	
+}
