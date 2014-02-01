@@ -916,6 +916,82 @@ Version "+ver+", as far as can be ascertained :)"))
 	}
 }
 
+class promptsdlg
+{
+	inherit window;
+	void create() {::create("window/prompts");}
+
+	string wrap(string txt)
+	{
+		//return noex(GTK2.Label(replace(txt,({"\n","\t"}),({" ",""})))->set_line_wrap(1)->set_justify(GTK2.JUSTIFY_LEFT));
+		return replace(txt,({"\n","\t"}),({" ",""}));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Configure prompts","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,20)
+			->add(GTK2.Label("Prompts from the server are easy for a human to\nrecognize, but not always for the computer."))
+			->add(GTK2.Frame("TELNET codes")
+				->add(GTK2.Label("The ideal is for prompts to be marked with\nIAC GA. This works perfectly and is guaranteed."))
+			)
+			->add(GTK2.Frame("Magic prompt marker")->add(GTK2Table(({
+				({"Next best is a special marker from the server. If this\nends a socket-read, it is treated as a prompt.",0}),
+				({"Marker:",win->promptsuffix=GTK2.Entry()->set_text(persist["prompt/suffix"]||"==> ")}),
+				({"Blank this to suppress this feature.",0}),
+			}))))
+			->add(GTK2.Frame("Pseudo-prompts")->add(GTK2Table(({
+				({wrap(#"Finally, a piece of text that ends a socket-read may be interpreted as a pseudo-prompt if it ends
+				with a typical marker. For most MUDs this would be a colon or a greater-than symbol - :> - but you may
+				want to either add to or remove from that list. The marker character may be followed by whitespace
+				but nothing else; it may be preceded by anything (the entire line will become the prompt)."),0}),
+				({"Pseudo-prompt tail characters:",
+					win->promptpseudo = GTK2.Entry()->set_text((stringp(persist["prompt/pseudo"]) && persist["prompt/pseudo"]) || ":>")
+				}),
+				({"Again, blank this list to suppress this feature.",0}),
+				({wrap(#"Alternatively, you could treat every partial line as a pseudo-prompt, regardless of what it ends
+				with. This tends to be ugly, but will work; rather than key in every possible ending character above,
+				simply tick this box."),0}),
+				({win->allpseudo=GTK2.CheckButton("All partial lines are pseudo-prompts"),0}),
+				({wrap(#"Since pseudo-prompts are often going to be incorrectly recognized, you may prefer to have
+				inputted commands not remove them from the subsequent line. With a guess that can have as many false
+				positives as false negatives, it's a judgement call whether to aim for the positive or aim for the
+				negative, so take your pick which one you find less ugly. With this option unticked (the default),
+				a false positive will result in a broken line if you happen to type a command right at that moment;
+				with it ticked, every pseudo-prompt will end up being duplicated into the next line of normal text."),0}),
+				({win->retainpseudo=GTK2.CheckButton("Retain pseudo-prompts after commands"),0}),
+			}),(["wrap":1,"justify":GTK2.JUSTIFY_LEFT,"xalign":0.0]))))
+			->add(GTK2.HbuttonBox()
+				->add(win->pb_ok=GTK2.Button("OK")) //TODO: Use stock?
+				->add(win->pb_cancel=GTK2.Button("Cancel"))
+			)
+		);
+		win->allpseudo->set_active(persist["prompt/pseudo"]==1.0);
+		win->retainpseudo->set_active(persist["prompt/retain_pseudo"]);
+	}
+
+	void pb_ok_click()
+	{
+		if (win->allpseudo->get_active()) persist["prompt/pseudo"]=1.0;
+		else persist["prompt/pseudo"]=win->promptpseudo->get_text();
+		persist["prompt/suffix"]=win->promptsuffix->get_text();
+		persist["prompt/retain_pseudo"]=win->retainpseudo->get_active();
+	}
+
+	void closewindow()
+	{
+		win->mainwindow->destroy();
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->pb_ok,"clicked",pb_ok_click),
+			gtksignal(win->pb_cancel,"clicked",closewindow),
+		});
+	}
+}
+
 /**
  *
  */
@@ -969,6 +1045,7 @@ void create(string name)
 					->add(menuitem("_Font","fontdlg"))
 					->add(menuitem("_Colors","channelsdlg"))
 					->add(menuitem("_Keyboard","keyboard"))
+					->add(menuitem("_Prompts","promptsdlg"))
 					->add(menuitem("Ad_vanced options","advoptions"))
 					#if constant(COMPAT_SIGNAL)
 					->add(menuitem("Save all window positions","savewinpos"))
