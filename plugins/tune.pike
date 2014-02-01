@@ -87,7 +87,7 @@ constant menu_label="Tune people out";
 class menu_clicked
 {
 
-    inherit configdlg;
+	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Tune Threshold RPG characters","modal":1]);
 
 	void create()
@@ -99,26 +99,26 @@ class menu_clicked
 
 	GTK2.Widget make_content() 
 	{
-                return two_column(({
+		return two_column(({
 			"Character",win->kwd=GTK2.Entry(),
 			"Tune out one or more characters\non Threshold RPG OOC channels.\nEveryone listed here will be muted.",0,
 		}));
 	}
 
-        void load_content(mapping(string:mixed) info)
-        {
+	void load_content(mapping(string:mixed) info)
+	{
 		//Nothing to do!
-        }
+	}
 
-        void save_content(mapping(string:mixed) info)
-        {
-                persist["tune/thresholdrpg"]=tuned;
-        }
+	void save_content(mapping(string:mixed) info)
+	{
+		persist["tune/thresholdrpg"]=tuned;
+	}
 
-        void delete_content(string kwd,mapping(string:mixed) info)
-        {
-                persist["tune/thresholdrpg"]=tuned;
-        }
+	void delete_content(string kwd,mapping(string:mixed) info)
+	{
+		persist["tune/thresholdrpg"]=tuned;
+	}
 }
 
 void create(string name) 
