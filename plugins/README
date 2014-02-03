@@ -193,9 +193,13 @@ constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accel
 constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
 void menu_clicked() { }
 
-ADVISORY: Note that, in theory, menu_clicked could be a class rather
-than a function. Be careful with this, though, as it may receive some
-arguments (it's currently used directly as a GTK signal handler).
+ADVISORY: Note that menu_clicked can be any callable, eg a class, not
+just a function. Be careful with this, though, as it may receive some
+arguments (it's currently used directly as a GTK signal handler). Works
+beautifully as long as this isn't a problem; a number of plugins do
+this by having an explicit create() that doesn't pass args on to its
+inherits. In the future, this may have specific args provided, but code
+that assumes no args will always be safe.
 
 Uses for this include opening/showing a window or configdlg, giving
 statistical information to the user, giving usage information about a
