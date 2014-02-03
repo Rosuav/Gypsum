@@ -194,7 +194,11 @@ int main() {process("save",0);}
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg") {config(); return 1;}
-	//TODO: Way to explicitly trigger a timer
+	//TODO: Way to explicitly trigger a timer, especially one starting in the past
+	//For instance, it should be possible to create a new timer and ask that it be
+	//started as at the most recent string that matches it (that one's easy enough
+	//to do); but also, it'd be great to have a one-off timer that has custom time
+	//and description, starting in the past.
 	if (param=="save" || sscanf(param,"save %s",string pfx))
 	{
 		string data="";
