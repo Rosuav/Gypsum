@@ -1,7 +1,8 @@
 #if !constant(COMPAT_SIGNAL)
 //This plugin works properly only if Enter inside random entryfields works.
 //Making it work with the enterpressed_glo bouncer is left as an exercise for
-//whoever cares to do it.
+//whoever cares to do it. (Or it might be better to have a separate default
+//button - not sure which would be easier. Either way, it's Windows-only atm.)
 
 //TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
 //keystroke while focus is on the Ctrl-F box).
