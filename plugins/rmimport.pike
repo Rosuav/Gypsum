@@ -5,6 +5,15 @@ remote system, or archive it and copy it across, or whatever you like.
 
 Note also that the set of importables may expand. This is why it's kept
 carefully configurable; it'll never import more stuff than you tell it to.
+
+In an inversion of the usual rules, this plugin is allowed to "reach in"
+to any other plugin's memory space. Otherwise, all other plugins would be
+forced to go to extra effort somewhere (the simplest would be to demand
+that they place an empty mapping back into persist[], but there may be
+other considerations too), which is backwards. It's the importer that has
+the complexity, not everything else. Of course, this may mean that changes
+to other plugins might precipitate changes here, which is a cost, but even
+if that's missed somewhere, it means only that the importer is broken.
 */
 inherit plugin_menu;
 
