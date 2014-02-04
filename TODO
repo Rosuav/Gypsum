@@ -5,7 +5,6 @@
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
-* Importing of settings from RosMud
 * A means of unloading a plugin - would probably mean searching all the mappings for
   anything whose Object.defined(function_object(x)) is the plugin; also destruct()
   the object itself, to catch any call_outs
