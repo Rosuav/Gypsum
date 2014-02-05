@@ -73,7 +73,7 @@ class menu_clicked
 
 	void pb_select_click(object self,int state)
 	{
-		say(0,"Set checkboxes to "+state); // state == GTK2.STUN?
+		indices(win->checkboxes)->set_active(state);
 	}
 
 	void filedlg_response(object self,int response)
