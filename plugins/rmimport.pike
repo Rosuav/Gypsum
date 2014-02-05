@@ -88,9 +88,9 @@ class menu_clicked
 		dosignals();
 	}
 
-	GTK2.Widget cb(string label,array(string) path)
+	GTK2.CheckButton cb(string label,array(string) path)
 	{
-		GTK2.Widget ret=GTK2.CheckButton(label);
+		GTK2.CheckButton ret=GTK2.CheckButton(label);
 		win->checkboxes[ret]=path;
 		return ret;
 	}
