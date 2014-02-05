@@ -75,6 +75,7 @@ class menu_clicked
 				cur=next;
 			}
 			cur[path[-2]]=path[-1];
+			persist[path[0]]=persist[path[0]]; //Force a save :)
 		}
 		win->mainwindow->destroy();
 	}
