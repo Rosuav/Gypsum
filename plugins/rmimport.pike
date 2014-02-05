@@ -44,6 +44,7 @@ class menu_clicked
 				->add(win->pb_close=GTK2.Button("Close"))
 			,0,0,0)
 		);
+		win->checkboxes=([]);
 		::makewindow();
 	}
 
@@ -81,9 +82,30 @@ class menu_clicked
 		{
 			win->import_dir->set_text(win->dir=self->get_filename());
 			for (int i=win->notebook->get_n_pages()-1;i>1;--i) win->notebook->remove_page(i);
-			foreach (indices(this),string func) if (has_prefix(func,"import_")) this[func]();
+			foreach (sort(indices(this)),string func) if (has_prefix(func,"import_")) this[func]();
 		}
 		m_delete(win,"filedlg")->destroy();
 		dosignals();
+	}
+
+	GTK2.Widget cb(string label,array(string) path)
+	{
+		GTK2.Widget ret=GTK2.CheckButton(label);
+		win->checkboxes[ret]=path;
+		return ret;
+	}
+
+	// ---- Importers ---- //
+
+	void import_aliases()
+	{
+		string data=Stdio.read_file(win->dir+"/Alias.ini");
+		if (!data || data=="") return;
+		data-="\r";
+		if (!persist["aliases/simple"]) persist["aliases/simple"]=function_object(G->G->commands->alias)->aliases||([]);
+		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import aliases:"),0,0,0);
+		foreach (data/"\n",string line) if (sscanf(line,"/alias %s %s",string kw,string expan) && expan)
+			box->pack_start(cb(kw+" -> "+expan,({"aliases/simple",kw,"expansion",expan})),0,0,0);
+		win->notebook->append_page(box->show_all(),GTK2.Label("Aliases"));
 	}
 }
