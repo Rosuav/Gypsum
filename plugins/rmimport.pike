@@ -103,7 +103,13 @@ class menu_clicked
 		{
 			win->import_dir->set_text(win->dir=self->get_filename());
 			for (int i=win->notebook->get_n_pages()-1;i>1;--i) win->notebook->remove_page(i);
-			foreach (sort(indices(this)),string func) if (has_prefix(func,"import_")) this[func]();
+			foreach (sort(indices(this)),string func) if (sscanf(func,"import_%s",string inifile) && inifile)
+			{
+				string data=Stdio.read_file(sprintf("%s/%s.ini",win->dir,inifile));
+				if (!data || data=="") continue;
+				data-="\r";
+				this[func](data);
+			}
 		}
 		m_delete(win,"filedlg")->destroy();
 		dosignals();
@@ -118,11 +124,8 @@ class menu_clicked
 
 	// ---- Importers ---- //
 
-	void import_aliases()
+	void import_Alias(string data)
 	{
-		string data=Stdio.read_file(win->dir+"/Alias.ini");
-		if (!data || data=="") return;
-		data-="\r";
 		if (!persist["aliases/simple"]) persist["aliases/simple"]=function_object(G->G->commands->alias)->aliases||([]);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import aliases:"),0,0,0);
 		foreach (data/"\n",string line) if (sscanf(line,"/alias %s %s",string kw,string expan) && expan)
@@ -130,11 +133,8 @@ class menu_clicked
 		win->notebook->append_page(box->show_all(),GTK2.Label("Aliases"));
 	}
 
-	void import_timers()
+	void import_Timer(string data)
 	{
-		string data=Stdio.read_file(win->dir+"/Timer.ini");
-		if (!data || data=="") return;
-		data-="\r";
 		object timer=function_object(G->G->commands->timer);
 		if (!persist["timer/timers"]) persist["timer/timers"]=timer->timers||([]);
 		sscanf(data,"%*s\n%s",data); //Currently ignoring the numeric info in the first line. May want to use some of that (???).
@@ -149,11 +149,8 @@ class menu_clicked
 		win->notebook->append_page(box->show_all(),GTK2.Label("Timers"));
 	}
 
-	void import_general()
+	void import_Rosmud(string data) //Oddly named, but it reads general settings from Rosmud.ini
 	{
-		string data=Stdio.read_file(win->dir+"/Rosmud.ini");
-		if (!data || data=="") return;
-		data-="\r";
 		if (!persist["color/channels"]) persist["color/channels"]=G->G->window->channels||([]);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import general settings:"),0,0,0);
 		GTK2.Vbox channels;
