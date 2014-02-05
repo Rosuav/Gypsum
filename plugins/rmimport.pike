@@ -148,4 +148,95 @@ class menu_clicked
 			),0,0,0);
 		win->notebook->append_page(box->show_all(),GTK2.Label("Timers"));
 	}
+
+	void import_general()
+	{
+		string data=Stdio.read_file(win->dir+"/Rosmud.ini");
+		if (!data || data=="") return;
+		data-="\r";
+		if (!persist["color/channels"]) persist["color/channels"]=G->G->window->channels||([]);
+		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import general settings:"),0,0,0);
+		GTK2.Vbox channels;
+		int ignore_numpad; //If set to 1 because numpadnav is disabled, will prevent the importing of numpad nav
+		foreach (data/"\n",string line) if (sscanf(line,"%s: %s",string type,string args) && args) switch (type)
+		{
+			case "Font": break; //No point trying to import font config, Windows/Wine vs Linux will likely have different fonts available anyway
+			case "Color": break; //TODO: Import the basics of colors, and possibly the configurations of the sixteen (if I make that configurable)
+			case "Sound": break; //Maybe want to import this later. Can't be bothered for now.
+			case "Window":
+			{
+				//Copied straight from rosmud.cpp with barely any change, woot!
+				sscanf(args,"%d %d %d %d %d %d %d %[^\xFE\n]\xFE%d",int wrapwidth,int wrapindent,int wraptochar,int promptonclose,int activityflash,int idletimeout,int inputlines,string htf,int hovertimesz);
+				box->pack_start(cb("Wrap width: "+wrapwidth,({"window/wrap"}),wrapwidth),0,0,0);
+				box->pack_start(cb("Wrap indent: "+wrapindent+" spaces",({"window/wrapindent"})," "*wrapindent),0,0,0);
+				//wraptochar not supported (currently Gypsum always wraps to word)
+				//promptonclose not supported (currently Gypsum always and only prompts if there are connections)
+				box->pack_start(cb("Activity alert: "+activityflash,({"notif/activity"}),activityflash),0,0,0);
+				int ka=idletimeout*60-10; //RosMud records an idle timeout in minutes, and backs off by 10 seconds (so "4" means it sends a KA every four minutes minus a bit).
+				box->pack_start(cb(sprintf("Keep-alive: %ds (approx %d minute(s))",ka,idletimeout),({"ka/delay"}),ka),0,0,0);
+				//inputlines not supported (currently Gypsum works only with a one-line EF)
+				box->pack_start(cb("Hover time format: "+htf,({"window/timestamp"}),htf),0,0,0);
+				//hovertimesz is the size in pixels of htf - unnecessary, let GTK work that out
+				break;
+			}
+			case "Display":
+			{
+				//Again, copied straight in, just changing the ampersands into 'int' declarations and declaring the string :)
+				sscanf(args,"%d %d %d %d %d %d %d \xFE%[^\n]",int AnsiCol,int LocalEcho,int showtoolbar,int showstatusbar,int boxsel,int inputcol,int wipepseudo,string promptchars);
+				//AnsiCol not yet supported (Gypsum doesn't currently have a no-color mode, but it would be worth adding)
+				//LocalEcho not supported (currently Gypsum can't disable it)
+				//showtoolbar, showstatusbar not supported - Gypsum never has the former and always has the latter, and there's no real reason to do otherwise
+				//boxsel not supported (currently Gypsum doesn't do that, would be nice though)
+				//inputcol not supported (currently Gypsum always uses color 6, cyan)
+				//RosMud has "wipepseudo" but Gypsum has "retain_pseudo". Same functionality, different name, negated condition.
+				box->pack_start(cb("Retain pseudo-prompts: "+({"Yes","No"})[wipepseudo],({"prompt/retain_pseudo"}),!wipepseudo),0,0,0);
+				box->pack_start(cb(sprintf("Pseudo-prompt markers: %O",promptchars),({"prompt/pseudo"}),promptchars),0,0,0);
+				break;
+			}
+			case "Keys":
+			{
+				//As above, straight from rosmud.cpp
+				sscanf(args,"%d %d %d %d %d %d %d",int hotkey_use,int hotkey_hide,int hotkey_show,int numpadnav,int cursoratend,int downarr,int cpgup);
+				//hotkey_* not supported
+				//numpadnav as a single flag doesn't exist; it's a feature that's always active and
+				//will have specific keys assigned or not assigned. But hold onto the flag; if it's
+				//zero, ignore the Numpad line (which, in a normal Rosmud.ini file, will come after
+				//this one).
+				if (!numpadnav) ignore_numpad=1;
+				//cursoratend not supported (currently Gypsum always puts it at the end)
+				//downarr not supported (currently Gypsum always "locks")
+				//cpgup not supported (currently Gypsum doesn't even react to the key)
+				break;
+			}
+			case "MRU": break; //Ignore window positions. Also, Gypsum doesn't have a single "last used world" marker.
+			case "Numpad":
+			{
+				if (ignore_numpad) break; //Numpad Nav is disabled in the Keys section, so don't offer any to import
+				GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import numpad nav:"),0,0,0);
+				foreach (args/"\xFE";int i;string cmd) if (cmd!="" && cmd!=" ")
+				{
+					string key;
+					if (i<10) key="ffb"+i; else key="ffa"+(i-10); //Windows's VK_ constants and GDK keysyms put these in a different order, but still in blocks.
+					box->pack_start(cb(sprintf("Key %s [%c]: %O",key,"0123456789*+ -./"[i],cmd),({"window/numpadnav",key,"cmd"}),cmd),0,0,0);
+				}
+				win->notebook->append_page(box->show_all(),GTK2.Label("Numpad"));
+				break;
+			}
+			case "Hilight":
+			{
+				//Note that Gypsum and RosMud have subtly different behaviour. RosMud insists there
+				//be a space following the word, but Gypsum simply looks at the first blank-delimited
+				//word on the line. The functionality is effectively identical, though.
+				if (!channels) channels=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import channel colors:"),0,0,0);
+				sscanf(args,"%d %[^ ]",int col,string word);
+				int r=col&255,g=(col>>8)&255,b=(col>>16)&255;
+				channels->pack_start(cb(sprintf("Channel %O: (%d,%d,%d)",word,r,g,b),({"color/channels",word}),(["r":r,"g":g,"b":b])),0,0,0);
+				break;
+			}
+			case "Logging": break; //Gypsum does logging per-world rather than globally.
+			default: say(0,"%%%% Unexpected keyword in Rosmud.ini: %s",type); break; //Shouldn't happen unless the ini file is corrupted
+		}
+		if (channels) win->notebook->append_page(channels->show_all(),GTK2.Label("Channels"));
+		win->notebook->append_page(box->show_all(),GTK2.Label("General"));
+	}
 }
