@@ -65,18 +65,21 @@ class menu_clicked
 
 	void pb_import_click()
 	{
-		foreach (win->checkboxes;GTK2.CheckButton cb;array path) if (cb->get_active())
+		multiset(function) funcs=(<>);
+		foreach (win->checkboxes;GTK2.CheckButton cb;[array(string) path,mixed value,function callme]) if (cb->get_active())
 		{
 			mixed cur=persist;
-			foreach (path[..<2],string part)
+			foreach (path[..<1],string part)
 			{
 				mixed next=cur[part];
 				if (!next) cur[part]=next=([]);
 				cur=next;
 			}
-			cur[path[-2]]=path[-1];
+			cur[path[-1]]=value;
 			persist[path[0]]=persist[path[0]]; //Force a save :)
+			funcs[callme]=1;
 		}
+		indices(funcs)(); //Call all the associated call-me functions (once each, even if specified multiple times)
 		win->mainwindow->destroy();
 	}
 
@@ -106,10 +109,10 @@ class menu_clicked
 		dosignals();
 	}
 
-	GTK2.CheckButton cb(string label,array path) //Note: path should be all strings except the last element, which may be anything
+	GTK2.CheckButton cb(string label,array(string) path,mixed value,function|void callme)
 	{
 		GTK2.CheckButton ret=GTK2.CheckButton(label);
-		win->checkboxes[ret]=path;
+		win->checkboxes[ret]=({path,value,callme});
 		return ret;
 	}
 
@@ -123,7 +126,7 @@ class menu_clicked
 		if (!persist["aliases/simple"]) persist["aliases/simple"]=function_object(G->G->commands->alias)->aliases||([]);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import aliases:"),0,0,0);
 		foreach (data/"\n",string line) if (sscanf(line,"/alias %s %s",string kw,string expan) && expan)
-			box->pack_start(cb(kw+" -> "+expan,({"aliases/simple",kw,"expansion",expan})),0,0,0);
+			box->pack_start(cb(kw+" -> "+expan,({"aliases/simple",kw,"expansion"}),expan),0,0,0);
 		win->notebook->append_page(box->show_all(),GTK2.Label("Aliases"));
 	}
 
@@ -132,12 +135,17 @@ class menu_clicked
 		string data=Stdio.read_file(win->dir+"/Timer.ini");
 		if (!data || data=="") return;
 		data-="\r";
-		if (!persist["timer/timers"]) persist["timer/timers"]=function_object(G->G->commands->timer)->timers||([]);
+		object timer=function_object(G->G->commands->timer);
+		if (!persist["timer/timers"]) persist["timer/timers"]=timer->timers||([]);
 		sscanf(data,"%*s\n%s",data); //Currently ignoring the numeric info in the first line. May want to use some of that (???).
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import timers:"),0,0,0);
-		function format_time=function_object(G->G->commands->timer)->format_time;
+		function format_time=timer->format_time,makelabels=timer->makelabels;
 		foreach (data/"\n",string line) if (sscanf(line,"|%s|%d|%s",string kw,int interval,string trigger) && trigger)
-			box->pack_start(cb(kw+" - "+format_time(interval,interval),({"timer/timers",kw,(["time":interval,"trigger":trigger])})),0,0,0);
+			box->pack_start(cb(
+				kw+" - "+format_time(interval,interval),
+				({"timer/timers",kw}),(["time":interval,"trigger":trigger]),
+				makelabels,
+			),0,0,0);
 		win->notebook->append_page(box->show_all(),GTK2.Label("Timers"));
 	}
 }
