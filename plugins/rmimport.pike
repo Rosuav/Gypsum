@@ -55,6 +55,7 @@ class menu_clicked
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
 			gtksignal(win->pb_close,"clicked",pb_close_click),
+			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
 
@@ -62,11 +63,27 @@ class menu_clicked
 
 	void pb_find_click()
 	{
-		win->import_dir->set_text("Stub, sorry!");
+		win->filedlg=GTK2.FileChooserDialog("Locate RosMud directory to import from",win->mainwindow,
+			GTK2.FILE_CHOOSER_ACTION_SELECT_FOLDER,({(["text":"Import","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})
+		)->show_all();
+		win->filedlg->set_filename("."); //This doesn't chain. What's the integer it returns? Meh.
+		dosignals();
 	}
 
-	void pb_select_click(mixed ... args)
+	void pb_select_click(object self,int state)
 	{
-		say(0,"%O",args);
+		say(0,"Set checkboxes to "+state); // state == GTK2.STUN?
+	}
+
+	void filedlg_response(object self,int response)
+	{
+		if (response==GTK2.RESPONSE_OK)
+		{
+			win->import_dir->set_text(win->dir=self->get_filename());
+			for (int i=win->notebook->get_n_pages()-1;i>1;--i) win->notebook->remove_page(i);
+			foreach (indices(this),string func) if (has_prefix(func,"import_")) this[func]();
+		}
+		m_delete(win,"filedlg")->destroy();
+		dosignals();
 	}
 }
