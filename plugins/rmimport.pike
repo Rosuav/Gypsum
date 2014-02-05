@@ -40,7 +40,7 @@ class menu_clicked
 				))
 			,GTK2.Label("Start")))
 			->pack_start(GTK2.HbuttonBox()
-				->add(win->pb_import=GTK2.Button("Import!")->set_sensitive(0))
+				->add(win->pb_import=GTK2.Button("Import!"))
 				->add(win->pb_close=GTK2.Button("Close"))
 			,0,0,0)
 		);
@@ -55,12 +55,29 @@ class menu_clicked
 			gtksignal(win->pb_find,"clicked",pb_find_click),
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
+			gtksignal(win->pb_import,"clicked",pb_import_click),
 			gtksignal(win->pb_close,"clicked",pb_close_click),
 			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
 
 	void pb_close_click() {win->mainwindow->destroy();}
+
+	void pb_import_click()
+	{
+		foreach (win->checkboxes;GTK2.CheckButton cb;array(string) path) if (cb->get_active())
+		{
+			mixed cur=persist;
+			foreach (path[..<2],string part)
+			{
+				mixed next=cur[part];
+				if (!next) cur[part]=next=([]);
+				cur=next;
+			}
+			cur[path[-2]]=path[-1];
+		}
+		win->mainwindow->destroy();
+	}
 
 	void pb_find_click()
 	{
