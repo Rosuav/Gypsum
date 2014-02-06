@@ -231,7 +231,7 @@ class menu_clicked
 				break;
 			}
 			case "Logging": break; //Gypsum does logging per-world rather than globally.
-			default: say(0,"%%%% Unexpected keyword in Rosmud.ini: %s",type); break; //Shouldn't happen unless the ini file is corrupted
+			default: win->status->set_text(win->status->get_text()+"** Unexpected keyword in Rosmud.ini: "+type+" **\n"); break; //Shouldn't happen unless the ini file is corrupted
 		}
 		if (channels) win->notebook->append_page(channels->show_all(),GTK2.Label("Channels"));
 		win->notebook->append_page(box->show_all(),GTK2.Label("General"));
