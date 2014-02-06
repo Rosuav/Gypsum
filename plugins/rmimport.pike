@@ -206,7 +206,7 @@ class menu_clicked
 				//this one).
 				if (!numpadnav) ignore_numpad=1;
 				//cursoratend not supported (currently Gypsum always puts it at the end)
-				//downarr not supported (currently Gypsum always "locks")
+				box->pack_start(cb("Down arrow on no history: "+({"Lock","Clear","Save & clear"})[downarr],({"window/downarr"}),downarr),0,0,0);
 				//cpgup not supported (currently Gypsum doesn't even react to the key)
 				break;
 			}
