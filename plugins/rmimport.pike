@@ -5,6 +5,11 @@ remote system, or archive it and copy it across, or whatever you like.
 
 Note also that the set of importables may expand. This is why it's kept
 carefully configurable; it'll never import more stuff than you tell it to.
+Window positions will never be imported, though - due to structural
+differences between RM and Gypsum, plus platform differences, screen size
+issues, etc, etc, etc, it's not worth hoping that the numbers have the
+same meaning on both. So we just let the human deal with that. Same with
+things like font. Sorry, folks. Not really a lot to do about that.
 
 In an inversion of the usual rules, this plugin is allowed to "reach in"
 to any other plugin's memory space. Otherwise, all other plugins would be
