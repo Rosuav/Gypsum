@@ -1,5 +1,4 @@
 * [20111129] Gypsum has now been used in combat.
-* Better client-side aliases
 * More generally, anything that people expect RosMud to do.
   (Easy way to find a whole lot of that is to grep plugins/rmimport.pike for "currently".)
 * Spell-checker?
