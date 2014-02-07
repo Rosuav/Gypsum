@@ -20,15 +20,6 @@
  * 
  */
 
-/*
-TODO: Rename 'recon' to something else, and formalize it as the official means
-of recognizing a world. Plugins can key stuff to the world identifier and thus
-know that it's the same world come back again; even if it's done by "ip port",
-that will work (note that plugins MUST be told not to depend on this being any
-sort of keyword or "identifier" in the programming sense, but it is "the thing
-that identifies", so it may well be called "identifier").
-*/
-
 void create(string name)
 {
 	G->G->connection=this;
@@ -364,7 +355,7 @@ void ka(mapping conn)
  */
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"recon":info->recon,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
+	mapping(string:mixed) conn=(["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
 	if ((<"0.0.0.0","::">)[info->host])
 	{
 		//Passive mode. (Currently hacked in by the specific IPs; may

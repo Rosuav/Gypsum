@@ -372,7 +372,7 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 /**
  * Connect to a world
  */
-void connect(mapping info,mapping|void subw)
+void connect(mapping info,string world,mapping|void subw)
 {
 	if (!subw) subw=current_subw();
 	if (!info)
@@ -382,6 +382,7 @@ void connect(mapping info,mapping|void subw)
 		subw->connection->sock->close(); G->G->connection->sockclosed(subw->connection);
 		return;
 	}
+	subw->world=world;
 	if (subw->connection && subw->connection->sock) {say(subw,"%% Already connected."); return;}
 	subw->connection=G->G->connection->connect(subw,info);
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
@@ -666,11 +667,6 @@ void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0)
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
 /**
- * Retrieve the specified (or current) subw's reconnection string
- */
-string recon(mapping|void subw) {return ((subw||current_subw())->connection||([]))->recon;}
-
-/**
  *
  */
 void addtab() {subwindow("New tab");}
@@ -681,7 +677,7 @@ void addtab() {subwindow("New tab");}
 void real_closetab(int removeme)
 {
 	if (sizeof(tabs)<2) addtab();
-	tabs[removeme]->signals=0; connect(0,tabs[removeme]);
+	tabs[removeme]->signals=0; connect(0,0,tabs[removeme]);
 	tabs=tabs[..removeme-1]+tabs[removeme+1..];
 	notebook->remove_page(removeme);
 	if (!sizeof(tabs)) addtab();
@@ -1131,9 +1127,6 @@ int window_close()
 }
 
 //Either reconnect, or give the world list.
-/**
- *
- */
 void connect_menu(object self)
 {
 	G->G->commands->connect("dlg",current_subw());
@@ -1142,7 +1135,7 @@ void connect_menu(object self)
 /**
  *
  */
-void disconnect_menu(object self) {connect(0);}
+void disconnect_menu(object self) {connect(0,0,0);}
 
 /**
  * Create a menu item and retain it for subsequent signal binding in mainwsignals()

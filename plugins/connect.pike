@@ -26,15 +26,14 @@ int process(string param,mapping(string:mixed) subw)
 		showwindow();
 		return 1;
 	}
-	if (param=="" && !(param=G->G->window->recon(subw))) return listworlds("",subw);
+	if (param=="" && !(param=subw->world)) return listworlds("",subw);
 	mapping info=worlds[param];
 	if (!info)
 	{
 		if (sscanf(param,"%s%*[ :]%d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
 		else {say(subw,"%% Connect to what?"); return 1;}
 	}
-	info->recon=param;
-	G->G->window->connect(info,subw || G->G->window->subwindow("New tab"));
+	G->G->window->connect(info,param,subw || G->G->window->subwindow("New tab"));
 	return 1;
 }
 
@@ -93,8 +92,7 @@ void action_callback()
 	string kwd=selecteditem();
 	if (!kwd) return;
 	mapping info=worlds[kwd];
-	info->recon=kwd;
-	G->G->window->connect(info,0);
+	G->G->window->connect(info,kwd,0);
 	win->mainwindow->destroy();
 }
 
