@@ -58,6 +58,8 @@ mapping(string:mixed) subwindow(string txt)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(tabs)-1);
+	//Note: It'd be nice if Ctrl-Z could do an Undo in in subw->ef. It's
+	//probably impractical though - GTK doesn't offer that.
 	setfonts(subw);
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
