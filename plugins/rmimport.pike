@@ -188,7 +188,7 @@ class menu_clicked
 				//AnsiCol not yet supported (Gypsum doesn't currently have a no-color mode, but it would be worth adding)
 				//LocalEcho not supported (currently Gypsum can't disable it)
 				//showtoolbar, showstatusbar not supported - Gypsum never has the former and always has the latter, and there's no real reason to do otherwise
-				//boxsel not supported (currently Gypsum doesn't do that, would be nice though)
+				//boxsel not supported (Gypsum always defaults to stream, use Shift-drag for box)
 				//inputcol not supported (currently Gypsum always uses color 6, cyan)
 				//RosMud has "wipepseudo" but Gypsum has "retain_pseudo". Same functionality, different name, negated condition.
 				box->pack_start(cb("Retain pseudo-prompts: "+({"Yes","No"})[wipepseudo],({"prompt/retain_pseudo"}),!wipepseudo),0,0,0);

@@ -224,6 +224,7 @@ void mousedown(object self,object ev,mapping subw)
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
+	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
 }
 
 /**
@@ -269,12 +270,15 @@ void mouseup(object self,object ev,mapping subw)
 	else
 	{
 		if (subw->selstartline>line) [line,col,subw->selstartline,subw->selstartcol]=({subw->selstartline,subw->selstartcol,line,col});
+		if (subw->boxsel && subw->selstartcol>col) [col,subw->selstartcol]=({subw->selstartcol,col});
+		content="";
 		for (int l=subw->selstartline;l<=line;++l)
 		{
-			string curline=filter((l==sizeof(subw->lines))?subw->prompt:subw->lines[l],stringp)*""+"\n";
-			if (l==subw->selstartline) content=curline[subw->selstartcol..];
+			string curline=filter((l==sizeof(subw->lines))?subw->prompt:subw->lines[l],stringp)*"";
+			if (subw->boxsel) content+=curline[subw->selstartcol..col-1]+"\n";
 			else if (l==line) content+=curline[..col-1];
-			else content+=curline;
+			else if (l==subw->selstartline) content+=curline[subw->selstartcol..]+"\n";
+			else content+=curline+"\n";
 		}
 	}
 	highlight(subw,-1,0,0,0);
@@ -446,6 +450,11 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColo
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
+	if (hlend>=0 && hlend<1<<29) //In block selection mode, draw highlight past the end of the string, if necessary
+	{
+		if (hlstart>0) {x=painttext(display,gc,x,y," "*hlstart,colors[7],colors[0]); hlend-=hlstart;}
+		if (hlend>=0) painttext(display,gc,x,y," "*(hlend+1),colors[0],colors[7]);
+	}
 }
 
 /**
@@ -461,6 +470,7 @@ int paint(object self,object ev,mapping subw)
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
 	if (zero_type(ssl)) ssl=sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
+	if (subw->boxsel && ssc>sec) [ssc,sec]=({sec,ssc}); //With box selection, row and column are independent.
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
 	{
@@ -468,8 +478,12 @@ int paint(object self,object ev,mapping subw)
 		int hlstart=-1,hlend=-1;
 		if (l>=ssl && l<=sel)
 		{
-			if (l==ssl) hlstart=ssc;
-			if (l==sel) hlend=sec-1; else hlend=1<<30;
+			if (subw->boxsel) {hlstart=ssc; hlend=sec-1;}
+			else
+			{
+				if (l==ssl) hlstart=ssc;
+				if (l==sel) hlend=sec-1; else hlend=1<<30;
+			}
 		}
 		paintline(display,gc,line,y+l*subw->lineheight,hlstart,hlend);
 	}
