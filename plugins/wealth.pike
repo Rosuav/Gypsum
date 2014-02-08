@@ -2,6 +2,8 @@ inherit command;
 inherit hook;
 inherit statustext;
 
+//TODO: Per-world wealth stats (based on subw->world)
+
 /**
  * The strings for which to monitor.
  */

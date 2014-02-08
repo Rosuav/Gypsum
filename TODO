@@ -11,7 +11,6 @@
 * Variant of the above: Clean-up - search for anything with Object.defined() as above
   but function_object is *not* this plugin. (Maybe even do that all the time? But not
   actually destructing anything, as that would disrupt stuff badly.)
-* Per-world wealth stats (probably based on subw->world)
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
