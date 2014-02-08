@@ -2,6 +2,8 @@ inherit hook;
 //inherit command; //TODO: Time conversions (a window, or a command, or both)
 inherit statustext;
 
+//TODO: Put the statustext inside a GTK2.EventBox and recognize a double-click, which can pull up a time conversion window
+
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
