@@ -223,6 +223,13 @@ subw reference is available. If additional arguments (after the say)
 are present, the message will be passed through sprintf(). Multiple
 lines of output can be produced; they will be processed separately.
 
+There are other ways that a plugin can hook itself into the system, such as
+OS-level signals (with the signal() command, and distinct from GTK signals),
+but these are all unsupported. Not only are they potentially platform
+specific (signals certainly are), but they will break the plugin unloading
+system, which is admittedly fragile already. Use this sort of thing ONLY if
+you are absolutely sure you know what you're doing.
+
 ADVISORY: Commands can be synthesized directly to a subw or conn:
 send(conn,line+"\r\n");
 Note that a subwindow may not necessarily have a connection, though
