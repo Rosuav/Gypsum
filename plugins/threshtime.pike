@@ -3,8 +3,6 @@ inherit plugin_menu;
 inherit statustext;
 inherit window;
 
-//TODO: Put the statustext inside a GTK2.EventBox and recognize a double-click, which can pull up the time conversion window
-
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
@@ -202,9 +200,20 @@ void convert_down()
 	set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
 }
 
+GTK2.Widget makestatus()
+{
+	return statustxt->evbox=GTK2.EventBox()->add(statustxt->lbl=GTK2.Label((["xalign":0.0])));
+}
+
+void mousedown(object self,object ev)
+{
+	if (ev->type=="2button_press") showwindow(); //Double-click on status bar to show the conversion window
+}
+
 void create(string name)
 {
 	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1356712257; persist["threshtime/sync_th"]=196948184;}
 	::create(name);
+	statustxt->signals=({gtksignal(statustxt->evbox,"button_press_event",mousedown)});
 	showtime();
 }
