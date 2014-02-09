@@ -219,13 +219,11 @@ class menu_clicked
 		::makewindow();
 	}
 
-	void pb_close_click() {win->mainwindow->destroy();}
-
 	void dosignals()
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->pb_close,"clicked",pb_close_click),
+			gtksignal(win->pb_close,"clicked",closewindow),
 		});
 	}
 }

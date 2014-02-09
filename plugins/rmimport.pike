@@ -61,12 +61,10 @@ class menu_clicked
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
 			gtksignal(win->pb_import,"clicked",pb_import_click),
-			gtksignal(win->pb_close,"clicked",pb_close_click),
+			gtksignal(win->pb_close,"clicked",closewindow),
 			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
-
-	void pb_close_click() {win->mainwindow->destroy();}
 
 	void pb_import_click()
 	{

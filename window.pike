@@ -928,7 +928,7 @@ Version "+ver+", as far as can be ascertained :)"))
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}),
+			gtksignal(win->pb_close,"clicked",closewindow),
 		});
 	}
 }
@@ -992,11 +992,6 @@ class promptsdlg
 		else persist["prompt/pseudo"]=win->promptpseudo->get_text();
 		persist["prompt/suffix"]=win->promptsuffix->get_text();
 		persist["prompt/retain_pseudo"]=win->retainpseudo->get_active();
-	}
-
-	void closewindow()
-	{
-		win->mainwindow->destroy();
 	}
 
 	void dosignals()

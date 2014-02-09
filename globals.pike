@@ -222,6 +222,11 @@ class window
 		win->mainwindow->hide();
 		return 1; //Allow this to be used as a delete_event (suppressing window destruction)
 	}
+	int closewindow()
+	{
+		win->mainwindow->destroy();
+		return 1;
+	}
 }
 
 //Subclass of window that handles save/load of position automatically.
@@ -388,7 +393,7 @@ class configdlg
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
 			gtksignal(win->pb_save,"clicked",pb_save),
 			allow_delete && gtksignal(win->pb_delete,"clicked",pb_delete),
-			gtksignal(win->pb_close,"clicked",lambda() {win->mainwindow->destroy();}), //Has to be done with a lambda, I think to dispose of the args
+			gtksignal(win->pb_close,"clicked",closewindow),
 			gtksignal(win->sel,"changed",selchanged),
 		});
 	}
