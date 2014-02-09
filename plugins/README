@@ -179,9 +179,10 @@ Override this:
 
 GTK2.Widget makestatus() {return statustxt->lbl=....;}
 
-It must both set statustxt->lbl to something, and return something,
-though they need not necessarily be the same object (eg the returned
-label might be wrapped inside something else for structure).
+It must both set statustxt->lbl to something, and return something.
+They need not necessarily be the same object (eg the returned label
+might be wrapped inside something else for structure), but if not, the
+return object must be a parent (direct or indirect) of statustxt->lbl.
 
 Plugin menu item - 'inherit plugin_menu'
 ----------------------------------------
