@@ -193,6 +193,8 @@ class plugin_menu
 //Generic window handler. If a plugin inherits this, it will normally show the window on startup and keep it there, though other patterns are available.
 class window
 {
+	//TODO: Stock buttons, which come with stock events, which are automatically handled by dosignals
+	//They'll use STOCK_* captions, but they're more than just that, as they do their events - eg close.
 	mapping(string:mixed) win=([]);
 
 	//Replace this and call the original after assigning to win->mainwindow.
