@@ -3,6 +3,10 @@ inherit plugin_menu;
 inherit statustext;
 inherit window;
 
+//TODO: Switch to using Calendar.Gregorian with set_timezone("America/New York") for EST/EDT
+//Might also be able to use that to get the list of Terran month names, which could then
+//be localized. Probably not worth it though, just use the English names.
+
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
