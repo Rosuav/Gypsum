@@ -208,14 +208,14 @@ class menu_clicked
 				->add(GTK2.Frame("Proxy server")->set_sensitive(0)->add(GTK2.Hbox(0,10) //TODO: Proxy
 					->add(win->proxy_use=GTK2.CheckButton("Use"))
 					->add(GTK2.Label("Address:"))->add(win->proxy_addr=GTK2.Entry()->set_text(persist["tinyurl/proxy_host"]||""))
-					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry()->set_text(persist["tinyurl/proxy_port"]||""))
+					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry((["width-chars":5]))->set_text(persist["tinyurl/proxy_port"]||""))
 				))
 				->add(win->announce=GTK2.CheckButton("Announce incoming URLs with an explanatory note"))
 				->add(GTK2.Frame("Default action")->add(GTK2.Hbox(0,10)
 					->add(win->default_browse=GTK2.RadioButton("Browse"))
 					->add(win->default_copy=GTK2.RadioButton("Copy to clipboard",win->default_browse))
 				))
-				->pack_end(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])),0,0,0)
+				->pack_end(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1]))),0,0,0)
 			);
 		::makewindow();
 	}
