@@ -193,12 +193,14 @@ class plugin_menu
 //Generic window handler. If a plugin inherits this, it will normally show the window on startup and keep it there, though other patterns are available.
 class window
 {
-	//TODO: Stock buttons, which come with stock events, which are automatically handled by dosignals
-	//They'll use STOCK_* captions, but they're more than just that, as they do their events - eg close.
 	mapping(string:mixed) win=([]);
 
 	//Replace this and call the original after assigning to win->mainwindow.
 	void makewindow() { }
+
+	//Stock item creation: Close button. TODO: Make an easy way to override its event (eg for confirm on close).
+	//(Or maybe that should be done by overriding closewindow??)
+	GTK2.Button stock_close() {return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]));}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
@@ -206,7 +208,9 @@ class window
 	//a gtksignal object or the integer 0, though currently nothing depends on this.
 	void dosignals()
 	{
-		win->signals=({ });
+		win->signals=({
+			win->stock_close && gtksignal(win->stock_close,"clicked",closewindow),
+		});
 	}
 	void create(string|void name)
 	{
@@ -383,7 +387,7 @@ class configdlg
 					:GTK2.Hbox(0,10))
 					->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
 					->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1,"sensitive":allow_delete])))
-					->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1])))
+					->add(stock_close())
 				,0,0,0)
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); selchanged();
@@ -397,7 +401,6 @@ class configdlg
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
 			gtksignal(win->pb_save,"clicked",pb_save),
 			allow_delete && gtksignal(win->pb_delete,"clicked",pb_delete),
-			gtksignal(win->pb_close,"clicked",closewindow),
 			gtksignal(win->sel,"changed",selchanged),
 		});
 	}

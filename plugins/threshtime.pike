@@ -123,7 +123,7 @@ void makewindow()
 			({"Year","Month","Day","Time",0}),
 			({ef("th_year",4),win->th_mon=SelectBox(threshmonth),ef("th_day",3),ef("th_hour"),ef("th_min")}),
 		}))))
-		->add(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button("_Close")->set_use_underline(1)))
+		->add(GTK2.HbuttonBox()->add(stock_close()))
 	);
 	set_time_now();
 }
@@ -138,7 +138,6 @@ void dosignals()
 		gtksignal(win->conv_up,"clicked",convert_up),
 		gtksignal(win->conv_dn,"clicked",convert_down),
 		gtksignal(win->set_now,"clicked",set_time_now),
-		gtksignal(win->pb_close,"clicked",closewindow),
 	});
 }
 

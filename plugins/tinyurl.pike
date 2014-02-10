@@ -215,17 +215,9 @@ class menu_clicked
 					->add(win->default_browse=GTK2.RadioButton("Browse"))
 					->add(win->default_copy=GTK2.RadioButton("Copy to clipboard",win->default_browse))
 				))
-				->pack_end(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1]))),0,0,0)
+				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
 		::makewindow();
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			gtksignal(win->pb_close,"clicked",closewindow),
-		});
 	}
 }
 

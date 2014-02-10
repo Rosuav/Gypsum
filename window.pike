@@ -919,17 +919,9 @@ Free software - see README for license terms
 By Chris Angelico, rosuav@gmail.com
 
 Version "+ver+", as far as can be ascertained :)"))
-			->add(GTK2.HbuttonBox()->add(win->pb_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))))
+			->add(GTK2.HbuttonBox()->add(stock_close()))
 		);
 		::makewindow();
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			gtksignal(win->pb_close,"clicked",closewindow),
-		});
 	}
 }
 

@@ -46,7 +46,7 @@ class menu_clicked
 			,GTK2.Label("Start")))
 			->pack_start(GTK2.HbuttonBox()
 				->add(win->pb_import=GTK2.Button("Import!"))
-				->add(win->pb_close=GTK2.Button("Close"))
+				->add(stock_close())
 			,0,0,0)
 		);
 		win->checkboxes=([]);
@@ -61,7 +61,6 @@ class menu_clicked
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
 			gtksignal(win->pb_import,"clicked",pb_import_click),
-			gtksignal(win->pb_close,"clicked",closewindow),
 			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
