@@ -117,6 +117,13 @@ Should look up GTK objects from win[] and use gtksignal() thus:
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
 
+Certain stock objects with obvious events can be created with simple
+function calls. Use of these functions guarantees a consistent look, and
+also automatically connects the appropriate signal handler. The following
+stock objects are available:
+
+stock_close() - a Close button, which will call closewindow().
+
 Movable window - 'inherit movablewindow'
 ----------------------------------------
 
