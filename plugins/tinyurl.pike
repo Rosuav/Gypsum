@@ -195,6 +195,7 @@ void tinify(object self,int response,array args)
 	if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 }
 
+//TODO: Actually make this, yaknow, functional...
 constant menu_label="TinyURL";
 class menu_clicked
 {
