@@ -201,7 +201,9 @@ class window
 	void makewindow() { }
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
-	//only place where win->signals is reset.
+	//only place where win->signals is reset. Note that it's perfectly legitimate to have
+	//non-signals in the array; for future compatibility, ensure that everything is either
+	//a gtksignal object or the integer 0, though currently nothing depends on this.
 	void dosignals()
 	{
 		win->signals=({ });
