@@ -199,7 +199,8 @@ class window
 	void makewindow() { }
 
 	//Stock item creation: Close button. TODO: Make an easy way to override its event (eg for confirm on close).
-	//(Or maybe that should be done by overriding closewindow??)
+	//(Or maybe that should be done by overriding closewindow??) (Actually, probably better to have everything
+	//go through closewindow, including the delete_event.)
 	GTK2.Button stock_close() {return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]));}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
