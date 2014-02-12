@@ -125,7 +125,12 @@ void makewindow()
 		}))))
 		->add(GTK2.HbuttonBox()->add(stock_close()))
 	);
+}
+
+void showwindow()
+{
 	set_time_now();
+	::showwindow();
 }
 
 void dosignals()
