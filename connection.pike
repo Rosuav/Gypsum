@@ -332,7 +332,6 @@ void connfailed(mapping conn)
 	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
 	conn->sock->close();
 	sockclosed(conn);
-	return;
 }
 
 /**
