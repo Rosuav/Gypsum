@@ -113,9 +113,20 @@ int inputhook(string line,mapping(string:mixed) subw)
 		return 1;
 	}
 	if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) outputhook(line,(["display":subw])); //NOTE: Don't use subw->conn for the last arg; if there's no connection, it should still be safe to use /tiny.
-	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*?)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long. Note that HTTPS consumes one character more than allowed for.
+	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*?)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long.
 	array parts=longurl->split(line);
 	if (!parts) return 0; //No match? Nothing needing tinification.
+	//The regex has a limit on the length of the part after the ://, but the protocol might cost one more letter.
+	//So the regex allows for this by tripping on http:// URLs that are exactly equal to the maxlen, which is
+	//wrong. What we really need is a regex (or something) that measures the total length of URL, and will skip
+	//any short URLs earlier in the string. The below check is imperfect; an exact-length URL will actually
+	//prevent the tinification of long URLs following it. In the RosMud version of this code, that would have
+	//been a major problem (as it did one shortening and then injected the string back into the system for
+	//another go-around - so if the first URL got shortened to exactly the limit, no others would be seen), but
+	//now it's just a really obscure edge case. Not having this line is a somewhat less obscure edge case (in
+	//that it'll prompt unnecessarily any time you post an exact-length non-SSL URL; if you say Yes, it'll think
+	//it's succeeded on a simple shortening), so I'd rather have it than not, but it's still imperfect.
+	if (parts[1]=="" && sizeof(parts[2])==maxlen-7) return 0;
 	object dlg=GTK2.MessageDialog(0,GTK2.MESSAGE_QUESTION,GTK2.BUTTONS_NONE,"You're posting a long URL - shorten it?");
 	dlg->signal_connect("response",tinify,parts+({subw}));
 	dlg->add_button(GTK2.STOCK_YES,GTK2.RESPONSE_YES);
