@@ -129,8 +129,8 @@ void makewindow()
 
 void showwindow()
 {
-	set_time_now();
 	::showwindow();
+	set_time_now();
 }
 
 void dosignals()
