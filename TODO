@@ -5,7 +5,6 @@
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
-* Pattern logging. A regex that starts logging, another that stops it. Keep 'em same to log just what matches.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?

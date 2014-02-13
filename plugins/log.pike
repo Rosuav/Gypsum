@@ -2,6 +2,22 @@
 Configure window-based logging. This is separate from world-based logging (done in
 the Connect dialog); this log will pick up local messages (including its own at the
 beginning of the log, identifying the file and the timestamp).
+
+TODO: Make this fully configure logging. There are two ways to log, with a third
+proposed, and this should be able to manage them all:
+1) Window-based logging, by creating a subw->logfile. Allow this to be done for any
+   current subw (showing their tabtext, maybe, and what file's open, if any).
+2) Connection-based logging, by creating a conn->logfile. Again, allow this to be
+   done for any current connection (has to have an open socket); this is independent
+   of autologging, except for the fact that autologging will create a conn->logfile.
+3) (Proposed) Filtered logging, which will probably be a subset of one of the other
+   two. Or maybe it's a subset of (something)-based logging but across all subw/conn
+   rather than tied to one. There are a set of "Start" triggers (probably regex) and
+   a set of "Stop" triggers (ditto).
+   - If current line matches a start trigger, logging becomes On.
+   - If logging is On, log current line.
+   - If current line matches a stop trigger, logging becomes Off.
+   This way, specific lines can be logged by duplicating the start trigger into stop.
 */
 inherit command;
 inherit plugin_menu;
