@@ -18,6 +18,10 @@ proposed, and this should be able to manage them all:
    - If logging is On, log current line.
    - If current line matches a stop trigger, logging becomes Off.
    This way, specific lines can be logged by duplicating the start trigger into stop.
+Hmm. Can I make a Notebook with three configdlg tabs? No, probably not worth it. But
+this will most likely end up copying and pasting some code from configdlg. Per Rule
+of Three, this is permitted; but anything that I recognize as existing elsewhere,
+it's time to break out into a separate place.
 */
 inherit command;
 inherit plugin_menu;
