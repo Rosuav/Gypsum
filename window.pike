@@ -400,6 +400,7 @@ void redraw(mapping subw)
 	subw->maindisplay->queue_draw();
 }
 
+//TODO: Background color!
 object mkcolor(int fg,int bg)
 {
 	return colors[fg];
