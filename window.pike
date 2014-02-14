@@ -406,6 +406,18 @@ void redraw(mapping subw)
 //colors. Supporting 256-color mode would require considerable changes; mostly,
 //I suspect, some system of not retaining all possible GdkColor objects, but eg
 //creating them as needed and maybe caching common ones in a mapping.
+/* 20140214: Currently, there is the possibility that the integer 0 will take the
+place of a color code, and it should be interpreted as "default color" (ie 7,0).
+This is fixed as of 77ec0e, but for the time being, maintain a temporary sort of
+pseudo-guarantee that 0 has this meaning. Going for an alternative system like
+integers (fg + bg<<8) would be okay as long as there's a hack retained such that
+0 becomes 7; but ultimately, we shouldn't assume that black-on-black is illogical
+(black being 0 in both sections). Conversely, do NOT pollute an otherwise-clean
+system with a hack like always setting some arbitrary bit, or storing black on
+black as 1<<16 - although the latter wouldn't be too terrible, as it could be
+parsed out reasonably cleanly. The worst case is that a user's active scrollback
+at time of update will (partially or completely) turn black when it should have
+been white. See also comments in paintline(). */
 object mkcolor(int fg,int bg)
 {
 	return colors[fg];
@@ -440,6 +452,13 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColo
 	int x=3;
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
+		/* NOTE: The color code is in line[i] and the text in line[i+1].
+		The color should always, as of 77ec0e, be a GTK2.GdkColor object;
+		old subw mappings may also contain integer 0, which means "default
+		color" and is ||'d into being colors[7] here. A future edit will
+		change the meaning of this, but an object here will continue to
+		mean "this color, black background" for compatibility, at least
+		for a while. CJA 20140214. */
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
 		if (hlstart>0)
