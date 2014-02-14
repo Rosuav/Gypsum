@@ -22,6 +22,21 @@ Hmm. Can I make a Notebook with three configdlg tabs? No, probably not worth it.
 this will most likely end up copying and pasting some code from configdlg. Per Rule
 of Three, this is permitted; but anything that I recognize as existing elsewhere,
 it's time to break out into a separate place.
+
+20140214 [a good day to be datestamping, btw]: I'm really not happy with how this is
+working out in my head. Should it put three separate entries on the plugin_menu (if
+that's even made possible, which it isn't currently)? Should it make a submenu with
+three items? One menu item that brings up... a notebook? A mini-window with three
+buttons that bring up more windows? A single unified window with radio buttons on
+each item to specify what "sort" of log it is? None feels right. So far I'm leaning
+toward the notebook idea, but it's clunky. The subw log has to offer just current
+tabs and nothing more; the world log would need to offer a (not necessarily proper)
+subset thereof; and the regex log allows you to add your own, maybe name them, and
+specify whether they're start or stop rules. Or maybe it should let you create some
+log files and then bind regexes to them. In any case, it's distinctly different from
+the other two. But breaking this out into three (or even two, merging subw and conn)
+separately-configured plugins is definitely wrong. Really really not happy with this
+and hoping someone else has some ideas.
 */
 inherit command;
 inherit plugin_menu;
