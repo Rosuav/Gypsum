@@ -7,7 +7,7 @@
  * object sockthrd;
  * array curmsg=({0,""});
  * int fg,bg,bold; //Current color, in original ANSI form
- * object curcolor;
+ * mixed curcolor;
  * string worldname;
  * mapping display; //References the subwindow data (see window.pike)
  * string conn_host;
@@ -354,7 +354,7 @@ void ka(mapping conn)
  */
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||""]);
+	mapping(string:mixed) conn=(["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
 	if ((<"0.0.0.0","::">)[info->host])
 	{
 		//Passive mode. (Currently hacked in by the specific IPs; may
