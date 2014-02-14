@@ -401,6 +401,11 @@ void redraw(mapping subw)
 }
 
 //TODO: Background color!
+//Note that this entire system is predicated on sixteen ANSI colors, the latter
+//eight being bold versions of the former eight, and all doubling as background
+//colors. Supporting 256-color mode would require considerable changes; mostly,
+//I suspect, some system of not retaining all possible GdkColor objects, but eg
+//creating them as needed and maybe caching common ones in a mapping.
 object mkcolor(int fg,int bg)
 {
 	return colors[fg];
