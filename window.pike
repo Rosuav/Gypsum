@@ -653,6 +653,7 @@ int enterpressed(mapping subw,string|void cmd)
 	if (!cmd) {cmd=subw->ef->get_text(); subw->ef->set_text("");}
 	subw->histpos=-1;
 	subw->prompt[0]->timestamp=time(1);
+	m_delete(subw->prompt[0],"Text"); //Wipe the cached text version of the line, which is now going to be wrong
 	if (!subw->passwordmode)
 	{
 		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});

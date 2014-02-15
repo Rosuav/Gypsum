@@ -529,3 +529,21 @@ int beep(int|void times)
 			return 1; //Always succeeds.
 	}
 }
+
+/*
+ * Return just the text out of one line from subw->lines
+ *
+ * Will cache its response. This may cause problems, if the line can get
+ * changed. Anything that mutates a line MUST m_delete(line[0],"Text");
+ * to wipe that cache.
+ *
+ * Note that this uses "Text" rather than the more obvious "text" due to
+ * the latter being used by plugins/search to store the exact same thing,
+ * only in lower_case. Ideally there should be a Great Renaming such that
+ * search uses lctext and this uses text; for now, this works.
+ */
+string line_text(array line)
+{
+	if (string t=line[0]->Text) return t;
+	return line[0]->Text=filter(line,stringp)*"";
+}
