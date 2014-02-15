@@ -208,6 +208,17 @@ int process(string param,mapping(string:mixed) subw)
 		else say(subw,"%% "+data);
 		return 1;
 	}
+	if (param=="load")
+	{
+		//Attempt to load from the most recent line of text with a quote in it
+		//TODO: Mark and detect, which would allow wrapped lines to be read.
+		for (int i=-2;i>=-10;--i) //Just scan back the most recent few
+		{
+			sscanf(filter(subw->lines[i],stringp)*"","%*s\"%s",string content);
+			if (content) {param="load \""+content; break;}
+		}
+		//"fall through" effectively
+	}
 	if (sscanf(param,"load %s",string data))
 	{
 		sscanf(param,"%{%O=%d%}",array(array(string|int)) data);
