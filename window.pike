@@ -459,6 +459,10 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColo
 		change the meaning of this, but an object here will continue to
 		mean "this color, black background" for compatibility, at least
 		for a while. CJA 20140214. */
+		//CJA 20140216: I'll probably change this shortly to encode the
+		//fg and bg colors into an int, which will then be able to be
+		//saved to disk, but there'll still be a hack that 0 means 7...
+		//at least for a while.
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
 		if (hlstart>0)
