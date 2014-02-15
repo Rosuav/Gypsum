@@ -538,9 +538,9 @@ int beep(int|void times)
  * to wipe that cache.
  *
  * Note that this uses "Text" rather than the more obvious "text" due to
- * the latter being used by plugins/search to store the exact same thing,
- * only in lower_case. Ideally there should be a Great Renaming such that
- * search uses lctext and this uses text; for now, this works.
+ * the latter having previously been used by plugins/search to store the
+ * exact same thing, only in lower_case. Now that the plugin isn't using
+ * the cache in this way, we have the opportunity to rename this, maybe.
  */
 string line_text(array line)
 {
