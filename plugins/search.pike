@@ -17,7 +17,7 @@ void find_string(string findme,mapping(string:mixed) subw)
 	while (--pos>0)
 	{
 		array line=subw->lines[pos];
-		string text=line[0]->text; if (!text) line[0]->text=text=lower_case(filter(line,stringp)*"");
+		string text=line[0]->text; if (!text) line[0]->text=text=lower_case(line_text(line));
 		int col=search(text,findme);
 		if (col!=-1)
 		{

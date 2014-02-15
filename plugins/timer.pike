@@ -214,7 +214,7 @@ int process(string param,mapping(string:mixed) subw)
 		//TODO: Mark and detect, which would allow wrapped lines to be read.
 		for (int i=-2;i>=-10;--i) //Just scan back the most recent few
 		{
-			sscanf(filter(subw->lines[i],stringp)*"","%*s\"%s",string content);
+			sscanf(line_text(subw->lines[i]),"%*s\"%s",string content);
 			if (content) {param="load \""+content; break;}
 		}
 		//"fall through" effectively

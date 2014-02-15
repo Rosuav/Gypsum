@@ -184,7 +184,7 @@ array(int) point_to_char(mapping subw,int x,int y)
 	if (line<0) line=0;
 	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
 	else l=subw->lines[line];
-	string str=filter(l,stringp)*"";
+	string str=line_text(l);
 	int pos=limit(0,(x-3)/subw->charwidth,sizeof(str));
 	if (has_value(str[..pos-2],'\t')) //There are tabs in the line, figure out where we really are.
 	{
@@ -266,7 +266,7 @@ void mouseup(object self,object ev,mapping subw)
 	{
 		//Single-line selection: special-cased for simplicity.
 		if (subw->selstartcol>col) [col,subw->selstartcol]=({subw->selstartcol,col});
-		content=filter((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],stringp)*""+"\n";
+		content=line_text((line==sizeof(subw->lines))?subw->prompt:subw->lines[line])+"\n";
 		content=content[subw->selstartcol..col-1];
 	}
 	else
@@ -276,7 +276,7 @@ void mouseup(object self,object ev,mapping subw)
 		content="";
 		for (int l=subw->selstartline;l<=line;++l)
 		{
-			string curline=filter((l==sizeof(subw->lines))?subw->prompt:subw->lines[l],stringp)*"";
+			string curline=line_text((l==sizeof(subw->lines))?subw->prompt:subw->lines[l]);
 			if (subw->boxsel) content+=curline[subw->selstartcol..col-1]+"\n";
 			else if (l==line) content+=curline[..col-1];
 			else if (l==subw->selstartline) content+=curline[subw->selstartcol..]+"\n";
@@ -332,7 +332,7 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
 	if (!mappingp(msg[0])) msg=({([])})+msg;
 	msg[0]->timestamp=time(1);
-	if (subw->logfile) subw->logfile->write(string_to_utf8(filter(msg,stringp)*""+"\n"));
+	if (subw->logfile) subw->logfile->write(string_to_utf8(line_text(msg)+"\n"));
 	array lines=({ });
 	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
 	//it'll wrap at any color change as if it were a space. This is unideal, but it
