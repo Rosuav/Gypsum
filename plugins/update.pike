@@ -18,6 +18,7 @@ string origin(function|object func)
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say(subw,"%% Update what?"); return 1;}
+	int cleanup=sscanf(param,"force %s",param); //Use "/update force some-file.pike" to clean up after building
 	if (param=="git")
 	{
 		say(subw,"%% Attempting git-based update...");
@@ -52,7 +53,7 @@ int process(string param,mapping(string:mixed) subw)
 		param=def;
 	}
 	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".
-	if (param[0]!='.') build(param); //"build ." to just rebuild what's already in queue
+	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master object, we just need to process it (by recompiling things).
 	//Note that I don't want to simply use foreach here, because the array may change.
@@ -62,6 +63,7 @@ int process(string param,mapping(string:mixed) subw)
 		string cur=G->needupdate[0]; G->needupdate-=({cur}); //Is there an easier way to take the first element off an array?
 		if (!has_value(been_there_done_that,cur)) {been_there_done_that+=({cur}); build(cur);}
 	}
+	if (cleanup && self) unload(param,subw,self); //When it's destubbified, use "confirm "+param (defanged for safety currently)
 	return 1;
 }
 
@@ -70,8 +72,10 @@ int process(string param,mapping(string:mixed) subw)
 //isn't the "current version" of the plugin (however that's to be determined...). Would
 //be easy enough to do - just check if the thing that's about to be put into selfs[] is
 //the same as the "current object" (again, whatever that's defined as), and ignore this
-//removable if it is.
-int unload(string param,mapping(string:mixed) subw)
+//removable if it is. Might be easiest to do the clean-up form as a form of update; the
+//"current object" would then be the one that just got created in build(), and anything
+//else would get unloaded. Stub implemented with extra param.
+int unload(string param,mapping(string:mixed) subw,object|void self)
 {
 	int confirm=sscanf(param,"confirm %s",param);
 	//Note that you can "/unload plugins/update" but you can't "/unload /update" like
@@ -150,18 +154,18 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
  *
  * @param param	the pike file to be compiled.
  */
-void build(string param)
+object build(string param)
 {
 	string param2;
 	if (has_prefix(param,"globals")) sscanf(param,"%s %s",param,param2);
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
-	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return;}
+	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
-	if (has_prefix(param,"globals.pike")) compiled(param,param2);
-	else compiled(param);
+	if (has_prefix(param,"globals.pike")) return compiled(param,param2);
+	return compiled(param);
 }
 
 void create(string name)
