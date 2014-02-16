@@ -80,7 +80,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		{
 			case 'c': case 'C':
 			{
-				subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(url,sizeof(url));
+				subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(url);
 				say(subw,"%% Copied to clipboard.");
 				break;
 			}

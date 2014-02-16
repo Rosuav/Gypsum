@@ -284,7 +284,7 @@ void mouseup(object self,object ev,mapping subw)
 		}
 	}
 	highlight(subw,-1,0,0,0);
-	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content,sizeof(content));
+	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content);
 }
 
 /**
