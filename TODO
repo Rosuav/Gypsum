@@ -6,7 +6,7 @@
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Autoscroll while selecting (to allow multi-page selection) - make sure big copy/paste works
-* Sighted bugesque: Copying and pasting with a percent sign, on Windows, bombs (not printf)
+* Sighted bugesque: Copying and pasting with a percent sign bombs (not printf)
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
