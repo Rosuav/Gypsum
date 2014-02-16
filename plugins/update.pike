@@ -63,62 +63,54 @@ int process(string param,mapping(string:mixed) subw)
 		string cur=G->needupdate[0]; G->needupdate-=({cur}); //Is there an easier way to take the first element off an array?
 		if (!has_value(been_there_done_that,cur)) {been_there_done_that+=({cur}); build(cur);}
 	}
-	if (cleanup && self) unload(param,subw,self); //When it's destubbified, use "confirm "+param (defanged for safety currently)
+	if (cleanup && self) unload(param,subw,self);
 	return 1;
 }
 
-//Attempt to unload a plugin completely.
-//TODO: Variant form: Clean-up - search for anything that gets caught by this check but
-//isn't the "current version" of the plugin (however that's to be determined...). Would
-//be easy enough to do - just check if the thing that's about to be put into selfs[] is
-//the same as the "current object" (again, whatever that's defined as), and ignore this
-//removable if it is. Might be easiest to do the clean-up form as a form of update; the
-//"current object" would then be the one that just got created in build(), and anything
-//else would get unloaded. Stub implemented with extra param.
-int unload(string param,mapping(string:mixed) subw,object|void self)
+//Attempt to unload a plugin completely, or do the cleanup after a force update.
+int unload(string param,mapping(string:mixed) subw,object|void keepme)
 {
 	int confirm=sscanf(param,"confirm %s",param);
+	if (keepme) confirm=1; //When we're doing a clean-up, always do the removal
 	//Note that you can "/unload plugins/update" but you can't "/unload /update" like
 	//you can /update it. (Note also that unloading this plugin will shoot yourself in
 	//the foot. Don't do it. You could recover using /x but it's fiddly. Just don't.)
 	if (!file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	say(subw,"%% "+param+" provides:");
 	multiset(object) selfs=(<>); //Might have multiple, if there've been several versions.
+	function reallydelete=lambda(object self,string desc)
+	{
+		if (self==keepme) say(subw,"%% (current) "+desc);
+		else if (keepme) say(subw,"%% (old) "+desc);
+		else say(subw,"%% "+desc);
+		if (confirm && self!=keepme) return selfs[self]=1;
+	};
 	foreach (G->G->commands;string name;function func) if (origin(func)==param)
 	{
-		selfs[function_object(func)]=1;
-		say(subw,"%% Command: /"+name);
-		if (confirm) m_delete(G->G->commands,name);
+		if (reallydelete(function_object(func),"Command: /"+name)) m_delete(G->G->commands,name);
 	}
 	foreach (G->G->hooks;string name;object obj) if (origin(obj)==param)
 	{
-		selfs[obj]=1;
-		say(subw,"%% Hook: "+name);
-		if (confirm) m_delete(G->G->hooks,name);
+		if (reallydelete(obj,"Hook: "+name)) m_delete(G->G->hooks,name);
 	}
 	foreach (G->G->plugin_menu;string name;mapping data) if (name && origin(data->self)==param) //Special: G->G->plugin_menu[0] is not a mapping.
 	{
-		selfs[data->self]=1;
-		say(subw,"%% Menu item: "+data->menuitem->get_child()->get_text());
-		if (confirm) ({m_delete(G->G->plugin_menu,name)->menuitem})->destroy();
+		if (reallydelete(data->self,"Menu item: "+data->menuitem->get_child()->get_text()))
+			({m_delete(G->G->plugin_menu,name)->menuitem})->destroy();
 	}
 	foreach (G->G->windows;string name;mapping data) if (origin(data->self)==param)
 	{
-		selfs[data->self]=1;
 		//Try to show the caption of the window, if it exists.
-		string desc="["+name+"]";
-		if (data->mainwindow) desc=data->mainwindow->get_title();
-		say(subw,"%% Window: "+desc); //Note that this also covers movablewindow and configdlg, which are special cases of window.
-		if (confirm) ({m_delete(G->G->windows,name)->mainwindow})->destroy();
+		string desc="["+name+"]"; //Note that this also covers movablewindow and configdlg, which are special cases of window.
+		if (data->mainwindow) desc=data->mainwindow->get_title(); 
+		if (reallydelete(data->self,"Window: "+desc)) ({m_delete(G->G->windows,name)->mainwindow})->destroy();
 	}
 	foreach (G->G->statustexts;string name;mapping data) if (origin(data->self)==param)
 	{
-		selfs[data->self]=1;
 		//Try to show the current contents (may not make sense for non-text statusbar entries)
 		string desc="["+name+"]";
 		catch {desc=data->lbl->get_text();};
-		say(subw,"%% Status bar: "+desc);
-		if (confirm)
+		if (reallydelete(data->self,"Status bar: "+desc))
 		{
 			//Scan upward from lbl until we find the Hbox that statusbar entries get packed into.
 			//If we don't find one, well, don't do anything. That shouldn't happen though.
@@ -133,7 +125,7 @@ int unload(string param,mapping(string:mixed) subw,object|void self)
 	if (confirm)
 	{
 		foreach (selfs;object self;) destruct(self);
-		say(subw,"%% All above removed.");
+		if (keepme) say(subw,"%% All old removed."); else say(subw,"%% All above removed.");
 	}
 	else say(subw,"%% To remove the above, type: /unload confirm "+param);
 	return 1;
