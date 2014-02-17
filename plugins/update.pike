@@ -156,8 +156,8 @@ object build(string param)
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
-	if (has_prefix(param,"globals.pike")) return compiled(param,param2);
-	return compiled(param);
+	if (has_prefix(param,"globals.pike")) compiled(param,param2); //Note: Does *not* return the object. A partial build followed by a cleanup would break stuff badly.
+	else return compiled(param);
 }
 
 void create(string name)
