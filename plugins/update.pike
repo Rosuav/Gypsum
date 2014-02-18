@@ -78,6 +78,12 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	if (!file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	say(subw,"%% "+param+" provides:");
 	multiset(object) selfs=(<>); //Might have multiple, if there've been several versions.
+
+	//Broken out in a vain attempt to bring some clarity to this pile of differences.
+	//It might be worth unifying some of these things - for instance, always having a
+	//mapping, rather than storing the object or function directly. But that would be
+	//overkill in other areas... warping other code for the sake of this is backward,
+	//so make changes ONLY if it's an improvement elsewhere.
 	function reallydelete=lambda(object self,string desc)
 	{
 		if (self==keepme) say(subw,"%% (current) "+desc);
@@ -85,6 +91,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 		else say(subw,"%% "+desc);
 		if (confirm && self!=keepme) return selfs[self]=1;
 	};
+
 	foreach (G->G->commands;string name;function func) if (origin(func)==param)
 	{
 		if (reallydelete(function_object(func),"Command: /"+name)) m_delete(G->G->commands,name);
