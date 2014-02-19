@@ -6,6 +6,7 @@
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Autoscroll while selecting (to allow multi-page selection) - make sure big copy/paste works on all platforms
+* Reorganize plugins and either have some way to disable default plugins, or have more.pike have a starting set
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
