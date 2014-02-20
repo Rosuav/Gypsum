@@ -135,6 +135,7 @@ int focus(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=se
  */
 void scrchange(object self,mapping subw)
 {
+	if (paused) return;
 	float upper=self->get_property("upper");
 	//werror("upper %f, page %f, pos %f\n",upper,self->get_property("page size"),upper-self->get_property("page size"));
 	#if constant(COMPAT_SCROLL)
@@ -143,7 +144,7 @@ void scrchange(object self,mapping subw)
 	//Note that I (CJA) haven't been seeing this, even on Windows. Not sure why. Must investigate.
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
-	if (!paused) self->set_value(upper-self->get_property("page size"));
+	self->set_value(upper-self->get_property("page size"));
 }
 
 void paste(object self,mapping subw)
