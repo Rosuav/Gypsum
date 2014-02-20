@@ -305,7 +305,6 @@ void mousemove(object self,object ev,mapping subw)
 		}
 		//Add further meta-information display here
 	}; //Ignore errors
-	//TODO: Cache the text, if performance is an issue. Be sure to flush the cache when appropriate.
 	setstatus(txt);
 	if (subw->mouse_down && (line!=subw->selendline || col!=subw->selendcol))
 	{
