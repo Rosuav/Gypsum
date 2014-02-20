@@ -137,7 +137,6 @@ void scrchange(object self,mapping subw)
 {
 	if (paused) return;
 	float upper=self->get_property("upper");
-	//werror("upper %f, page %f, pos %f\n",upper,self->get_property("page size"),upper-self->get_property("page size"));
 	#if constant(COMPAT_SCROLL)
 	//On Windows, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
 	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
