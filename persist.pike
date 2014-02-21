@@ -1,3 +1,5 @@
+//NOTE: COMPAT_* options are not set when this file is loaded, and therefore cannot be used.
+
 object persist=class(string savefn)
 {
 	//Persistent storage (when this dies, bring it back with a -1/-1 counter on it).
