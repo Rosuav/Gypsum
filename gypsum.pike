@@ -86,9 +86,10 @@ void add_gypsum_constant(string name,mixed val)
 int main(int argc,array(string) argv)
 {
 	replace_master(mymaster());
-	
+
+	//Use the usual add_constant for these, not add_gypsum_constant(). They won't be replaced.
 	add_constant("add_gypsum_constant",add_gypsum_constant);
-	add_constant("G",this); //Let this one go with the usual add_constant.
+	add_constant("G",this);
 	add_constant("started",time());
 	bootstrap("persist.pike");
 	
