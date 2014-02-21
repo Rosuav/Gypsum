@@ -90,7 +90,7 @@ int main(int argc,array(string) argv)
 	add_constant("add_gypsum_constant",add_gypsum_constant);
 	add_constant("G",this); //Let this one go with the usual add_constant.
 	add_constant("started",time());
-	bootstrap("persist.pike"); //Note that compat options are NOT set when persist is loaded for the first time, but will be if it is reloaded.
+	bootstrap("persist.pike");
 	
 	mapping(string:int) compat=([
 		"scroll":(string)GTK2.version()<"\2\26", //Scroll bug - seems to have been fixed somewhere between 2.12 and 2.22 (\2\26 being octal for 2.22)
