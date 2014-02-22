@@ -8,6 +8,11 @@ just compile to program - a non-protected constant will be visible in the progra
 If it does, create an entry with active=1; if not, create an entry with active=0.
 In fact, this can be done on startup to look for any unrecognized ones, which would
 allow new plugins to be loaded up by default.
+
+Don't apply plugin_active_by_default to anything where there's really no downside to
+having it active. Keep 'em in the main section. Use this only for plugins where it's
+normal to have it, but might be logical to remove it - like statusbar entries, which
+have to compete for space.
 */
 
 constant menu_label="More plugins";

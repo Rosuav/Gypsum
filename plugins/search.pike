@@ -4,6 +4,8 @@
 //whoever cares to do it. (Or it might be better to have a separate default
 //button - not sure which would be easier. Either way, it's Windows-only atm.)
 
+constant plugin_active_by_default = 1;
+
 //TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
 //keystroke while focus is on the Ctrl-F box).
 
