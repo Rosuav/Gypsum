@@ -1,5 +1,15 @@
 inherit plugin_menu;
 
+/* TODO: "Active-by-default" plugins
+
+When this starts up, if there's no persist list, compile every plugin in plugins-more
+and see if it has a constant plugin_active_by_default (don't actually instantiate,
+just compile to program - a non-protected constant will be visible in the program).
+If it does, create an entry with active=1; if not, create an entry with active=0.
+In fact, this can be done on startup to look for any unrecognized ones, which would
+allow new plugins to be loaded up by default.
+*/
+
 constant menu_label="More plugins";
 class menu_clicked
 {

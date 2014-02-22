@@ -3,6 +3,8 @@ inherit plugin_menu;
 inherit statustext;
 inherit window;
 
+constant plugin_active_by_default = 1;
+
 //TODO: Switch to using Calendar.Gregorian with set_timezone("America/New York") for EST/EDT
 //Might also be able to use that to get the list of Terran month names, which could then
 //be localized. Probably not worth it though, just use the English names.
