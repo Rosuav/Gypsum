@@ -1,4 +1,5 @@
 //NOTE: COMPAT_* options are not set when this file is loaded, and therefore cannot be used.
+//(They will exist if the file is reloaded post-startup, but still should not be used.)
 
 object persist=class(string savefn)
 {
