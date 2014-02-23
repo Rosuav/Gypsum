@@ -2,6 +2,8 @@ inherit command;
 inherit hook;
 inherit statustext;
 
+constant plugin_active_by_default = 1;
+
 //TODO: Per-world wealth stats (based on subw->world)
 
 /**
