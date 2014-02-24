@@ -21,6 +21,7 @@ GTK2.Hbox statusbar;
 array(object) signals;
 int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
+GTK2.Tooltips tooltips;
 inherit statustext;
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
@@ -1064,6 +1065,7 @@ void create(string name)
 			mainwindow->move(pos[0],pos[1]);
 		}
 		else mainwindow->set_default_size(800,500);
+		tooltips=GTK2.Tooltips();
 		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 		G->G->plugin_menu=([]);
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
@@ -1108,7 +1110,8 @@ void create(string name)
 	else
 	{
 		object other=G->G->window;
-		colors=other->colors; notebook=other->notebook; mainwindow=other->mainwindow;
+		colors=other->colors; notebook=other->notebook; mainwindow=other->mainwindow; tooltips=other->tooltips;
+		if (!tooltips) tooltips=GTK2.Tooltips(); //Compatibility, drop when not needed
 		#if constant(COMPAT_SIGNAL)
 		defbutton=other->defbutton;
 		#endif
@@ -1117,6 +1120,7 @@ void create(string name)
 		if (other->menu) menu=other->menu;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
+	if (!tooltips) tooltips=GTK2.Tooltips();
 	G->G->window=this;
 	::create(name);
 	mainwsignals();
