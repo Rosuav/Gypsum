@@ -410,8 +410,8 @@ class configdlg
 //Inherit this to get a spot on the main window's status bar.
 //By default you get a simple GTK2.Label (hence the name "text"),
 //but this can be altered by overriding makestatus(), which
-//should normally set statustxt->lbl (but might wrap it in some
-//other object if it wishes).
+//must set statustxt->lbl and return either it or a parent of it.
+//For example, wrapping a label in an EventBox can be useful.
 //TODO: Make it possible to go onto a second row of statusbar entries.
 /* Possibility: Instead of putting them in an Hbox (see window.pike), put them into a TextView.
 
