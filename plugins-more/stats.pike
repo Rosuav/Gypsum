@@ -9,7 +9,8 @@ Provide an sscanf pattern for each, and the average will be maintained.
 The monitors all have unique identifiers (mainly for the configdlg), and then have an sscanf
 string. If that string has no non-star markers, the line will be retained, thus allowing
 multi-line search patterns. Otherwise, it should have one %d (maybe %s could be added later?)
-and that gets saved.
+and that gets saved. Note that, in current code, a 0 result is assumed to mean continuation,
+so a string like "foo bar %d asdf qwer" matching "foo bar 0 asdf qwer" will be misparsed.
 
 As well as the sscanf pattern are two numbers: total and count. They effectively allow a
 running average to be maintained.
