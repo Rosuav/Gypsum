@@ -413,7 +413,7 @@ class configdlg
 //should normally set statustxt->lbl (but might wrap it in some
 //other object if it wishes).
 //TODO: Make it possible to go onto a second row of statusbar entries.
-/* Possibility: Instead of putting them in a Vbox (see window.pike), put them into a TextView.
+/* Possibility: Instead of putting them in an Hbox (see window.pike), put them into a TextView.
 
 int main()
 {
