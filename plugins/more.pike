@@ -1,19 +1,32 @@
 inherit plugin_menu;
 
-/* TODO: "Active-by-default" plugins
+/* Magic: "Active-by-default" plugins
 
-When this starts up, if there's no persist list, compile every plugin in plugins-more
-and see if it has a constant plugin_active_by_default (don't actually instantiate,
-just compile to program - a non-protected constant will be visible in the program).
-If it does, create an entry with active=1; if not, create an entry with active=0.
-In fact, this can be done on startup to look for any unrecognized ones, which would
-allow new plugins to be loaded up by default.
+When this starts up, if there's no persist list, it compiles every plugin in
+plugins-more to see if it has a constant 'plugin_active_by_default'. If it does,
+it creates an entry with active=1; if not, it creates an entry with active=0.
 
 Don't apply plugin_active_by_default to anything where there's really no downside to
 having it active. Keep 'em in the main section. Use this only for plugins where it's
 normal to have it, but might be logical to remove it - like statusbar entries, which
 have to compete for space.
 */
+
+//Prune the list of plugins to only what can be statted, and add any from plugins-more
+mapping(string:mapping(string:mixed)) prune()
+{
+	mapping(string:mapping(string:mixed)) items=persist["plugins/more/list"]||([]);
+	foreach (get_dir("plugins-more"),string fn) if (has_suffix(fn,".pike") && !items["plugins-more/"+fn])
+	{
+		//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
+		//if it's found, that's the default active state. (Normally, if it's present, it'll be 1.)
+		program compiled; catch {compiled=compile_file("plugins-more/"+fn);};
+		items["plugins-more/"+fn]=(["active":compiled && compiled->plugin_active_by_default]);
+	}
+	foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
+	persist["plugins/more/list"]=items; //Autosave (even if nothing's changed, currently)
+	return items;
+}
 
 constant menu_label="More plugins";
 class menu_clicked
@@ -24,10 +37,7 @@ class menu_clicked
 
 	void create()
 	{
-		items=persist["plugins/more/list"]||([]);
-		foreach (get_dir("plugins-more"),string fn)
-			if (has_suffix(fn,".pike") && !items["plugins-more/"+fn]) items["plugins-more/"+fn]=([]);
-		foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
+		items=prune();
 		::create("plugins/moreplugins");
 		showwindow();
 	}
@@ -72,5 +82,6 @@ void load_all()
 void create(string name)
 {
 	::create(name);
+	prune();
 	load_all();
 }
