@@ -14,7 +14,7 @@ and that gets saved.
 As well as the sscanf pattern are two numbers: total and count. They effectively allow a
 running average to be maintained.
 
-TODO: Add a configdlg.
+TODO: Add a configdlg. (Data structures have been set up around that expectation.)
 */
 
 mapping(string:mapping(string:mixed)) monitors=persist["stats/monitors"] || ([
