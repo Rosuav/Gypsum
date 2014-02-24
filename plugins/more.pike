@@ -16,6 +16,7 @@ have to compete for space.
 mapping(string:mapping(string:mixed)) prune()
 {
 	mapping(string:mapping(string:mixed)) items=persist["plugins/more/list"]||([]);
+	foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
 	foreach (get_dir("plugins-more"),string fn) if (has_suffix(fn,".pike") && !items["plugins-more/"+fn])
 	{
 		//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
@@ -23,7 +24,6 @@ mapping(string:mapping(string:mixed)) prune()
 		program compiled; catch {compiled=compile_file("plugins-more/"+fn);};
 		items["plugins-more/"+fn]=(["active":compiled && compiled->plugin_active_by_default]);
 	}
-	foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
 	persist["plugins/more/list"]=items; //Autosave (even if nothing's changed, currently)
 	return items;
 }
