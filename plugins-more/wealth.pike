@@ -122,6 +122,7 @@ int split(string param,mapping(string:mixed) subw)
 
 void create(string name)
 {
+	statustxt->tooltip="Threshold RPG wealth stats";
 	::create(name);
 	G->G->commands->party=party;
 	G->G->commands->split=split;
