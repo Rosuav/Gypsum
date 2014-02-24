@@ -2,3 +2,10 @@ Files in this directory are plugins, but will not be loaded automatically.
 
 See ../plugins/README for details on how to write a plugin, and the
 'more' plugin for how to load these or other plugins.
+
+Note that a new plugin in this directory will be auto-loaded if and only if
+it has a declaration in it, thus:
+
+constant plugin_active_by_default = 1;
+
+It can still be activated and deactivated through the 'more' plugin.
