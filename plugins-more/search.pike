@@ -63,6 +63,7 @@ void menu_clicked() {statustxt->ef->grab_focus();}
 
 void create(string name)
 {
+	statustxt->tooltip="Ctrl-F to search";
 	::create(name);
 	statustxt->signals=({gtksignal(statustxt->ef,"key_press_event",keypress,0,UNDEFINED,1)});
 }
