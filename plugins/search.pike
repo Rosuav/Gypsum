@@ -52,7 +52,7 @@ int keypress(object self,array|object ev)
 GTK2.Widget makestatus()
 {
 	statustxt->lbl=GTK2.Label("Search: ");
-	statustxt->ef=GTK2.Entry()->set_has_frame(0)->set_size_request(-1,statustxt->lbl->size_request()->height);
+	statustxt->ef=GTK2.Entry((["width-chars":10]))->set_has_frame(0)->set_size_request(-1,statustxt->lbl->size_request()->height);
 	return two_column(({statustxt->lbl,statustxt->ef}));
 }
 
