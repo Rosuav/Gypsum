@@ -33,6 +33,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		say(conn->display,fmt[1],first,last);
 		persist["wealth/last_"+kwd]=cur;
 		persist["wealth/diff_"+kwd]=diff(cur,first);
+		if (!persist["wealth/stats_since"]) persist["wealth/stats_since"]=time();
 		string status="";
 		foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
 		setstatus(status[..<2]);
@@ -44,13 +45,14 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 int process(string param,mapping(string:mixed) subw)
 {
+	if (persist["wealth/stats_since"]) say(subw,"%% Stats since "+ctime(persist["wealth/stats_since"]));
 	foreach (indices(monitors),string kwd) if (persist["wealth/first_"+kwd])
 	{
 		say(subw,"%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
 			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" "));
 		if (param=="reset") persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
 	}
-	if (param=="reset") say(subw,"%% Stats reset to zero.");
+	if (param=="reset") {m_delete(persist,"wealth/stats_since"); say(subw,"%% Stats reset to zero.");}
 	return 1;
 }
 
