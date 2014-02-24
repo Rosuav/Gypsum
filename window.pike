@@ -301,11 +301,14 @@ void mousemove(object self,object ev,mapping subw)
 	{
 		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
 		if (!mappingp(meta)) break;
-		if (meta->timestamp)
-		{
-			mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
-			txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
-		}
+		//Note: If the line has no timestamp (such as the prompt after a local command),
+		//this will show the epoch in either UTC or local time. This looks a bit weird,
+		//but is actually less weird than omitting the timestamp altogether and having
+		//the box suddenly narrow. Yes, there'll be some odd questions about why there's
+		//a timestamp of 1970 (or 1969 if you're behind UTC and showing localtime), but
+		//on the whole, that's going to bug people less than the flickering of width is.
+		mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
+		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
 	}; //Ignore errors
 	setstatus(txt);
