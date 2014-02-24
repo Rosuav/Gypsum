@@ -223,6 +223,7 @@ void mousedown(object self,object ev)
 void create(string name)
 {
 	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1356712257; persist["threshtime/sync_th"]=196948184;}
+	statustxt->tooltip="Threshold RPG date/time - double-click for converter";
 	::create(name);
 	statustxt->signals=({gtksignal(statustxt->evbox,"button_press_event",mousedown)});
 	showtime();
