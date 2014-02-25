@@ -317,6 +317,18 @@ void mousemove(object self,object ev,mapping subw)
 		subw->mouse_down=2; //Mouse has moved.
 		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
 	}
+	float low=subw->scr->get_value(),high=low+subw->scr->get_property("page size");
+	if (ev->y<low) subw->autoscroll=low-ev->y;
+	else if (ev->y>high) subw->autoscroll=high-ev->y;
+	else subw->autoscroll=0;
+	if (subw->autoscroll && !subw->autoscroll_callout) subw->autoscroll_callout=call_out(autoscroll,0.1,subw);
+}
+
+void autoscroll(mapping subw)
+{
+	if (!subw->autoscroll) {m_delete(subw,"autoscroll_callout"); return;}
+	subw->autoscroll_callout=call_out(autoscroll,0.1,subw);
+	subw->scr->set_value(limit(0.0,subw->scr->get_value()-subw->autoscroll,subw->scr->get_property("upper")-subw->scr->get_property("page size")));
 }
 
 /**
