@@ -77,7 +77,7 @@ Returning from the hook function and subsequently calling nexthook
 will work so long as the subw still exists. (Note that nexthook will
 not call the current hook function, and thus cannot create an infinite
 loop.)
-ADVISORY: If this is called and 0 is returned, both commands will be
+ADVISORY: If this is called _and_ 0 is returned, both commands will be
 executed, but this is not the normal form of processing and is not
 formally supported.
 
