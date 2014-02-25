@@ -8,6 +8,26 @@ string origin(function|object func)
 	return def && (def/":")[0]; //Assume we don't have absolute Windows paths here, which this would break
 }
 
+//Figure out an actual file name based on the input
+//Returns the input unchanged if nothing is found, but tries hard to find something.
+//The provided subw is just for error messages. Will return 0 if there's an error.
+string fn(mapping subw,string param)
+{
+	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
+	{
+		//Allow "update /blah" to update the file where /blah is coded
+		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
+		function f=G->G->commands[param[1..]];
+		if (!f) {say(subw,"%% Command not found: "+param[1..]+"\n"); return 0;}
+		string def=origin(f);
+		if (!def) {say(subw,"%% Function origin not found: "+param[1..]+"\n"); return 0;}
+		param=def;
+	}
+	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".
+	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
+	return param;
+}
+
 /**
  * Recompiles the provided plugin
  *
@@ -42,17 +62,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% Update complete.");
 		param="."; //And re-update anything that needs it.
 	}
-	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
-	{
-		//Allow "update /blah" to update the file where /blah is coded
-		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
-		function f=G->G->commands[param[1..]];
-		if (!f) {say(subw,"%% Command not found: "+param[1..]+"\n"); return 1;}
-		string def=origin(f);
-		if (!def) {say(subw,"%% Function origin not found: "+param[1..]+"\n"); return 1;}
-		param=def;
-	}
-	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".
+	if (!(param=fn(subw,param))) return 1;
 	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master object, we just need to process it (by recompiling things).
@@ -72,10 +82,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 {
 	int confirm=sscanf(param,"confirm %s",param);
 	if (keepme) confirm=1; //When we're doing a clean-up, always do the removal
-	//Note that you can "/unload plugins/update" but you can't "/unload /update" like
-	//you can /update it. (Note also that unloading this plugin will shoot yourself in
-	//the foot. Don't do it. You could recover using /x but it's fiddly. Just don't.)
-	if (!file_stat(param) && file_stat(param+".pike")) param+=".pike";
+	if (!(param=fn(subw,param))) return 1;
 	say(subw,"%% "+param+" provides:");
 	multiset(object) selfs=(<>); //Might have multiple, if there've been several versions.
 
@@ -157,7 +164,7 @@ object build(string param)
 {
 	string param2;
 	if (has_prefix(param,"globals")) sscanf(param,"%s %s",param,param2);
-	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
+	if (!(param=fn(0,param))) return 0;
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
