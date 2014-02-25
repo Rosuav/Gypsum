@@ -191,6 +191,18 @@ They need not necessarily be the same object (eg the returned label
 might be wrapped inside something else for structure), but if not, the
 return object must be a parent (direct or indirect) of statustxt->lbl.
 
+Status text with eventbox - 'inherit statusevent'
+-------------------------------------------------
+
+Just like statustext, but creates an eventbox. Most of this is to be
+considered ADVISORY as the details may change, but the intent is to
+provide an easy way to respond to mouse clicks. The simplest form is
+standardized: inherit this, don't override makestatus(), and implement
+a statusbar_double_click function, which will be called when the user
+double-clicks on your statusbar entry. The recommended name for that
+function MAY be changed, but if it is, a default bouncer will be
+provided so that statusbar_double_click() will still work.
+
 Plugin menu item - 'inherit plugin_menu'
 ----------------------------------------
 
