@@ -12,8 +12,9 @@ multi-line search patterns. Otherwise, it should have one %d (maybe %s could be 
 and that gets saved. Note that, in current code, a 0 result is assumed to mean continuation,
 so a string like "foo bar %d asdf qwer" matching "foo bar 0 asdf qwer" will be misparsed.
 
-As well as the sscanf pattern are two numbers: total and count. They effectively allow a
-running average to be maintained.
+The statistical figures (total, count, min, max) can all be freely edited in the configdlg.
+Normally, I expect this to be treated as read-only, or maybe someone will clear the stats,
+but technically, any edit can be done.
 */
 
 mapping(string:mapping(string:mixed)) monitors=persist["stats/monitors"] || ([
