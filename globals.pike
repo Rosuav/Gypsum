@@ -317,8 +317,8 @@ class configdlg
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
 	//... optionally provide me...
-	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
-	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
+	string actionbtn; //(DEPRECATED) If set, a special "action button" will be included, otherwise not. This is its caption.
+	void action_callback() { } //(DEPRECATED) Callback when the action button is clicked (provide if actionbtn is set)
 	constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
 	constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
 	constant allow_rename=1; //Set to 0 to ignore changes to keywords
