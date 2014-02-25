@@ -48,6 +48,7 @@ int process(string param,mapping(string:mixed) subw)
 class statusbar_double_click
 {
 	inherit configdlg;
+	constant ints=({"total","count","min","max"});
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
 	void create() {items=monitors; ::create("plugins/stats");}
 
@@ -69,13 +70,11 @@ class statusbar_double_click
 	void load_content(mapping(string:mixed) info)
 	{
 		win->sscanf->get_buffer()->set_text(info->sscanf || "");
-		foreach (({"total","count","min","max"}),string kw) win[kw]->set_text((string)info[kw]);
 	}
 
 	void save_content(mapping(string:mixed) info)
 	{
 		info->sscanf=win->sscanf->get_text();
-		foreach (({"total","count","min","max"}),string kw) info[kw]=(int)win[kw]->get_text();
 		persist["stats/monitors"]=items;
 	}
 
