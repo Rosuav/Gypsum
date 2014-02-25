@@ -657,6 +657,8 @@ int keypress(object self,array|object ev,mapping subw)
 	{
 		string cmd=numpad->cmd;
 		if (!numpadspecial[cmd] && !has_prefix(cmd,"go ")) cmd="go "+cmd;
+		if (!subw->lastnav) subw->lastnav=({ });
+		if (has_prefix(cmd,"go ")) subw->lastnav+=({cmd[3..]});
 		send(subw->connection,cmd+"\r\n");
 		return 1;
 	}
@@ -686,6 +688,7 @@ void enterpressed(mapping subw,string|void cmd)
 		say(subw,"%% Unknown command.");
 		return 0;
 	}
+	if (array nav=m_delete(subw,"lastnav")) subw->lastnav_desc=nav*", ";
 	execcommand(subw,cmd,0);
 }
 
