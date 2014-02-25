@@ -50,16 +50,18 @@ object persist=class(string savefn)
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
-		if (!saving) {saving=1; call_out(save,0);}
+		save();
 		return data[idx]=val;
 	}
 	mixed _m_delete(string idx)
 	{
-		if (!saving) {saving=1; call_out(save,0);}
+		save();
 		return m_delete(data,idx);
 	}
 
-	void save()
+	void save() {if (!saving) {saving=1; call_out(dosave,0);}}
+	
+	void dosave()
 	{
 		if (mixed ex=catch
 		{
@@ -69,7 +71,7 @@ object persist=class(string savefn)
 		})
 		{
 			werror("Unable to save .gypsumrc: %s\nWill retry in 60 seconds.\n",describe_error(ex));
-			call_out(save,60);
+			call_out(dosave,60);
 		}
 	}
 }(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
