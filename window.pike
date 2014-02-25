@@ -9,7 +9,7 @@ mapping(string:mapping(string:mixed)) channels=persist->setdefault("color/channe
 constant deffont="Monospace 10";
 mapping(string:mapping(string:mixed)) fonts=persist->setdefault("window/font",(["display":(["name":deffont]),"input":(["name":deffont])]));
 mapping(string:mapping(string:mixed)) numpadnav=persist->setdefault("window/numpadnav",([])); //Technically doesn't have to be restricted to numpad.
-multiset(string) numpadspecial=persist->setdefault("window/numpadspecial", (<"look", "glance", "l", "gl">)); //Commands that don't get prefixed with 'go ' in numpadnav
+multiset(string) numpadspecial=persist->setdefault("window/numpadspecial", (<"look", "glance", "l", "gl", "/lastnav">)); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
