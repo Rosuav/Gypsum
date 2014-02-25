@@ -59,6 +59,14 @@ object persist=class(string savefn)
 		return m_delete(data,idx);
 	}
 
+	//Like the Python dict method of the same name, will save a default back in if nothing's set.
+	mixed setdefault(string idx,mixed def)
+	{
+		mixed ret=data[idx];
+		if (zero_type(ret)) return this[idx]=def;
+		return ret;
+	}
+
 	void save() {if (!saving) {saving=1; call_out(dosave,0);}}
 	
 	void dosave()
