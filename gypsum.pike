@@ -1,7 +1,6 @@
-/** 
- * Global collection of commands. 
- * Used to store plugin commands, and allows for dynamic loading.
- * Access: G->G-><command>
+/* 
+ * Generic globally accessible data
+ * Accessible everywhere as G->G->whatever.
  */
 mapping(string:mixed) G=([]); 
 
