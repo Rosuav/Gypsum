@@ -728,7 +728,7 @@ void closetab_response(object self,int response,int removeme)
 void closetab()
 {
 	int removeme=notebook->get_current_page();
-	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) {real_closetab(removeme); return;} //TODO: Use ?->sock for this
+	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) {real_closetab(removeme); return;} //TODO post 7.8: Use ?->sock for this
 	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have an active connection, really close this tab?")
 		->show()
 		->signal_connect("response",closetab_response,removeme);
