@@ -47,6 +47,7 @@ class statusbar_double_click
 {
 	inherit configdlg;
 	constant ints=({"total","count","min","max"});
+	constant strings=({"sscanf"});
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
 	void create() {items=monitors; ::create("plugins/stats");}
 
@@ -65,14 +66,8 @@ class statusbar_double_click
 			),1,1,0);
 	}
 
-	void load_content(mapping(string:mixed) info)
-	{
-		win->sscanf->get_buffer()->set_text(info->sscanf || "");
-	}
-
 	void save_content(mapping(string:mixed) info)
 	{
-		info->sscanf=win->sscanf->get_text();
 		persist["stats/monitors"]=items;
 	}
 
