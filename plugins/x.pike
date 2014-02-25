@@ -22,10 +22,14 @@ int inputhook(string line,mapping(string:mixed) subw)
 			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
 			{
 				int explain=has_prefix(expr,"#");
-				int|float|string val=compile_string("int|float _() {return "+expr[explain..]+";}",0,this)()->_();
+				mixed prev=subw->last_calc_result;
+				if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
+				else prev="";
+				int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
 				if (explain) val=expr[1..]+" = "+val;
 				if (before) nexthook(subw,before+val+(after||"")); //Command with embedded expression
 				else say(subw,"%% "+val); //"calc" command
+				subw->last_calc_result=val;
 				return 1;
 			};
 			return 0;
