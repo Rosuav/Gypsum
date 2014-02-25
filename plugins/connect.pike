@@ -2,6 +2,7 @@ inherit command;
 inherit configdlg;
 constant strings=({"name","host","logfile","descr","writeme"});
 constant ints=({"port"});
+constant bools=({"use_ka"});
 
 /**
  * List of worlds available by default.
@@ -67,14 +68,13 @@ int listworlds(string param,mapping(string:mixed) subw)
 //---------------- Config dialog ----------------
 void save_content(mapping(string:mixed) info)
 {
-	info->use_ka=win->use_ka->get_active();
 	persist["worlds"]=worlds;
 }
 
 void load_content(mapping(string:mixed) info)
 {
 	if (!info->port) {info->port=23; win->port->set_text("23");}
-	win->use_ka->set_active(info->use_ka || zero_type(info->use_ka));
+	if (zero_type(info->use_ka)) win->use_ka->set_active(1);
 }
 
 void action_callback()
