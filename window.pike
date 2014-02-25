@@ -785,6 +785,7 @@ class advoptions
 class channelsdlg
 {
 	inherit configdlg;
+	constant ints=({"r","g","b"});
 	mapping(string:mapping(string:mixed)) items=channels;
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
 	void create() {::create("channelsdlg");}
@@ -805,14 +806,12 @@ class channelsdlg
 
 	void save_content(mapping(string:mixed) info)
 	{
-		foreach (({"r","g","b"}),string c) info[c]=(int)win[c]->get_text();
 		persist["color/channels"]=channels;
 	}
 
 	void load_content(mapping(string:mixed) info)
 	{
-		if (zero_type(info["r"])) info->r=info->g=info->b=255;
-		foreach (({"r","g","b"}),string c) win[c]->set_text((string)info[c]);
+		if (zero_type(info["r"])) {info->r=info->g=info->b=255; ({win->r,win->g,win->b})->set_text("255");}
 	}
 }
 
