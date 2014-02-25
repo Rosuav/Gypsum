@@ -25,6 +25,14 @@ string fn(mapping subw,string param)
 	}
 	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
+	if (!has_value(param,"/") && !file_stat(param))
+	{
+		foreach (({"plugins","plugins-more"}),string dir)
+		{
+			if (file_stat(dir+"/"+param)) {param=dir+"/"+param; break;}
+			if (file_stat(dir+"/"+param+".pike")) {param=dir+"/"+param+".pike"; break;}
+		}
+	}
 	return param;
 }
 
