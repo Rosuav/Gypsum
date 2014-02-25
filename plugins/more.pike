@@ -34,6 +34,8 @@ class menu_clicked
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Load more plugins"]);
 	constant allow_rename=0;
+	//NOTE: Cannot use simple bindings as it needs to know the previous state
+	//Note also: This does not unload plugins on deactivation. Maybe it should?
 
 	void create()
 	{
