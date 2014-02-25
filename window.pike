@@ -989,7 +989,7 @@ class promptsdlg
 				({win->retainpseudo=GTK2.CheckButton("Retain pseudo-prompts after commands"),0}),
 			}),(["wrap":1,"justify":GTK2.JUSTIFY_LEFT,"xalign":0.0]))))
 			->add(GTK2.HbuttonBox()
-				->add(win->pb_ok=GTK2.Button("OK")) //TODO: Use stock?
+				->add(win->pb_ok=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_OK])))
 				->add(stock_close())
 			)
 		);
