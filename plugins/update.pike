@@ -23,7 +23,15 @@ string fn(mapping subw,string param)
 		if (!def) {say(subw,"%% Function origin not found: "+param[1..]+"\n"); return 0;}
 		param=def;
 	}
-	if (has_value(param,":")) sscanf(param,"%s:",param); //Turn "cmd/update.pike:4" into "cmd/update.pike". Also protects against "c:\blah".
+
+	//Turn "cmd/update.pike:4" into "cmd/update.pike". This breaks on Windows path names, which
+	//may be a problem; to prevent issues, always use relative paths. Anything auto-loaded from
+	//either plugins/ or plugins-more/ will use a relative path, for obvious reasons, but if an
+	//external plugin is loaded from outside the Gypsum tree, it could be problematic. (This is
+	//an issue for loading plugins off a different drive, obviously. It is unsolvable for now.)
+	if (has_value(param,":")) sscanf(param,"%s:",param);
+
+	//Attempt to turn a base-name-only and/or a pathless name into a real name
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	if (!has_value(param,"/") && !file_stat(param))
 	{
