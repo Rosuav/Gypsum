@@ -105,11 +105,6 @@ class menu_clicked
 		}));
 	}
 
-	void load_content(mapping(string:mixed) info)
-	{
-		//Nothing to do!
-	}
-
 	void save_content(mapping(string:mixed) info)
 	{
 		persist["tune/thresholdrpg"]=tuned;
