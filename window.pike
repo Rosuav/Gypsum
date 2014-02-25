@@ -852,6 +852,7 @@ class fontdlg
 class keyboard
 {
 	inherit configdlg;
+	constant strings=({"cmd"});
 	mapping(string:mapping(string:mixed)) items=numpadnav;
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
 	void create() {::create("keyboard");}
@@ -925,13 +926,7 @@ class keyboard
 
 	void save_content(mapping(string:mixed) info)
 	{
-		info->cmd=win->cmd->get_text();
 		persist["window/numpadnav"]=numpadnav;
-	}
-
-	void load_content(mapping(string:mixed) info)
-	{
-		win->cmd->set_text(info->cmd||"");
 	}
 }
 
