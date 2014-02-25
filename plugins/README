@@ -148,7 +148,7 @@ the work of a config dialog - as long as your configuration fits in
 the provided framework. (If it doesn't, just use window/movablewindow
 and do everything directly.)
 
-Provide:
+Provide any or all of:
 
 mapping(string:mixed) windowprops=(["title":"Configure"]);
 //Create and return a widget (most likely a layout widget) representing all the custom content.
@@ -160,9 +160,6 @@ mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will gener
 void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
-
-Optionally also provide:
-
 string actionbtn; //(DEPRECATED) If set, a special "action button" will be included, otherwise not. This is its caption.
 void action_callback() { } //(DEPRECATED) Callback when the action button is clicked (provide if actionbtn is set)
 constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
@@ -174,7 +171,9 @@ constant bools=({"key","key","key"});
 constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
-examples using it (eg plugins/timer.pike) and replicate.
+examples using it (eg plugins/timer.pike) and replicate. Most of the elements
+have sane defaults; it's possible to create a fairly minimal configdlg by
+using persist_key, strings/ints/bools, and make_content() only.
 
 The simple bindings arrays are for the common case where a widget in win[]
 has the same name as a string or integer in info[]. In that case, you can
