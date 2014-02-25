@@ -13,10 +13,6 @@ void create(string n,string which)
 }
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
-/**
- * 
- *
- */
 class bouncer(string ... keys)
 {
 	mixed `()(mixed ... args)
@@ -39,10 +35,6 @@ class gtksignal(object obj)
 //Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
 //Recognizes a subset of strftime(3)'s formatting codes - notably not the locale-based ones.
 //Month/day names are not localized.
-/**
- * 
- *
- */
 string strftime(string format,int|mapping(string:int) tm)
 {
 	if (intp(tm)) tm=gmtime(tm);
