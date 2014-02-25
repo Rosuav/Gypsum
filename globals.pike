@@ -324,6 +324,7 @@ class configdlg
 	constant allow_rename=1; //Set to 0 to ignore changes to keywords
 	constant strings=({ }); //Simple string bindings - see plugins/README
 	constant ints=({ }); //Simple integer bindings, ditto
+	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -346,6 +347,7 @@ class configdlg
 		if (allow_rename) items[newkwd]=info;
 		foreach (strings,string key) info[key]=win[key]->get_text();
 		foreach (ints,string key) info[key]=(int)win[key]->get_text();
+		foreach (bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
 		if (newkwd!=oldkwd)
 		{
@@ -363,6 +365,7 @@ class configdlg
 		if (!kwd) return;
 		store->remove(iter);
 		foreach (strings+ints,string key) win[key]->set_text("");
+		foreach (bools,string key) win[key]->set_active(0);
 		delete_content(kwd,m_delete(items,kwd));
 	}
 
@@ -373,6 +376,7 @@ class configdlg
 		if (win->kwd) win->kwd->set_text(kwd || "");
 		foreach (strings,string key) win[key]->set_text((string)(info[key] || ""));
 		foreach (ints,string key) win[key]->set_text((string)info[key]);
+		foreach (bools,string key) win[key]->set_active((int)info[key]);
 		load_content(info);
 	}
 
