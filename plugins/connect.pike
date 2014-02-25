@@ -1,5 +1,7 @@
 inherit command;
 inherit configdlg;
+constant strings=({"name","host","logfile","descr","writeme"});
+constant ints=({"port"});
 
 /**
  * List of worlds available by default.
@@ -65,24 +67,13 @@ int listworlds(string param,mapping(string:mixed) subw)
 //---------------- Config dialog ----------------
 void save_content(mapping(string:mixed) info)
 {
-	info->name=win->name->get_text();
-	info->host=win->hostname->get_text();
-	info->port=(int)win->port->get_text();
-	info->logfile=win->logfile->get_text();
-	info->descr=win->descr->get_text();
-	info->writeme=win->writeme->get_text();
 	info->use_ka=win->use_ka->get_active();
 	persist["worlds"]=worlds;
 }
 
 void load_content(mapping(string:mixed) info)
 {
-	win->name->set_text(info->name || "");
-	win->hostname->set_text(info->host || "");
-	win->port->set_text((string)(info->port||"23"));
-	win->logfile->set_text(info->logfile || "");
-	win->descr->get_buffer()->set_text(info->descr || "",-1);
-	win->writeme->get_buffer()->set_text(info->writeme || "",-1);
+	if (!info->port) {info->port=23; win->port->set_text("23");}
 	win->use_ka->set_active(info->use_ka || zero_type(info->use_ka));
 }
 
@@ -102,7 +93,7 @@ GTK2.Widget make_content()
 		->pack_start(two_column(({
 			"Keyword",win->kwd=GTK2.Entry(),
 			"Name",win->name=GTK2.Entry(),
-			"Host name",win->hostname=GTK2.Entry(),
+			"Host name",win->host=GTK2.Entry(),
 			"Port",win->port=GTK2.Entry(),
 			"Auto-log",win->logfile=GTK2.Entry(),
 			"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
