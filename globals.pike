@@ -398,9 +398,9 @@ class configdlg
 					->add(make_content())
 				)
 				->pack_end(
-					win->buttonbox=(actionbtn?GTK2.Hbox(0,10)
+					win->buttonbox=(actionbtn?GTK2.HbuttonBox()
 					->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
-					:GTK2.Hbox(0,10))
+					:GTK2.HbuttonBox())
 					->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
 					->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1,"sensitive":allow_delete])))
 					->add(stock_close())
