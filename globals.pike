@@ -313,9 +313,9 @@ class configdlg
 	//it may be a GTK2.Label, or it may be omitted altogether).
 	GTK2.Widget make_content() { }
 	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
-	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping. The mapping is already inside items[], so this is also a good place to trigger a persist[] save.
+	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
-	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword. The mapping has already been removed from items[], so as above, save here.
+	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
 	//... optionally provide me...
 	string actionbtn; //If set, a special "action button" will be included, otherwise not. This is its caption.
 	void action_callback() { } //Callback when the action button is clicked (provide if actionbtn is set)
@@ -325,6 +325,7 @@ class configdlg
 	constant strings=({ }); //Simple string bindings - see plugins/README
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
+	constant persist_key=0; //(string) Set this to the persist[] key to automatically save items[] into after every edit
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -349,6 +350,7 @@ class configdlg
 		foreach (ints,string key) info[key]=(int)win[key]->get_text();
 		foreach (bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
+		if (persist_key) persist[persist_key]=items;
 		if (newkwd!=oldkwd)
 		{
 			[object iter,object store]=win->sel->get_selected();
@@ -367,6 +369,7 @@ class configdlg
 		foreach (strings+ints,string key) win[key]->set_text("");
 		foreach (bools,string key) win[key]->set_active(0);
 		delete_content(kwd,m_delete(items,kwd));
+		if (persist_key) persist[persist_key]=items;
 	}
 
 	void selchanged()
