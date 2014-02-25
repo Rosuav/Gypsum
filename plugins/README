@@ -249,7 +249,7 @@ happened.
 Local output can be produced on any subw:
 say(subw,"message");
 A subw of 0 means "whichever is current" and is appropriate when no
-subw reference is available. If additional arguments (after the say)
+subw reference is available. If additional arguments (after the message)
 are present, the message will be passed through sprintf(). Multiple
 lines of output can be produced; they will be processed separately.
 
