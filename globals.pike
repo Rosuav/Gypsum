@@ -362,6 +362,7 @@ class configdlg
 		string kwd=iter && store->get_value(iter,0);
 		if (!kwd) return;
 		store->remove(iter);
+		foreach (strings+ints,string key) win[key]->set_text("");
 		delete_content(kwd,m_delete(items,kwd));
 	}
 
