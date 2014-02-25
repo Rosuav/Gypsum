@@ -14,6 +14,8 @@ mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 ]));
 
 mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);
+//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
+//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
 string actionbtn="Save and C_onnect";
 
 /**
