@@ -370,7 +370,8 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
-		foreach (strings+ints,string key) win[key]->set_text((string)info[key]);
+		foreach (strings,string key) win[key]->set_text((string)(info[key] || ""));
+		foreach (ints,string key) win[key]->set_text((string)info[key]);
 		load_content(info);
 	}
 
