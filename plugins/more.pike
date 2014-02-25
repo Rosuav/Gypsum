@@ -13,7 +13,7 @@ have to compete for space.
 */
 
 //Prune the list of plugins to only what can be statted, and add any from plugins-more
-mapping(string:mapping(string:mixed)) prune()
+void prune()
 {
 	mapping(string:mapping(string:mixed)) items=persist->setdefault("plugins/more/list",([]));
 	foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
@@ -25,7 +25,6 @@ mapping(string:mapping(string:mixed)) prune()
 		items["plugins-more/"+fn]=(["active":compiled && compiled->plugin_active_by_default]);
 	}
 	persist->save(); //Autosave (even if nothing's changed, currently)
-	return items;
 }
 
 constant menu_label="More plugins";
@@ -40,9 +39,8 @@ class menu_clicked
 
 	void create()
 	{
-		items=prune();
+		prune();
 		::create("plugins/moreplugins");
-		showwindow();
 	}
 
 	GTK2.Widget make_content()
