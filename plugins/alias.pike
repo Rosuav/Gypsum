@@ -59,6 +59,7 @@ constant menu_label="Aliases";
 class menu_clicked
 {
 	inherit configdlg;
+	constant strings=({"expansion"});
 	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
 
 	void create()
@@ -72,25 +73,18 @@ class menu_clicked
 	{
 		return two_column(({
 			"Alias",win->kwd=GTK2.Entry(),
-			"Expansion",win->exp=GTK2.Entry(),
+			"Expansion",win->expansion=GTK2.Entry(),
 		}));
-	}
-
-	void load_content(mapping(string:mixed) info)
-	{
-		win->exp->set_text(info->expansion||"");
 	}
 
 	void save_content(mapping(string:mixed) info)
 	{
-		info->expansion=win->exp->get_text();
 		persist["aliases/simple"]=aliases;
 	}
 
 	void delete_content(string kwd,mapping(string:mixed) info)
 	{
 		persist["aliases/simple"]=aliases;
-		win->exp->set_text("");
 	}
 }
 
