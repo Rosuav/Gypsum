@@ -31,6 +31,8 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (!value) {conn->stats_laststr=line; return 0;}
 		if (!intp(value)) {say(conn->display,"%% Parse error: need an integer"); return 0;}
 		info->total+=value; ++info->count;
+		if (value>info->max) info->max=value;
+		if (!has_index(info,"min") || value<info->min) info->min=value;
 		persist["stats/monitors"]=monitors;
 		setstatus(sprintf("%s: %d -> %.2f",kwd,value,info->total/(float)info->count));
 	}
@@ -39,7 +41,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 int process(string param,mapping(string:mixed) subw)
 {
 	foreach (monitors;string kwd;mapping info) if (info->count)
-		say(subw,"%%%% %s: %d results averaging %.2f",kwd,info->count,info->total/(float)info->count);
+		say(subw,"%%%% %s: %d results %d-%d, averaging %.2f",kwd,info->count,info->min,info->max,info->total/(float)info->count);
 	return 1;
 }
 
