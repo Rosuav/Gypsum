@@ -329,6 +329,7 @@ void autoscroll(mapping subw)
 	if (!subw->autoscroll) {m_delete(subw,"autoscroll_callout"); return;}
 	subw->autoscroll_callout=call_out(autoscroll,0.1,subw);
 	subw->scr->set_value(limit(0.0,subw->scr->get_value()-subw->autoscroll,subw->scr->get_property("upper")-subw->scr->get_property("page size")));
+	//TODO: Trigger a mousemove with the mouse at its current location, to update highlight
 }
 
 /**
