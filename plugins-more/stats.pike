@@ -1,6 +1,6 @@
 inherit command;
 inherit hook;
-inherit statustext;
+inherit statusevent;
 
 /* Keep stats on lines of text with numbers in them.
 
@@ -44,5 +44,46 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%%%% %s: %d results %d-%d, averaging %.2f",kwd,info->count,info->min,info->max,info->total/(float)info->count);
 	return 1;
 }
+
+class statusbar_double_click
+{
+	inherit configdlg;
+	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
+	void create() {items=monitors; ::create("plugins/stats");}
+
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10)
+			->pack_start(two_column(({
+				"Keyword",win->kwd=GTK2.Entry(),
+				"Total",win->total=GTK2.Entry(),
+				"Count",win->count=GTK2.Entry(),
+				"Min",win->min=GTK2.Entry(),
+				"Max",win->max=GTK2.Entry(),
+			})),0,0,0)
+			->pack_start(GTK2.Frame("Pattern (capture with %d)")->add(
+				win->sscanf=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
+			),1,1,0);
+	}
+
+	void load_content(mapping(string:mixed) info)
+	{
+		win->sscanf->get_buffer()->set_text(info->sscanf || "");
+		foreach (({"total","count","min","max"}),string kw) win[kw]->set_text((string)info[kw]);
+	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		info->sscanf=win->sscanf->get_text();
+		foreach (({"total","count","min","max"}),string kw) info[kw]=(int)win[kw]->get_text();
+		persist["stats/monitors"]=items;
+	}
+
+	void delete_content(string kwd,mapping(string:mixed) info)
+	{
+		persist["stats/monitors"]=items;
+	}
+}
+
 
 void create(string name) {::create(name);}
