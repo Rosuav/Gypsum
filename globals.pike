@@ -325,7 +325,7 @@ class configdlg
 	constant strings=({ }); //Simple string bindings - see plugins/README
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
-	constant persist_key=0; //(string) Set this to the persist[] key to automatically save items[] into after every edit
+	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -350,7 +350,7 @@ class configdlg
 		foreach (ints,string key) info[key]=(int)win[key]->get_text();
 		foreach (bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
-		if (persist_key) persist[persist_key]=items;
+		if (persist_key) persist->save();
 		if (newkwd!=oldkwd)
 		{
 			[object iter,object store]=win->sel->get_selected();
@@ -369,7 +369,7 @@ class configdlg
 		foreach (strings+ints,string key) win[key]->set_text("");
 		foreach (bools,string key) win[key]->set_active(0);
 		delete_content(kwd,m_delete(items,kwd));
-		if (persist_key) persist[persist_key]=items;
+		if (persist_key) persist->save();
 	}
 
 	void selchanged()
@@ -386,6 +386,7 @@ class configdlg
 	void makewindow()
 	{
 		object ls=GTK2.ListStore(({"string"}));
+		if (persist_key && !items) items=persist[persist_key];
 		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
 		object new; if (allow_new) ls->set_value(new=ls->append(),0,"-- New --");
 		win->mainwindow=GTK2.Window(windowprops+(["transient-for":G->G->window->mainwindow]))

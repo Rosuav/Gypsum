@@ -171,7 +171,7 @@ constant allow_rename=1; //Set to 0 to ignore changes to keywords
 constant strings=({"key","key","key"}); //Simple bindings, see below
 constant ints=({"key","key","key"});
 constant bools=({"key","key","key"});
-constant persist_key="pluginname/whatever"; //Set this to the persist[] key to automatically save items[] into after every edit
+constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
 examples using it (eg plugins/timer.pike) and replicate.
