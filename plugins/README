@@ -168,9 +168,16 @@ void action_callback() { } //Callback when the action button is clicked (provide
 constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
 constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
 constant allow_rename=1; //Set to 0 to ignore changes to keywords
+constant strings=({"key","key","key"}); //Simple bindings, see below
+constant ints=({"key","key","key"});
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
 examples using it (eg plugins/timer.pike) and replicate.
+
+The simple bindings arrays are for the common case where a widget in win[]
+has the same name as a string or integer in info[]. In that case, you can
+simply list the keys in strings/ints and the saving and loading will be done
+for you (prior to save_content/load_content being called).
 
 Status text - 'inherit statustext'
 ----------------------------------

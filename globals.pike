@@ -322,6 +322,8 @@ class configdlg
 	constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
 	constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
 	constant allow_rename=1; //Set to 0 to ignore changes to keywords
+	constant strings=({ }); //Simple string bindings - see plugins/README
+	constant ints=({ }); //Simple integer bindings, ditto
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -342,6 +344,8 @@ class configdlg
 		if (!info)
 			if (allow_new) info=([]); else return;
 		if (allow_rename) items[newkwd]=info;
+		foreach (strings,string key) info[key]=win[key]->get_text();
+		foreach (ints,string key) info[key]=(int)win[key]->get_text();
 		save_content(info);
 		if (newkwd!=oldkwd)
 		{
@@ -366,6 +370,7 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
+		foreach (strings+ints,string key) win[key]->set_text((string)info[key]);
 		load_content(info);
 	}
 
