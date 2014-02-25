@@ -990,7 +990,7 @@ class promptsdlg
 			}),(["wrap":1,"justify":GTK2.JUSTIFY_LEFT,"xalign":0.0]))))
 			->add(GTK2.HbuttonBox()
 				->add(win->pb_ok=GTK2.Button("OK")) //TODO: Use stock?
-				->add(win->pb_cancel=GTK2.Button("Cancel"))
+				->add(stock_close())
 			)
 		);
 		win->allpseudo->set_active(persist["prompt/pseudo"]==1.0);
@@ -1010,7 +1010,6 @@ class promptsdlg
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->pb_ok,"clicked",pb_ok_click),
-			gtksignal(win->pb_cancel,"clicked",closewindow),
 		});
 	}
 }
