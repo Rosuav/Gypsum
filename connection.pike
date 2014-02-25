@@ -241,6 +241,7 @@ int dohooks(mapping conn,string line)
 int sockclosed(mapping conn)
 {
 	say(conn->display,"%%% Disconnected from server.");
+	G->G->window->unpassword(conn->display);
 	conn->display->prompt=({([])});
 	G->G->sockets[conn->sock]=0;
 	conn->sock=0; //Break refloop
