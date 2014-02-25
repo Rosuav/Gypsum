@@ -15,7 +15,7 @@ have to compete for space.
 //Prune the list of plugins to only what can be statted, and add any from plugins-more
 mapping(string:mapping(string:mixed)) prune()
 {
-	mapping(string:mapping(string:mixed)) items=persist["plugins/more/list"]||([]);
+	mapping(string:mapping(string:mixed)) items=persist->setdefault("plugins/more/list",([]));
 	foreach (items;string fn;mapping plg) if (!file_stat(fn)) m_delete(items,fn);
 	foreach (get_dir("plugins-more"),string fn) if (has_suffix(fn,".pike") && !items["plugins-more/"+fn])
 	{
@@ -24,7 +24,7 @@ mapping(string:mapping(string:mixed)) prune()
 		program compiled; catch {compiled=compile_file("plugins-more/"+fn);};
 		items["plugins-more/"+fn]=(["active":compiled && compiled->plugin_active_by_default]);
 	}
-	persist["plugins/more/list"]=items; //Autosave (even if nothing's changed, currently)
+	persist->save(); //Autosave (even if nothing's changed, currently)
 	return items;
 }
 

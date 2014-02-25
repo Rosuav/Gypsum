@@ -17,10 +17,10 @@ Normally, I expect this to be treated as read-only, or maybe someone will clear 
 but technically, any edit can be done.
 */
 
-mapping(string:mapping(string:mixed)) monitors=persist["stats/monitors"] || ([
+mapping(string:mapping(string:mixed)) monitors=persist->setdefault("stats/monitors",([
 	"raki_hold":(["sscanf":"You complete the process of disintegrating your flagon of raki and are"]),
 	"raki":(["sscanf":"You complete the process of disintegrating your flagon of raki and are%*[ ]rewarded with %d handfuls of metal particles ready to be molded by"]),
-]);
+]));
 
 int outputhook(string line,mapping(string:mixed) conn)
 {

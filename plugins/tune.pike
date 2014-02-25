@@ -7,7 +7,7 @@ inherit command;
 inherit hook;
 inherit plugin_menu;
 
-mapping(string:mapping(string:mixed)) tuned = persist["tune/thresholdrpg"] || ([]); //Persist key permits other systems to be added.
+mapping(string:mapping(string:mixed)) tuned = persist->setdefault("tune/thresholdrpg", ([])); //Persist key permits other systems to be added.
 constant channels=(<"-{Citizen}-","[court]","[trivia]","[sports]">); //TODO: Make configurable, now that it's easy
 
 int outputhook(string line,mapping(string:mixed) conn)

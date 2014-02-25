@@ -8,10 +8,10 @@ constant persist_key="worlds";
 /**
  * List of worlds available by default.
  */
-mapping(string:mapping(string:mixed)) worlds=persist["worlds"] || ([
+mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
-]);
+]));
 
 mapping(string:mapping(string:mixed)) items=worlds;
 mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);

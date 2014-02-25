@@ -5,11 +5,11 @@ constant defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
 array(GTK2.GdkColor) colors;
 
-mapping(string:mapping(string:mixed)) channels=persist["color/channels"] || ([]);
+mapping(string:mapping(string:mixed)) channels=persist->setdefault("color/channels",([]));
 constant deffont="Monospace 10";
-mapping(string:mapping(string:mixed)) fonts=persist["window/font"] || (["display":(["name":deffont]),"input":(["name":deffont])]);
-mapping(string:mapping(string:mixed)) numpadnav=persist["window/numpadnav"] || ([]); //Technically doesn't have to be restricted to numpad.
-multiset(string) numpadspecial=persist["window/numpadspecial"] || (<"look", "glance", "l", "gl">); //Commands that don't get prefixed with 'go ' in numpadnav
+mapping(string:mapping(string:mixed)) fonts=persist->setdefault("window/font",(["display":(["name":deffont]),"input":(["name":deffont])]));
+mapping(string:mapping(string:mixed)) numpadnav=persist->setdefault("window/numpadnav",([])); //Technically doesn't have to be restricted to numpad.
+multiset(string) numpadspecial=persist->setdefault("window/numpadspecial", (<"look", "glance", "l", "gl">)); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
 GTK2.Window mainwindow;
@@ -787,7 +787,6 @@ class channelsdlg
 	inherit configdlg;
 	constant ints=({"r","g","b"});
 	constant persist_key="color/channels";
-	mapping(string:mapping(string:mixed)) items=channels;
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
 	void create() {::create("channelsdlg");}
 

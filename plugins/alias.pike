@@ -8,7 +8,7 @@ inherit plugin_menu;
 // Mapping     Mapping
 // |==========||=============================|
 // <alias key>  [expansion] <expansion value>
-mapping(string:mapping(string:mixed)) aliases=persist["aliases/simple"]||([]);
+mapping(string:mapping(string:mixed)) aliases=persist->setdefault("aliases/simple",([]));
 
 int process(string param,mapping(string:mixed) subw)
 {

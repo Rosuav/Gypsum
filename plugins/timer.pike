@@ -15,7 +15,7 @@ rates, and leave the text blank. Then let the magic happen. :) */
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
-mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
+mapping(string:mapping(string:mixed)) timers=persist->setdefault("timer/timers",([]));
 
 int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
 
