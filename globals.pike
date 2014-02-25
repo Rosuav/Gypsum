@@ -461,6 +461,29 @@ class statustext
 	void setstatus(string txt) {statustxt->lbl->set_text(txt);}
 }
 
+//Like statustext, but has an eventbox and responds to a double-click.
+class statusevent
+{
+	inherit statustext;
+	void create(string name)
+	{
+		::create(name);
+		statustxt->signals=({gtksignal(statustxt->evbox,"button_press_event",mousedown)});
+	}
+
+	GTK2.Widget makestatus()
+	{
+		return statustxt->evbox=GTK2.EventBox()->add(::makestatus());
+	}
+
+	void mousedown(object self,object ev)
+	{
+		if (ev->type=="2button_press") statusbar_double_click();
+	}
+
+	void statusbar_double_click() {/* Override me */}
+}
+
 string gypsum_version()
 {
 	return String.trim_all_whites(Stdio.read_file("VERSION"));
