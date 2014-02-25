@@ -401,7 +401,9 @@ void redraw(mapping subw)
 	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
 	if (height!=subw->totheight) subw->display->set_size_request(-1,subw->totheight=height);
 	if (subw==current_subw()) subw->activity=0;
-	notebook->set_tab_label_text(subw->page,"* "*subw->activity+subw->tabtext);
+	//Check the current tab text before overwriting, to minimize flicker
+	string tabtext="* "*subw->activity+subw->tabtext;
+	if (notebook->get_tab_label_text(subw->page)!=tabtext) notebook->set_tab_label_text(subw->page,tabtext);
 	subw->maindisplay->queue_draw();
 }
 
