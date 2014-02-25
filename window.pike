@@ -652,11 +652,8 @@ int keypress(object self,array|object ev,mapping subw)
 /**
  *
  */
-int enterpressed(mapping subw,string|void cmd)
+void enterpressed(mapping subw,string|void cmd)
 {
-	//TODO: Figure out what the return value is supposed to mean.
-	//It's used only in COMPAT_SIGNAL mode, and it seems a little inconsistent.
-	//I think this probably ought to just return void.
 	if (!cmd) {cmd=subw->ef->get_text(); subw->ef->set_text("");}
 	subw->histpos=-1;
 	subw->prompt[0]->timestamp=time(1);
@@ -672,12 +669,11 @@ int enterpressed(mapping subw,string|void cmd)
 	{
 		redraw(subw);
 		sscanf(cmd,"/%[^ ] %s",cmd,string args);
-		if (G->G->commands[cmd] && G->G->commands[cmd](args||"",subw)) return 0;
+		if (G->G->commands[cmd] && G->G->commands[cmd](args||"",subw)) return;
 		say(subw,"%% Unknown command.");
 		return 0;
 	}
 	execcommand(subw,cmd,0);
-	return 1;
 }
 
 /**
@@ -1167,7 +1163,8 @@ int enterpressed_glo(object self)
 	object focus=mainwindow->get_focus();
 	object parent=focus->get_parent();
 	while (parent->get_name()!="GtkNotebook") parent=(focus=parent)->get_parent();
-	return enterpressed(tabs[parent->page_num(focus)]);
+	enterpressed(tabs[parent->page_num(focus)]);
+	return 1;
 }
 
 /**
