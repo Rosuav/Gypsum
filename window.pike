@@ -863,7 +863,9 @@ class keyboard
 	void makewindow()
 	{
 		::makewindow();
-		//Add a button to the bottom row
+		//Add a button to the bottom row. Note that this is coming up at the far right,
+		//which I'm not happy with; I'd rather put it in the middle somewhere. But packing
+		//buttons from the start/end doesn't seem to make any difference to an HbuttonBox.
 		win->buttonbox->add(win->pb_std=GTK2.Button((["label":"Standard","use-underline":1])));
 	}
 
