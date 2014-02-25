@@ -13,7 +13,6 @@ mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
 ]));
 
-mapping(string:mapping(string:mixed)) items=worlds;
 mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);
 string actionbtn="Save and C_onnect";
 

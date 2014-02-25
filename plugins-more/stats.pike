@@ -51,7 +51,7 @@ class statusbar_double_click
 	constant strings=({"sscanf"});
 	constant persist_key="stats/monitors";
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
-	void create() {items=monitors; ::create("plugins/stats");}
+	void create() {::create("plugins/stats");}
 
 	GTK2.Widget make_content()
 	{

@@ -813,7 +813,6 @@ class channelsdlg
 class fontdlg
 {
 	inherit configdlg;
-	mapping(string:mapping(string:mixed)) items=fonts;
 	constant persist_key="window/font";
 	constant allow_new=0;
 	void create() {::create("fontdlg");}
@@ -849,7 +848,6 @@ class keyboard
 	inherit configdlg;
 	constant strings=({"cmd"});
 	constant persist_key="window/numpadnav";
-	mapping(string:mapping(string:mixed)) items=numpadnav;
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
 	void create() {::create("keyboard");}
 

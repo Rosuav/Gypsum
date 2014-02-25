@@ -63,12 +63,7 @@ class menu_clicked
 	constant persist_key="aliases/simple";
 	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
 
-	void create()
-	{
-		items=aliases;
-		::create("Alias");
-		::showwindow();
-	}
+	void create() {::create("Alias");}
 
 	GTK2.Widget make_content() 
 	{
