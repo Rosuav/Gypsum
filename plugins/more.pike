@@ -72,8 +72,8 @@ void load_all()
 {
 	if (!G->G->commands->update) {call_out(load_all,0); return;} //Can't load other plugins without the /update command
 	function build=function_object(G->G->commands->update)->build;
-	foreach (persist["plugins/more/list"]||([]);string fn;mapping plg)
-		if (plg->active) build(fn);
+	foreach (sort(indices(persist["plugins/more/list"])),string fn)
+		if (persist["plugins/more/list"][fn]->active) build(fn);
 }
 
 void create(string name)
