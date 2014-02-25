@@ -3,6 +3,7 @@ inherit configdlg;
 constant strings=({"name","host","logfile","descr","writeme"});
 constant ints=({"port"});
 constant bools=({"use_ka"});
+constant persist_key="worlds";
 
 /**
  * List of worlds available by default.
@@ -66,11 +67,6 @@ int listworlds(string param,mapping(string:mixed) subw)
 }
 
 //---------------- Config dialog ----------------
-void save_content(mapping(string:mixed) info)
-{
-	persist["worlds"]=worlds;
-}
-
 void load_content(mapping(string:mixed) info)
 {
 	if (!info->port) {info->port=23; win->port->set_text("23");}

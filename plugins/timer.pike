@@ -52,6 +52,7 @@ class config
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
 	constant strings=({"trigger"});
 	constant bools=({"present"});
+	constant persist_key="timer/timers";
 	void create() {items=timers; ::create("plugins/timer"); showwindow();}
 
 	GTK2.Widget make_content()
@@ -75,13 +76,11 @@ class config
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
-		persist["timer/timers"]=timers;
 		makelabels();
 	}
 
 	void delete_content(string kwd,mapping(string:mixed) info)
 	{
-		persist["timer/timers"]=timers;
 		makelabels();
 	}
 }

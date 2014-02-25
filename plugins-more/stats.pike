@@ -48,6 +48,7 @@ class statusbar_double_click
 	inherit configdlg;
 	constant ints=({"total","count","min","max"});
 	constant strings=({"sscanf"});
+	constant persist_key="stats/monitors";
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
 	void create() {items=monitors; ::create("plugins/stats");}
 
@@ -64,16 +65,6 @@ class statusbar_double_click
 			->pack_start(GTK2.Frame("Pattern (capture with %d)")->add(
 				win->sscanf=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);
-	}
-
-	void save_content(mapping(string:mixed) info)
-	{
-		persist["stats/monitors"]=items;
-	}
-
-	void delete_content(string kwd,mapping(string:mixed) info)
-	{
-		persist["stats/monitors"]=items;
 	}
 }
 

@@ -34,6 +34,7 @@ class menu_clicked
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Load more plugins"]);
 	constant allow_rename=0;
+	constant persist_key="plugins/more/list";
 	//NOTE: Cannot use simple bindings as it needs to know the previous state
 	//Note also: This does not unload plugins on deactivation. Maybe it should?
 
@@ -64,12 +65,6 @@ class menu_clicked
 		int nowactive=win->active->get_active();
 		if (!info->active && nowactive) function_object(G->G->commands->update)->build(selecteditem());
 		info->active=nowactive;
-		persist["plugins/more/list"]=items;
-	}
-
-	void delete_content(string kwd,mapping(string:mixed) info)
-	{
-		persist["plugins/more/list"]=items;
 	}
 }
 

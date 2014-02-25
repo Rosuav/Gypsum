@@ -786,6 +786,7 @@ class channelsdlg
 {
 	inherit configdlg;
 	constant ints=({"r","g","b"});
+	constant persist_key="color/channels";
 	mapping(string:mapping(string:mixed)) items=channels;
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
 	void create() {::create("channelsdlg");}
@@ -804,11 +805,6 @@ class channelsdlg
 		}));
 	}
 
-	void save_content(mapping(string:mixed) info)
-	{
-		persist["color/channels"]=channels;
-	}
-
 	void load_content(mapping(string:mixed) info)
 	{
 		if (zero_type(info["r"])) {info->r=info->g=info->b=255; ({win->r,win->g,win->b})->set_text("255");}
@@ -819,6 +815,7 @@ class fontdlg
 {
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=fonts;
+	constant persist_key="window/font";
 	constant allow_new=0;
 	void create() {::create("fontdlg");}
 
@@ -837,7 +834,6 @@ class fontdlg
 		if (info->name==name) return; //No change, no need to dump the cached object
 		info->name=name;
 		m_delete(fontdesc,name);
-		persist["window/font"]=fonts;
 		setfonts(tabs[*]);
 		redraw(tabs[*]);
 		tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
@@ -853,6 +849,7 @@ class keyboard
 {
 	inherit configdlg;
 	constant strings=({"cmd"});
+	constant persist_key="window/numpadnav";
 	mapping(string:mapping(string:mixed)) items=numpadnav;
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
 	void create() {::create("keyboard");}
@@ -922,11 +919,6 @@ class keyboard
 			#endif
 			gtksignal(win->pb_std,"clicked",pb_std),
 		});
-	}
-
-	void save_content(mapping(string:mixed) info)
-	{
-		persist["window/numpadnav"]=numpadnav;
 	}
 }
 
