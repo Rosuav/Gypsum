@@ -50,6 +50,8 @@ class config
 {
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
+	constant strings=({"trigger"});
+	constant bools=({"present"});
 	void create() {items=timers; ::create("plugins/timer"); showwindow();}
 
 	GTK2.Widget make_content()
@@ -68,15 +70,11 @@ class config
 	void load_content(mapping(string:mixed) info)
 	{
 		win->time->set_text(format_time(info->time,info->time));
-		win->trigger->get_buffer()->set_text(info->trigger || "");
-		win->present->set_active(info->present);
 	}
 
 	void save_content(mapping(string:mixed) info)
 	{
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
-		info->trigger=win->trigger->get_text();
-		info->present=win->present->get_active();
 		persist["timer/timers"]=timers;
 		makelabels();
 	}
