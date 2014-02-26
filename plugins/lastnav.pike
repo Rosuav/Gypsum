@@ -1,3 +1,5 @@
+//Extremely simple and rudimentary command to show the numpad nav cache
+//See window.pike for what this is actually accomplishing :)
 inherit command;
 
 int process(string param,mapping(string:mixed) subw)
