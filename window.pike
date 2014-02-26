@@ -656,6 +656,7 @@ int keypress(object self,array|object ev,mapping subw)
 	if (mapping numpad=numpadnav[sprintf("%x",ev->keyval)])
 	{
 		string cmd=numpad->cmd;
+		//Should *all* slash commands be permitted? That might be clean.
 		if (cmd=="/lastnav") {G->G->commands->lastnav("",subw); return 1;}
 		if (!numpadspecial[cmd] && !has_prefix(cmd,"go ")) cmd="go "+cmd;
 		if (!subw->lastnav) subw->lastnav=({ });
