@@ -44,12 +44,16 @@ object persist=class(string savefn)
 		};
 	}
 
+	//Capture rewrite locations for investigation
+	multiset(string) rewrites=(<>);
+
 	/**
 	 * Retrievals and mutations work as normal; mutations trigger a save().
 	 */
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
+		if (data[idx]==val) rewrites[sprintf("%s:%d",@backtrace()[-2][..1])]=1;
 		save();
 		return data[idx]=val;
 	}
