@@ -1,5 +1,8 @@
 //Extremely simple and rudimentary command to show the numpad nav cache
 //See window.pike for what this is actually accomplishing :)
+//TODO: Make this more discoverable somehow. It doesn't want to be on the
+//status bar, nor does it need a menu item. Would it be good to have this
+//in a window?? Probably a bit costly in real-estate.
 inherit command;
 
 int process(string param,mapping(string:mixed) subw)
