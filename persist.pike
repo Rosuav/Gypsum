@@ -44,7 +44,13 @@ object persist=class(string savefn)
 		};
 	}
 
-	//Capture rewrite locations for investigation
+	//Capture rewrite locations for investigation. Prior to e8b155, the common
+	//idiom was "persist[some_key]=existing_value;" to trigger a save; now, the
+	//preferred idiom is "persist->save();". Any time an unnecessary mutation
+	//is done (defined by setting it to what it already is), log the source file
+	//and line into here. Query that with "/x persist->rewrites" at any time.
+	//Not everything in this will actually need rewriting; consider them to be
+	//code smell. Once most of them are caught, this code can be commented out.
 	multiset(string) rewrites=(<>);
 
 	/**
