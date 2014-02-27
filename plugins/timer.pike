@@ -109,7 +109,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		{
 			tm->next=time(1)+tm->time;
 			win->timers[i]->set_text(format_time(tm->next-time(1),tm->time));
-			persist["timer/timers"]=timers;
+			persist->save();
 		}
 	}
 }
