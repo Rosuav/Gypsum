@@ -45,8 +45,8 @@ int process(string param,mapping(string:mixed) subw)
 	else
 	{
 		aliases[param] = (["expansion":expansion]);
+		persist->save();
 		say(subw,"%% Aliased.");
-		persist["aliases/simple"]=aliases; //Force persist to save
 	}
 	return 1;
 }
