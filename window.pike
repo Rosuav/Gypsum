@@ -661,7 +661,8 @@ int keypress(object self,array|object ev,mapping subw)
 		if (!numpadspecial[cmd] && !has_prefix(cmd,"go ")) cmd="go "+cmd;
 		if (!subw->lastnav) subw->lastnav=({ });
 		if (has_prefix(cmd,"go ")) subw->lastnav+=({cmd[3..]});
-		send(subw->connection,cmd+"\r\n");
+		if (persist["window/numpadecho"]) enterpressed(subw,cmd);
+		else send(subw->connection,cmd+"\r\n");
 		return 1;
 	}
 }
