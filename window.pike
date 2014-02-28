@@ -912,7 +912,7 @@ class keyboard
 			}
 			else numpadnav["ffb"+i]->cmd=cmd;
 		}
-		persist["window/numpadnav"]=numpadnav;
+		persist->save();
 		selchanged();
 	}
 
