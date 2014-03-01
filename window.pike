@@ -312,7 +312,8 @@ void mousemove(object self,object ev,mapping subw)
 		//Add further meta-information display here
 	}; //Ignore errors
 	setstatus(txt);
-	if (subw->mouse_down && (line!=subw->selendline || col!=subw->selendcol))
+	if (!subw->mouse_down) return; //All below depends on having the mouse button held down.
+	if (line!=subw->selendline || col!=subw->selendcol)
 	{
 		subw->mouse_down=2; //Mouse has moved.
 		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
