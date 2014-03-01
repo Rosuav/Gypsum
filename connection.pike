@@ -65,6 +65,7 @@ protected string bytes_to_string(string bytes)
 void textread(mapping conn,string data)
 {
 	//werror("textread: %O\n",data);
+	if (arrayp(conn->textreads)) conn->textreads+=({data});
 	if (sizeof(data) && data[0]=='\n' && conn->lastcr) data=data[1..];
 	conn->lastcr=sizeof(data) && data[-1]=='\r';
 	data=replace(data,({"\r\n","\n\r","\r"}),"\n");
@@ -129,6 +130,7 @@ void textread(mapping conn,string data)
 void ansiread(mapping conn,string data)
 {
 	//werror("ansiread: %O\n",data);
+	if (arrayp(conn->ansireads)) conn->ansireads+=({data});
 	conn->ansibuffer+=data;
 	while (sscanf(conn->ansibuffer,"%s\x1b%s",string data,string ansi)) if (mixed ex=catch
 	{
