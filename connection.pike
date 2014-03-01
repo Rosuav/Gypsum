@@ -155,7 +155,7 @@ void ansiread(mapping conn,string data)
 		}
 		conn->ansibuffer=ansi;
 	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
-	textread(conn,conn->ansibuffer); conn->ansibuffer="";
+	string tmp=conn->ansibuffer; conn->ansibuffer=""; textread(conn,tmp); //Clear the buffer before passing through to textread()
 }
 
 enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
@@ -224,7 +224,7 @@ void sockread(mapping conn,string data)
 		}
 		conn->readbuffer=iac;
 	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
-	ansiread(conn,bytes_to_string(conn->readbuffer)); conn->readbuffer="";
+	string tmp=bytes_to_string(conn->readbuffer); conn->readbuffer=""; ansiread(conn,tmp); //Clear the buffer before passing through to ansiread()
 }
 
 /**
