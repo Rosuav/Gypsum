@@ -33,7 +33,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (value>info->max) info->max=value;
 		if (!has_index(info,"min") || value<info->min) info->min=value;
 		persist["stats/monitors"]=monitors;
-		setstatus(sprintf("%s: %d -> %.2f",kwd,value,info->total/(float)info->count));
+		setstatus(sprintf("%s %.2f",kwd,info->total/(float)info->count));
 	}
 }
 
