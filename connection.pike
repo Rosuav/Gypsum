@@ -61,8 +61,9 @@ protected string bytes_to_string(string bytes)
  *
  * @param conn Current connection
  * @param data Bytes from socket, with newlines separating lines
+ * @param end_of_block 1 if we're at the very end of a block of reading
  */
-void textread(mapping conn,string data)
+void textread(mapping conn,string data,int end_of_block)
 {
 	//werror("textread: %O\n",data);
 	if (arrayp(conn->textreads)) conn->textreads+=({data});
@@ -96,7 +97,7 @@ void textread(mapping conn,string data)
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
-	if (conn->ansibuffer!="" || conn->readbuffer!="") return; //It's not the end of a socket-read if we have anything in buffer.
+	if (!end_of_block) return; //Check for prompts only at the end of a block of data from the socket
 	string prompt_suffix = persist["prompt/suffix"] || "==> "; //This may become conn->prompt_suffix and world-configurable.
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
@@ -126,8 +127,9 @@ void textread(mapping conn,string data)
  *
  * @param conn Current connection
  * @param data Unicode data from socket, with ANSI codes marking colors
+ * @param end_of_block 1 if we're at the very end of a block of reading
  */
-void ansiread(mapping conn,string data)
+void ansiread(mapping conn,string data,int end_of_block)
 {
 	//werror("ansiread: %O\n",data);
 	if (arrayp(conn->ansireads)) conn->ansireads+=({data});
@@ -135,9 +137,9 @@ void ansiread(mapping conn,string data)
 	while (sscanf(conn->ansibuffer,"%s\x1b%s",string data,string ansi)) if (mixed ex=catch
 	{
 		//werror("HAVE ANSI CODE\nPreceding data: %O\nANSI code and subsequent: %O\n",data,ansi);
-		textread(conn,data); conn->ansibuffer="\x1b"+ansi;
+		textread(conn,data,0); conn->ansibuffer="\x1b"+ansi;
 		//werror("ANSI code: %O\n",(ansi/"m")[0]);
-		if (ansi[0]!='[') {textread(conn,"\\e"); conn->ansibuffer=ansi; continue;} //Report an escape character as the literal string "\e" if it doesn't start an ANSI code
+		if (ansi[0]!='[') {textread(conn,"\\e",0); conn->ansibuffer=ansi; continue;} //Report an escape character as the literal string "\e" if it doesn't start an ANSI code
 		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, leave the unprocessed text and wait for more data from the socket.
 		{
 			case '3': conn->fg=ansi[++i]-'0'; break;
@@ -155,7 +157,7 @@ void ansiread(mapping conn,string data)
 		}
 		conn->ansibuffer=ansi;
 	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
-	string tmp=conn->ansibuffer; conn->ansibuffer=""; textread(conn,tmp); //Clear the buffer before passing through to textread()
+	textread(conn,conn->ansibuffer,end_of_block); conn->ansibuffer="";
 }
 
 enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
@@ -173,7 +175,7 @@ void sockread(mapping conn,string data)
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
-		ansiread(conn,bytes_to_string(data)); conn->readbuffer="\xff"+iac;
+		ansiread(conn,bytes_to_string(data),0); conn->readbuffer="\xff"+iac;
 		switch (iac[0])
 		{
 			case IAC: data+="\xFF"; iac=iac[1..]; break;
@@ -224,7 +226,7 @@ void sockread(mapping conn,string data)
 		}
 		conn->readbuffer=iac;
 	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
-	string tmp=bytes_to_string(conn->readbuffer); conn->readbuffer=""; ansiread(conn,tmp); //Clear the buffer before passing through to ansiread()
+	ansiread(conn,bytes_to_string(conn->readbuffer),1); conn->readbuffer="";
 }
 
 /**
