@@ -145,6 +145,8 @@ void scrchange(object self,mapping subw)
 	//Is it possible there are different GTK versions available? Get people to check Pike and GTK versions.
 	//20140302: YES! The version I'm running has a newer GTK than the version Bod has. Now, how to upgrade
 	//GTK when it's the same Pike... hrm... weird.
+	//20140303: Oh! I upgraded GTK manually on Traal. No wonder! Okay. Will play around with this and fix
+	//the problem. Might also offer a simple download-and-patch system alongside Gypsum.
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	self->set_value(upper-self->get_property("page size"));
