@@ -143,6 +143,8 @@ void scrchange(object self,mapping subw)
 	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
 	//Note that I (CJA) haven't been seeing this, even on Windows. Not sure why. Must investigate.
 	//Is it possible there are different GTK versions available? Get people to check Pike and GTK versions.
+	//20140302: YES! The version I'm running has a newer GTK than the version Bod has. Now, how to upgrade
+	//GTK when it's the same Pike... hrm... weird.
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	self->set_value(upper-self->get_property("page size"));
