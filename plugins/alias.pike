@@ -30,7 +30,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% Remove an alias: /alias keyword");
 		say(subw,"%% Enumerate aliases: /alias");
 		say(subw,"%% In an alias, the marker %* will be replaced by all arguments:");
-		say(subw,"%%   /alias speak say Sir! %s Sir!");
+		say(subw,"%%   /alias speak say Sir! %* Sir!");
 		say(subw,"%%   speak Hello!");
 		say(subw,"%%   --> say Sir! Hello! Sir!");
 		return 1;
