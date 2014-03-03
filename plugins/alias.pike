@@ -35,7 +35,6 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%%   --> say Sir! Hello! Sir!");
 		return 1;
 	}
-	if (!aliases) persist["aliases/simple"]=aliases=([]);
 	sscanf(param,"%s %s",param,string expansion);
 	if (!expansion || expansion=="") //Unalias
 	{
