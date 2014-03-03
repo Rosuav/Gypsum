@@ -443,6 +443,7 @@ black as 1<<16 - although the latter wouldn't be too terrible, as it could be
 parsed out reasonably cleanly. The worst case is that a user's active scrollback
 at time of update will (partially or completely) turn black when it should have
 been white. See also comments in paintline(). */
+//TODO maybe maybe maybe: 256 color mode???
 object mkcolor(int fg,int bg)
 {
 	return colors[fg];
