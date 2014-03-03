@@ -107,7 +107,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	//mapping, rather than storing the object or function directly. But that would be
 	//overkill in other areas... warping other code for the sake of this is backward,
 	//so make changes ONLY if it's an improvement elsewhere.
-	function reallydelete=lambda(object self,string desc)
+	int reallydelete(object self,string desc)
 	{
 		if (self==keepme) say(subw,"%% (current) "+desc);
 		else if (keepme) say(subw,"%% (old) "+desc);

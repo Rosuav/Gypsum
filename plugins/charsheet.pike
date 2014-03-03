@@ -156,7 +156,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				type,(array)symbols,formula
 			))()->_;
 			//Phase two: Snapshot a few extra bits of info via a closure.
-			function f2=lambda(mapping data,multiset beenthere)
+			void f2(mapping data,multiset beenthere)
 			{
 				string val=(string)f1(data);
 				if (name) set_value(name,val,beenthere);
@@ -432,7 +432,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						}
 						synergy_desc=noex(GTK2.Button(""));
 						array(array(string)) full_desc; //Shared state between the two closures, nothing more
-						function recalc=lambda(mapping data,multiset beenthere)
+						void recalc(mapping data,multiset beenthere)
 						{
 							int mod=0;
 							full_desc=({({"Synergy","Value"})});
