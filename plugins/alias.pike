@@ -54,15 +54,14 @@ int inputhook(string line,mapping(string:mixed) subw)
 {
 	sscanf(line,"%s %s",line,string args);
 	if (mapping(string:mixed) alias=aliases[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
+	if (mapping worldalias=subw->world && persist["aliases/simple/"+subw->world])
+		if (mapping(string:mixed) alias=worldalias[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
 }
 
-//Plugin menu takes us straight into the config dlg
-constant menu_label="Aliases";
-class menu_clicked
+class aliasdlg(string persist_key)
 {
 	inherit configdlg;
 	constant strings=({"expansion"});
-	constant persist_key="aliases/simple";
 	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
 	void create() {::create("Alias");}
 
@@ -74,6 +73,17 @@ class menu_clicked
 		}));
 	}
 }
+
+constant menu_label="Aliases - global";
+void menu_clicked() {aliasdlg("aliases/simple");}
+
+//Hack: A second plugin menu item.
+object hack=class {inherit plugin_menu; constant menu_label="Aliases - this world"; void menu_clicked()
+{
+	mapping subw=G->G->window->current_subw(); if (!subw || !subw->world) return;
+	persist->setdefault("aliases/simple/"+subw->world,([]));
+	aliasdlg("aliases/simple/"+subw->world);
+}}("plugins/alias.pike/more");
 
 void create(string name)
 {
