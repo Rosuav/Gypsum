@@ -234,7 +234,7 @@ void sockread(mapping conn,string data)
  */
 int dohooks(mapping conn,string line)
 {
-	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency
+	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency. TODO: Keep 'em sorted, for efficiency? Profile this.
 	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) say(conn->display,"Error in hook: "+describe_backtrace(ex));
 }
 
