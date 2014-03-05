@@ -51,7 +51,7 @@ mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
 	tabs+=({subw});
-	//Build the window
+	//Build the subwindow
 	notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
 			->add(subw->display=GTK2.DrawingArea())
@@ -60,7 +60,8 @@ mapping(string:mixed) subwindow(string txt)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(tabs)-1);
 	//Note: It'd be nice if Ctrl-Z could do an Undo in in subw->ef. It's
-	//probably impractical though - GTK doesn't offer that.
+	//probably impractical though - GTK doesn't offer that directly, I'd
+	//have to do the work myself.
 	setfonts(subw);
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
