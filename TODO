@@ -7,6 +7,7 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Cross-platform safety check: copy/paste of huge amounts of text, does it crash? Do I need to protect against it?
 * Code model/layout check: standardize on composition not inheritance, don't "inherit configdlg" and leave it hidden.
+* Helper function for GTK2.MessageDialog. Not sure what the best way to do it is, but I see code dup everywhere.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
