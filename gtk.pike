@@ -41,12 +41,26 @@ array(string) files=({"freetype6.dll","intl.dll","libatk-1.0-0.dll","libcairo-2.
 //Place to fetch 'em from, as of 20130304
 string url="http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_2.24.10-20120208_win32.zip";
 
+void cleanup(object self,int response) {self->destroy();}
+
+void msgresponse(object self,int response)
+{
+	self->destroy();
+	if (response==GTK2.RESPONSE_OK)
+		GTK2.MessageDialog(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Currently unimplemented, sorry!")
+			->show()->signal_connect("response",cleanup);
+}
+
 void create()
 {
 	if ((string)GTK2.version()=="\2\30\12")
 	{
-		say(0,"%% Already on GTK 2.24.10, nothing to do.");
+		GTK2.MessageDialog(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Already on GTK 2.24.10, nothing to do.")
+			->show()->signal_connect("response",cleanup);
 		return;
 	}
-	say(0,"%% Currently you're on %d.%d.%d, and in theory, 2.24.10 is available.",@GTK2.version());
+	GTK2.MessageDialog(0,GTK2.MESSAGE_QUESTION,GTK2.BUTTONS_OK_CANCEL,
+		sprintf("Currently you're on %d.%d.%d, and in theory, 2.24.10 is available. Fetch it?",@GTK2.version()))
+		->show()
+		->signal_connect("response",msgresponse);
 }
