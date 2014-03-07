@@ -58,6 +58,43 @@ string strftime(string format,int|mapping(string:int) tm)
 	]));
 }
 
+class MessageBox
+{
+	inherit GTK2.MessageDialog;
+	function callback;
+
+	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb)
+	{
+		//NOTE: The parent window should always be specified (even as 0), but
+		//there's a bug in Pike 7.8.700 that means we can't actually pass it on.
+		//So it gets swallowed here, for now. Later on, one place to change.
+		callback=cb;
+		::create(flags,type,buttons,message);
+		signal_connect("response",response);
+		show();
+	}
+
+	void response(object self,int button)
+	{
+		self->destroy();
+		if (callback) callback(button);
+	}
+}
+
+class confirm
+{
+	inherit MessageBox;
+	void create(int flags,string message,GTK2.Window parent,function cb)
+	{
+		::create(flags,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,message,parent,cb);
+	}
+	void response(object self,int button)
+	{
+		self->destroy();
+		if (callback && button==GTK2.RESPONSE_OK) callback(button);
+	}
+}
+
 //Exactly the same as a GTK2.TextView but with set_text() and get_text() methods like the GTK2.Entry
 //Should be able to be used like an Entry.
 class MultiLineEntryField
