@@ -7,12 +7,11 @@
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Cross-platform safety check: copy/paste of huge amounts of text, does it crash? Do I need to protect against it?
 * Code model/layout check: standardize on composition not inheritance, don't "inherit configdlg" and leave it hidden.
-* Helper function for GTK2.MessageDialog. Not sure what the best way to do it is, but I see code dup everywhere.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
 2) Drop COMPAT_SIGNAL and possibly other COMPAT features
-3) Provide an additional arg to GTK2.MessageDialog() to bind it to a window (see helper function idea above, too)
+3) Provide an additional arg to GTK2.MessageDialog() to bind it to a window (see globals.pike::MessageBox)
 4) (Or when a newer 7.8 build than 805 is released) recode charsheet::noex() to use [sg]et_data()
 5) Unconditionally connect to the paste_clipboard signal in window.pike
 

@@ -742,12 +742,6 @@ void real_closetab(int removeme)
 	if (!sizeof(tabs)) addtab();
 }
 
-void closetab_response(object self,int response,int removeme)
-{
-	self->destroy();
-	if (response==GTK2.RESPONSE_OK) real_closetab(removeme);
-}
-
 /**
  * First-try at closing a tab. May call real_closetab() or raise a prompt.
  */
@@ -755,9 +749,7 @@ void closetab()
 {
 	int removeme=notebook->get_current_page();
 	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) {real_closetab(removeme); return;} //TODO post 7.8: Use ?->sock for this
-	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have an active connection, really close this tab?")
-		->show()
-		->signal_connect("response",closetab_response,removeme);
+	confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
 class advoptions
@@ -907,10 +899,8 @@ class keyboard
 		return 1;
 	}
 
-	void stdkeys_response(object self,int response)
+	void stdkeys()
 	{
-		self->destroy();
-		if (response!=GTK2.RESPONSE_OK) return;
 		object store=win->list->get_model();
 		foreach (({"look","southwest","south","southeast","west","glance","east","northwest","north","northeast"});int i;string cmd)
 		{
@@ -927,9 +917,7 @@ class keyboard
 
 	void pb_std()
 	{
-		GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"Adding/updating standard nav keys will overwrite anything you currently have on those keys. Really do it?")
-			->show()
-			->signal_connect("response",stdkeys_response);
+		confirm(0,"Adding/updating standard nav keys will overwrite anything you currently have on those keys. Really do it?",win->mainwindow,stdkeys);
 	}
 
 	void dosignals()
@@ -1143,19 +1131,11 @@ void create(string name)
  */
 int window_destroy() {exit(0);}
 
-void closewindow_response(object self,int response)
-{
-	self->destroy();
-	if (response==GTK2.RESPONSE_OK) exit(0);
-}
-
 int window_close()
 {
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
 	if (!conns) {exit(0); return 1;}
-	GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"You have "+conns+" active connection(s), really quit?")
-		->show()
-		->signal_connect("response",closewindow_response);
+	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit);
 	return 1;
 }
 

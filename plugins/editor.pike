@@ -38,19 +38,17 @@ class editor(mapping(string:mixed) conn)
 		win->buf->set_modified(0);
 	}
 
-	void close_response(object self,int response)
+	void close_unchanged()
 	{
-		self->destroy();
-		if (response==GTK2.RESPONSE_OK) {win->buf->set_modified(0); pb_close_click();}
+		win->buf->set_modified(0);
+		pb_close_click();
 	}
 
 	void pb_close_click()
 	{
 		if (win->buf->get_modified())
 		{
-			GTK2.MessageDialog(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,"File has been modified, close without sending/saving?")
-				->show()
-				->signal_connect("response",close_response);
+			confirm(0,"File has been modified, close without sending/saving?",win->mainwindow,close_unchanged);
 			return;
 		}
 		win->signals=0;
