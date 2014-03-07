@@ -19,7 +19,7 @@ state should be marked in the file VERSION, as it exists in git.
 
 License: MIT
 
-Copyright (c) 2011-2013, Chris Angelico
+Copyright (c) 2011-2014, Chris Angelico
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in 
