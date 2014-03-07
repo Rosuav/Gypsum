@@ -63,7 +63,7 @@ class MessageBox
 	inherit GTK2.MessageDialog;
 	function callback;
 
-	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb)
+	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb,mixed|void cb_arg)
 	{
 		//NOTE: The parent window should always be specified (even as 0), but
 		//there's a bug in Pike 7.8.700 that means we can't actually pass it on.
@@ -71,28 +71,28 @@ class MessageBox
 		if (!parent) parent=G->G->window->mainwindow;
 		callback=cb;
 		::create(flags,type,buttons,message);
-		signal_connect("response",response);
+		signal_connect("response",response,cb_arg);
 		show();
 	}
 
-	void response(object self,int button)
+	void response(object self,int button,mixed cb_arg)
 	{
 		self->destroy();
-		if (callback) callback(button);
+		if (callback) callback(button,cb_arg);
 	}
 }
 
 class confirm
 {
 	inherit MessageBox;
-	void create(int flags,string message,GTK2.Window parent,function cb)
+	void create(int flags,string message,GTK2.Window parent,function cb,mixed|void cb_arg)
 	{
-		::create(flags,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,message,parent,cb);
+		::create(flags,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,message,parent,cb,cb_arg);
 	}
-	void response(object self,int button)
+	void response(object self,int button,mixed cb_arg)
 	{
 		self->destroy();
-		if (callback && button==GTK2.RESPONSE_OK) callback(button);
+		if (callback && button==GTK2.RESPONSE_OK) callback(button,cb_arg);
 	}
 }
 
