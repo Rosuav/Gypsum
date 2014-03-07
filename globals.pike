@@ -92,7 +92,7 @@ class confirm
 	void response(object self,int button,mixed cb_arg)
 	{
 		self->destroy();
-		if (callback && button==GTK2.RESPONSE_OK) callback(button,cb_arg);
+		if (callback && button==GTK2.RESPONSE_OK) callback(cb_arg);
 	}
 }
 
