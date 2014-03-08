@@ -6,7 +6,7 @@ into the Pike binaries directory, over the top of the existing ones (backing
 them up just in case).
 
 As the GTK libraries are licensed in ways that demand source code distribution
-(LGPL mainly; I haven't checked every single one of them), I carry the sources
+(LGPL mainly; a few are more permissive, no source needed), I carry the sources
 on the same web site that the binaries are downloaded from. Both sources and
 binaries were simply downloaded from gtk.org, though - I didn't actually build
 anything.
