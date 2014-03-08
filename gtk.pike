@@ -44,7 +44,8 @@ the lookups in such a way as to not have the problem in the first place.
 //The files we need to fetch
 array(string) files=({"freetype6.dll","intl.dll","libatk-1.0-0.dll","libcairo-2.dll","libgdk-win32-2.0-0.dll","libgdk_pixbuf-2.0-0.dll",
 	"libgio-2.0-0.dll","libglib-2.0-0.dll","libgmodule-2.0-0.dll","libgobject-2.0-0.dll","libgthread-2.0-0.dll","libgtk-win32-2.0-0.dll",
-	"libpango-1.0-0.dll","libpangocairo-1.0-0.dll","libpangoft2-1.0-0.dll","libpangowin32-1.0-0.dll","libpng14-14.dll","zlib1.dll"});
+	"libpango-1.0-0.dll","libpangocairo-1.0-0.dll","libpangoft2-1.0-0.dll","libpangowin32-1.0-0.dll","libpng14-14.dll","zlib1.dll"
+});
 
 //Place to fetch 'em from, as of 20130304
 string url="http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_2.24.10-20120208_win32.zip";
