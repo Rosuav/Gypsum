@@ -65,7 +65,7 @@ void switch_dirs()
 {
 	foreach (files;string fn;)
 	{
-		mv(target+"/"+fn,target+"/oldgtk/"+fn);
+		if (file_stat(target+"/"+fn)) mv(target+"/"+fn,target+"/oldgtk/"+fn);
 		mv("newgtk/"+fn,target+"/"+fn);
 	}
 	rm("newgtk");
