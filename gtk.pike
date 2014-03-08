@@ -40,6 +40,7 @@ mapping(string:string) files=([
 	"intl.dll":                "682d4277092472cac940558f9e679b44a6394159e49c9bbda299e33bfc6fdc92",
 	"libatk-1.0-0.dll":        "d45ee3e6573c0c55db99ae66b641075ec1e0b64feb548786378dc79f63d69045",
 	"libcairo-2.dll":          "d91d6b0577e0334aa63d9ab8a31edc16270d00f60c32eb7bcc50092d81cb6a21",
+	"libexpat-1.dll":          "f2e500f501c03d3d09609c6d0b2ea4c51bb433762d9c8f82ac6163877a780bc8",
 	"libfontconfig-1.dll":     "1c0a17ef42755d653d496dd7f52a4a2ca488b89ea1cf0df08f7fa32216f4c051",
 	"libgdk-win32-2.0-0.dll":  "84a8b0041d806dc92cdb19e6127e25fbdb8c3cc6a93cb014ea57351a22685b78",
 	"libgdk_pixbuf-2.0-0.dll": "c8ff2373d4c261fcd6525a826dbc736d347ae10168490a7a7fc837e76329afc1",
