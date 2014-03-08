@@ -122,7 +122,8 @@ void update()
 		Protocols.HTTP.do_async_method("GET","http://rosuav.com/gtk/"+fn,0,0,
 			Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,fn));
 	}
-	say(0,"%% Downloading "+downloading+" files...");
+	if (downloading) say(0,"%% Downloading "+downloading+" files...");
+	else confirm(0,"All files already downloaded. Effect the change?",0,switch_dirs);
 }
 
 void create()
