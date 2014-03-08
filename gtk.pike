@@ -41,6 +41,12 @@ updating GTK and then updating globals will re-update GTK), but simpler to do
 the lookups in such a way as to not have the problem in the first place.
 */
 
+/*
+Awkwardness: I can't actually be sure of having any sort of 'unzip' utility on
+the user's computer. Most Windows systems do have some way to unzip files, but
+not necessarily exposed as a program.
+*/
+
 //The files we need to fetch
 array(string) files=({"freetype6.dll","intl.dll","libatk-1.0-0.dll","libcairo-2.dll","libgdk-win32-2.0-0.dll","libgdk_pixbuf-2.0-0.dll",
 	"libgio-2.0-0.dll","libglib-2.0-0.dll","libgmodule-2.0-0.dll","libgobject-2.0-0.dll","libgthread-2.0-0.dll","libgtk-win32-2.0-0.dll",
@@ -53,7 +59,8 @@ string urls=#"%% Download GTK+ 2.24.10 from http://www.gtk.org/download/win32.ph
 %% You can also get the sources from there, per the terms of the LGPL,
 %% but these are not necessary for Gypsum or Pike to run.
 %% Direct download link: http://tinyurl.com/7wujdp4
-%% (will download gtk+-bundle_2.24.10-20120208_win32.zip)";
+%% (will download gtk+-bundle_2.24.10-20120208_win32.zip)
+%% Unzip that file into the Gypsum directory and re-run /update gtk";
 
 void update()
 {
