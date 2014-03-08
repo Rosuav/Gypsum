@@ -58,7 +58,7 @@ mapping(string:string) files=([
 
 //Destination binary directory
 string target=combine_path(@explode_path(Program.defined(object_program(GTK2)))[..<3],"bin");
-int downloading;
+int downloading,downloaded;
 
 void switch_dirs()
 {
@@ -80,10 +80,10 @@ void data_available(object q,string fn)
 		say(0,"%% "+describe_error(ex));
 		return;
 	}
-	say(0,"%% Downloaded: "+fn);
-	if (!--downloading)
+	say(0,"%%%% Downloaded %d/%d: %s",++downloaded,downloading,fn);
+	if (downloaded==downloading)
 	{
-		//Note that failed downloads don't decrement the count. This
+		//Note that failed downloads don't increment the count. This
 		//block should only happen when everything seems to have worked.
 		say(0,"%% All files downloaded. Checking integrity...");
 		foreach (files;string fn;string sig)
