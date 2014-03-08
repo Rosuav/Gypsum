@@ -80,6 +80,7 @@ void data_available(object q,string fn)
 		say(0,"%% "+describe_error(ex));
 		return;
 	}
+	say(0,"%% Downloaded: "+fn);
 	if (!--downloading)
 	{
 		//Note that failed downloads don't decrement the count. This
