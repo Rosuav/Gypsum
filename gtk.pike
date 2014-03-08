@@ -33,6 +33,14 @@ but what's the point? The command '/update_gtk' is no better than '/update gtk'
 and there's no need to keep it in memory :)
 */
 
+/*
+Code style oddity: Do not use any globals.pike features by name. Instead, use
+G->globals->some_name, which avoids creating a useless lookup entry. It's not
+particularly likely that someone will be bugged by this (all it means is that
+updating GTK and then updating globals will re-update GTK), but simpler to do
+the lookups in such a way as to not have the problem in the first place.
+*/
+
 //The files we need to fetch
 array(string) files=({"freetype6.dll","intl.dll","libatk-1.0-0.dll","libcairo-2.dll","libgdk-win32-2.0-0.dll","libgdk_pixbuf-2.0-0.dll",
 	"libgio-2.0-0.dll","libglib-2.0-0.dll","libgmodule-2.0-0.dll","libgobject-2.0-0.dll","libgthread-2.0-0.dll","libgtk-win32-2.0-0.dll",
@@ -43,15 +51,15 @@ string url="http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_
 
 void update()
 {
-	MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Currently unimplemented, sorry!",0);
+	G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Currently unimplemented, sorry!",0);
 }
 
 void create()
 {
 	if ((string)GTK2.version()=="\2\30\11")
 	{
-		MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Already on GTK 2.24.10, nothing to do.",0);
+		G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Already on GTK 2.24.10, nothing to do.",0);
 		return;
 	}
-	confirm(0,sprintf("Currently you're on %d.%d.%d, and in theory, 2.24.10 is available. Fetch it?",@GTK2.version()),0,update);
+	G->globals->confirm(0,sprintf("Currently you're on %d.%d.%d, and in theory, 2.24.10 is available. Fetch it?",@GTK2.version()),0,update);
 }
