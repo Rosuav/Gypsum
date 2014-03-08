@@ -106,10 +106,17 @@ void request_fail(object q,string fn) {say(0,"%% Failed to download: "+fn);}
 
 void update()
 {
-	mkdir("newgtk");
+	//Ignore errors eg already existing
+	catch {mkdir("newgtk");};
 	catch {mkdir(target+"/oldgtk");};
-	foreach (files;string fn;)
+	foreach (files;string fn;string sig)
 	{
+		if (file_stat("newgtk/"+fn))
+		{
+			string data=Stdio.read_file("newgtk/"+fn);
+			if (data && String.string2hex(Crypto.SHA256.hash(data))==sig) continue; //File already downloaded.
+			rm("newgtk/"+fn); //File unreadable or incorrect somehow. I don't care how; just wipe it and redownload.
+		}
 		++downloading;
 		Protocols.HTTP.do_async_method("GET","http://rosuav.com/gtk/"+fn,0,0,
 			Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,fn));
