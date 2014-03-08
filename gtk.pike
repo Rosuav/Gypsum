@@ -62,14 +62,27 @@ string urls=#"%% Download GTK+ 2.24.10 from http://www.gtk.org/download/win32.ph
 %% (will download gtk+-bundle_2.24.10-20120208_win32.zip)
 %% Unzip that file into the Gypsum directory and re-run /update gtk";
 
+void request_ok(object q,string fn)
+{
+	
+}
+
+void request_fail(object q,string fn)
+{
+	say(0,"%% Failed to download: "+fn);
+}
+
 void update()
 {
-	G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Currently unimplemented, sorry!",0);
+	//G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Currently unimplemented, sorry!",0);
+	say(0,"%% Downloading 
+	Protocols.HTTP.do_async_method("GET","http://rosuav.com/gtk/"+files[-1],0,0,
+		Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,files[-1]));
 }
 
 void create()
 {
-	if ((string)GTK2.version()=="\2\30\11")
+	if ((string)GTK2.version()=="\2\30\12")
 	{
 		G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Already on GTK 2.24.10, nothing to do.",0);
 		return;
