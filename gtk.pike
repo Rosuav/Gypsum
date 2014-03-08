@@ -48,7 +48,12 @@ array(string) files=({"freetype6.dll","intl.dll","libatk-1.0-0.dll","libcairo-2.
 });
 
 //Place to fetch 'em from, as of 20130304
-string url="http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_2.24.10-20120208_win32.zip";
+string urls=#"%% Download GTK+ 2.24.10 from http://www.gtk.org/download/win32.php
+%% Get the 2.x all-in-one bundle.
+%% You can also get the sources from there, per the terms of the LGPL,
+%% but these are not necessary for Gypsum or Pike to run.
+%% Direct download link: http://tinyurl.com/7wujdp4
+%% (will download gtk+-bundle_2.24.10-20120208_win32.zip)";
 
 void update()
 {
