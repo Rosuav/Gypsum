@@ -390,7 +390,8 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 		case 1: if (subw!=current_subw()) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
 		case 2: if (paused) break; //Present the window only if we're not paused.
 			//Okay, so let's present ourselves.
-			mainwindow->present();
+			if (persist["notif/present"]) mainwindow->present();
+			else mainwindow->set_urgency_hint(1);
 	}
 	redraw(subw);
 }
@@ -764,6 +765,7 @@ class advoptions
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Numpad Nav echo":(["path":"window/numpadecho","default":0,"desc":"Set this to 1 to have numpad navigation commands echoed as if you'd typed them; 0 gives a cleaner display.","type":"int"]),
+		"Present action":(["path":"notif/present","type":"int","default":0,"desc":"Activity alerts can present the window in one of two ways:\n0: Mark the window as 'urgent'\n1: Request the window be immediately presented"]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
 		"Timestamp localtime":(["path":"window/timestamp_local","default":0,"desc":"Display line timestamps in local time (1) rather than in UTC (0).","type":"int"]),
 		"Wrap":(["path":"window/wrap","default":0,"desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
@@ -1230,6 +1232,13 @@ void savepos()
 	pos=0;
 }
 
+//Reset the urgency hint when focus arrives.
+//Ideally I want to do this at the exact moment when mainwindow->is_active()
+//changes from 0 to 1, but I can't find that. In lieu of such an event, I'm
+//going for something that fires on various focus movements within the main
+//window; it'll never fire when we don't have window focus, so it's safe.
+void window_focus() {mainwindow->set_urgency_hint(0);}
+
 void mainwsignals()
 {
 	signals=({
@@ -1242,6 +1251,7 @@ void mainwsignals()
 		#else
 		gtksignal(mainwindow,"configure_event",configevent,0,UNDEFINED,1),
 		#endif
+		gtksignal(mainwindow,"focus_in_event",window_focus),
 	});
 	foreach (menu;GTK2.MenuItem widget;string func)
 		signals+=({gtksignal(widget,"activate",this[func] || TODO)}); //If the function can't be found, put it through to TODO(). This is not itself a TODO.
