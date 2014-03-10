@@ -1,9 +1,4 @@
 inherit command;
-inherit configdlg;
-constant strings=({"name","host","logfile","descr","writeme"});
-constant ints=({"port"});
-constant bools=({"use_ka"});
-constant persist_key="worlds";
 
 /**
  * List of worlds available by default.
@@ -12,11 +7,6 @@ mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
 ]));
-
-mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1,"no-show-all":1]);
-//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
-//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
-string actionbtn="Save and C_onnect";
 
 /**
  * Displays the connection window dialog or attempts a connection to a world.
@@ -28,7 +18,7 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg")
 	{
-		showwindow();
+		connectdlg();
 		return 1;
 	}
 	if (param=="" && !(param=subw->world)) return listworlds("",subw);
@@ -67,40 +57,53 @@ int listworlds(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-//---------------- Config dialog ----------------
-void load_content(mapping(string:mixed) info)
+class connectdlg
 {
-	if (!info->port) {info->port=23; win->port->set_text("23");}
-	if (zero_type(info->use_ka)) win->use_ka->set_active(1);
-}
+	inherit configdlg;
+	constant strings=({"name","host","logfile","descr","writeme"});
+	constant ints=({"port"});
+	constant bools=({"use_ka"});
+	constant persist_key="worlds";
 
-void action_callback()
-{
-	pb_save();
-	string kwd=selecteditem();
-	if (!kwd) return;
-	mapping info=worlds[kwd];
-	G->G->window->connect(info,kwd,0);
-	win->mainwindow->destroy();
-}
+	mapping(string:mixed) windowprops=(["title":"Connect to a world","modal":1]);
+	//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
+	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
+	string actionbtn="Save and C_onnect";
 
-GTK2.Widget make_content()
-{
-	return GTK2.Vbox(0,10)
-		->pack_start(two_column(({
-			"Keyword",win->kwd=GTK2.Entry(),
-			"Name",win->name=GTK2.Entry(),
-			"Host name",win->host=GTK2.Entry(),
-			"Port",win->port=GTK2.Entry(),
-			"Auto-log",win->logfile=GTK2.Entry(),
-			"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
-		})),0,0,0)
-		->pack_start(GTK2.Frame("Description")->add(
-			win->descr=MultiLineEntryField()->set_size_request(250,70)
-		),1,1,0)
-		->pack_start(GTK2.Frame("Text to output upon connect")->add(
-			win->writeme=MultiLineEntryField()->set_size_request(250,70)
-		),1,1,0);
+	void load_content(mapping(string:mixed) info)
+	{
+		if (!info->port) {info->port=23; win->port->set_text("23");}
+		if (zero_type(info->use_ka)) win->use_ka->set_active(1);
+	}
+
+	void action_callback()
+	{
+		pb_save();
+		string kwd=selecteditem();
+		if (!kwd) return;
+		mapping info=worlds[kwd];
+		G->G->window->connect(info,kwd,0);
+		win->mainwindow->destroy();
+	}
+
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10)
+			->pack_start(two_column(({
+				"Keyword",win->kwd=GTK2.Entry(),
+				"Name",win->name=GTK2.Entry(),
+				"Host name",win->host=GTK2.Entry(),
+				"Port",win->port=GTK2.Entry(),
+				"Auto-log",win->logfile=GTK2.Entry(),
+				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
+			})),0,0,0)
+			->pack_start(GTK2.Frame("Description")->add(
+				win->descr=MultiLineEntryField()->set_size_request(250,70)
+			),1,1,0)
+			->pack_start(GTK2.Frame("Text to output upon connect")->add(
+				win->writeme=MultiLineEntryField()->set_size_request(250,70)
+			),1,1,0);
+	}
 }
 
 void create(string name)
