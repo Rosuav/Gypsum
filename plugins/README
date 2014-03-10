@@ -100,7 +100,6 @@ The plugin's main window should be stored in win->mainwindow; set
 (or consider setting) the following properties on it:
 	"title":"some useful string, even if you suppress its display"
 	"transient-for":G->G->window->mainwindow /* mandatory */
-	"no-show-all":1 /* to hide the window initially */
 	"modal":1 /* may be useful for config dialogs */
 After creating the window, call ::makewindow() in case further setup
 needs to be done.
