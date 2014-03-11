@@ -70,6 +70,7 @@ class connectdlg
 	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
 	//Hmm. Maybe separate "edit worlds" from "connect"? The dialog could be "edit worlds" and simply not _have_ a
 	//button to connect to the world. Would that bug people?
+	//Actually - yes it would. Don't do that. But there could be something other than an action button, maybe.
 	string actionbtn="Save and C_onnect";
 
 	void load_content(mapping(string:mixed) info)
