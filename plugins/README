@@ -171,7 +171,7 @@ constant persist_key="pluginname/whatever"; //Set this to the persist[] key to l
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
 examples using it (eg plugins/timer.pike) and replicate. Most of the elements
-have sane defaults; it's possible to create a fairly minimal configdlg by
+have sane defaults; it's possible to create a fully functional configdlg by
 using persist_key, strings/ints/bools, and make_content() only.
 
 The simple bindings arrays are for the common case where a widget in win[]
