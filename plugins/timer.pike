@@ -185,6 +185,7 @@ void config() {}
 void showtimes() {}
 void say(mapping|void subw,string msg) {write("%s\n",msg);}
 void send(mapping dest,string msg) {/* Not needed */}
+string line_text(array l) {/* Also not needed */}
 int main() {process("save",0);}
 #endif
 
