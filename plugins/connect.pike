@@ -105,7 +105,8 @@ class connectdlg
 			),1,1,0)
 			->pack_start(GTK2.Frame("Text to output upon connect")->add(
 				win->writeme=MultiLineEntryField()->set_size_request(250,70)
-			),1,1,0);
+			),1,1,0)
+		;
 	}
 }
 
