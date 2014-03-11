@@ -71,7 +71,8 @@ class connectdlg
 	//Hmm. Maybe separate "edit worlds" from "connect"? The dialog could be "edit worlds" and simply not _have_ a
 	//button to connect to the world. Would that bug people?
 	//Actually - yes it would. Don't do that. But there could be something other than an action button, maybe.
-	string actionbtn="Save and C_onnect";
+	//string actionbtn="Save and C_onnect";
+	//20140311: Now putting the button inside the dialog, as an experiment.
 
 	void load_content(mapping(string:mixed) info)
 	{
@@ -106,7 +107,18 @@ class connectdlg
 			->pack_start(GTK2.Frame("Text to output upon connect")->add(
 				win->writeme=MultiLineEntryField()->set_size_request(250,70)
 			),1,1,0)
+			->pack_start(GTK2.HbuttonBox()->add(
+				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
+			),1,1,0)
 		;
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->pb_connect,"clicked",action_callback),
+		});
 	}
 }
 
