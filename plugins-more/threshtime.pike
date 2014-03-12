@@ -86,7 +86,7 @@ void showtime()
 	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
 	int th_year,th_mon,th_day,th_hour,th_min;
 	int threshtime=persist["threshtime/sync_th"]+(time()-persist["threshtime/sync_rl"])/5;
-	th_min=threshtime%60; threshtime/=60; //Need to optimize this somehow. Each is being rendered as two duplicate divisions.
+	th_min=threshtime%60; threshtime/=60;
 	th_hour=threshtime%24; threshtime/=24;
 	th_day=threshtime%30; threshtime/=30;
 	th_mon=threshtime%12; threshtime/=12;
