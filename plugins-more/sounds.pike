@@ -1,4 +1,5 @@
 inherit hook;
+#if constant(SDL)
 
 //Has a fixed number of "streams", with any given trigger attached to one particular stream
 //Whenever there's any trigger on a stream, that stream's entry is _replaced_ with the new one.
@@ -50,3 +51,4 @@ void create(string name)
 	else G->G->sounds_playing&=values(triggers)->stream; //Mute any streams that no longer exist
 	::create(name);
 }
+#endif
