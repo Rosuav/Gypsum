@@ -686,12 +686,15 @@ void enterpressed(mapping subw,string|void cmd)
 	subw->histpos=-1;
 	subw->prompt[0]->timestamp=time(1);
 	m_delete(subw->prompt[0],"text"); //Wipe the cached text version of the line, which is now going to be wrong
-	if (!subw->passwordmode)
+	if (!persist["window/hideinput"])
 	{
-		if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-		say(subw,subw->prompt+({colors[6],cmd}));
+		if (!subw->passwordmode)
+		{
+			if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
+			say(subw,subw->prompt+({colors[6],cmd}));
+		}
+		else subw->lines+=({subw->prompt});
 	}
-	else subw->lines+=({subw->prompt});
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
@@ -763,6 +766,7 @@ class advoptions
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Beep":(["path":"notif/beep","type":"int","default":0,"desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
+		"Hide input":(["path":"window/hideinput","type":"int","default":0,"desc":"Local echo is active by default, but set this to 1 to disable it and hide all your commands."]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Numpad Nav echo":(["path":"window/numpadecho","default":0,"desc":"Set this to 1 to have numpad navigation commands echoed as if you'd typed them; 0 gives a cleaner display.","type":"int"]),
 		"Present action":(["path":"notif/present","type":"int","default":0,"desc":"Activity alerts can present the window in one of two ways:\n0: Mark the window as 'urgent'\n1: Request the window be immediately presented"]),
