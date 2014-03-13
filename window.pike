@@ -952,7 +952,7 @@ class aboutdlg
 		string ver=gypsum_version();
 		if (ver!=INIT_GYPSUM_VERSION) ver=sprintf("%s (upgraded from %s)",ver,INIT_GYPSUM_VERSION);
 		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
-			->add(GTK2.Label(#"Pike MUD client for Windows/Linux (and others); Mac support pending
+			->add(GTK2.Label(#"Pike MUD client for Windows/Linux/Mac (and others)
 
 Free software - see README for license terms
 

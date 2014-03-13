@@ -1,0 +1,23 @@
+Installing Gypsum on Mac OS X should work, in theory, on any reasonably-new
+version. However, I've only tested it on 10.9 Mavericks, so that's all I can
+cite. You'll need to download two files:
+
+http://xquartz.macosforge.org/downloads/SL/XQuartz-2.7.5.dmg
+http://rosuav.com/Pike_OSXMavericks/pike.tgz
+
+The first one is perfectly standard, and it's possible you already have it.
+The second is my custom build of Pike for OS X. Download both files, and
+install XQuartz in the normal way (double-click the .dmg and then the .pkg
+inside it); you'll need to log out and log in, or reboot, to complete the
+installation. With the other, open up Terminal, and type the following -
+assuming you downloaded it into your Downloads directory:
+
+cd Downloads
+sudo tar xf pike.tgz -C /
+get_gypsum
+
+The last command may pop up a box asking you to install more software. You
+may need to re-run get_gypsum after installing.
+
+If everything's successful, you'll have a new application called Gypsum.
+Double-click that to run Gypsum!
