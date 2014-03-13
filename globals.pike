@@ -283,7 +283,7 @@ class movablewindow
 	{
 		if (array pos=persist[pos_key])
 		{
-			if (sizeof(pos)>2 && load_size) win->mainwindow->set_default_size(pos[2],pos[3]);
+			if (sizeof(pos)>3 && load_size) win->mainwindow->set_default_size(pos[2],pos[3]);
 			win->x=1; call_out(lambda() {m_delete(win,"x");},1);
 			win->mainwindow->move(pos[0],pos[1]);
 		}
