@@ -10,6 +10,9 @@ Don't apply plugin_active_by_default to anything where there's really no downsid
 having it active. Keep 'em in the main section. Use this only for plugins where it's
 normal to have it, but might be logical to remove it - like statusbar entries, which
 have to compete for space.
+
+Note that the discovery does involve compiling, though not instantiating, each
+plugin (once). This is unavoidable.
 */
 
 //Prune the list of plugins to only what can be statted, and add any from plugins-more
