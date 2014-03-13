@@ -79,7 +79,8 @@ not call the current hook function, and thus cannot create an infinite
 loop.)
 ADVISORY: If this is called _and_ 0 is returned, both commands will be
 executed, but this is not the normal form of processing and is not
-formally supported.
+formally supported. Similarly if nexthook is called to synthesize an
+input command that wasn't in response to an inputhook call.
 
 An output hook is similar to an input hook, but works on a different
 type of line: a line of text from the server. It therefore does not
