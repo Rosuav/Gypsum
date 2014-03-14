@@ -465,8 +465,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 									->add(GTK2.Frame("Synergies for "+desc)->add(GTK2Table(full_desc)))
 									->add(GTK2.HbuttonBox()->add(cancel))
 								)
-								->show_all()
-								->signal_connect("delete-event",lambda(object self) {self->destroy();});
+								->show_all();
 						});
 						foreach (synergies,[string dep,int type,string desc])
 							if (!depends[dep]) depends[dep]=(<recalc>);
