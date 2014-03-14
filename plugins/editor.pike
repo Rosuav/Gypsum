@@ -9,7 +9,7 @@ class editor(mapping(string:mixed) conn)
 	void create(string initial)
 	{
 		win->initial=initial;
-		::create(); //No name. Each one should be independent.
+		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
 		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
 
