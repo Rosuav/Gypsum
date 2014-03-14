@@ -38,21 +38,14 @@ class editor(mapping(string:mixed) conn)
 		win->buf->set_modified(0);
 	}
 
-	void close_unchanged()
-	{
-		win->buf->set_modified(0);
-		pb_close_click();
-	}
-
-	void pb_close_click()
+	int closewindow()
 	{
 		if (win->buf->get_modified())
 		{
-			confirm(0,"File has been modified, close without sending/saving?",win->mainwindow,close_unchanged);
-			return;
+			confirm(0,"File has been modified, close without sending/saving?",win->mainwindow,::closewindow);
+			return 1;
 		}
-		win->signals=0;
-		win->mainwindow->destroy();
+		return ::closewindow();
 	}
 
 	void cursorpos(mixed unknown,object self,object mark,mixed foo)
@@ -67,7 +60,7 @@ class editor(mapping(string:mixed) conn)
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->pb_send,"clicked",pb_send_click),
-			gtksignal(win->pb_close,"clicked",pb_close_click),
+			gtksignal(win->pb_close,"clicked",closewindow),
 			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
 			//(whatever it is). See the shim in the function definition, which shouldn't be
 			//necessary. Am disabling this code until a patch or workaround is deployed.
