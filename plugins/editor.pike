@@ -22,7 +22,7 @@ class editor(mapping(string:mixed) conn)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
-				->add(win->pb_close=GTK2.Button((["label":"_Close","use-underline":1,"focus-on-click":0])))
+				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
 		win->mle->modify_font(G->G->window->getfont("input"));
@@ -60,7 +60,6 @@ class editor(mapping(string:mixed) conn)
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->pb_send,"clicked",pb_send_click),
-			gtksignal(win->pb_close,"clicked",closewindow),
 			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
 			//(whatever it is). See the shim in the function definition, which shouldn't be
 			//necessary. Am disabling this code until a patch or workaround is deployed.
