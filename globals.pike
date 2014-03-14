@@ -240,7 +240,7 @@ class window
 	void dosignals()
 	{
 		win->signals=({
-			gtksignal(win->mainwindow,"delete-event",closewindow),
+			gtksignal(win->mainwindow,"delete_event",closewindow),
 			win->stock_close && gtksignal(win->stock_close,"clicked",closewindow),
 		});
 	}
@@ -469,7 +469,7 @@ int main()
 	function add=lambda(GTK2.Widget wid) {view->add_child_at_anchor(wid,buf->create_child_anchor(buf->get_end_iter())); buf->insert(buf->get_end_iter(),"  ",-1);};
 	function frm=lambda(GTK2.Widget wid) {add(GTK2.Frame()->add(wid)->set_shadow_type(GTK2.SHADOW_ETCHED_OUT));};
 	foreach (({"Asdf","qwer","zxcv","Testing, testing","1, 2, 3, 4"}),string x) frm(GTK2.Label(x));
-	GTK2.Window(GTK2.WindowToplevel)->add(GTK2.Vbox(0,0)->add(GTK2.Button("This is the base width"))->add(view))->show_all()->signal_connect("delete-event",lambda() {exit(0);});
+	GTK2.Window(GTK2.WindowToplevel)->add(GTK2.Vbox(0,0)->add(GTK2.Button("This is the base width"))->add(view))->show_all()->signal_connect("delete_event",lambda() {exit(0);});
 	return -1;
 }
 
