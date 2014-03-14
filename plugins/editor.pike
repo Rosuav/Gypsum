@@ -1,6 +1,6 @@
 inherit hook;
 
-class editor(mapping(string:mixed) conn)
+class editor(mapping(string:mixed) subw)
 {
 	inherit movablewindow;
 	constant pos_key="editor/winpos";
@@ -32,7 +32,11 @@ class editor(mapping(string:mixed) conn)
 
 	void pb_send_click()
 	{
-		send(conn,replace(String.trim_all_whites(
+		//Note that we really need the conn, but are retaining the subw in case
+		//the connection breaks and is reconnected. Alternatively, we could use
+		//current_subw(), or maybe a check (subw if valid else current_subw) to
+		//catch other cases.
+		send(subw,replace(String.trim_all_whites(
 			win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0)
 		),"\n","\r\n")+"\r\n");
 		win->buf->set_modified(0);
@@ -77,7 +81,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 	if (conn->editor_eax)
 	{
-		if (line=="<=== Editor ===>") {editor(conn,m_delete(conn,"editor_eax")); return 0;}
+		if (line=="<=== Editor ===>") {editor(conn->display,m_delete(conn,"editor_eax")); return 0;}
 		conn->editor_eax+=line+"\n";
 		return 0;
 	}
