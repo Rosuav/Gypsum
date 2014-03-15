@@ -554,7 +554,7 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF52: //Up arrow
 		{
 			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
-			else if (!subw->histpos) return 1;
+			if (!subw->histpos) return 1;
 			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
 			string pfx = subw->ef->get_text()[..pos-1];
 			int hp=subw->histpos;
