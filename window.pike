@@ -29,8 +29,8 @@ inherit statustext;
 	//Each 'line' represents one line that came from the MUD. In theory, they might be wrapped for display, which would
 	//mean taking up more than one display line, though currently this is not implemented.
 	//Each entry must begin with a metadata mapping and then alternate between color and string, in that order.
-	array(array(mapping|GTK2.GdkColor|string)) lines=({ });
-	array(mapping|GTK2.GdkColor|string) prompt=({([])}); //NOTE: If this is ever reassigned, other than completely overwriting it, check pseudo-prompt handling.
+	array(array(mapping|int|string)) lines=({ });
+	array(mapping|int|string) prompt=({([])}); //NOTE: If this is ever reassigned, other than completely overwriting it, check pseudo-prompt handling.
 	GTK2.DrawingArea display;
 	GTK2.ScrolledWindow maindisplay;
 	GTK2.Adjustment scr;
@@ -350,10 +350,13 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	{
 		if (sizeof(args)) msg=sprintf(msg,@args);
 		if (msg[-1]=='\n') msg=msg[..<1];
-		foreach (msg/"\n",string line) say(subw,({colors[7],line}));
+		foreach (msg/"\n",string line) say(subw,({7,line}));
 		return;
 	}
-	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=colors[7];
+	//DEPRECATED: A zero color represents default. As of 20140315, this should
+	//not be done, as 0 should represent black-on-black. This code will at
+	//some point be removed, so don't depend on it.
+	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=7;
 	if (!mappingp(msg[0])) msg=({([])})+msg;
 	msg[0]->timestamp=time(1);
 	if (subw->logfile) subw->logfile->write(string_to_utf8(line_text(msg)+"\n"));
@@ -415,9 +418,6 @@ void connect(mapping info,string world,mapping|void subw)
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
 }
 
-/**
- *
- */
 void redraw(mapping subw)
 {
 	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
@@ -448,15 +448,12 @@ parsed out reasonably cleanly. The worst case is that a user's active scrollback
 at time of update will (partially or completely) turn black when it should have
 been white. See also comments in paintline(). */
 //TODO maybe maybe maybe: 256 color mode???
-object mkcolor(int fg,int bg)
+int mkcolor(int fg,int bg)
 {
-	return colors[fg];
+	return fg;
 }
 
 //Paint one piece of text at (x,y), returns the x for the next text.
-/**
- *
- */
 int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return x;
@@ -474,10 +471,8 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
-/**
- *
- */
-void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColor|string) line,int y,int hlstart,int hlend)
+//Note that for compatibility, this declaration needs to recognize the possibility of objects in line.
+void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|string) line,int y,int hlstart,int hlend)
 {
 	int x=3;
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
@@ -493,21 +488,27 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|GTK2.GdkColo
 		//fg and bg colors into an int, which will then be able to be
 		//saved to disk, but there'll still be a hack that 0 means 7...
 		//at least for a while.
+		//CJA 20140315: Am now making that change. For compatibility,
+		//the above 0->7 change is still done, but that will be dropped.
+		GTK2.GdkColor fg,bg;
+		if (!line[i]) {fg=colors[7]; bg=colors[0];} //Old compat
+		else if (objectp(line[i])) {fg=[object]line[i]; bg=colors[0];} //Compat
+		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //New
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
 		if (hlstart>0)
 		{
 			//Draw the leading unhighlighted part (which might be the whole string).
-			x=painttext(display,gc,x,y,txt[..hlstart-1],line[i] || colors[7],colors[0]);
+			x=painttext(display,gc,x,y,txt[..hlstart-1],fg,bg);
 		}
 		if (hlstart<sizeof(txt))
 		{
 			//Draw the highlighted part (which might be the whole string).
-			x=painttext(display,gc,x,y,txt[hlstart..min(hlend,sizeof(txt))],colors[0],line[i] || colors[7]);
+			x=painttext(display,gc,x,y,txt[hlstart..min(hlend,sizeof(txt))],bg,fg);
 			if (hlend<sizeof(txt))
 			{
 				//Draw the trailing unhighlighted part.
-				x=painttext(display,gc,x,y,txt[hlend+1..],line[i] || colors[7],colors[0]);
+				x=painttext(display,gc,x,y,txt[hlend+1..],fg,bg);
 			}
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
@@ -536,7 +537,7 @@ int paint(object self,object ev,mapping subw)
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
 	{
-		array(mapping|GTK2.GdkColor|string) line=(l==sizeof(subw->lines)?subw->prompt:subw->lines[l]);
+		array(mapping|int|string) line=(l==sizeof(subw->lines)?subw->prompt:subw->lines[l]);
 		int hlstart=-1,hlend=-1;
 		if (l>=ssl && l<=sel)
 		{
@@ -691,7 +692,7 @@ void enterpressed(mapping subw,string|void cmd)
 		if (!subw->passwordmode)
 		{
 			if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-			say(subw,subw->prompt+({colors[6],cmd}));
+			say(subw,subw->prompt+({6,cmd}));
 		}
 		else subw->lines+=({subw->prompt});
 	}
