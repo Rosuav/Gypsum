@@ -67,10 +67,10 @@ class editor(mapping(string:mixed) subw)
 			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
 			//(whatever it is). Am disabling this code until a patch is deployed.
 			//The solution is deep inside the Pike GTK support code and can't be worked
-			//around, so this will depend on some way of recognizing a fixed Pike - probably
-			//a COMPAT option that will default to unconditionally active until there's an
-			//official Pike build that incorporates it. It's a minor convenience anyway.
-			//gtksignal(win->buf,"mark_set",cursorpos),
+			//around, so this depends on a Pike patch.
+			#if !constant(COMPAT_BOOM2)
+			gtksignal(win->buf,"mark_set",cursorpos),
+			#endif
 		});
 	}
 }
