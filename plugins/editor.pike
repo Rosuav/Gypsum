@@ -52,7 +52,7 @@ class editor(mapping(string:mixed) subw)
 		return ::closewindow();
 	}
 
-	void cursorpos(object self,mixed iter,object mark,mixed foo)
+	void cursorpos(object self,mixed iter1,object mark,mixed foo)
 	{
 		if (mark->get_name()!="insert") return;
 		GTK2.TextIter iter=win->buf->get_iter_at_mark(mark);
