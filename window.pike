@@ -429,28 +429,9 @@ void redraw(mapping subw)
 	subw->maindisplay->queue_draw();
 }
 
-//TODO: Background color!
-//Note that this entire system is predicated on sixteen ANSI colors, the latter
-//eight being bold versions of the former eight, and all doubling as background
-//colors. Supporting 256-color mode would require considerable changes; mostly,
-//I suspect, some system of not retaining all possible GdkColor objects, but eg
-//creating them as needed and maybe caching common ones in a mapping.
-/* 20140214: Currently, there is the possibility that the integer 0 will take the
-place of a color code, and it should be interpreted as "default color" (ie 7,0).
-This is fixed as of 77ec0e, but for the time being, maintain a temporary sort of
-pseudo-guarantee that 0 has this meaning. Going for an alternative system like
-integers (fg + bg<<8) would be okay as long as there's a hack retained such that
-0 becomes 7; but ultimately, we shouldn't assume that black-on-black is illogical
-(black being 0 in both sections). Conversely, do NOT pollute an otherwise-clean
-system with a hack like always setting some arbitrary bit, or storing black on
-black as 1<<16 - although the latter wouldn't be too terrible, as it could be
-parsed out reasonably cleanly. The worst case is that a user's active scrollback
-at time of update will (partially or completely) turn black when it should have
-been white. See also comments in paintline(). */
-//TODO maybe maybe maybe: 256 color mode???
 int mkcolor(int fg,int bg)
 {
-	return fg;
+	return fg || (bg<<16);
 }
 
 //Paint one piece of text at (x,y), returns the x for the next text.
