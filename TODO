@@ -14,7 +14,7 @@ Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
 2) Drop COMPAT_SIGNAL and possibly other COMPAT features
 3) Search the code for "7.8" and see what's commented
-4) (Or when a newer 7.8 build than 805 is released) recode charsheet::noex() to use [sg]et_data()
+4) (Or when a newer 7.8 build than 805 is released) Recode charsheet::noex() to use [sg]et_data()
 5) Unconditionally connect to the paste_clipboard signal in window.pike
 
 There are a few places around the code where magic happens. Ideally they should
