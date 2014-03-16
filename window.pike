@@ -553,7 +553,11 @@ int keypress(object self,array|object ev,mapping subw)
 		case 0xFF0D: case 0xFF8D: enterpressed(subw); return 1; //Enter (works only when COMPAT_SIGNAL not needed)
 		case 0xFF52: //Up arrow
 		{
-			if (subw->histpos==-1) subw->histpos=sizeof(subw->cmdhist);
+			if (subw->histpos==-1)
+			{
+				subw->histpos=sizeof(subw->cmdhist);
+				subw->last_ef=subw->ef->get_text();
+			}
 			if (!subw->histpos) return 1;
 			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
 			string pfx = subw->ef->get_text()[..pos-1];
@@ -579,6 +583,7 @@ int keypress(object self,array|object ev,mapping subw)
 			int hp=subw->histpos;
 			while (++hp<sizeof(subw->cmdhist) && !has_prefix(subw->cmdhist[hp],pfx));
 			if (hp<sizeof(subw->cmdhist)) settext(subw,subw->cmdhist[subw->histpos=hp]);
+			else if (pfx=="" && persist["window/uparr"]) {settext(subw,subw->last_ef); subw->histpos=-1;}
 			else {subw->ef->set_text(pfx); subw->histpos=-1;}
 			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
 			return 1;
@@ -748,6 +753,7 @@ class advoptions
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Beep":(["path":"notif/beep","type":"int","default":0,"desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
+		"Up arrow":(["path":"window/uparr","type":"int","default":0,"desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?\n\n0: No.\n1: Yes.\n"]),
 		"Hide input":(["path":"window/hideinput","type":"int","default":0,"desc":"Local echo is active by default, but set this to 1 to disable it and hide all your commands."]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Numpad Nav echo":(["path":"window/numpadecho","default":0,"desc":"Set this to 1 to have numpad navigation commands echoed as if you'd typed them; 0 gives a cleaner display.","type":"int"]),
