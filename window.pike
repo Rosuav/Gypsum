@@ -610,7 +610,9 @@ int keypress(object self,array|object ev,mapping subw)
 		{
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
-				//TODO: Scroll up to last activity
+				//Scroll up to last activity
+				if (subw->last_activity) subw->scr->set_value(subw->last_activity);
+				subw->paused=1; statustxt->paused->set_text("<PAUSED>");
 				return 1;
 			}
 			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
@@ -683,6 +685,7 @@ void enterpressed(mapping subw,string|void cmd)
 		else subw->lines+=({subw->prompt});
 	}
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
+	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page size");
 	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
 	{
 		redraw(subw);
