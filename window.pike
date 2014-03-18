@@ -612,6 +612,8 @@ int keypress(object self,array|object ev,mapping subw)
 			{
 				//Scroll up to last activity. Note that this is stored by scrollbar
 				//position, not line index, so a change of font/size might disrupt it.
+				//The value will be clamped to the range, so the worst effect is that
+				//it'll take an extra hit of PgUp to get to normality. Not a big deal.
 				if (subw->last_activity) subw->scr->set_value(subw->last_activity);
 				subw->paused=1; statustxt->paused->set_text("<PAUSED>");
 				return 1;
