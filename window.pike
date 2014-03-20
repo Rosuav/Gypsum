@@ -747,8 +747,8 @@ void real_closetab(int removeme)
 void closetab()
 {
 	int removeme=notebook->get_current_page();
-	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) {real_closetab(removeme); return;} //TODO post 7.8: Use ?->sock for this
-	confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
+	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) real_closetab(removeme); //TODO post 7.8: Use ?->sock for this
+	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
 class advoptions
