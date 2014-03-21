@@ -107,6 +107,7 @@ void textread(mapping conn,string data,int end_of_block)
 		conn->curmsg[0]->timestamp=time(1);
 		conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+		G->G->window->redraw(conn->display);
 	}
 	else if (conn->curline!="") switch (persist["prompt/pseudo"] || ":>")
 	{
@@ -118,6 +119,7 @@ void textread(mapping conn,string data,int end_of_block)
 		case 1.0: //Treat everything as a pseudo-prompt.
 			conn->real_prompt=conn->display->prompt;
 			conn->display->prompt=conn->curmsg;
+			G->G->window->redraw(conn->display);
 			//Since this is a pseudo-prompt, don't clear anything out - just shadow the real prompt with this.
 	}
 }
