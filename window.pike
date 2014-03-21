@@ -689,7 +689,8 @@ void enterpressed(mapping subw,string|void cmd)
 	}
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
 	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page size");
-	if (sizeof(cmd)>1 && cmd[0]=='/' && cmd[1]!='/')
+	if (has_prefix(cmd,"//")) cmd=cmd[1..];
+	else if (has_prefix(cmd,"/"))
 	{
 		redraw(subw);
 		sscanf(cmd,"/%[^ ] %s",cmd,string args);
