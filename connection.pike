@@ -140,20 +140,39 @@ void ansiread(mapping conn,string data,int end_of_block)
 		textread(conn,data,0); conn->ansibuffer="\x1b"+ansi;
 		//werror("ANSI code: %O\n",(ansi/"m")[0]);
 		if (ansi[0]!='[') {textread(conn,"\\e",0); conn->ansibuffer=ansi; continue;} //Report an escape character as the literal string "\e" if it doesn't start an ANSI code
+		array(int|string) params=({ }); int|string curparam=UNDEFINED;
 		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, leave the unprocessed text and wait for more data from the socket.
 		{
-			case '3': conn->fg=ansi[++i]-'0'; break;
-			case '4': conn->bg=ansi[++i]-'0'; break;
-			case '0': conn->bold=0; conn->fg=7; conn->bg=0; break;
-			case '1': conn->bold=8; break;
-			case '2': conn->bold=0; break;
-			case ';': break;
-			case 'm':
-				conn->curmsg[-1]=conn->curmsg[-1];
-				conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
+			case '0'..'9':
+				if (zero_type(curparam)) curparam=ansi[i]-'0';
+				else curparam=curparam*10+ansi[i]-'0';
+				break;
+			case ';': params+=({curparam}); curparam=UNDEFINED; break;
+			//case '"': //Read a string (not currently supported)
+			case 'A'..'Z': case 'a'..'z':
+			{
+				//We have a complete sequence now.
+				if (!zero_type(curparam)) params+=({curparam});
+				switch (ansi[i]) //See if we understand the command.
+				{
+					case 'm': foreach (params,int|string param) if (intp(param)) switch (param)
+					{
+						case 0: conn->bold=0; conn->bg=0; conn->fg=7; break;
+						case 1: conn->bold=8; break;
+						case 2: conn->bold=0; break;
+						case 30..37: conn->fg=param-30; break;
+						case 40..47: conn->bg=param-40; break;
+						default: break; //Ignore unknowns (currently without error)
+					}
+					conn->curmsg[-1]=conn->curmsg[-1];
+					conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
+					break;
+					default: break; //Ignore unknowns without error
+				}
 				ansi=ansi[i+1..];
 				break colorloop;
-			default: werror("Unparseable ANSI sequence: %O\n",ansi); return;
+			}
+			default: werror("Unparseable ANSI sequence: %O\n",ansi[..i]); return;
 		}
 		conn->ansibuffer=ansi;
 	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
