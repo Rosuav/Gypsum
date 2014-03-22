@@ -230,7 +230,7 @@ class window
 	//Replace this and call the original after assigning to win->mainwindow.
 	void makewindow() { }
 
-	//Stock item creation: Close button. Calls closewindow() same as clicking the cross does.
+	//Stock item creation: Close button. Calls closewindow(), same as clicking the cross does.
 	GTK2.Button stock_close() {return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]));}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
