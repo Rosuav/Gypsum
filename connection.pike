@@ -66,7 +66,6 @@ protected string bytes_to_string(string bytes)
 void textread(mapping conn,string data,int end_of_block)
 {
 	if (conn->debug_textread) say(conn->display,"textread [%d]: %O\n",end_of_block,data);
-	if (arrayp(conn->textreads)) conn->textreads+=({data});
 	if (sizeof(data) && data[0]=='\n' && conn->lastcr) data=data[1..];
 	conn->lastcr=sizeof(data) && data[-1]=='\r';
 	data=replace(data,({"\r\n","\n\r","\r"}),"\n");
@@ -191,7 +190,6 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
 void sockread(mapping conn,string data)
 {
 	if (conn->debug_sockread) say(conn->display,"sockread: %O\n",data);
-	if (arrayp(conn->sockreads)) conn->sockreads+=({data});
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
