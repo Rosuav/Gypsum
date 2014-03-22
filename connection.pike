@@ -134,7 +134,6 @@ void textread(mapping conn,string data,int end_of_block)
 void ansiread(mapping conn,string data,int end_of_block)
 {
 	if (conn->debug_ansiread) say(conn->display,"ansiread: %O\n",data);
-	if (arrayp(conn->ansireads)) conn->ansireads+=({data});
 	conn->ansibuffer+=data;
 	while (sscanf(conn->ansibuffer,"%s\x1b%s",string data,string ansi)) if (mixed ex=catch
 	{
