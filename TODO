@@ -9,6 +9,7 @@
 * Performance check: is the constant resizing of the display slowing things down?
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Maybe maybe maybe: 256 color mode???
+* Save scrollback as HTML, or some other color-retaining format
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
