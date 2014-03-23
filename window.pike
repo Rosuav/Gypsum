@@ -355,6 +355,8 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	}
 	if (!mappingp(msg[0])) msg=({([])})+msg;
 	msg[0]->timestamp=time(1);
+	//Clean up any empty strings in msg, for efficiency
+	for (int i=2;i<sizeof(msg);i+=2) if (msg[i]=="") {msg=msg[..i-2]+msg[i+1..]; i-=2;}
 	if (subw->logfile) subw->logfile->write(string_to_utf8(line_text(msg)+"\n"));
 	array lines=({ });
 	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
