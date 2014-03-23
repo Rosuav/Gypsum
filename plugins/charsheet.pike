@@ -67,7 +67,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		string cur=ef->get_text();
 		if (cur==towhat) return; //No change
 		ef->set_text(towhat);
-		checkchanged(ef,0,what); //Pretend the user entered it and tabbed out
+		checkchanged(ef,what); //Pretend the user entered it and tabbed out
 	}
 
 	void ensurevisible(GTK2.Widget self)
