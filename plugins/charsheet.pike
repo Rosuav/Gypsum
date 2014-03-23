@@ -51,7 +51,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	{
 		string kwd=args[-1];
 		string val=self->get_text();
-		if (function f=this["fmt_"+kwd]) catch {self->set_text(val=f(val));}; //See if there's a reformatter function. If there is, it MUST be idempotent.
+		//See if there's a reformatter function. If there is, it MUST be idempotent.
+		if (function f=this["fmt_"+kwd])
+		{
+			string oldval=val; catch {val=f(val);};
+			if (val!=oldval) self->set_text(val);
+		}
 		set_value(kwd,val);
 	}
 
