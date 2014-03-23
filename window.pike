@@ -356,6 +356,9 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	//DEPRECATED: A zero color represents default. As of 20140315, this should
 	//not be done, as 0 should represent black-on-black. This code will at
 	//some point be removed, so don't depend on it.
+	//NOTE for git: This is actually potentially broken. It assumes that there
+	//is no info mapping at the beginning. Rather than fix it, I'm just going
+	//to remove it. Job done.
 	for (int i=0;i<sizeof(msg);i+=2) if (!msg[i]) msg[i]=7;
 	if (!mappingp(msg[0])) msg=({([])})+msg;
 	msg[0]->timestamp=time(1);
