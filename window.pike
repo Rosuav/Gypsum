@@ -1186,7 +1186,7 @@ int enterpressed_glo(object self)
 void savewinpos()
 {
 	windowmoved();
-	foreach (G->G->windows;string name;mapping win) if (win->save_position_hook) win->save_position_hook();
+	values(G->G->windows)->save_position_hook();
 }
 
 /**
