@@ -1185,9 +1185,8 @@ int enterpressed_glo(object self)
  */
 void savewinpos()
 {
-	object ev=class {string type="configure";}();
-	configevent(mainwindow,ev);
-	foreach (G->G->windows;string name;mapping win) if (win->save_position_hook) win->save_position_hook(win->mainwindow,ev);
+	windowmoved();
+	foreach (G->G->windows;string name;mapping win) if (win->save_position_hook) win->save_position_hook();
 }
 
 /**
@@ -1218,13 +1217,10 @@ int switchpage(object self,mixed segfault,int page,mixed otherarg)
 }
 
 mapping(string:int) pos;
-void configevent(object self,object ev)
+void windowmoved()
 {
-	#if constant(COMPAT_SIGNAL)
-	if (ev->type!="configure") return; //This check isn't needed if we can hook configure_event
-	#endif
 	if (!pos) call_out(savepos,0.1); //Save a moment after the window moves. "Sweep" movement creates a spew of these events, don't keep saving.
-	pos=self->get_position(); //Will return x and y
+	pos=mainwindow->get_position(); //Will return x and y
 }
 
 void savepos()
@@ -1249,9 +1245,8 @@ void mainwsignals()
 		gtksignal(notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(defbutton,"clicked",enterpressed_glo),
-		//gtksignal(mainwindow,"event",configevent), //See equiv in globals.pike
 		#else
-		gtksignal(mainwindow,"configure_event",configevent,0,UNDEFINED,1),
+		gtksignal(mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
 		#endif
 		gtksignal(mainwindow,"focus_in_event",window_focus),
 	});

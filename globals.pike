@@ -289,13 +289,10 @@ class movablewindow
 		::makewindow();
 	}
 
-	void configevent(object self,object ev)
+	void windowmoved()
 	{
-		#if constant(COMPAT_SIGNAL)
-		if (ev->type!="configure") return;
-		#endif
 		if (!has_index(win,"x")) call_out(savepos,0.1);
-		mapping pos=self->get_position(); win->x=pos->x; win->y=pos->y;
+		mapping pos=win->mainwindow->get_position(); win->x=pos->x; win->y=pos->y;
 	}
 
 	void savepos()
@@ -308,26 +305,12 @@ class movablewindow
 	{
 		::dosignals();
 		win->signals+=({
-			#if constant(COMPAT_SIGNAL)
-			/* NOTE: Pike 7.8.700 has a refcount bug with the "event" event.
-			Newer versions of Pike don't have this bug - see commit ff1242 in
-			branch 7.9 (and therefore 8.0) - but those same versions also have
-			the ability to hook "before" events, which is what we need for the
-			configure_event - that functionality was added in b29c8c (7.9
-			branch) and a4d094 (7.8 branch, in version 7.8.733). This issue
-			means that this would shortly cause Pike to either crash hard or
-			get into a nasty spin. To avoid the issue, I have simply disabled
-			the event hook (here and the equiv in window.pike), which means
-			window positions simply won't save. As a workaround, a "Save all
-			window positions" menu item has been deployed, but that's clunky.
-			Hopefully some other workaround can be found! */
-			//gtksignal(win->mainwindow,"event",configevent),
-			#else
-			gtksignal(win->mainwindow,"configure_event",configevent,0,UNDEFINED,1),
+			#if !constant(COMPAT_SIGNAL)
+			gtksignal(win->mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
 			#endif
 		});
 		#if constant(COMPAT_SIGNAL)
-		win->save_position_hook=configevent;
+		win->save_position_hook=windowmoved;
 		#endif
 	}
 }
