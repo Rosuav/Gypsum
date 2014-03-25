@@ -429,7 +429,7 @@ void redraw(mapping subw)
 
 int mkcolor(int fg,int bg)
 {
-	return fg || (bg<<16);
+	return fg | (bg<<16);
 }
 
 //Paint one piece of text at (x,y), returns the x for the next text.
