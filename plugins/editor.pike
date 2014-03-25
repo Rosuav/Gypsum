@@ -22,6 +22,9 @@ class editor(mapping(string:mixed) subw)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
+				#if constant(COMPAT_SIGNAL)
+				->add(win->pb_savepos=GTK2.Button("Save pos"))
+				#endif
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
@@ -71,6 +74,7 @@ class editor(mapping(string:mixed) subw)
 			#if !constant(COMPAT_BOOM2)
 			gtksignal(win->buf,"mark_set",cursorpos),
 			#endif
+			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
 		});
 	}
 }
