@@ -583,6 +583,7 @@ int invoke_browser(string url)
 /**
  * Attempt to beep, if the user hasn't disabled it
  * Currently ignores the 'times' parameter and just beeps once.
+ * TODO: Look into an ioctl way to beep???
  */
 int beep(int|void times)
 {
