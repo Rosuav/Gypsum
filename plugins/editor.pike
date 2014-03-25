@@ -21,7 +21,9 @@ class editor(mapping(string:mixed) subw)
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
+				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
+				#endif
 				#if constant(COMPAT_SIGNAL)
 				->add(win->pb_savepos=GTK2.Button("Save pos"))
 				#endif
