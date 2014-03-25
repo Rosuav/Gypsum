@@ -73,9 +73,7 @@ class editor(mapping(string:mixed) subw)
 			//(whatever it is). Am disabling this code until a patch is deployed.
 			//The solution is deep inside the Pike GTK support code and can't be worked
 			//around, so this depends on a Pike patch.
-			#if !constant(COMPAT_BOOM2)
-			gtksignal(win->buf,"mark_set",cursorpos),
-			#endif
+			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
 			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
 		});
 	}
