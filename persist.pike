@@ -59,7 +59,7 @@ object persist=class(string savefn)
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
-		if (data[idx]==val) rewrites[sprintf("%s:%d",@backtrace()[-2][..1])]=1;
+		if (!intp(val) && !stringp(val) && data[idx]==val) rewrites[sprintf("%s:%d",@backtrace()[-2][..1])]=1;
 		save();
 		return data[idx]=val;
 	}
