@@ -23,9 +23,10 @@ class editor(mapping(string:mixed) subw)
 				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
 				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
-				#endif
-				#if constant(COMPAT_SIGNAL)
+				#elif constant(COMPAT_SIGNAL)
 				->add(win->pb_savepos=GTK2.Button("Save pos"))
+				#else
+				->add(GTK2.Label("(cursor pos)"))
 				#endif
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
