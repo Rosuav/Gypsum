@@ -78,7 +78,7 @@ class menu_clicked
 				cur=next;
 			}
 			cur[path[-1]]=value;
-			persist[path[0]]=persist[path[0]]; //Force a save :)
+			persist->save();
 			funcs[callme]=1;
 		}
 		indices(funcs)(); //Call all the associated call-me functions (once each, even if specified multiple times)
