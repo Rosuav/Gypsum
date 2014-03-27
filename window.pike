@@ -23,6 +23,7 @@ int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 GTK2.Tooltips tooltips;
 inherit statustext;
+int mono; //Set to 1 to paint the screen in monochrome
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -470,7 +471,8 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 		//CJA 20140315: Am now making that change. For compatibility,
 		//the above 0->7 change is still done, but that will be dropped.
 		GTK2.GdkColor fg,bg;
-		if (!line[i]) {fg=colors[7]; bg=colors[0];} //Old compat
+		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
+		else if (!line[i]) {fg=colors[7]; bg=colors[0];} //Old compat
 		else if (objectp(line[i])) {fg=[object]line[i]; bg=colors[0];} //Compat
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //New
 		string txt=replace(line[i+1],"\n","\\n");
@@ -506,7 +508,7 @@ int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
-	display->set_background(colors[0]);
+	display->set_background(colors[mono && 15]); //In monochrome mode, background is all white.
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
