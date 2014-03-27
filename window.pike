@@ -1082,6 +1082,17 @@ void create(string name)
 		tooltips=GTK2.Tooltips();
 		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 		G->G->plugin_menu=([]);
+		/* TODO: Make this more declarative somehow.
+		
+		Currently, the menu bar can't be edited after program start. This is a problem; in
+		theory, new menu items could be created without breaking anything, but in practice
+		none of this code gets re-executed. It might be cleaner to create the MenuBar once
+		as part of program start, and then populate it every load - on the flip side, this
+		would probably make for a lot of unnecessary flicker, and the menu bar doesn't get
+		edited very often. But on the flip-flop side (does that exist??), it would then be
+		possible to go back to referencing functions directly, rather than naming them, as
+		they would never need their signals reconnected post-creation.
+		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
