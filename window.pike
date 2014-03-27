@@ -1035,6 +1035,12 @@ class promptsdlg
 	}
 }
 
+void monochrome()
+{
+	mono=!mono;
+	call_out(redraw,0,current_subw());
+}
+
 /**
  *
  */
@@ -1090,6 +1096,7 @@ void create(string name)
 					->add(menuitem("_Colors","channelsdlg"))
 					->add(menuitem("_Keyboard","keyboard"))
 					->add(menuitem("_Prompts","promptsdlg"))
+					->add(menuitem("_Monochrome","monochrome"))
 					->add(menuitem("Ad_vanced options","advoptions"))
 					#if constant(COMPAT_SIGNAL)
 					->add(menuitem("Save all window positions","savewinpos"))
