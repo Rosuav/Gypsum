@@ -204,7 +204,7 @@ class menu_clicked
 				if (!numpadnav) ignore_numpad=1;
 				//cursoratend not supported (currently Gypsum always puts it at the end)
 				box->pack_start(cb("Down arrow on no history: "+({"Lock","Clear","Save & clear"})[downarr],({"window/downarr"}),downarr),0,0,0);
-				//cpgup not supported (currently Gypsum doesn't even react to the key)
+				//cpgup not supported (currently Gypsum always pauses)
 				break;
 			}
 			case "MRU": break; //Ignore window positions. Also, Gypsum doesn't have a single "last used world" marker.
