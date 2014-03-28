@@ -182,7 +182,7 @@ class menu_clicked
 			{
 				//Again, copied straight in, just changing the ampersands into 'int' declarations and declaring the string :)
 				sscanf(args,"%d %d %d %d %d %d %d \xFE%[^\n]",int AnsiCol,int LocalEcho,int showtoolbar,int showstatusbar,int boxsel,int inputcol,int wipepseudo,string promptchars);
-				//AnsiCol not yet supported (Gypsum doesn't currently have a no-color mode, but it would be worth adding)
+				//AnsiCol not applicable (Gypsum's monochrome mode is transient)
 				//LocalEcho not supported (currently Gypsum can't disable it)
 				//showtoolbar, showstatusbar not supported - Gypsum never has the former and always has the latter, and there's no real reason to do otherwise
 				//boxsel not supported (Gypsum always defaults to stream, use Shift-drag for box)
