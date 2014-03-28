@@ -1137,7 +1137,6 @@ void create(string name)
 	{
 		object other=G->G->window;
 		colors=other->colors; notebook=other->notebook; mainwindow=other->mainwindow; tooltips=other->tooltips;
-		if (!tooltips) tooltips=GTK2.Tooltips(); //Compatibility, drop when not needed
 		#if constant(COMPAT_SIGNAL)
 		defbutton=other->defbutton;
 		#endif
