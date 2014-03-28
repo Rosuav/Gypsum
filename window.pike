@@ -1092,6 +1092,11 @@ void create(string name)
 		edited very often. But on the flip-flop side (does that exist??), it would then be
 		possible to go back to referencing functions directly, rather than naming them, as
 		they would never need their signals reconnected post-creation.
+
+		NOTE: The plugins menu has to be retained - or else recreated. If it ends up being
+		recreated in a consistent order (alphabetical by plugin name?) every time window's
+		reloaded, that would be fine; but this shouldn't require all 'plugin_menu' plugins
+		to be reloaded.
 		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
