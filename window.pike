@@ -1083,7 +1083,7 @@ void create(string name)
 		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 		G->G->plugin_menu=([]);
 		/* TODO: Make this more declarative somehow.
-		
+
 		Currently, the menu bar can't be edited after program start. This is a problem; in
 		theory, new menu items could be created without breaking anything, but in practice
 		none of this code gets re-executed. It might be cleaner to create the MenuBar once
