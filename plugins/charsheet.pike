@@ -95,6 +95,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		}
 	}
 
+	/* TODO: Make these entryfields able to record notes.
+	If a note is recorded against a field, it needs to have a marker (maybe a colored
+	triangle on one corner, like GDocs?), and pressing F2 should show that note. Also
+	notes can be created with F2, so what it really means is that a non-blank note is
+	represented in some way. Ideally, the note should record who put it there and, if
+	possible, when (and/or when it was last edited).
+	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
 		if (!width_or_props) width_or_props=5;
