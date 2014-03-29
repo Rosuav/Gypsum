@@ -13,6 +13,11 @@ have to compete for space.
 
 Note that the discovery does involve compiling, though not instantiating, each
 plugin (once). This is unavoidable.
+
+Idea: Move this functionality into window.pike, have the initial detection done in
+gypsum.pike (instead of bootstrap_all("plugins")), and push plugins-more and plugins
+back together. That'd also remove the oddity that most plugin loads get reported to
+the console, but -more plugins get echoed to... whichever subw is active at the time.
 */
 
 //Prune the list of plugins to only what can be statted, and add any from plugins-more
