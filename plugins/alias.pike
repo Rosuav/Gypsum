@@ -85,12 +85,4 @@ object hack=class {inherit plugin_menu; constant menu_label="Aliases - this worl
 	aliasdlg("aliases/simple/"+subw->world);
 }}("plugins/alias.pike/more");
 
-void create(string name)
-{
-	::create(name);
-	//Compatibility: Previously, aliases were mapped directly to their expansions.
-	//Any string expansions need to get converted to mappings. 20140201, can be
-	//removed once no longer needed.
-	foreach (aliases;string keyword;string|mapping expansion)
-		if (stringp(expansion)) aliases[keyword]=(["expansion":expansion]);
-}
+void create(string name) {::create(name);}
