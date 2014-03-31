@@ -85,7 +85,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			//It may be worth putting in a version trap; on the other hand, I've yet to see
 			//any false positives from checking for the presence of get_hscrollbar, so while
 			//it may not be the clearest way to do things, it does work. No other source file
-			//in pike/src/post_modules/GTK2/source/*.pre has get_hscrollbar.
+			//in pike/src/post_modules/GTK2/source/*.pre has get_hscrollbar, so I don't
+			//expect any other type of object in the hierarchy to give a false positive.
 			{
 				mapping alloc=self->allocation();
 				par->get_hadjustment()->clamp_page(alloc->x,alloc->x+alloc->width);
