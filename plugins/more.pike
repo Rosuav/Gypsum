@@ -12,7 +12,7 @@ normal to have it, but might be logical to remove it - like statusbar entries, w
 have to compete for space.
 
 Note that the discovery does involve compiling, though not instantiating, each
-plugin (once). This is unavoidable.
+plugin (once). This is unavoidable without switching to a separate parse step.
 
 Idea: Move this functionality into window.pike, have the initial detection done in
 gypsum.pike (instead of bootstrap_all("plugins")), and push plugins-more and plugins
