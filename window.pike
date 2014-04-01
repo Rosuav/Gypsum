@@ -1098,6 +1098,10 @@ void create(string name)
 		recreated in a consistent order (alphabetical by plugin name?) every time window's
 		reloaded, that would be fine; but this shouldn't require all 'plugin_menu' plugins
 		to be reloaded.
+
+		Compromise: Create the submenus once, and recreate the menu items inside them each
+		reload. That would cover most of what we need, and creating a new top-level menu I
+		think will be rare.
 		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
