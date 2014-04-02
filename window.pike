@@ -1113,6 +1113,11 @@ void create(string name)
 		which would be the text "Close tab"; and then "menuaccel_closetab" would be 'w' to
 		set the accelerator, with "menuaccelmod_closetab" to set the control mask. Feels a
 		bit clunky, but it's the germ of an idea.
+
+		Hmm. The above would have a problem with ordering. Possibly best to sort the items
+		by their function names (or their constant names, if you prefer), as that's in the
+		control of the code and is also not dependent on anything user-visible (would be a
+		bit awkward if the menu items were sorted by menu label, for instance).
 		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
