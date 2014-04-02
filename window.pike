@@ -1102,6 +1102,17 @@ void create(string name)
 		Compromise: Create the submenus once, and recreate the menu items inside them each
 		reload. That would cover most of what we need, and creating a new top-level menu I
 		think will be rare.
+
+		Option: Recognize specially-marked function names in this[] which will become menu
+		items. I need to have spaces in them and underscores, so we need a name convention
+		that can come with that. I'd rather keep these files ASCII, so solutions involving
+		some high Unicode symbol in place of the space have the aerodynamic qualities of a
+		two-ton rock (they won't fly...), and I may need to suss out accelerators too. Not
+		sure how that should be done. It might be necessary to have a tag; for instance, a
+		function "closetab" could be turned into a menu item by a constant "menu_closetab"
+		which would be the text "Close tab"; and then "menuaccel_closetab" would be 'w' to
+		set the accelerator, with "menuaccelmod_closetab" to set the control mask. Feels a
+		bit clunky, but it's the germ of an idea.
 		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
