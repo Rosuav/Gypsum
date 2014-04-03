@@ -725,9 +725,7 @@ void execcommand(mapping subw,string cmd,string|void skiphook)
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
-/**
- *
- */
+/* Menu item function also used elsewhere */
 void addtab() {subwindow("New tab");}
 
 /**
@@ -1182,6 +1180,7 @@ void create(string name)
  */
 int window_destroy() {exit(0);}
 
+/* Menu item function also used elsewhere */
 int window_close()
 {
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
