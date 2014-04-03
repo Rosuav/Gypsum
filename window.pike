@@ -1125,6 +1125,11 @@ void create(string name)
 		control of the code and is also not dependent on anything user-visible (would be a
 		bit awkward if the menu items were sorted by menu label, for instance).
 
+		Sorting by function/constant name would maintain the current menu item order, with
+		the following exceptions: Advanced options would move to the top (may be better to
+		not do that); Colors would move above Font (not a problem!); Monochrome would move
+		above Prompts (no biggie, neither is part of a group or anything).
+
 		Constants can be found via sort(indices(this_program)), which will be shorter than
 		indices(this) and thus quicker to iterate over; constants can be arrays, so that's
 		the way to do accelerators. (In Python, this would be a tuple rather than a list.)
