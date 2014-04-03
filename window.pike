@@ -726,6 +726,7 @@ void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0)
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
 /* Menu item function also used elsewhere */
+constant file_addtab=({"_New Tab",'t',GTK2.GDK_CONTROL_MASK});
 void addtab() {subwindow("New tab");}
 
 /**
@@ -1116,6 +1117,15 @@ void create(string name)
 		by their function names (or their constant names, if you prefer), as that's in the
 		control of the code and is also not dependent on anything user-visible (would be a
 		bit awkward if the menu items were sorted by menu label, for instance).
+
+		Constants can be found via sort(indices(this_program)), which will be shorter than
+		indices(this) and thus quicker to iterate over; constants can be arrays, so that's
+		the way to do accelerators. (In Python, this would be a tuple rather than a list.)
+		On creation, create the menu item with arrayp(x)?x[0]:x and then optionally add an
+		accelerator; accelerators will always be visible. It's not worth hanging onto refs
+		to the various submenus (it'd break compat anyway), so on update, just locate 'em,
+		tracing the hierarchy from mainwindow's child.
+		--> mainwindow->get_child()->get_children()[0]->get_children()->get_submenu()
 		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
@@ -1190,6 +1200,7 @@ int window_close()
 }
 
 //Either reconnect, or give the world list.
+constant file_connect_menu="_Connect";
 void connect_menu(object self)
 {
 	G->G->commands->connect("dlg",current_subw());
