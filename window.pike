@@ -743,6 +743,7 @@ void real_closetab(int removeme)
 /**
  * First-try at closing a tab. May call real_closetab() or raise a prompt.
  */
+constant file_closetab=({"Close Tab",'w',GTK2.GDK_CONTROL_MASK});
 void closetab()
 {
 	int removeme=notebook->get_current_page();
@@ -750,6 +751,7 @@ void closetab()
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
+constant options_advoptions="Ad_vanced options";
 class advoptions
 {
 	inherit configdlg;
@@ -806,6 +808,7 @@ class advoptions
 	}
 }
 
+constant options_channelsdlg="_Colors";
 class channelsdlg
 {
 	inherit configdlg;
@@ -834,6 +837,7 @@ class channelsdlg
 	}
 }
 
+constant options_fontdlg="_Font";
 class fontdlg
 {
 	inherit configdlg;
@@ -867,6 +871,7 @@ class fontdlg
 	}
 }
 
+constant options_keyboard="_Keyboard";
 class keyboard
 {
 	inherit configdlg;
@@ -941,6 +946,7 @@ class keyboard
 	}
 }
 
+constant help_aboutdlg="_About";
 class aboutdlg
 {
 	inherit window;
@@ -964,6 +970,7 @@ Version "+ver+", as far as can be ascertained :)"))
 	}
 }
 
+constant options_promptsdlg="_Prompts";
 class promptsdlg
 {
 	inherit window;
@@ -1034,6 +1041,7 @@ class promptsdlg
 	}
 }
 
+constant options_monochrome="_Monochrome";
 void monochrome()
 {
 	mono=!mono;
@@ -1189,6 +1197,7 @@ void create(string name)
  */
 int window_destroy() {exit(0);}
 
+constant file_window_close="E_xit";
 int window_close()
 {
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
@@ -1204,9 +1213,7 @@ void connect_menu(object self)
 	G->G->commands->connect("dlg",current_subw());
 }
 
-/**
- *
- */
+constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0,0);}
 
 /**
