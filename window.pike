@@ -1160,7 +1160,7 @@ void create(string name)
 					#endif
 				))
 				->add(GTK2.MenuItem("_Plugins")->set_submenu(G->G->plugin_menu[0]=GTK2.Menu()
-					->add(menuitem("_Configure","configure_plugins"))
+					->add(menuitem("_Configure","configure_plugins")) //TODO: Subsume plugins/more.pike into this
 					->add(GTK2.SeparatorMenuItem())
 				))
 				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
