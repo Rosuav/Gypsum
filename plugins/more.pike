@@ -25,6 +25,20 @@ Putting everything into trunk will mean that a persist key of plugins/more/list 
 be inappropriate, but it can stay around as legacy as there's no real reason to be
 changing it. It'd have to query both, as anyone who upgrades would be highly surprised
 to find the set of active plugins suddenly changing.
+
+Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
+RosMud, where plugins were the bit you could reload separately and the core required
+a shutdown, there's no difference here between window.pike and plugins/timer.pike.
+The choice of whether to make something core or plugin should now be made on the basis
+of two factors. Firstly, anything that should be removable MUST be a plugin; core code
+is always active. That means that anything that creates a window, statusbar entry, or
+other invasive or space-limited GUI content, should be a plugin. And secondly, the
+convenience of the code. If it makes good sense to have something create a command of
+its own name, for instance, it's easier to make it a plugin; but if something needs
+to be called on elsewhere, it's better to make it part of core (maybe globals). The
+current use of plugins/update.pike by other modules is an unnecessary dependency; it
+may still be convenient to have /update handled by that file, but the code that's
+called on elsewhere should be broken out into core.
 */
 
 //Prune the list of plugins to only what can be statted, and add any from plugins-more
