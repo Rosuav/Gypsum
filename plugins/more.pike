@@ -20,6 +20,8 @@ Idea: Move this functionality into window.pike, have the initial detection done 
 gypsum.pike (instead of bootstrap_all("plugins")), and push plugins-more and plugins
 back together. That'd also remove the oddity that most plugin loads get reported to
 the console, but -more plugins get echoed to... whichever subw is active at the time.
+This would also mean that the "active_by_default" feature is no longer magic, but a
+documented part of the plugin protocol.
 
 Putting everything into trunk will mean that a persist key of plugins/more/list will
 be inappropriate, but it can stay around as legacy as there's no real reason to be
