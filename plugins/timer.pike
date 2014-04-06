@@ -12,6 +12,10 @@ special keywords " HP", " SP" (yes, they begin with a space each), and ".EP"
 (yes, that's a period/full stop). Set their times to your corresponding regen
 rates, and leave the text blank. Then let the magic happen. :) */
 
+/* TODO maybe: "Hide when done" timers. They're visible only while they tick
+down. You can have piles and piles of them and they sit there quietly until
+one of them actually gets hit. */
+
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
