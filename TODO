@@ -10,6 +10,7 @@
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Maybe maybe maybe: 256 color mode???
 * Save scrollback as HTML, or some other color-retaining format
+* Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
