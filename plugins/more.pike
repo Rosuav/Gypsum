@@ -28,6 +28,11 @@ be inappropriate, but it can stay around as legacy as there's no real reason to 
 changing it. It'd have to query both, as anyone who upgrades would be highly surprised
 to find the set of active plugins suddenly changing.
 
+The merged-in code should go into window.pike, not gypsum.pike and definitely not
+anywhere else. It has to be the last, and a comment to that effect needs to go into
+gypsum.pike; and it should be possible for an "/update all" to install new defaultly
+active plugins and load them.
+
 Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
 RosMud, where plugins were the bit you could reload separately and the core required
 a shutdown, there's no difference here between window.pike and plugins/timer.pike.
