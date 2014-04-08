@@ -1275,9 +1275,9 @@ void create(string name)
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
-	foreach (plugins;string fn;mapping info)
+	foreach (sort(indices(plugins)),string fn)
 	{
-		if (info->active)
+		if (plugins[fn]->active)
 		{
 			int mtime=file_stat(fn)->mtime;
 			if (mtime!=plugin_mtime[fn] && !catch {G->bootstrap(fn);}) plugin_mtime[fn]=mtime;
