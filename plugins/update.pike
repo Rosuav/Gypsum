@@ -1,5 +1,7 @@
 inherit command;
 
+constant plugin_active_by_default = 1;
+
 string origin(function|object func)
 {
 	//Always go via the program, in case the function actually comes from an inherited parent.

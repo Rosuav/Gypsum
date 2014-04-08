@@ -5,6 +5,8 @@
 //in a window?? Probably a bit costly in real-estate.
 inherit command;
 
+constant plugin_active_by_default = 1;
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (subw->lastnav_desc) say(subw,"%% You travelled: "+subw->lastnav_desc);

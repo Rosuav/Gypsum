@@ -7,6 +7,8 @@ Thanks Thierran for helping me test the original RosMud version, of which this i
 inherit hook;
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 /* persist["tinyurl/*"] contains the following:
 proxy_host/proxy_port - if 0, goes direct to Tiny, else goes via the specified HTTP proxy
 maxlen=64 - maximum length of a URL that gets passed through unchanged

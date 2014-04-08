@@ -7,6 +7,8 @@ inherit command;
 inherit hook;
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 // Current Mapping:
 // Mapping     Mapping
 // |==========||=============================|

@@ -1,5 +1,7 @@
 inherit hook;
 
+constant plugin_active_by_default = 1;
+
 class editor(mapping(string:mixed) subw)
 {
 	inherit movablewindow;

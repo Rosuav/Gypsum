@@ -12,6 +12,9 @@ up. So take a bit of care, and don't deploy without knowing that it's right. :)
 */
 
 inherit hook;
+
+constant plugin_active_by_default = 1;
+
 mapping(string:multiset(object)) charsheets;
 
 class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) data)

@@ -5,6 +5,8 @@ inherit command;
 inherit movablewindow;
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 /* TODO: Document me properly somewhere.
 
 To set up for Threshold RPG regeneration timers, create three timers with the

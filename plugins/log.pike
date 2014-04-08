@@ -41,6 +41,8 @@ and hoping someone else has some ideas.
 inherit command;
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" && !subw->logfile)

@@ -1,5 +1,8 @@
 inherit command;
 
+//TODO: Some of this needs to move into core.
+constant plugin_active_by_default = 1;
+
 /**
  * List of worlds available by default.
  */

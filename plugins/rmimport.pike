@@ -22,6 +22,8 @@ if that's missed somewhere, it means only that the importer is broken.
 */
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 constant menu_label="Import settings";
 class menu_clicked
 {

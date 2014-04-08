@@ -1,6 +1,8 @@
 inherit command;
 inherit hook;
 
+constant plugin_active_by_default = 1;
+
 /* Command executor and expression evaluator
 
 Has two distinct modes, similar but with a few different operations. In the future one of them may be deprecated in favour of the other, but for now I'm undecided.
