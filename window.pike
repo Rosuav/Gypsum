@@ -1277,6 +1277,7 @@ void create(string name)
 		foreach (old;string fn;mapping info) plugins[fn-"-more"]=info; //Cheat a bit, remove any instance of -more from the filename
 		m_delete(persist,"plugins/more/list"); //Delete at the end, just in case something goes wrong
 	}
+	//Prune the plugins list to only what actually exists
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
