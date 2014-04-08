@@ -85,6 +85,6 @@ object hack=class {inherit plugin_menu; constant menu_label="Aliases - this worl
 	mapping subw=G->G->window->current_subw(); if (!subw || !subw->world) return;
 	persist->setdefault("aliases/simple/"+subw->world,([]));
 	aliasdlg("aliases/simple/"+subw->world);
-}}("plugins/alias.pike/more");
+}}("alias_more");
 
 void create(string name) {::create(name);}
