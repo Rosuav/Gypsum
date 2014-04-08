@@ -1066,12 +1066,6 @@ void colorcheck(object self,mapping subw)
 	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
-//Anything that calls this function is by definition a TODO, though this itself isn't.
-void TODO()
-{
-	say(0,"%% Sorry, that function isn't implemented yet.");
-}
-
 constant plugins_configure_plugins="_Configure";
 class configure_plugins
 {
