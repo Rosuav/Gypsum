@@ -1342,11 +1342,14 @@ int enterpressed_glo(object self)
 /**
  * COMPAT_SIGNAL window position saver hack
  */
+#if constant(COMPAT_SIGNAL)
+constant options_savewinpos="Save all window positions";
 void savewinpos()
 {
 	windowmoved();
 	values(G->G->windows)->save_position_hook();
 }
+#endif
 
 /**
  *
