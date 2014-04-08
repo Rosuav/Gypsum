@@ -24,6 +24,7 @@ mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of th
 GTK2.Tooltips tooltips;
 inherit statustext;
 int mono; //Set to 1 to paint the screen in monochrome
+multiset(string) plugins_active=(<>);
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -1067,9 +1068,75 @@ void TODO()
 	say(0,"%% Sorry, that function isn't implemented yet.");
 }
 
-/**
- *
- */
+constant plugins_configure_plugins="_Configure";
+class configure_plugins
+{
+	inherit configdlg;
+	mapping(string:mixed) windowprops=(["title":"Activate/deactivate plugins"]);
+	constant allow_rename=0;
+	constant persist_key="plugins/status";
+	//NOTE: Cannot use simple bindings as it needs to know the previous state
+	//Note also: This does not unload plugins on deactivation. Maybe it should?
+
+	void create() {::create("plugins/configure");}
+
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10) //Note that the "useless" Vbox here means that two_column doesn't expand to fill the height, which looks tidier.
+			->pack_start(two_column(({
+				"Filename",win->kwd=GTK2.Entry(),
+				"",win->active=GTK2.CheckButton("Active"),
+				"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
+			})),0,0,0);
+	}
+
+	void load_content(mapping(string:mixed) info)
+	{
+		win->active->set_active(info->active);
+	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		int nowactive=win->active->get_active();
+		if (!info->active && nowactive) function_object(G->G->commands->update)->build(selecteditem());
+		info->active=nowactive;
+	}
+}
+
+/*
+Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
+RosMud, where plugins were the bit you could reload separately and the core required
+a shutdown, there's no difference here between window.pike and plugins/timer.pike.
+The choice of whether to make something core or plugin should now be made on the basis
+of two factors. Firstly, anything that should be removable MUST be a plugin; core code
+is always active. That means that anything that creates a window, statusbar entry, or
+other invasive or space-limited GUI content, should be a plugin. And secondly, the
+convenience of the code. If it makes good sense to have something create a command of
+its own name, for instance, it's easier to make it a plugin; but if something needs
+to be called on elsewhere, it's better to make it part of core (maybe globals). The
+current use of plugins/update.pike by other modules is an unnecessary dependency; it
+may still be convenient to have /update handled by that file, but the code that's
+called on elsewhere should be broken out into core.
+*/
+void load_plugins(string dir)
+{
+	mapping(string:mapping(string:mixed)) plugins=persist["plugins/status"];
+	foreach (get_dir(dir),string fn)
+	{
+		fn=combine_path(dir,fn);
+		if (file_stat(fn)->isdir) load_plugins(dir);
+		else if (has_suffix(fn,".pike") && !plugins[fn])
+		{
+			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
+			//if it's found, that's the default active state. (Normally, if it's present, it'll be 1.)
+			add_constant("COMPILE_ONLY",1);
+			program compiled; catch {compiled=compile_file(fn);};
+			add_constant("COMPILE_ONLY");
+			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
+		}
+	}
+}
+
 void create(string name)
 {
 	if (!G->G->window)
@@ -1160,7 +1227,7 @@ void create(string name)
 					#endif
 				))
 				->add(GTK2.MenuItem("_Plugins")->set_submenu(G->G->plugin_menu[0]=GTK2.Menu()
-					->add(menuitem("_Configure","configure_plugins")) //TODO: Subsume plugins/more.pike into this
+					->add(menuitem("_Configure","configure_plugins"))
 					->add(GTK2.SeparatorMenuItem())
 				))
 				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
@@ -1189,12 +1256,27 @@ void create(string name)
 		tabs=other->tabs; statusbar=other->statusbar;
 		if (other->signals) other->signals=0; //Clear them out, just in case.
 		if (other->menu) menu=other->menu;
+		if (other->plugins_active) plugins_active=other->plugins_active;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	if (!tooltips) tooltips=GTK2.Tooltips();
 	G->G->window=this;
 	::create(name);
 	mainwsignals();
+
+	//Scan for plugins now that everything else is initialized.
+	mapping(string:mapping(string:mixed)) plugins=persist->setdefault("plugins/status",([]));
+	//Compat: Pull in the list from plugins/more.pike's config
+	if (mapping old=persist["plugins/more/list"])
+	{
+		foreach (old;string fn;mapping info) plugins[fn-"-more"]=info; //Cheat a bit, remove any instance of -more from the filename
+		m_delete(persist,"plugins/more/list"); //Delete at the end, just in case something goes wrong
+	}
+	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
+	load_plugins("plugins");
+	persist->save(); //Autosave (even if nothing's changed, currently)
+	foreach (plugins;string fn;mapping info) if (info->active && !plugins_active[fn])
+		if (!catch {G->bootstrap(fn);}) plugins_active[fn]=1;
 }
 
 /**

@@ -298,6 +298,19 @@ No such file should exist in the repository (to avoid overwriting
 a user's config), but a ".ini.example" file should be provided if
 appropriate. BEST PRACTICE: Use a configdlg instead.
 
+A plugin will be loaded by default if it has this declaration at top-level:
+constant plugin_active_by_default = 1;
+The plugin is probed for this by compiling it and examining its constants,
+so it's possible for the value of the constant to be programmatically
+chosen, eg based on the presence or absence of some lower-level module. If
+the loading of the plugin could be problematic, guard the entire code thus:
+#if !constant(COMPILE_ONLY)
+... plugin code here ...
+#endif
+Anything inside this check will not be processed during the probe phase.
+(The normal create() call also doesn't happen during probing, so most
+plugins need not go to this level of hassle.)
+
 ADVISORY: Everything in globals.pike can be used simply by referencing
 its name. Explore the file for what can be used; most of it is stable,
 even if not explicitly part of this file's pledge. They're omitted for
