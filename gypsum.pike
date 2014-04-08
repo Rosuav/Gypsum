@@ -45,21 +45,6 @@ void bootstrap(string c)
 }
 
 /**
- * Searches a provided directory and subdirectories for pike files to be compiled.
- *
- * @param dir Name of directory to be searched.
- */
-void bootstrap_all(string dir) //Recursively bootstrap all .pike files in dir and its subdirectories
-{
-	foreach (sort(get_dir(dir)),string cur) if (mixed ex=catch
-	{
-		string c=dir+"/"+cur;
-		if (file_stat(c)->isdir) bootstrap_all(c);
-		else if (has_suffix(c,".pike")) bootstrap(c);
-	}) werror("Error bootstrapping %s: %s\n",cur,describe_backtrace(ex)); //If error, report it and move on - plugins can happily be reloaded later.
-}
-
-/**
  * Adds a constant to the global constant list. Allows for inheritance checks.
  *
  * @param Name	Name of the constant
@@ -110,7 +95,6 @@ int main(int argc,array(string) argv)
 	bootstrap("connection.pike");
 	bootstrap("window.pike");
 	if (!globals->say) return 1;
-	bootstrap_all("plugins");
 	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect)
 	{

@@ -76,7 +76,6 @@ int process(string param,mapping(string:mixed) subw)
 		//NOTE: Does NOT update persist.pike or globals.pike.
 		G->bootstrap("connection.pike");
 		G->bootstrap("window.pike");
-		G->bootstrap_all("plugins");
 		say(subw,"%% Update complete.");
 		param="."; //And re-update anything that needs it.
 	}

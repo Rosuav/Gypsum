@@ -24,7 +24,7 @@ mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of th
 GTK2.Tooltips tooltips;
 inherit statustext;
 int mono; //Set to 1 to paint the screen in monochrome
-multiset(string) plugins_active=(<>);
+mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
@@ -1256,7 +1256,7 @@ void create(string name)
 		tabs=other->tabs; statusbar=other->statusbar;
 		if (other->signals) other->signals=0; //Clear them out, just in case.
 		if (other->menu) menu=other->menu;
-		if (other->plugins_active) plugins_active=other->plugins_active;
+		if (other->plugin_mtime) plugin_mtime=other->plugin_mtime;
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	if (!tooltips) tooltips=GTK2.Tooltips();
@@ -1275,8 +1275,15 @@ void create(string name)
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	load_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
-	foreach (plugins;string fn;mapping info) if (info->active && !plugins_active[fn])
-		if (!catch {G->bootstrap(fn);}) plugins_active[fn]=1;
+	foreach (plugins;string fn;mapping info)
+	{
+		if (info->active)
+		{
+			int mtime=file_stat(fn)->mtime;
+			if (mtime!=plugin_mtime[fn] && !catch {G->bootstrap(fn);}) plugin_mtime[fn]=mtime;
+		}
+		else m_delete(plugin_mtime,fn);
+	}
 }
 
 /**
