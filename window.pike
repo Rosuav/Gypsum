@@ -1124,7 +1124,7 @@ void discover_plugins(string dir)
 	foreach (get_dir(dir),string fn)
 	{
 		fn=combine_path(dir,fn);
-		if (file_stat(fn)->isdir) discover_plugins(dir);
+		if (file_stat(fn)->isdir) discover_plugins(fn);
 		else if (has_suffix(fn,".pike") && !plugins[fn])
 		{
 			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
