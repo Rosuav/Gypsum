@@ -1160,84 +1160,14 @@ void create(string name)
 		tooltips=GTK2.Tooltips();
 		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 		G->G->plugin_menu=([]);
-		/* TODO: Make this more declarative somehow.
-
-		Currently, the menu bar can't be edited after program start. This is a problem; in
-		theory, new menu items could be created without breaking anything, but in practice
-		none of this code gets re-executed. It might be cleaner to create the MenuBar once
-		as part of program start, and then populate it every load - on the flip side, this
-		would probably make for a lot of unnecessary flicker, and the menu bar doesn't get
-		edited very often. But on the flip-flop side (does that exist??), it would then be
-		possible to go back to referencing functions directly, rather than naming them, as
-		they would never need their signals reconnected post-creation.
-
-		NOTE: The plugins menu has to be retained - or else recreated. If it ends up being
-		recreated in a consistent order (alphabetical by plugin name?) every time window's
-		reloaded, that would be fine; but this shouldn't require all 'plugin_menu' plugins
-		to be reloaded.
-
-		Compromise: Create the submenus once, and recreate the menu items inside them each
-		reload. That would cover most of what we need, and creating a new top-level menu I
-		think will be rare.
-
-		Option: Recognize specially-marked function names in this[] which will become menu
-		items. I need to have spaces in them and underscores, so we need a name convention
-		that can come with that. I'd rather keep these files ASCII, so solutions involving
-		some high Unicode symbol in place of the space have the aerodynamic qualities of a
-		two-ton rock (they won't fly...), and I may need to suss out accelerators too. Not
-		sure how that should be done. It might be necessary to have a tag; for instance, a
-		function "closetab" could be turned into a menu item by a constant "menu_closetab"
-		which would be the text "Close tab"; and then "menuaccel_closetab" would be 'w' to
-		set the accelerator, with "menuaccelmod_closetab" to set the control mask. Feels a
-		bit clunky, but it's the germ of an idea.
-
-		Hmm. The above would have a problem with ordering. Possibly best to sort the items
-		by their function names (or their constant names, if you prefer), as that's in the
-		control of the code and is also not dependent on anything user-visible (would be a
-		bit awkward if the menu items were sorted by menu label, for instance).
-
-		Sorting by function/constant name would maintain the current menu item order, with
-		the following exceptions: Advanced options would move to the top (may be better to
-		not do that); Colors would move above Font (not a problem!); Monochrome would move
-		above Prompts (no biggie, neither is part of a group or anything). Renaming adv to
-		z_adv to force the position.
-
-		Constants can be found via sort(indices(this_program)), which will be shorter than
-		indices(this) and thus quicker to iterate over; constants can be arrays, so that's
-		the way to do accelerators. (In Python, this would be a tuple rather than a list.)
-		On creation, create the menu item with arrayp(x)?x[0]:x and then optionally add an
-		accelerator; accelerators will always be visible. It's not worth hanging onto refs
-		to the various submenus (it'd break compat anyway), so on update, just locate 'em,
-		tracing the hierarchy from mainwindow's child.
-		--> mainwindow->get_child()->get_children()[0]->get_children()->get_submenu()
-		*/
 		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 			->pack_start(GTK2.MenuBar()
-				->add(GTK2.MenuItem("_File")->set_submenu(GTK2.Menu()
-					->add(menuitem("_New Tab","addtab")->add_accelerator("activate",accel,'t',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
-					->add(menuitem("Close tab","closetab")->add_accelerator("activate",accel,'w',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE))
-					->add(menuitem("_Connect","connect_menu"))
-					->add(menuitem("_Disconnect","disconnect_menu"))
-					->add(menuitem("E_xit","window_close"))
-				))
-				->add(GTK2.MenuItem("_Options")->set_submenu(GTK2.Menu()
-					->add(menuitem("_Font","fontdlg"))
-					->add(menuitem("_Colors","channelsdlg"))
-					->add(menuitem("_Keyboard","keyboard"))
-					->add(menuitem("_Prompts","promptsdlg"))
-					->add(menuitem("_Monochrome","monochrome"))
-					->add(menuitem("Ad_vanced options","zadvoptions"))
-					#if constant(COMPAT_SIGNAL)
-					->add(menuitem("Save all window positions","savewinpos"))
-					#endif
-				))
-				->add(GTK2.MenuItem("_Plugins")->set_submenu(G->G->plugin_menu[0]=GTK2.Menu()
-					->add(menuitem("_Configure","configure_plugins"))
-					->add(GTK2.SeparatorMenuItem())
-				))
-				->add(GTK2.MenuItem("_Help")->set_submenu(GTK2.Menu()
-					->add(menuitem("_About","aboutdlg"))
-				))
+				//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
+				//reason won't accept a GTK2.Menu, which is a subclass of Widget.
+				->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
+				->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
+				->add(GTK2.MenuItem("_Plugins")->set_submenu((object)(G->G->plugin_menu[0]=GTK2.Menu())))
+				->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
 			,0,0,0)
 			->add(notebook=GTK2.Notebook())
 			->pack_end(statusbar=GTK2.Hbox(0,0),0,0,0)
@@ -1267,6 +1197,30 @@ void create(string name)
 	if (!tooltips) tooltips=GTK2.Tooltips();
 	G->G->window=this;
 	::create(name);
+
+	//Build or rebuild the menus
+	//Note that this code depends on there being four menus: File, Options, Plugins, Help.
+	//If that changes, compatibility code will be needed.
+	array(GTK2.Menu) submenus=mainwindow->get_child()->get_children()[0]->get_children()->get_submenu();
+	foreach (submenus,GTK2.Menu submenu) foreach (submenu->get_children(),GTK2.MenuItem w) {w->destroy(); destruct(w);}
+	//Neat hack: Build up a mapping from a prefix like "options" (the part before the underscore
+	//in the constant name) to the submenu object it should be appended to.
+	mapping(string:GTK2.Menu) menus=([]);
+	[menus->file,menus->options,menus->plugins,menus->help] = submenus;
+	foreach (sort(indices(this_program)),string const) if (object menu=sscanf(const,"%s_%s",string pfx,string name) && name && menus[pfx])
+	{
+		program me=this_program; //Note that this_program[const] doesn't work - the compiler thinks I'm indexing a function.
+		array|string info=me[const];
+		GTK2.MenuItem item=arrayp(info)
+			? GTK2.MenuItem(info[0])->add_accelerator("activate",G->G->accel,info[1],info[2],GTK2.ACCEL_VISIBLE)
+			: GTK2.MenuItem(info); //String constants are just labels; arrays have accelerator key and modifiers.
+		item->show()->signal_connect("activate",this[name]);
+		menu->add(item);
+	}
+	//Recreate plugin menu items in name order
+	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=name && G->G->plugin_menu[name])
+		if (!mi->menuitem) mi->self->make_menuitem(name);
+
 	mainwsignals();
 
 	//Scan for plugins now that everything else is initialized.
@@ -1315,16 +1269,6 @@ void connect_menu(object self)
 
 constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0,0);}
-
-/**
- * Create a menu item and retain it for subsequent signal binding in mainwsignals()
- */
-GTK2.MenuItem menuitem(mixed content,string func)
-{
-	GTK2.MenuItem ret=GTK2.MenuItem(content);
-	menu[ret]=func;
-	return ret;
-}
 
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
 
@@ -1413,6 +1357,4 @@ void mainwsignals()
 		#endif
 		gtksignal(mainwindow,"focus_in_event",window_focus),
 	});
-	foreach (menu;GTK2.MenuItem widget;string func)
-		signals+=({gtksignal(widget,"activate",this[func] || TODO)}); //If the function can't be found, put it through to TODO(). This is not itself a TODO.
 }
