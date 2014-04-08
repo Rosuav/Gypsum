@@ -1118,13 +1118,13 @@ current use of plugins/update.pike by other modules is an unnecessary dependency
 may still be convenient to have /update handled by that file, but the code that's
 called on elsewhere should be broken out into core.
 */
-void load_plugins(string dir)
+void discover_plugins(string dir)
 {
 	mapping(string:mapping(string:mixed)) plugins=persist["plugins/status"];
 	foreach (get_dir(dir),string fn)
 	{
 		fn=combine_path(dir,fn);
-		if (file_stat(fn)->isdir) load_plugins(dir);
+		if (file_stat(fn)->isdir) discover_plugins(dir);
 		else if (has_suffix(fn,".pike") && !plugins[fn])
 		{
 			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
@@ -1273,7 +1273,7 @@ void create(string name)
 		m_delete(persist,"plugins/more/list"); //Delete at the end, just in case something goes wrong
 	}
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
-	load_plugins("plugins");
+	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
 	foreach (plugins;string fn;mapping info)
 	{
