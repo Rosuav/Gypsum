@@ -811,7 +811,6 @@ class zadvoptions
 		win->desc->set_text(info->desc);
 	}
 }
-constant advoptions=zadvoptions; //Until the full change is done and the menu recreated every update, keep this for compat.
 
 constant options_channelsdlg="_Colors";
 class channelsdlg
