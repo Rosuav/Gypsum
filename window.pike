@@ -752,8 +752,11 @@ void closetab()
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
-constant options_advoptions="Ad_vanced options";
-class advoptions
+/* This is called "zadvoptions" rather than "advoptions" to force its menu item
+to be at the end of the Options menu. It's a little odd, but that's the only
+case that needs to be fiddled with to make the menu work how I want it to. */
+constant options_zadvoptions="Ad_vanced options";
+class zadvoptions
 {
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
@@ -808,6 +811,7 @@ class advoptions
 		win->desc->set_text(info->desc);
 	}
 }
+constant advoptions=zadvoptions; //Until the full change is done and the menu recreated every update, keep this for compat.
 
 constant options_channelsdlg="_Colors";
 class channelsdlg
@@ -1195,7 +1199,8 @@ void create(string name)
 		Sorting by function/constant name would maintain the current menu item order, with
 		the following exceptions: Advanced options would move to the top (may be better to
 		not do that); Colors would move above Font (not a problem!); Monochrome would move
-		above Prompts (no biggie, neither is part of a group or anything).
+		above Prompts (no biggie, neither is part of a group or anything). Renaming adv to
+		z_adv to force the position.
 
 		Constants can be found via sort(indices(this_program)), which will be shorter than
 		indices(this) and thus quicker to iterate over; constants can be arrays, so that's
@@ -1221,7 +1226,7 @@ void create(string name)
 					->add(menuitem("_Keyboard","keyboard"))
 					->add(menuitem("_Prompts","promptsdlg"))
 					->add(menuitem("_Monochrome","monochrome"))
-					->add(menuitem("Ad_vanced options","advoptions"))
+					->add(menuitem("Ad_vanced options","zadvoptions"))
 					#if constant(COMPAT_SIGNAL)
 					->add(menuitem("Save all window positions","savewinpos"))
 					#endif
