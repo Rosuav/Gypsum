@@ -1272,6 +1272,7 @@ void disconnect_menu(object self) {connect(0,0,0);}
 
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
 
+#if constant(COMPAT_SIGNAL)
 /**
  * COMPAT_SIGNAL bouncer
  */
@@ -1287,7 +1288,6 @@ int enterpressed_glo(object self)
 /**
  * COMPAT_SIGNAL window position saver hack
  */
-#if constant(COMPAT_SIGNAL)
 constant options_savewinpos="Save all window positions";
 void savewinpos()
 {
