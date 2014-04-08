@@ -173,8 +173,8 @@ class command
 	int process(string param,mapping(string:mixed) subw) {}
 	void create(string name)
 	{
-		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
-		if (cmdname) G->G->commands[cmdname]=process;
+		sscanf(explode_path(name)[-1],"%s.pike",name);
+		if (name) G->G->commands[name]=process;
 	}
 }
 
@@ -186,6 +186,7 @@ class hook
 	string hookname;
 	void create(string name)
 	{
+		//Slightly different from the others in that it needs to retain its hookname
 		sscanf(explode_path(name)[-1],"%s.pike",hookname);
 		if (hookname) G->G->hooks[hookname]=this;
 	}
@@ -478,8 +479,8 @@ class statustext
 	mapping(string:mixed) statustxt=([]);
 	void create(string name)
 	{
-		sscanf(explode_path(name)[-1],"%s.pike",string cmdname);
-		if (cmdname) {if (G->G->statustexts[cmdname]) statustxt=G->G->statustexts[cmdname]; else G->G->statustexts[cmdname]=statustxt;}
+		sscanf(explode_path(name)[-1],"%s.pike",name);
+		if (name) {if (G->G->statustexts[name]) statustxt=G->G->statustexts[name]; else G->G->statustexts[name]=statustxt;}
 		statustxt->self=this;
 		if (!statustxt->lbl)
 		{
@@ -487,7 +488,7 @@ class statustext
 				->add(makestatus())
 				->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
 			G->G->window->statusbar->pack_start(frm,0,0,3)->show_all();
-			G->G->window->tooltips->set_tip(frm,statustxt->tooltip || cmdname);
+			G->G->window->tooltips->set_tip(frm,statustxt->tooltip || name);
 		}
 	}
 	GTK2.Widget makestatus() {return statustxt->lbl=GTK2.Label((["xalign":0.0]));}
