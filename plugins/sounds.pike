@@ -1,5 +1,5 @@
 inherit hook;
-#if constant(SDL.Music)
+#if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
 //Has a fixed number of "streams", with any given trigger attached to one particular stream
 //Whenever there's any trigger on a stream, that stream's entry is _replaced_ with the new one.
