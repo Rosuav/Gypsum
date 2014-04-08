@@ -464,8 +464,8 @@ hard-coding F0F0F0. Or how to make the TextView simply not draw a bg. Have email
 NOTE: This does not appear to work on Windows. GTK version is the same, and Pike 7.8.700 on Linux works,
 but for some reason it's failing me on Windows. Weird weird weird, and very annoying.
 */
-//Note that the need for a second row is less pressing now that several of the statusbar
-//plugins have been moved to -more. If someone finds the statusbar too wide, s/he can
+//Note that the need for a second row is less pressing now that any plugin can be
+//removed, not just "non-core" ones. If someone finds the statusbar too wide, s/he can
 //simply deactivate some of them, and reclaim the space. It'd still be nice, but the
 //Windows issues mean it's not worth the hassle... for now, at least.
 

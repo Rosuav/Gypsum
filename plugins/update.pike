@@ -27,9 +27,8 @@ string fn(mapping subw,string param)
 	}
 
 	//Turn "cmd/update.pike:4" into "cmd/update.pike". This breaks on Windows path names, which
-	//may be a problem; to prevent issues, always use relative paths. Anything auto-loaded from
-	//either plugins/ or plugins-more/ will use a relative path, for obvious reasons, but if an
-	//external plugin is loaded from outside the Gypsum tree, it could be problematic. (This is
+	//may be a problem; to prevent issues, always use relative paths. Auto-discovered plugins
+	//use a relative path, but manually loaded ones could be problematic. (This is
 	//an issue for loading plugins off a different drive, obviously. It is unsolvable for now.)
 	if (has_value(param,":")) sscanf(param,"%s:",param);
 
@@ -37,7 +36,7 @@ string fn(mapping subw,string param)
 	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
 	if (!has_value(param,"/") && !file_stat(param))
 	{
-		foreach (({"plugins","plugins-more"}),string dir)
+		foreach (({"plugins","plugins/zz_local"}),string dir)
 		{
 			if (file_stat(dir+"/"+param)) {param=dir+"/"+param; break;}
 			if (file_stat(dir+"/"+param+".pike")) {param=dir+"/"+param+".pike"; break;}
