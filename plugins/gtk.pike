@@ -100,7 +100,7 @@ void data_available(object q,string fn)
 			}
 		}
 		say(0,"%% Files downloaded correctly.");
-		confirm(0,"All files downloaded successfully. Effect the change?",0,switch_dirs);
+		G->globals->confirm(0,"All files downloaded successfully. Effect the change?",0,switch_dirs);
 	}
 }
 
@@ -125,7 +125,7 @@ void update()
 			Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,fn));
 	}
 	if (downloading) say(0,"%% Downloading "+downloading+" files...");
-	else confirm(0,"All files already downloaded. Effect the change?",0,switch_dirs);
+	else G->globals->confirm(0,"All files already downloaded. Effect the change?",0,switch_dirs);
 }
 
 void create()
