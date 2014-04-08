@@ -209,6 +209,8 @@ class plugin_menu
 	void create(string|void name)
 	{
 		if (!name) return;
+		if (G->G->plugin_menu[name]) mi=m_delete(G->G->plugin_menu,name); //Compat - the entries were renamed CJA 20140408.
+		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (G->G->plugin_menu[name]) mi=G->G->plugin_menu[name]; else G->G->plugin_menu[name]=mi;
 		mi->self=this;
 		if (mi->menuitem) mi->menuitem->get_child()->set_text(menu_label||name);
@@ -246,6 +248,8 @@ class window
 	}
 	void create(string|void name)
 	{
+		if (G->G->windows[name]) win=m_delete(G->G->windows,name); //Compat - the entries were renamed CJA 20140408.
+		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
 		win->self=this;
 		if (!win->mainwindow) makewindow();
