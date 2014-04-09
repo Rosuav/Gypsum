@@ -1,7 +1,6 @@
 inherit hook;
 inherit plugin_menu;
 inherit statusevent;
-inherit window;
 
 constant plugin_active_by_default = 1;
 
@@ -95,122 +94,120 @@ void showtime()
 }
 
 constant menu_label="Thresh Time converter";
-void menu_clicked() {showwindow();}
-
-GTK2.Entry ef(string name,int|void width)
+class menu_clicked
 {
-	return win[name]=GTK2.Entry((["width-chars":width||2]));
-}
+	inherit window;
+	void create() {::create("threshtime"); set_time_now(); showwindow();} //Explicitly show the window for compatibility (can drop later)
 
-void makewindow()
-{
-	win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow,"no-show-all":1]))->add(GTK2.Vbox(0,10)
-		->add(GTK2.Frame("Real life (Terra) time")->add(GTK2.Vbox(0,0)
-			->add(GTK2.Hbox(0,0)
-				->add(win->rb_local=GTK2.RadioButton("Local")->set_active(1))
-				->add(win->rb_est=GTK2.RadioButton("EST",win->rb_local))
-				->add(win->rb_edt=GTK2.RadioButton("EDT",win->rb_local))
+	GTK2.Entry ef(string name,int|void width)
+	{
+		return win[name]=GTK2.Entry((["width-chars":width||2]));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,10)
+			->add(GTK2.Frame("Real life (Terra) time")->add(GTK2.Vbox(0,0)
+				->add(GTK2.Hbox(0,0)
+					->add(win->rb_local=GTK2.RadioButton("Local")->set_active(1))
+					->add(win->rb_est=GTK2.RadioButton("EST",win->rb_local))
+					->add(win->rb_edt=GTK2.RadioButton("EDT",win->rb_local))
+				)
+				->add(GTK2Table(({
+					({"Year","Month","Day","Time",0}),
+					({ef("rl_year",4),win->rl_mon=SelectBox(terramonth),ef("rl_day",3),ef("rl_hour"),ef("rl_min")}),
+				})))
+			))
+			->add(GTK2.HbuttonBox()
+				->add(win->conv_up=GTK2.Button("Convert ^"))
+				->add(win->conv_dn=GTK2.Button("Convert v"))
+				->add(win->set_now=GTK2.Button("Set today"))
 			)
-			->add(GTK2Table(({
+			->add(GTK2.Frame("Threshold time")->add(GTK2Table(({
 				({"Year","Month","Day","Time",0}),
-				({ef("rl_year",4),win->rl_mon=SelectBox(terramonth),ef("rl_day",3),ef("rl_hour"),ef("rl_min")}),
-			})))
-		))
-		->add(GTK2.HbuttonBox()
-			->add(win->conv_up=GTK2.Button("Convert ^"))
-			->add(win->conv_dn=GTK2.Button("Convert v"))
-			->add(win->set_now=GTK2.Button("Set today"))
-		)
-		->add(GTK2.Frame("Threshold time")->add(GTK2Table(({
-			({"Year","Month","Day","Time",0}),
-			({ef("th_year",4),win->th_mon=SelectBox(threshmonth),ef("th_day",3),ef("th_hour"),ef("th_min")}),
-		}))))
-		->add(GTK2.HbuttonBox()->add(stock_close()))
-	);
+				({ef("th_year",4),win->th_mon=SelectBox(threshmonth),ef("th_day",3),ef("th_hour"),ef("th_min")}),
+			}))))
+			->add(GTK2.HbuttonBox()->add(stock_close()))
+		);
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->rb_local,"toggled",check_timezone),
+			gtksignal(win->rb_est,"toggled",check_timezone),
+			gtksignal(win->rb_edt,"toggled",check_timezone),
+			gtksignal(win->conv_up,"clicked",convert_up),
+			gtksignal(win->conv_dn,"clicked",convert_down),
+			gtksignal(win->set_now,"clicked",set_time_now),
+		});
+	}
+
+	void set_rl_time(int time)
+	{
+		win->last_rl_time=time;
+		mapping tm;
+		if (win->rb_local->get_active()) tm=localtime(time); //Local time. Ask for it directly.
+		else tm=gmtime(time-3600*(4+!win->rb_edt->get_active())); //EST/EDT. A bit of a cheat; ask for GMT, but bias the time by either 4 or 5 hours.
+		win->rl_min->set_text((string)tm->min);
+		win->rl_hour->set_text((string)tm->hour);
+		win->rl_day->set_text((string)tm->mday);
+		win->rl_mon->set_active(tm->mon);
+		win->rl_year->set_text((string)(tm->year+1900));
+	}
+
+	void check_timezone() {set_rl_time(win->last_rl_time);}
+
+	void set_th_time(int time)
+	{
+		win->last_th_time=time;
+		win->th_min->set_text((string)(time%60)); time/=60;
+		win->th_hour->set_text((string)(time%24)); time/=24;
+		win->th_day->set_text((string)(time%30+1)); time/=30;
+		win->th_mon->set_active(time%12); time/=12;
+		win->th_year->set_text((string)time);
+	}
+
+	void set_time_now()
+	{
+		int tm=time();
+		set_rl_time(tm);
+		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
+	}
+
+	void convert_up()
+	{
+		int tm=
+			(int)win->th_year->get_text() * 518400 +
+			(int)win->th_mon->get_active() * 43200 +
+			(int)win->th_day->get_text() * 1440 - 1440 +
+			(int)win->th_hour->get_text() * 60 +
+			(int)win->th_min->get_text();
+		win->last_th_time=tm;
+		set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5);
+	}
+
+	void convert_down()
+	{
+		//Pick a timezone. Local time is represented by UNDEFINED, which is distinct
+		//from a normal zero which would mean UTC.
+		int tz=UNDEFINED;
+		if (win->rb_edt->get_active()) tz=4*3600;
+		else if (win->rb_est->get_active()) tz=5*3600;
+		int tm=mktime(0,
+			(int)win->rl_min->get_text(),
+			(int)win->rl_hour->get_text(),
+			(int)win->rl_day->get_text(),
+			(int)win->rl_mon->get_active(),
+			(int)win->rl_year->get_text()-1900,
+			UNDEFINED,tz);
+		win->last_rl_time=tm;
+		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
+	}
 }
 
-void showwindow()
-{
-	::showwindow();
-	set_time_now();
-}
-
-void dosignals()
-{
-	::dosignals();
-	win->signals+=({
-		gtksignal(win->rb_local,"toggled",check_timezone),
-		gtksignal(win->rb_est,"toggled",check_timezone),
-		gtksignal(win->rb_edt,"toggled",check_timezone),
-		gtksignal(win->conv_up,"clicked",convert_up),
-		gtksignal(win->conv_dn,"clicked",convert_down),
-		gtksignal(win->set_now,"clicked",set_time_now),
-	});
-}
-
-void set_rl_time(int time)
-{
-	win->last_rl_time=time;
-	mapping tm;
-	if (win->rb_local->get_active()) tm=localtime(time); //Local time. Ask for it directly.
-	else tm=gmtime(time-3600*(4+!win->rb_edt->get_active())); //EST/EDT. A bit of a cheat; ask for GMT, but bias the time by either 4 or 5 hours.
-	win->rl_min->set_text((string)tm->min);
-	win->rl_hour->set_text((string)tm->hour);
-	win->rl_day->set_text((string)tm->mday);
-	win->rl_mon->set_active(tm->mon);
-	win->rl_year->set_text((string)(tm->year+1900));
-}
-
-void check_timezone() {set_rl_time(win->last_rl_time);}
-
-void set_th_time(int time)
-{
-	win->last_th_time=time;
-	win->th_min->set_text((string)(time%60)); time/=60;
-	win->th_hour->set_text((string)(time%24)); time/=24;
-	win->th_day->set_text((string)(time%30+1)); time/=30;
-	win->th_mon->set_active(time%12); time/=12;
-	win->th_year->set_text((string)time);
-}
-
-void set_time_now()
-{
-	int tm=time();
-	set_rl_time(tm);
-	set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
-}
-
-void convert_up()
-{
-	int tm=
-		(int)win->th_year->get_text() * 518400 +
-		(int)win->th_mon->get_active() * 43200 +
-		(int)win->th_day->get_text() * 1440 - 1440 +
-		(int)win->th_hour->get_text() * 60 +
-		(int)win->th_min->get_text();
-	win->last_th_time=tm;
-	set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5);
-}
-
-void convert_down()
-{
-	//Pick a timezone. Local time is represented by UNDEFINED, which is distinct
-	//from a normal zero which would mean UTC.
-	int tz=UNDEFINED;
-	if (win->rb_edt->get_active()) tz=4*3600;
-	else if (win->rb_est->get_active()) tz=5*3600;
-	int tm=mktime(0,
-		(int)win->rl_min->get_text(),
-		(int)win->rl_hour->get_text(),
-		(int)win->rl_day->get_text(),
-		(int)win->rl_mon->get_active(),
-		(int)win->rl_year->get_text()-1900,
-		UNDEFINED,tz);
-	win->last_rl_time=tm;
-	set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
-}
-
-void statusbar_double_click() {showwindow();} //Double-click on status bar to show the conversion window
+void statusbar_double_click() {menu_clicked();} //Double-click on status bar to show the conversion window
 
 void create(string name)
 {
