@@ -5,7 +5,6 @@
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Cross-platform safety check: copy/paste of huge amounts of text, does it crash? Do I need to protect against it?
-* Code model/layout check: standardize on composition not inheritance, don't "inherit configdlg" and leave it hidden.
 * Performance check: is the constant resizing of the display slowing things down?
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Maybe maybe maybe: 256 color mode???
