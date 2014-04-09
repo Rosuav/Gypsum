@@ -1202,8 +1202,8 @@ void create(string name)
 	[menus->file,menus->options,menus->plugins,menus->help] = submenus;
 	foreach (sort(indices(this_program)),string const) if (object menu=sscanf(const,"%s_%s",string pfx,string name) && name && menus[pfx])
 	{
-		program me=this_program; //Note that this_program[const] doesn't work - the compiler thinks I'm indexing a function.
-		array|string info=me[const];
+		program me=this_program; //Note that this_program[const] doesn't work in Pike 7.8.700 due to a bug fixed in afa24a.
+		array|string info=me[const]; //The workaround is to assign this_program to a temporary and index that instead.
 		GTK2.MenuItem item=arrayp(info)
 			? GTK2.MenuItem(info[0])->add_accelerator("activate",G->G->accel,info[1],info[2],GTK2.ACCEL_VISIBLE)
 			: GTK2.MenuItem(info); //String constants are just labels; arrays have accelerator key and modifiers.
