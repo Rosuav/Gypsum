@@ -8,6 +8,8 @@ constant plugin_active_by_default = 1;
 //Might also be able to use that to get the list of Terran month names, which could then
 //be localized. Probably not worth it though, just use the English names.
 
+//TODO: Colorize the background (subtly, not intrusively) to show season - esp summer vs non-summer.
+
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
