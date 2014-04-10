@@ -75,7 +75,9 @@ class editor(mapping(string:mixed) subw)
 			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
 			//(whatever it is). Am disabling this code until a patch is deployed.
 			//The solution is deep inside the Pike GTK support code and can't be worked
-			//around, so this depends on a Pike patch.
+			//around, so this depends on a Pike patch. For want of a better name, I'm calling
+			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
+			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
 			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
 		});
