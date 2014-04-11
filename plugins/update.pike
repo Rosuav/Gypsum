@@ -69,15 +69,9 @@ int process(string param,mapping(string:mixed) subw)
 		}]));
 		return 1;
 	}
-	if (param=="all")
-	{
-		//Update everything. Note that this uses G->bootstrap() so errors come up on the console instead of in subw.
-		//NOTE: Does NOT update persist.pike or globals.pike.
-		G->bootstrap("connection.pike");
-		G->bootstrap("window.pike");
-		say(subw,"%% Update complete.");
-		param="."; //And re-update anything that needs it.
-	}
+	//Update everything by updating globals; everything's bound to use at least something.
+	//NOTE: Does NOT update persist.pike, deliberately.
+	if (param=="all") param="globals.pike";
 	if (!(param=fn(subw,param))) return 1;
 	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
