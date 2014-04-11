@@ -490,7 +490,8 @@ class statustext
 				->add(makestatus())
 				->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
 			G->G->window->statusbar->pack_start(frm,0,0,3)->show_all();
-			G->G->window->tooltips->set_tip(frm,statustxt->tooltip || name);
+			if (!G->G->tooltips) G->G->tooltips=GTK2.Tooltips();
+			G->G->tooltips->set_tip(frm,statustxt->tooltip || name);
 		}
 	}
 	GTK2.Widget makestatus() {return statustxt->lbl=GTK2.Label((["xalign":0.0]));}
