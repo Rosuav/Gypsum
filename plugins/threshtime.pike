@@ -9,6 +9,7 @@ constant plugin_active_by_default = 1;
 //be localized. Probably not worth it though, just use the English names.
 
 //TODO: Colorize the background (subtly, not intrusively) to show season - esp summer vs non-summer.
+//We're already in an EventBox so that shouldn't cost much more.
 
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
