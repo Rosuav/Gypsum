@@ -1237,9 +1237,6 @@ void create(string name)
 	}
 }
 
-/**
- *
- */
 int window_destroy() {exit(0);}
 
 constant file_window_close="E_xit";
