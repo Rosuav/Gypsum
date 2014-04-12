@@ -1244,7 +1244,7 @@ int window_close()
 {
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
 	if (!conns) exit(0);
-	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit);
+	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
 	return 1;
 }
 
