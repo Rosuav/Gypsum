@@ -1227,6 +1227,7 @@ void create(string name)
 	persist->save(); //Autosave (even if nothing's changed, currently)
 	foreach (sort(indices(plugins)),string fn)
 	{
+		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
 		if (plugins[fn]->active)
 		{
 			int mtime=file_stat(fn)->mtime;
