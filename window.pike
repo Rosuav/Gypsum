@@ -1245,7 +1245,7 @@ int window_close()
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
 	if (!conns) exit(0);
 	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
-	return 1;
+	return 1; //Used as the delete-event, so it should return 0 for that.
 }
 
 //Either reconnect, or give the world list.
