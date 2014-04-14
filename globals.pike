@@ -214,9 +214,12 @@ class plugin_menu
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (G->G->plugin_menu[name]) mi=G->G->plugin_menu[name]; else G->G->plugin_menu[name]=mi;
 		mi->self=this;
-		if (mi->menuitem) mi->menuitem->get_child()->set_text(menu_label||name);
+		if (mi->menuitem)
+		{
+			mi->menuitem->get_child()->set_text(menu_label||name);
+			mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
+		}
 		else make_menuitem(name);
-		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 	}
 
 	void make_menuitem(string name)
@@ -224,6 +227,7 @@ class plugin_menu
 		mi->menuitem=GTK2.MenuItem(menu_label||name);
 		if (menu_accel_key) mi->menuitem->add_accelerator("activate",G->G->accel,menu_accel_key,menu_accel_mods,GTK2.ACCEL_VISIBLE);
 		G->G->plugin_menu[0]->add(mi->menuitem->show());
+		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 	}
 }
 
