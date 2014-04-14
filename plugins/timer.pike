@@ -195,6 +195,14 @@ string line_text(array l) {/* Also not needed */}
 int main() {process("save",0);}
 #endif
 
+string save()
+{
+	string data="";
+	foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
+		data+=sprintf("%q=%d",kwd,info->next);
+	return data;
+}
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg") {config(); return 1;}
@@ -204,15 +212,8 @@ int process(string param,mapping(string:mixed) subw)
 	//to do); but also, it'd be great to have a one-off timer that has custom time
 	//and description, starting in the past. Particularly so if it can retrieve an
 	//estimated time from the text and use that as the timer.
-	if (param=="save" || sscanf(param,"save %s",string pfx))
-	{
-		string data="";
-		foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
-			data+=sprintf("%q=%d",kwd,info->next);
-		if (pfx) send(subw->connection,pfx+" "+data+"\r\n");
-		else say(subw,"%% "+data);
-		return 1;
-	}
+	if (param=="save") say(subw,"%% "+save());
+	if (sscanf(param,"save %s",string pfx)) send(subw->connection,pfx+" "+save()+"\r\n");
 	if (param=="load")
 	{
 		//Attempt to load from the most recent line of text with a quote in it
@@ -232,6 +233,6 @@ int process(string param,mapping(string:mixed) subw)
 		persist["timer/timers"]=timers;
 		showtimes();
 		say(subw,"%% Loaded.");
-		return 1;
 	}
+	return 1;
 }
