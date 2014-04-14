@@ -143,12 +143,7 @@ void scrchange(object self,mapping subw)
 	#if constant(COMPAT_SCROLL)
 	//On Windows, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
 	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
-	//Note that I (CJA) haven't been seeing this, even on Windows. Not sure why. Must investigate.
-	//Is it possible there are different GTK versions available? Get people to check Pike and GTK versions.
-	//20140302: YES! The version I'm running has a newer GTK than the version Bod has. Now, how to upgrade
-	//GTK when it's the same Pike... hrm... weird.
-	//20140303: Oh! I upgraded GTK manually on Traal. No wonder! Okay. Will play around with this and fix
-	//the problem. Might also offer a simple download-and-patch system alongside Gypsum.
+	//Note that this is solved by updating GTK, so it may not be all that important after all.
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	self->set_value(upper-self->get_property("page size"));
