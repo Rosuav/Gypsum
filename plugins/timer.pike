@@ -175,34 +175,6 @@ void dosignals()
 	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }
 
-void create(string name)
-{
-	::create(name);
-	showtimes();
-}
-#else
-//This file is executable, as a means of saving (to the console).
-//Reads directly from .gypsumrc so it can be used whether Gypsum's running or not.
-//Suitable for remote execution eg via SSH
-mapping G=(["G":([])]);
-mapping persist=decode_value(Stdio.read_file(combine_path(__FILE__,"..","..",".gypsumrc"))) || ([]);
-mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
-void config() {}
-void showtimes() {}
-void say(mapping|void subw,string msg) {write("%s\n",msg);}
-void send(mapping dest,string msg) {/* Not needed */}
-string line_text(array l) {/* Also not needed */}
-int main() {process("save",0);}
-#endif
-
-string save()
-{
-	string data="";
-	foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
-		data+=sprintf("%q=%d",kwd,info->next);
-	return data;
-}
-
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="dlg") {config(); return 1;}
@@ -235,4 +207,26 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% Loaded.");
 	}
 	return 1;
+}
+
+void create(string name)
+{
+	::create(name);
+	showtimes();
+}
+#else
+//This file is executable, as a means of saving (to the console).
+//Reads directly from .gypsumrc so it can be used whether Gypsum's running or not.
+//Suitable for remote execution eg via SSH
+mapping persist=decode_value(Stdio.read_file(combine_path(__FILE__,"..","..",".gypsumrc"))) || ([]);
+mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
+int main() {write("%s\n",save());}
+#endif
+
+string save()
+{
+	string data="";
+	foreach (timers;string kwd;mapping info) if (info->next && info->next>time(1))
+		data+=sprintf("%q=%d",kwd,info->next);
+	return data;
 }
