@@ -230,7 +230,7 @@ int process(string param,mapping(string:mixed) subw)
 		sscanf(param,"%{%O=%d%}",array(array(string|int)) data);
 		foreach (data,[string kwd,int next])
 			if (timers[kwd]) timers[kwd]->next=next;
-		persist["timer/timers"]=timers;
+		persist->save();
 		showtimes();
 		say(subw,"%% Loaded.");
 	}
