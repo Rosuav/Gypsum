@@ -71,9 +71,6 @@ class connectdlg
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
 	//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
 	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
-	//Hmm. Maybe separate "edit worlds" from "connect"? The dialog could be "edit worlds" and simply not _have_ a
-	//button to connect to the world. Would that bug people?
-	//Actually - yes it would. Don't do that. But there could be something other than an action button, maybe.
 	//string actionbtn="Save and C_onnect";
 	//20140311: Now putting the button inside the dialog, as an experiment.
 
