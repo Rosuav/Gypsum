@@ -1059,6 +1059,40 @@ void colorcheck(object self,mapping subw)
 	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
+/*
+Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
+RosMud, where plugins were the bit you could reload separately and the core required
+a shutdown, there's no difference here between window.pike and plugins/timer.pike.
+The choice of whether to make something core or plugin should now be made on the basis
+of two factors. Firstly, anything that should be removable MUST be a plugin; core code
+is always active. That means that anything that creates a window, statusbar entry, or
+other invasive or space-limited GUI content, should be a plugin. And secondly, the
+convenience of the code. If it makes good sense to have something create a command of
+its own name, for instance, it's easier to make it a plugin; but if something needs
+to be called on elsewhere, it's better to make it part of core (maybe globals). The
+current use of plugins/update.pike by other modules is an unnecessary dependency; it
+may still be convenient to have /update handled by that file, but the code that's
+called on elsewhere should be broken out into core.
+*/
+void discover_plugins(string dir)
+{
+	mapping(string:mapping(string:mixed)) plugins=persist["plugins/status"];
+	foreach (get_dir(dir),string fn)
+	{
+		fn=combine_path(dir,fn);
+		if (file_stat(fn)->isdir) discover_plugins(fn);
+		else if (has_suffix(fn,".pike") && !plugins[fn])
+		{
+			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
+			//if it's found, that's the default active state. (Normally, if it's present, it'll be 1.)
+			add_constant("COMPILE_ONLY",1);
+			program compiled; catch {compiled=compile_file(fn);};
+			add_constant("COMPILE_ONLY");
+			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
+		}
+	}
+}
+
 constant plugins_configure_plugins="_Configure";
 class configure_plugins
 {
@@ -1091,40 +1125,6 @@ class configure_plugins
 		int nowactive=win->active->get_active();
 		if (!info->active && nowactive) function_object(G->G->commands->update)->build(selecteditem());
 		info->active=nowactive;
-	}
-}
-
-/*
-Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
-RosMud, where plugins were the bit you could reload separately and the core required
-a shutdown, there's no difference here between window.pike and plugins/timer.pike.
-The choice of whether to make something core or plugin should now be made on the basis
-of two factors. Firstly, anything that should be removable MUST be a plugin; core code
-is always active. That means that anything that creates a window, statusbar entry, or
-other invasive or space-limited GUI content, should be a plugin. And secondly, the
-convenience of the code. If it makes good sense to have something create a command of
-its own name, for instance, it's easier to make it a plugin; but if something needs
-to be called on elsewhere, it's better to make it part of core (maybe globals). The
-current use of plugins/update.pike by other modules is an unnecessary dependency; it
-may still be convenient to have /update handled by that file, but the code that's
-called on elsewhere should be broken out into core.
-*/
-void discover_plugins(string dir)
-{
-	mapping(string:mapping(string:mixed)) plugins=persist["plugins/status"];
-	foreach (get_dir(dir),string fn)
-	{
-		fn=combine_path(dir,fn);
-		if (file_stat(fn)->isdir) discover_plugins(fn);
-		else if (has_suffix(fn,".pike") && !plugins[fn])
-		{
-			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
-			//if it's found, that's the default active state. (Normally, if it's present, it'll be 1.)
-			add_constant("COMPILE_ONLY",1);
-			program compiled; catch {compiled=compile_file(fn);};
-			add_constant("COMPILE_ONLY");
-			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
-		}
 	}
 }
 
