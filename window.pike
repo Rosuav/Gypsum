@@ -1069,7 +1069,7 @@ class configure_plugins
 	//NOTE: Cannot use simple bindings as it needs to know the previous state
 	//Note also: This does not unload plugins on deactivation. Maybe it should?
 
-	void create() {::create("plugins/configure");}
+	void create() {discover_plugins("plugins"); ::create("plugins/configure");}
 
 	GTK2.Widget make_content()
 	{
