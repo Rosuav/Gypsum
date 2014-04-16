@@ -1,5 +1,9 @@
 //Threshold RPG vote assistant
 //Ticks down 12 hours, then reminds you to vote.
+//By default, it's non-intrusive. If you'd like it to be a bit more visible,
+//type this: /x persist["plugins/vote/color"]=11
+//That'll make a yellow highlight. (Other numbers for other colors, per the
+//usual definitions.)
 inherit plugin_menu;
 inherit statusevent;
 
@@ -9,8 +13,16 @@ void showtime()
 {
 	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,60);
 	int t=persist["plugins/vote/nexttime"]-time();
-	if (t<=0) {setstatus("VOTE: NOW!"); return;}
-	setstatus(sprintf("Vote: %02d:%02d",t/3600,(t/60)%60));
+	if (t<=0)
+	{
+		setstatus("VOTE: NOW!");
+		if (int col=persist["plugins/vote/color"]) statustxt->evbox->modify_bg(GTK2.STATE_NORMAL,G->G->window->colors[col]);
+	}
+	else
+	{
+		setstatus(sprintf("Vote: %02d:%02d",t/3600,(t/60)%60));
+		statustxt->evbox->modify_bg(GTK2.STATE_NORMAL);
+	}
 }
 
 void vote()
