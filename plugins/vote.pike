@@ -4,6 +4,9 @@
 //type this: /x persist["plugins/vote/color"]=11
 //That'll make a yellow highlight. (Other numbers for other colors, per the
 //usual definitions.)
+//TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
+//across Gypsums, but more importantly, means it needs to somehow detect its
+//external IP and re-highlight accordingly.
 inherit plugin_menu;
 inherit statusevent;
 
