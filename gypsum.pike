@@ -65,7 +65,7 @@ void add_gypsum_constant(string name,mixed val)
  * Driver function for the Gypsum application
  *
  * @param argc number of arguments passed in from the command line
- * @param argv array of arguments passed in from the commadnd line
+ * @param argv array of arguments passed in from the command line
  */
 int main(int argc,array(string) argv)
 {
