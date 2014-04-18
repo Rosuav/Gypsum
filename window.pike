@@ -25,6 +25,16 @@ inherit statustext;
 int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 
+/* I could easily add tab completion to the entry field. The only question is, what
+should be added as suggestions?
+1) Character names. Somehow it should figure out who's a character and who's not.
+2) Objects in rooms that can be looked at.
+3) Channel names, and then people on those channels
+4) Other?
+
+Should it be context sensitive? It could be reconfigured in colorcheck().
+*/
+
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
 
 	//Each 'line' represents one line that came from the MUD. In theory, they might be wrapped for display, which would
