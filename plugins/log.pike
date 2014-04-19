@@ -37,6 +37,14 @@ log files and then bind regexes to them. In any case, it's distinctly different 
 the other two. But breaking this out into three (or even two, merging subw and conn)
 separately-configured plugins is definitely wrong. Really really not happy with this
 and hoping someone else has some ideas.
+
+20140419: This really needs something, but I'm still not sure what. The logging
+facilities exist in core (that's correct), and the configuration can be a plugin
+(that's fine), but I still feel as I did above, that it shouldn't be three separate
+menu items, nor a notebook. But what *should* it be? Or maybe I should actually cut
+the options a bit. Maybe having window and connection logging is superfluous. Can I
+do the whole thing as a single logging feature, with maybe a tick box "include input
+lines"???
 */
 inherit command;
 inherit plugin_menu;
