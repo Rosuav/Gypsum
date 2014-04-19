@@ -1191,6 +1191,7 @@ void create(string name)
 		foreach (tabs,mapping subw) subwsignals(subw);
 	}
 	G->G->window=this;
+	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
 
 	//Build or rebuild the menus
