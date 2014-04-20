@@ -201,6 +201,12 @@ They need not necessarily be the same object (eg the returned label
 might be wrapped inside something else for structure), but if not, the
 return object must be a parent (direct or indirect) of statustxt->lbl.
 
+The status text will have a tooltip, which by default is your plugin's
+name. To change this to something more useful, put this in create():
+statustxt->tooltip = "whatever text you want";
+This must be done prior to calling ::create(), as there is currently no
+way to alter the tooltip post-creation. (This may change in future.)
+
 Status text with eventbox - 'inherit statusevent'
 -------------------------------------------------
 
