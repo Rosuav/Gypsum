@@ -338,7 +338,7 @@ void sockaccept(mapping conn)
  */
 void connected(mapping conn)
 {
-	if (!conn->sock) return; //Connection must have failed eg in sock->connect()
+	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
