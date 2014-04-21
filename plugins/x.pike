@@ -63,22 +63,22 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
 
 int process(string param,mapping(string:mixed) subw)
 {
-	program tmp; mixed err,ret;
+	program tmp; mixed err;
 	err=catch {tmp=compile_string(#"
 	GTK2.Window mw=G->G->window->mainwindow;
 	object window=G->G->window;
 	//Add any other 'convenience names' here
 
-	mixed foo(mapping(string:mixed) subw)
+	mixed foo(mapping(string:mixed) subw,mixed _)
 	{
 		mixed ret="+param+#";
 		return ret;
 	}",".exec",this);};
 	
 	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
-	err=catch {ret=tmp()->foo(subw);};
+	err=catch {G->G->last_x_result=tmp()->foo(subw,G->G->last_x_result);};
 	if (err) {say(subw,"Error in execution: %O\n",err); return 1;}
-	say(subw,"%O\n",ret);
+	say(subw,"%O\n",G->G->last_x_result);
 	return 1;
 }
 
