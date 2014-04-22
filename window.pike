@@ -1195,7 +1195,7 @@ void create(string name)
 	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
 
-	/* Not quite doing what I want, but it's a strt...
+	/* Not quite doing what I want, but it's a start...
 
 	GTK2.ListStore ls=GTK2.ListStore(({"string"}));
 	GTK2.EntryCompletion compl=GTK2.EntryCompletion()->set_model(ls)->set_text_column(0)->set_minimum_key_length(2);
