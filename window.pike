@@ -1195,6 +1195,14 @@ void create(string name)
 	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
 
+	/* Not quite doing what I want, but it's a strt...
+
+	GTK2.ListStore ls=GTK2.ListStore(({"string"}));
+	GTK2.EntryCompletion compl=GTK2.EntryCompletion()->set_model(ls)->set_text_column(0)->set_minimum_key_length(2);
+	foreach (sort(indices(G->G->commands)),string kwd) ls->set_value(ls->append(),0,"/"+kwd);
+	tabs[0]->ef->set_completion(compl);
+	*/
+
 	//Build or rebuild the menus
 	//Note that this code depends on there being four menus: File, Options, Plugins, Help.
 	//If that changes, compatibility code will be needed.
