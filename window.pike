@@ -31,6 +31,7 @@ should be added as suggestions?
 2) Objects in rooms that can be looked at.
 3) Channel names, and then people on those channels
 4) Other?
+5) Local commands, if the user's already typed a slash. Should be easy enough.
 
 Should it be context sensitive? It could be reconfigured in colorcheck().
 */
