@@ -189,9 +189,6 @@ GTK2.Widget makestatus()
 //Depends on the current scr->pagesize.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
-/**
- *
- */
 array(int) point_to_char(mapping subw,int x,int y)
 {
 	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
@@ -233,9 +230,6 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 }
 
-/**
- *
- */
 void mousedown(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
@@ -244,9 +238,6 @@ void mousedown(object self,object ev,mapping subw)
 	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
 }
 
-/**
- *
- */
 void mouseup(object self,object ev,mapping subw)
 {
 	int mouse_down=m_delete(subw,"mouse_down"); //Destructive query
@@ -302,9 +293,6 @@ void mouseup(object self,object ev,mapping subw)
 	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content);
 }
 
-/**
- *
- */
 void mousemove(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
@@ -507,9 +495,6 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 	}
 }
 
-/**
- *
- */
 int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
@@ -539,18 +524,12 @@ int paint(object self,object ev,mapping subw)
 	}
 }
 
-/**
- *
- */
 void settext(mapping subw,string text)
 {
 	subw->ef->set_text(text);
 	subw->ef->set_position(sizeof(text));
 }
 
-/**
- *
- */
 int keypress(object self,array|object ev,mapping subw)
 {
 	if (arrayp(ev)) ev=ev[0];
@@ -675,9 +654,6 @@ int keypress(object self,array|object ev,mapping subw)
 	}
 }
 
-/**
- *
- */
 void enterpressed(mapping subw,string|void cmd)
 {
 	if (!cmd) {cmd=subw->ef->get_text(); subw->ef->set_text("");}
