@@ -1,6 +1,6 @@
 //Connection handler.
 
-/**
+/*
  * Everything works with a mapping(string:mixed) conn; some of its handy elements include:
  * 
  * Stdio.File sock;
