@@ -3,11 +3,9 @@
 * Spell-checker?
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
-* Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
 * Cross-platform safety check: copy/paste of huge amounts of text, does it crash? Do I need to protect against it?
 * Performance check: is the constant resizing of the display slowing things down?
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
-* Maybe maybe maybe: 256 color mode???
 * Save scrollback as HTML, or some other color-retaining format
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
 
@@ -24,3 +22,7 @@ least some chance of being found.
 * Creating timers (plugins/timer.pike) with names " HP", " SP", and ".EP" will handle them with Threshold RPG semantics.
 * Creating a world (plugins/connect.pike) with an IP address of "0.0.0.0" or "::" will put it in passive mode (IPv4 or IPv6).
 * Setting persist["wealth/autosplit"] (plugins/wealth.pike) will send, rather than displaying, the split commands.
+
+Vague theories of maybe-this-would-be-nice:
+* Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
+* 256 color support
