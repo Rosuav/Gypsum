@@ -823,6 +823,43 @@ class channelsdlg
 	}
 }
 
+constant options_colorsdlg="Co_lors";
+class colorsdlg
+{
+	inherit configdlg;
+	constant ints=({"r","g","b"});
+	constant allow_new=0,allow_delete=0,allow_rename=0;
+	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
+	void create()
+	{
+		items=([]);
+		foreach (color_defs;int i;[int r,int g,int b]) items[sprintf("%2d: %s%s",i,"bold "*(i>7),colnames[i&7])]=(["r":r,"g":g,"b":b]);
+		::create("colorsdlg");
+	}
+
+	GTK2.Widget make_content()
+	{
+		return two_column(({
+			"Color",noex(win->kwd=GTK2.Label()),
+			"Red",noex(win->r=GTK2.Entry()->set_size_request(40,-1)),
+			"Green",noex(win->g=GTK2.Entry()->set_size_request(40,-1)),
+			"Blue",noex(win->b=GTK2.Entry()->set_size_request(40,-1)),
+			"Colors range from 0 to 255.\nNote that all colors set\nhere are ignored in\nmonochrome mode.",0,
+		}));
+	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		int idx=(int)win->kwd->get_text(); //Will ignore a leading space and everything from the colon on.
+		array val=({info->r,info->g,info->b});
+		if (equal(val,color_defs[idx])) return; //No change.
+		color_defs[idx]=val;
+		colors[idx]=GTK2.GdkColor(@val);
+		persist["colors/sixteen"]=color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
+		redraw(current_subw());
+	}
+}
+
 constant options_fontdlg="_Font";
 class fontdlg
 {
