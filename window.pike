@@ -1,6 +1,6 @@
 //GUI handler.
 
-//First color must be black.
+//First color must be black. (TODO: What depends on this? Is it that "first color is background"?)
 constant defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
 array(GTK2.GdkColor) colors;
