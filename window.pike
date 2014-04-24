@@ -1,7 +1,8 @@
 //GUI handler.
 
 //First color must be black. (TODO: What depends on this? Is it that "first color is background"?)
-constant defcolors="000000 00007F 007F00 007F7F 7F0000 7F007F 7F7F00 C0C0C0 7F7F7F 0000FF 00FF00 00FFFF FF0000 FF00FF FFFF00 FFFFFF"; //TODO: INI file this. (And stop reversing them.)
+constant colnames=({"black","red","green","orange","blue","magenta","cyan","white"}); //Plus bold of the same
+array(array(int)) color_defs;
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
 array(GTK2.GdkColor) colors;
 
@@ -1121,8 +1122,6 @@ void create(string name)
 	{
 		add_gypsum_constant("say",bouncer("window","say")); //Say, Bouncer, say!
 		GTK2.setup_gtk();
-		colors=({});
-		foreach (defcolors/" ",string col) colors+=({GTK2.GdkColor(@reverse(array_sscanf(col,"%2x%2x%2x")))});
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum");
 		if (array pos=persist["window/winpos"])
@@ -1157,7 +1156,7 @@ void create(string name)
 	else
 	{
 		object other=G->G->window;
-		colors=other->colors; notebook=other->notebook; mainwindow=other->mainwindow;
+		colors=other->colors; color_defs=other->color_defs; notebook=other->notebook; mainwindow=other->mainwindow;
 		#if constant(COMPAT_SIGNAL)
 		defbutton=other->defbutton;
 		#endif
@@ -1170,6 +1169,21 @@ void create(string name)
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
+
+	if (!color_defs)
+	{
+		color_defs=persist["color/sixteen"]; //Note: Assumed to be exactly sixteen arrays of exactly three ints each.
+		if (!color_defs)
+		{
+			//Default color definitions: the standard ANSI colors.
+			array bits = map(enumerate(8),lambda(int x) {return ({x&1,!!(x&2),!!(x&4)});});
+			color_defs = (bits[*][*]*127) + (bits[*][*]*255);
+			//The strict bitwise definition would have bold black looking black. It should be a bit darker than nonbold white, so we change it.
+			color_defs[8] = color_defs[7]; color_defs[7] = ({192,192,192});
+		}
+	}
+	//if (!colors) colors = GTK2.GdkColor(@color_defs[*]); //Hmm. I can't get @ and [*] to play nicely together.
+	if (!colors) colors = lambda(array x) {return GTK2.GdkColor(@x);}(color_defs[*]); //This works but is ugly.
 
 	/* Not quite doing what I want, but it's a start...
 
