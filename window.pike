@@ -793,7 +793,7 @@ class zadvoptions
 	}
 }
 
-constant options_channelsdlg="_Colors";
+constant options_channelsdlg="_Channel Colors";
 class channelsdlg
 {
 	inherit configdlg;
