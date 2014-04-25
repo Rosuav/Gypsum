@@ -1219,8 +1219,7 @@ void create(string name)
 			color_defs[8] = color_defs[7]; color_defs[7] = ({192,192,192});
 		}
 	}
-	//if (!colors) colors = GTK2.GdkColor(@color_defs[*]); //Hmm. I can't get @ and [*] to play nicely together.
-	if (!colors) colors = lambda(array x) {return GTK2.GdkColor(@x);}(color_defs[*]); //This works but is ugly.
+	if (!colors) colors = Function.splice_call(color_defs[*],GTK2.GdkColor); //Note that the @ short form can't replace splice_call here.
 
 	/* Not quite doing what I want, but it's a start...
 
