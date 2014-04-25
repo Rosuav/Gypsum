@@ -839,8 +839,10 @@ class colorsdlg
 
 	GTK2.Widget make_content()
 	{
+		win->kwd=GTK2.Label("13: bold magenta"); //The longest name in the list
+		win->kwd->set_size_request(win->kwd->size_request()->width,-1)->set_text("");
 		return two_column(({
-			"Color",noex(win->kwd=GTK2.Label()),
+			"Color",noex(win->kwd),
 			"Red",noex(win->r=GTK2.Entry()->set_size_request(40,-1)),
 			"Green",noex(win->g=GTK2.Entry()->set_size_request(40,-1)),
 			"Blue",noex(win->b=GTK2.Entry()->set_size_request(40,-1)),
