@@ -622,16 +622,6 @@ int keypress(object self,array|object ev,mapping subw)
 			scr->set_value(min(scr->get_value()+pg,scr->get_property("upper")-pg));
 			return 1;
 		}
-		case 0xFF13: //Pause (GTK official value (GDK_KEY_Pause); Linux produces this)
-		#if constant(COMPAT_SIGNAL)
-		case 0xFFFFFF: //GDK_KEY_VoidSymbol; Windows produces this instead of FF13, for some reason (but also produces it for other keys eg Caps Lock)
-		//TODO: Figure out if this is a Windows issue, a GTK version issue, or something else, and then bracket it appropriately.
-		#endif
-		{
-			paused=!paused;
-			statustxt->paused->set_text("<PAUSED>"*paused);
-			return 1;
-		}
 		#if constant(DEBUG)
 		case 0xFFE1: case 0xFFE2: //Shift
 		case 0xFFE3: case 0xFFE4: //Ctrl
@@ -1064,6 +1054,16 @@ class promptsdlg
 			gtksignal(win->pb_ok,"clicked",pb_ok_click),
 		});
 	}
+}
+
+/* The official key value (GDK_KEY_Pause) is 0xFF13, but Windows produces 0xFFFFFF (GDK_KEY_VoidSymbol)
+instead - and also produces it for other keys, eg Caps Lock. TODO: Figure out if this is a Windows
+issue, a GTK version issue, or something else, and then bracket it appropriately. */
+constant options_pause=({"Pause scroll",all_constants()["COMPAT_SIGNAL"]?0xFFFFFF:0xFF13,0});
+void pause()
+{
+	paused=!paused;
+	statustxt->paused->set_text("<PAUSED>"*paused);
 }
 
 constant options_monochrome="_Monochrome";
