@@ -743,6 +743,7 @@ class zadvoptions
 		"Compat: Scroll":(["desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar."COMPAT("scroll")]),
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
+		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, try toggling this."COMPAT("pausekey")]),
 
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
 		"Hide input":(["path":"window/hideinput","type":"int","default":0,"desc":"Local echo is active by default, but set this to 1 to disable it and hide all your commands."]),
@@ -1059,7 +1060,7 @@ class promptsdlg
 /* The official key value (GDK_KEY_Pause) is 0xFF13, but Windows produces 0xFFFFFF (GDK_KEY_VoidSymbol)
 instead - and also produces it for other keys, eg Caps Lock. TODO: Figure out if this is a Windows
 issue, a GTK version issue, or something else, and then bracket it appropriately. */
-constant options_pause=({"Pause scroll",all_constants()["COMPAT_SIGNAL"]?0xFFFFFF:0xFF13,0});
+constant options_pause=({"Pause scroll",all_constants()["COMPAT_PAUSEKEY"]?0xFFFFFF:0xFF13,0});
 void pause()
 {
 	paused=!paused;
