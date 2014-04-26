@@ -51,7 +51,7 @@ object persist=class(string savefn)
 	//and line into here. Query that with "/x persist->rewrites" at any time.
 	//Not everything in this will actually need rewriting; consider them to be
 	//code smell. Once most of them are caught, this code can be commented out.
-	multiset(string) rewrites=(<>);
+	//multiset(string) rewrites=(<>); //Reenable if desired. (This and in []=.)
 
 	/**
 	 * Retrievals and mutations work as normal; mutations trigger a save().
@@ -59,7 +59,7 @@ object persist=class(string savefn)
 	mixed `[](string idx) {return data[idx];}
 	mixed `[]=(string idx,mixed val)
 	{
-		if (!intp(val) && !stringp(val) && data[idx]==val) rewrites[sprintf("%s:%d",@backtrace()[-2][..1])]=1;
+		//if (!intp(val) && !stringp(val) && data[idx]==val) rewrites[sprintf("%s:%d",@backtrace()[-2][..1])]=1;
 		save();
 		return data[idx]=val;
 	}
