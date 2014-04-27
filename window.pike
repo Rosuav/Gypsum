@@ -1059,7 +1059,7 @@ class promptsdlg
 
 /* The official key value (GDK_KEY_Pause) is 0xFF13, but Windows produces 0xFFFFFF (GDK_KEY_VoidSymbol)
 instead - and also produces it for other keys, eg Caps Lock. TODO: Figure out if this is a Windows
-issue, a GTK version issue, or something else, and configure the detection in gypsum.pike accordingly. */
+issue or something else, and configure the detection in gypsum.pike accordingly. */
 constant options_pause=({"Pause scroll",all_constants()["COMPAT_PAUSEKEY"]?0xFFFFFF:0xFF13,0});
 void pause()
 {
