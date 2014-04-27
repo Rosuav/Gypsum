@@ -4,6 +4,8 @@
 //type this: /x persist["plugins/vote/color"]=11
 //That'll make a yellow highlight. (Other numbers for other colors, per the
 //usual definitions.)
+//By default, you get a non-personalized link. To personalize it to your
+//character, type this: /x persist["plugins/vote/character"]="yourname"
 //TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
 //across Gypsums, but more importantly, means it needs to somehow detect its
 //external IP and re-highlight accordingly.
@@ -30,7 +32,8 @@ void showtime()
 
 void vote()
 {
-	invoke_browser("http://vote.thresholdrpg.com");
+	if (string n=persist["plugins/vote/character"]) invoke_browser("http://vote.thresholdrpg.com/vote.php?name="+n);
+	else invoke_browser("http://vote.thresholdrpg.com");
 	invoke_browser("http://www.mpogd.com/games/game.asp?ID=449");
 	invoke_browser("http://www.mudconnect.com/cgi-bin/vote_rank.cgi?mud=Threshold+RPG");
 	persist["plugins/vote/nexttime"]=time()+12*3600;
