@@ -440,6 +440,7 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
 	}
 	gc->set_foreground(fg);
+	//NOTE: This has an issue with tabs. May need to do an explicit tab expansion, possibly including an offset based on the previous text in the line.
 	display->draw_text(gc,x,y,txt);
 	destruct(layout);
 	return x+(sz->x+sz->width)/1024;
