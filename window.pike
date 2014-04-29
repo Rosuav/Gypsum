@@ -1155,7 +1155,15 @@ class configure_plugins
 	void save_content(mapping(string:mixed) info)
 	{
 		int nowactive=win->active->get_active();
-		if (!info->active && nowactive) function_object(G->G->commands->update)->build(selecteditem());
+		if (!info->active && nowactive)
+		{
+			string param=selecteditem();
+			say(0,"%% Compiling "+param+"...");
+			program compiled; catch {compiled=compile_file(param);};
+			if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
+			say(0,"%% Compiled.");
+			compiled(param);
+		}
 		info->active=nowactive;
 	}
 }
