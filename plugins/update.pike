@@ -146,6 +146,12 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 			}
 		}
 	}
+	if (!keepme) foreach (G->globalusage;string globl;array(string) usages) if (has_value(usages,param))
+	{
+		//Doesn't use reallydelete() as it can't distinguish current from old
+		say(subw,"%% Global usage: "+globl);
+		if (confirm) G->globalusage[globl]-=({param});
+	}
 	if (confirm)
 	{
 		foreach (selfs;object self;) destruct(self);
