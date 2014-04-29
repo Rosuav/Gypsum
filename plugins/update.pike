@@ -148,7 +148,8 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	}
 	if (!keepme) foreach (G->globalusage;string globl;array(string) usages) if (has_value(usages,param))
 	{
-		//Doesn't use reallydelete() as it can't distinguish current from old
+		//Doesn't use reallydelete() as it can't distinguish current from old (hence this whole block
+		//is done only if (!keepme) ie if it's a full unload).
 		say(subw,"%% Global usage: "+globl);
 		if (confirm) G->globalusage[globl]-=({param});
 	}
