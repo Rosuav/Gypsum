@@ -445,6 +445,8 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 	//(not forgetting to mark it with its copyright/license) and just have a way to set the initial position.
 	//Note that this MUST draw spaces, but elsewhere the code MUST retain tabs, so that mark-and-copy will grab
 	//the tabs. Otherwise it's an unfaithful reproduction.
+	//Or alternatively, instead of expanding tabs, it could set the Pango tab stops. I'd need seven of them (for
+	//different offsets; if 8, don't do it, although for debugging it might be worth doing anyway.
 	display->draw_text(gc,x,y,txt);
 	destruct(layout);
 	return x+(sz->x+sz->width)/1024;
