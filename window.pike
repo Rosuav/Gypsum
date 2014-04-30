@@ -445,7 +445,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	object layout=display->create_pango_layout(txt);
 	if (has_value(txt,'\t'))
 	{
-		layout->set_tabs(tabstops[tabpos]);
+		layout->set_tabs(tabstops[tabpos]); //Not strictly necessary if (!tabpos) but it's consistent.
 		state[4]=sizeof((txt/"\t")[-1])%8;
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
@@ -456,13 +456,6 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
 	}
 	gc->set_foreground(fg);
-	//NOTE: This has an issue with tabs. May need to do an explicit tab expansion, possibly including an offset
-	//based on the previous text in the line. Grab code from pike/lib/modules/String.pmod/module.pmod lines 349ff
-	//(not forgetting to mark it with its copyright/license) and just have a way to set the initial position.
-	//Note that this MUST draw spaces, but elsewhere the code MUST retain tabs, so that mark-and-copy will grab
-	//the tabs. Otherwise it's an unfaithful reproduction.
-	//Or alternatively, instead of expanding tabs, it could set the Pango tab stops. I'd need seven of them (for
-	//different offsets; if 8, don't do it, although for debugging it might be worth doing anyway.
 	display->draw_text(gc,x,y,layout);
 	destruct(layout);
 	state[2]=x+(sz->x+sz->width)/1024;
@@ -504,11 +497,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 		{
 			//Draw the highlighted part (which might be the whole string).
 			painttext(state,txt[hlstart..min(hlend,sizeof(txt))],bg,fg);
-			if (hlend<sizeof(txt))
-			{
-				//Draw the trailing unhighlighted part.
-				painttext(state,txt[hlend+1..],fg,bg);
-			}
+			if (hlend<sizeof(txt)) painttext(state,txt[hlend+1..],fg,bg); //Draw the trailing unhighlighted part.
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
