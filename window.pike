@@ -25,6 +25,7 @@ mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of th
 inherit statustext;
 int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
+array(GTK2.PangoTabArray) tabstops;
 
 /* I could easily add tab completion to the entry field. The only question is, what
 should be added as suggestions?
@@ -102,6 +103,14 @@ GTK2.PangoFontDescription getfont(string category)
 	return fontdesc[fontname] || (fontdesc[fontname]=GTK2.PangoFontDescription(fontname));
 }
 
+//Update the tabstops array based on a new pixel width
+void settabs(int w)
+{
+	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays
+	for (int i=1;i<20;++i) //Number of tab stops to place
+		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
+}
+
 /**
  * Set/update fonts and font metrics
  *
@@ -113,8 +122,8 @@ void setfonts(mapping(string:mixed) subw)
 	subw->ef->modify_font(getfont("input"));
 	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
+	settabs(subw->charwidth);
 }
-
 
 /**
  * (Re)establish event handlers
@@ -432,7 +441,7 @@ int mkcolor(int fg,int bg)
 int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return x;
-	object layout=display->create_pango_layout(txt);
+	object layout=display->create_pango_layout(txt)->set_tabs(tabstops[0]);
 	mapping sz=layout->index_to_pos(sizeof(txt)-1);
 	if (bg!=colors[0]) //Why can't I just set_background and then tell draw_text to cover any background pixels? Meh.
 	{
@@ -1293,6 +1302,7 @@ void create(string name)
 		}
 		else m_delete(plugin_mtime,fn);
 	}
+	settabs(tabs[0]->charwidth);
 }
 
 int window_destroy() {exit(0);}
