@@ -438,9 +438,10 @@ int mkcolor(int fg,int bg)
 }
 
 //Paint one piece of text at (x,y), returns the x for the next text.
-int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
+void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
-	if (txt=="") return x;
+	if (txt=="") return;
+	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y]=state;
 	object layout=display->create_pango_layout(txt)->set_tabs(tabstops[0]);
 	mapping sz=layout->index_to_pos(sizeof(txt)-1);
 	if (bg!=colors[0]) //Why can't I just set_background and then tell draw_text to cover any background pixels? Meh.
@@ -458,14 +459,14 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 	//different offsets; if 8, don't do it, although for debugging it might be worth doing anyway.
 	display->draw_text(gc,x,y,layout);
 	destruct(layout);
-	return x+(sz->x+sz->width)/1024;
+	state[2]=x+(sz->x+sz->width)/1024;
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
 //Note that for compatibility, this declaration needs to recognize the possibility of objects in line.
 void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|string) line,int y,int hlstart,int hlend)
 {
-	int x=3;
+	array state=({display,gc,3,y}); //State passed on to painttext() and modifiable by it. Could alternatively be done as a closure.
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		/* NOTE: The color code is in line[i] and the text in line[i+1].
@@ -491,24 +492,24 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 		if (hlstart>0)
 		{
 			//Draw the leading unhighlighted part (which might be the whole string).
-			x=painttext(display,gc,x,y,txt[..hlstart-1],fg,bg);
+			painttext(state,txt[..hlstart-1],fg,bg);
 		}
 		if (hlstart<sizeof(txt))
 		{
 			//Draw the highlighted part (which might be the whole string).
-			x=painttext(display,gc,x,y,txt[hlstart..min(hlend,sizeof(txt))],bg,fg);
+			painttext(state,txt[hlstart..min(hlend,sizeof(txt))],bg,fg);
 			if (hlend<sizeof(txt))
 			{
 				//Draw the trailing unhighlighted part.
-				x=painttext(display,gc,x,y,txt[hlend+1..],fg,bg);
+				painttext(state,txt[hlend+1..],fg,bg);
 			}
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
 	if (hlend>=0 && hlend<1<<29) //In block selection mode, draw highlight past the end of the string, if necessary
 	{
-		if (hlstart>0) {x=painttext(display,gc,x,y," "*hlstart,colors[7],colors[0]); hlend-=hlstart;}
-		if (hlend>=0) painttext(display,gc,x,y," "*(hlend+1),colors[0],colors[7]);
+		if (hlstart>0) {painttext(state," "*hlstart,colors[7],colors[0]); hlend-=hlstart;}
+		if (hlend>=0) painttext(state," "*(hlend+1),colors[0],colors[7]);
 	}
 }
 
