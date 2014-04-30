@@ -447,7 +447,7 @@ int painttext(GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,string txt,GTK2
 	//the tabs. Otherwise it's an unfaithful reproduction.
 	//Or alternatively, instead of expanding tabs, it could set the Pango tab stops. I'd need seven of them (for
 	//different offsets; if 8, don't do it, although for debugging it might be worth doing anyway.
-	display->draw_text(gc,x,y,txt);
+	display->draw_text(gc,x,y,layout);
 	destruct(layout);
 	return x+(sz->x+sz->width)/1024;
 }
