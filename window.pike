@@ -441,8 +441,14 @@ int mkcolor(int fg,int bg)
 void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return;
-	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y]=state;
-	object layout=display->create_pango_layout(txt)->set_tabs(tabstops[0]);
+	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,int tabpos]=state;
+	object layout=display->create_pango_layout(txt);
+	if (has_value(txt,'\t'))
+	{
+		layout->set_tabs(tabstops[tabpos]);
+		state[4]=sizeof((txt/"\t")[-1])%8;
+	}
+	else state[4]=(tabpos+sizeof(txt))%8;
 	mapping sz=layout->index_to_pos(sizeof(txt)-1);
 	if (bg!=colors[0]) //Why can't I just set_background and then tell draw_text to cover any background pixels? Meh.
 	{
@@ -466,7 +472,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 //Note that for compatibility, this declaration needs to recognize the possibility of objects in line.
 void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|string) line,int y,int hlstart,int hlend)
 {
-	array state=({display,gc,3,y}); //State passed on to painttext() and modifiable by it. Could alternatively be done as a closure.
+	array state=({display,gc,3,y,0}); //State passed on to painttext() and modifiable by it. Could alternatively be done as a closure.
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		/* NOTE: The color code is in line[i] and the text in line[i+1].
