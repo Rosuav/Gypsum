@@ -473,15 +473,10 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
-		if (hlstart>0)
-		{
-			//Draw the leading unhighlighted part (which might be the whole string).
-			painttext(state,txt[..hlstart-1],fg,bg);
-		}
+		if (hlstart>0) painttext(state,txt[..hlstart-1],fg,bg); //Draw the leading unhighlighted part (which might be the whole string).
 		if (hlstart<sizeof(txt))
 		{
-			//Draw the highlighted part (which might be the whole string).
-			painttext(state,txt[hlstart..min(hlend,sizeof(txt))],bg,fg);
+			painttext(state,txt[hlstart..min(hlend,sizeof(txt))],bg,fg); //Draw the highlighted part (which might be the whole string).
 			if (hlend<sizeof(txt)) painttext(state,txt[hlend+1..],fg,bg); //Draw the trailing unhighlighted part.
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
