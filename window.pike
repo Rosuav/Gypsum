@@ -485,7 +485,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
 		else if (!line[i]) {fg=colors[7]; bg=colors[0];} //Old compat
 		else if (objectp(line[i])) {fg=[object]line[i]; bg=colors[0];} //Compat
-		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //New
+		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
 		if (hlstart>0)
