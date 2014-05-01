@@ -468,23 +468,8 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|s
 	array state=({display,gc,3,y,0}); //State passed on to painttext() and modifiable by it. Could alternatively be done as a closure.
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
-		/* NOTE: The color code is in line[i] and the text in line[i+1].
-		The color should always, as of 77ec0e, be a GTK2.GdkColor object;
-		old subw mappings may also contain integer 0, which means "default
-		color" and is ||'d into being colors[7] here. A future edit will
-		change the meaning of this, but an object here will continue to
-		mean "this color, black background" for compatibility, at least
-		for a while. CJA 20140214. */
-		//CJA 20140216: I'll probably change this shortly to encode the
-		//fg and bg colors into an int, which will then be able to be
-		//saved to disk, but there'll still be a hack that 0 means 7...
-		//at least for a while.
-		//CJA 20140315: Am now making that change. For compatibility,
-		//the above 0->7 change is still done, but that will be dropped.
 		GTK2.GdkColor fg,bg;
 		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
-		else if (!line[i]) {fg=colors[7]; bg=colors[0];} //Old compat
-		else if (objectp(line[i])) {fg=[object]line[i]; bg=colors[0];} //Compat
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
