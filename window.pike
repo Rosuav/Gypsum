@@ -462,8 +462,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
-//Note that for compatibility, this declaration needs to recognize the possibility of objects in line.
-void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|object|string) line,int y,int hlstart,int hlend)
+void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) line,int y,int hlstart,int hlend)
 {
 	array state=({display,gc,3,y,0}); //State passed on to painttext() and modifiable by it. Could alternatively be done as a closure.
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
