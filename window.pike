@@ -445,7 +445,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	object layout=display->create_pango_layout(txt);
 	if (has_value(txt,'\t'))
 	{
-		layout->set_tabs(tabstops[tabpos]); //Not strictly necessary if (!tabpos) but it's consistent.
+		if (tabpos) layout->set_tabs(tabstops[tabpos]); //else the defaults will work fine
 		state[4]=sizeof((txt/"\t")[-1])%8;
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
