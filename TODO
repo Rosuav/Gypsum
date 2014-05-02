@@ -9,7 +9,6 @@
 * Save scrollback as HTML, or some other color-retaining format
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
 * Option to suppress display of input?
-* Bug: Selection with tabs (sometimes?) can't reach the end of the line.
 * Editor plugin needs to support wrap!
 
 Eventually, drop support for Pike 7.8. This means:

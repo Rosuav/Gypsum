@@ -207,17 +207,15 @@ array(int) point_to_char(mapping subw,int x,int y)
 	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
 	else l=subw->lines[line];
 	string str=line_text(l);
-	int pos=limit(0,(x-3)/subw->charwidth,sizeof(str));
-	if (has_value(str[..pos-2],'\t')) //There are tabs in the line, figure out where we really are.
+	int pos=(x-3)/subw->charwidth;
+	if (!has_value(str,'\t')) return ({line,limit(0,pos,sizeof(str))}); //There are no tabs in the line, simple.
+	int realpos=0;
+	foreach (str;int i;int ch)
 	{
-		int realpos=0;
-		for (int i=0;i<pos;++i)
-		{
-			if (str[i]=='\t') realpos+=8-realpos%8; else ++realpos;
-			if (realpos>pos) return ({line,i});
-		}
+		if (ch=='\t') realpos+=8-realpos%8; else ++realpos;
+		if (realpos>pos) return ({line,i});
 	}
-	return ({line,pos});
+	return ({line,sizeof(str)});
 }
 
 /**
