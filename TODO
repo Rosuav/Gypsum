@@ -8,7 +8,6 @@
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Save scrollback as HTML, or some other color-retaining format
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
-* Option to suppress display of input?
 * Editor plugin needs to support wrap!
 
 Eventually, drop support for Pike 7.8. This means:
