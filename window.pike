@@ -1,6 +1,5 @@
 //GUI handler.
 
-//First color must be black. (TODO: What depends on this? Is it that "first color is background"?)
 constant colnames=({"black","red","green","orange","blue","magenta","cyan","white"}); //Plus bold of the same
 array(array(int)) color_defs;
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
