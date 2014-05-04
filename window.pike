@@ -1308,6 +1308,7 @@ int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0
 int enterpressed_glo(object self)
 {
 	object focus=mainwindow->get_focus();
+	if (function f=G->G->enterpress[focus]) return f();
 	object parent=focus->get_parent();
 	while (parent->get_name()!="GtkNotebook") parent=(focus=parent)->get_parent();
 	enterpressed(tabs[parent->page_num(focus)]);
@@ -1386,4 +1387,7 @@ void mainwsignals()
 		#endif
 		gtksignal(mainwindow,"focus_in_event",window_focus),
 	});
+	#if constant(COMPAT_SIGNAL)
+	if (!G->G->enterpress) G->G->enterpress=([]);
+	#endif
 }
