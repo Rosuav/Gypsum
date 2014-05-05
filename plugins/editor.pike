@@ -1,5 +1,6 @@
 inherit hook;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
+//TODO: Config dialog. Also, would be nice to have an in-editor Wrap button, maybe.
 
 constant plugin_active_by_default = 1;
 
