@@ -1,4 +1,5 @@
 inherit hook;
+//To enable auto-wrapping: /x persist["editor/wrap"]=80
 
 constant plugin_active_by_default = 1;
 
@@ -44,9 +45,32 @@ class editor(mapping(string:mixed) subw)
 		//the connection breaks and is reconnected. Alternatively, we could use
 		//current_subw(), or maybe a check (subw if valid else current_subw) to
 		//catch other cases.
-		send(subw,replace(String.trim_all_whites(
-			win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0)
-		),"\n","\r\n")+"\r\n");
+		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
+		if (int wrap=persist["editor/wrap"])
+		{
+			array lines=txt/"\n";
+			foreach (lines;int i;string l)
+			{
+				if (sizeof(l)<wrap && !has_value(l,'\t')) continue; //Trivially short enough
+				array(string) sublines=({ });
+				while (1)
+				{
+					int pos,wrappos;
+					for (int p=0;p<sizeof(l) && pos<wrap;++p) switch (l[p])
+					{
+						case '\t': pos+=8-pos%8; break;
+						case ' ': wrappos=p; //p, not pos, and fall through
+						default: ++pos;
+					}
+					if (pos<wrap) {sublines+=({l}); break;} //No more wrapping to do.
+					sublines+=({l[..wrappos-1]});
+					l=l[wrappos+1..];
+				}
+				lines[i]=sublines*"\r\n"; //Optional: Indent subsequent lines, by multiplying by "\r\n  " or similar.
+			}
+			send(subw,lines*"\r\n"+"\r\n");
+		}
+		else send(subw,replace(txt,"\n","\r\n")+"\r\n");
 		win->buf->set_modified(0);
 	}
 
