@@ -32,6 +32,7 @@ class editor(mapping(string:mixed) subw)
 				#else
 				->add(GTK2.Label("(cursor pos)"))
 				#endif
+				->add(win->pb_wrap=GTK2.Button("Wrap"))
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
@@ -94,6 +95,14 @@ class editor(mapping(string:mixed) subw)
 		win->curpos->set_text(iter->get_line()+","+iter->get_line_offset());
 	}
 
+	void wrap_input()
+	{
+		int wrap=persist["editor/wrap"] || 80; //Default to 80 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
+		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
+		string newtxt=wrap_text(txt,wrap);
+		if (newtxt!=txt) win->buf->set_text(newtxt+"\n");
+	}
+
 	void dosignals()
 	{
 		::dosignals();
@@ -107,6 +116,7 @@ class editor(mapping(string:mixed) subw)
 			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
 			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
+			gtksignal(win->pb_wrap,"clicked",wrap_input),
 		});
 	}
 }
