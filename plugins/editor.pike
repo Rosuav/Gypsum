@@ -40,6 +40,31 @@ class editor(mapping(string:mixed) subw)
 		::makewindow();
 	}
 
+	string wrap_text(string txt,int wrap)
+	{
+		array lines=txt/"\n";
+		foreach (lines;int i;string l)
+		{
+			if (sizeof(l)<wrap && !has_value(l,'\t')) continue; //Trivially short enough
+			array(string) sublines=({ });
+			while (1)
+			{
+				int pos,wrappos;
+				for (int p=0;p<sizeof(l) && pos<wrap;++p) switch (l[p])
+				{
+					case '\t': pos+=8-pos%8; break;
+					case ' ': wrappos=p; //p, not pos, and fall through
+					default: ++pos;
+				}
+				if (pos<wrap) {sublines+=({l}); break;} //No more wrapping to do.
+				sublines+=({l[..wrappos-1]});
+				l=l[wrappos+1..];
+			}
+			lines[i]=sublines*"\n"; //Optional: Indent subsequent lines, by multiplying by "\n  " or similar.
+		}
+		return lines*"\n";
+	}
+
 	void pb_send_click()
 	{
 		//Note that we really need the conn, but are retaining the subw in case
@@ -47,31 +72,8 @@ class editor(mapping(string:mixed) subw)
 		//current_subw(), or maybe a check (subw if valid else current_subw) to
 		//catch other cases.
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
-		if (int wrap=persist["editor/wrap"])
-		{
-			array lines=txt/"\n";
-			foreach (lines;int i;string l)
-			{
-				if (sizeof(l)<wrap && !has_value(l,'\t')) continue; //Trivially short enough
-				array(string) sublines=({ });
-				while (1)
-				{
-					int pos,wrappos;
-					for (int p=0;p<sizeof(l) && pos<wrap;++p) switch (l[p])
-					{
-						case '\t': pos+=8-pos%8; break;
-						case ' ': wrappos=p; //p, not pos, and fall through
-						default: ++pos;
-					}
-					if (pos<wrap) {sublines+=({l}); break;} //No more wrapping to do.
-					sublines+=({l[..wrappos-1]});
-					l=l[wrappos+1..];
-				}
-				lines[i]=sublines*"\r\n"; //Optional: Indent subsequent lines, by multiplying by "\r\n  " or similar.
-			}
-			send(subw,lines*"\r\n"+"\r\n");
-		}
-		else send(subw,replace(txt,"\n","\r\n")+"\r\n");
+		if (int wrap=persist["editor/wrap"]) txt=wrap_text(txt,wrap);
+		send(subw,replace(txt,"\n","\r\n")+"\r\n");
 		win->buf->set_modified(0);
 	}
 
