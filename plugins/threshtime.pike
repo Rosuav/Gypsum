@@ -4,10 +4,6 @@ inherit statusevent;
 
 constant plugin_active_by_default = 1;
 
-//TODO: Switch to using Calendar.Gregorian with set_timezone("America/New York") for EST/EDT
-//Might also be able to use that to get the list of Terran month names, which could then
-//be localized. Probably not worth it though, just use the English names.
-
 //TODO: Colorize the background (subtly, not intrusively) to show season - esp summer vs non-summer.
 //We're already in an EventBox so that shouldn't cost much more.
 
@@ -100,76 +96,67 @@ constant menu_label="Thresh Time converter";
 class menu_clicked
 {
 	inherit window;
-	void create() {::create("threshtime"); set_time_now(); showwindow();} //Explicitly show the window for compatibility (can drop later)
 
 	GTK2.Entry ef(string name,int|void width)
 	{
-		return win[name]=GTK2.Entry((["width-chars":width||2]));
+		return noex(win[name]=GTK2.Entry((["width-chars":width||2])));
 	}
 
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,10)
-			->add(GTK2.Frame("Real life (Terra) time")->add(GTK2.Vbox(0,0)
-				->add(GTK2.Hbox(0,0)
-					->add(win->rb_local=GTK2.RadioButton("Local")->set_active(1))
-					->add(win->rb_est=GTK2.RadioButton("EST",win->rb_local))
-					->add(win->rb_edt=GTK2.RadioButton("EDT",win->rb_local))
-				)
-				->add(GTK2Table(({
-					({"Year","Month","Day","Time",0}),
-					({ef("rl_year",4),win->rl_mon=SelectBox(terramonth),ef("rl_day",3),ef("rl_hour"),ef("rl_min")}),
-				})))
-			))
-			->add(GTK2.HbuttonBox()
-				->add(win->conv_up=GTK2.Button("Convert ^"))
-				->add(win->conv_dn=GTK2.Button("Convert v"))
-				->add(win->set_now=GTK2.Button("Set today"))
-			)
+			->add(GTK2.Frame("Local time")->add(GTK2Table(({
+				({"Year","Month","Day","Time",0}),
+				({ef("loc_year",4),win->loc_mon=SelectBox(terramonth),ef("loc_day",3),ef("loc_hour"),ef("loc_min")}),
+			}))))
+			->add(GTK2.Frame("New York time (EST/EDT)")->add(GTK2Table(({
+				({"Year","Month","Day","Time",0}),
+				({ef("est_year",4),win->est_mon=SelectBox(terramonth),ef("est_day",3),ef("est_hour"),ef("est_min")}),
+			}))))
 			->add(GTK2.Frame("Threshold time")->add(GTK2Table(({
 				({"Year","Month","Day","Time",0}),
 				({ef("th_year",4),win->th_mon=SelectBox(threshmonth),ef("th_day",3),ef("th_hour"),ef("th_min")}),
 			}))))
-			->add(GTK2.HbuttonBox()->add(stock_close()))
+			->add(GTK2.HbuttonBox()
+				->add(win->set_now=GTK2.Button("Set today"))
+				->add(GTK2.HbuttonBox()->add(stock_close()))
+			)
 		);
+		set_time_now(); //Before signals get connected.
 	}
 
 	void dosignals()
 	{
 		::dosignals();
+		foreach (({"loc","est","th"}),string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
+			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",this["convert_"+pfx])});
 		win->signals+=({
-			gtksignal(win->rb_local,"toggled",check_timezone),
-			gtksignal(win->rb_est,"toggled",check_timezone),
-			gtksignal(win->rb_edt,"toggled",check_timezone),
-			gtksignal(win->conv_up,"clicked",convert_up),
-			gtksignal(win->conv_dn,"clicked",convert_down),
 			gtksignal(win->set_now,"clicked",set_time_now),
 		});
 	}
 
-	void set_rl_time(int time)
+	void set_rl_time(int time,string|void which)
 	{
-		win->last_rl_time=time;
-		mapping tm;
-		if (win->rb_local->get_active()) tm=localtime(time); //Local time. Ask for it directly.
-		else tm=gmtime(time-3600*(4+!win->rb_edt->get_active())); //EST/EDT. A bit of a cheat; ask for GMT, but bias the time by either 4 or 5 hours.
-		win->rl_min->set_text((string)tm->min);
-		win->rl_hour->set_text((string)tm->hour);
-		win->rl_day->set_text((string)tm->mday);
-		win->rl_mon->set_active(tm->mon);
-		win->rl_year->set_text((string)(tm->year+1900));
+		if (!which) {set_rl_time(time,"loc"); set_rl_time(time,"est"); return;}
+		if (win->signals) destruct(win->signals[*]); //Suppress 'changed' signals from this.
+		Calendar.Gregorian.Second tm=Calendar.Gregorian.Second(time);
+		if (which=="est") tm=tm->set_timezone("America/New_York");
+		//Transfer cal->year_no() into win->est_year->set_text() or win->loc_year->set_text(), etc.
+		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no"]);string ef;string cal)
+			win[which+"_"+ef]->set_text((string)tm[cal]());
+		win[which+"_mon"]->set_active(tm->month_no()-1);
+		if (win->signals) dosignals(); //Un-suppress changed signals.
 	}
-
-	void check_timezone() {set_rl_time(win->last_rl_time);}
 
 	void set_th_time(int time)
 	{
-		win->last_th_time=time;
+		if (win->signals) destruct(win->signals[*]); //As above, in set_rl_time
 		win->th_min->set_text((string)(time%60)); time/=60;
 		win->th_hour->set_text((string)(time%24)); time/=24;
 		win->th_day->set_text((string)(time%30+1)); time/=30;
 		win->th_mon->set_active(time%12); time/=12;
 		win->th_year->set_text((string)time);
+		if (win->signals) dosignals();
 	}
 
 	void set_time_now()
@@ -179,7 +166,7 @@ class menu_clicked
 		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
 	}
 
-	void convert_up()
+	void convert_th()
 	{
 		int tm=
 			(int)win->th_year->get_text() * 518400 +
@@ -187,26 +174,38 @@ class menu_clicked
 			(int)win->th_day->get_text() * 1440 - 1440 +
 			(int)win->th_hour->get_text() * 60 +
 			(int)win->th_min->get_text();
-		win->last_th_time=tm;
 		set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5);
 	}
 
-	void convert_down()
+	void convert_loc() {call_out(convert_rl,0,"loc");}
+	void convert_est() {call_out(convert_rl,0,"est");}
+
+	void convert_rl(string source)
 	{
-		//Pick a timezone. Local time is represented by UNDEFINED, which is distinct
-		//from a normal zero which would mean UTC.
-		int tz=UNDEFINED;
-		if (win->rb_edt->get_active()) tz=4*3600;
-		else if (win->rb_est->get_active()) tz=5*3600;
-		int tm=mktime(0,
-			(int)win->rl_min->get_text(),
-			(int)win->rl_hour->get_text(),
-			(int)win->rl_day->get_text(),
-			(int)win->rl_mon->get_active(),
-			(int)win->rl_year->get_text()-1900,
-			UNDEFINED,tz);
-		win->last_rl_time=tm;
-		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
+		catch //If error, just don't convert.
+		{
+			Calendar.Gregorian.Day day=Calendar.Gregorian.Day(
+				(int)win[source+"_year"]->get_text(),
+				(int)win[source+"_mon"]->get_active(),
+				(int)win[source+"_day"]->get_text()
+			);
+			if (source=="est") day=day->set_timezone("America/New_York");
+			int hr=(int)win[source+"_hour"]->get_text();
+			int min=(int)win[source+"_min"]->get_text();
+			Calendar.Gregorian.Second tm=day->second(3600*hr+60*min);
+			if (int diff=hr-tm->hour_no()) tm=tm->add(3600*diff); //If DST switch happened, adjust time
+			if (int diff=min-tm->minute_no()) tm=tm->add(60*diff);
+			if (int diff=0-tm->second_no()) tm=tm->add(60*diff); //As above but since sec will always be zero, hard-code it.
+			//Note that it's possible for the figures to still be wrong, if time jumped forward.
+			//(For instance, there is no 2014-03-09 02:30:00 AM in America/New_York.)
+			//This ought to be a parse failure; however, since this is done live with 'changed' signals,
+			//it's more polite to show something, even if it's not precisely right.
+			int ts=tm->unix_time(); //Work with Unix time for simplicity
+			if (ts==win->last_rl_time) return; //No change, no updates
+			win->last_rl_time=ts;
+			set_rl_time(ts,source=="est"?"loc":"est");
+			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
+		};
 	}
 }
 
