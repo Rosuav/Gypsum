@@ -105,7 +105,7 @@ GTK2.PangoFontDescription getfont(string category)
 //Update the tabstops array based on a new pixel width
 void settabs(int w)
 {
-	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays
+	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed)
 	for (int i=1;i<20;++i) //Number of tab stops to place
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
 }
