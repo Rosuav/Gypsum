@@ -1,6 +1,5 @@
 inherit command;
 
-//TODO: Some of this needs to move into core.
 constant plugin_active_by_default = 1;
 
 /**
@@ -60,6 +59,7 @@ int listworlds(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
+//TODO: Move this dialog into core and have File|Connect call it directly
 class connectdlg
 {
 	inherit configdlg;
