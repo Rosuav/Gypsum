@@ -213,7 +213,7 @@ void statusbar_double_click() {menu_clicked();} //Double-click on status bar to 
 
 void create(string name)
 {
-	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1356712257; persist["threshtime/sync_th"]=196948184;}
+	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1399531774; persist["threshtime/sync_th"]=205512058;}
 	statustxt->tooltip="Threshold RPG date/time - double-click for converter";
 	::create(name);
 	showtime();
