@@ -1293,6 +1293,7 @@ int window_close()
 }
 
 //Either reconnect, or give the world list.
+//TODO: Migrate the connect dialog into here directly, and abolish "/connect dlg".
 constant file_connect_menu="_Connect";
 void connect_menu(object self)
 {
