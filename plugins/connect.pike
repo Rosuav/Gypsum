@@ -85,7 +85,7 @@ class connectdlg
 		pb_save();
 		string kwd=selecteditem();
 		if (!kwd) return;
-		mapping info=worlds[kwd];
+		mapping info=items[kwd];
 		G->G->window->connect(info,kwd,0);
 		win->mainwindow->destroy();
 	}
