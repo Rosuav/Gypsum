@@ -1286,7 +1286,7 @@ int window_destroy() {exit(0);}
 constant file_window_close="E_xit";
 int window_close()
 {
-	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections
+	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? in 8.0).
 	if (!conns) exit(0);
 	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
 	return 1; //Used as the delete-event, so it should return 1 for that.
