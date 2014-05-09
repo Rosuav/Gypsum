@@ -1303,6 +1303,7 @@ class connect_menu
 	constant persist_key="worlds";
 
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
+	void create() {::create();} //Pass on no args
 	//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
 	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
 	//string actionbtn="Save and C_onnect";
