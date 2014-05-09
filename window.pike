@@ -1332,12 +1332,12 @@ class connect_menu
 				"Auto-log",win->logfile=GTK2.Entry(),
 				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
 			})),0,0,0)
-			->pack_start(GTK2.Frame("Description")->add(
+			->add(GTK2.Frame("Description")->add(
 				win->descr=MultiLineEntryField()->set_size_request(250,70)
-			),1,1,0)
-			->pack_start(GTK2.Frame("Text to output upon connect")->add(
+			))
+			->add(GTK2.Frame("Text to output upon connect")->add(
 				win->writeme=MultiLineEntryField()->set_size_request(250,70)
-			),1,1,0)
+			))
 			->pack_start(GTK2.HbuttonBox()->add(
 				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
 			),0,0,0)
