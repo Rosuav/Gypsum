@@ -1340,7 +1340,7 @@ class connect_menu
 			),1,1,0)
 			->pack_start(GTK2.HbuttonBox()->add(
 				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
-			),1,1,0)
+			),0,0,0)
 		;
 	}
 
