@@ -1293,11 +1293,67 @@ int window_close()
 }
 
 //Either reconnect, or give the world list.
-//TODO: Migrate the connect dialog into here directly, and abolish "/connect dlg".
 constant file_connect_menu="_Connect";
-void connect_menu(object self)
+class connect_menu
 {
-	G->G->commands->connect("dlg",current_subw());
+	inherit configdlg;
+	constant strings=({"name","host","logfile","descr","writeme"});
+	constant ints=({"port"});
+	constant bools=({"use_ka"});
+	constant persist_key="worlds";
+
+	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
+	//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
+	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
+	//string actionbtn="Save and C_onnect";
+	//20140311: Now putting the button inside the dialog, as an experiment.
+
+	void load_content(mapping(string:mixed) info)
+	{
+		if (!info->port) {info->port=23; win->port->set_text("23");}
+		if (zero_type(info->use_ka)) win->use_ka->set_active(1);
+	}
+
+	void action_callback()
+	{
+		pb_save();
+		string kwd=selecteditem();
+		if (!kwd) return;
+		mapping info=items[kwd];
+		G->G->window->connect(info,kwd,0);
+		win->mainwindow->destroy();
+	}
+
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10)
+			->pack_start(two_column(({
+				"Keyword",win->kwd=GTK2.Entry(),
+				"Name",win->name=GTK2.Entry(),
+				"Host name",win->host=GTK2.Entry(),
+				"Port",win->port=GTK2.Entry(),
+				"Auto-log",win->logfile=GTK2.Entry(),
+				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label
+			})),0,0,0)
+			->pack_start(GTK2.Frame("Description")->add(
+				win->descr=MultiLineEntryField()->set_size_request(250,70)
+			),1,1,0)
+			->pack_start(GTK2.Frame("Text to output upon connect")->add(
+				win->writeme=MultiLineEntryField()->set_size_request(250,70)
+			),1,1,0)
+			->pack_start(GTK2.HbuttonBox()->add(
+				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
+			),1,1,0)
+		;
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->pb_connect,"clicked",action_callback),
+		});
+	}
 }
 
 constant file_disconnect_menu="_Disconnect";
