@@ -26,6 +26,12 @@ int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 array(GTK2.PangoTabArray) tabstops;
 
+//Default set of worlds. Not currently actually used here - just for the setdefault().
+mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
+	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
+	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
+]));
+
 /* I could easily add tab completion to the entry field. The only question is, what
 should be added as suggestions?
 1) Character names. Somehow it should figure out who's a character and who's not.
@@ -1292,7 +1298,6 @@ int window_close()
 	return 1; //Used as the delete-event, so it should return 1 for that.
 }
 
-//Either reconnect, or give the world list.
 constant file_connect_menu="_Connect";
 class connect_menu
 {
