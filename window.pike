@@ -1304,10 +1304,6 @@ class connect_menu
 
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
 	void create() {::create();} //Pass on no args
-	//TODO: Find a generic way to do this. I'm not happy with the actionbtn system, and this is the only place using it.
-	//Am hereby deprecating it. Will maintain support for a while but won't use it anywhere new.
-	//string actionbtn="Save and C_onnect";
-	//20140311: Now putting the button inside the dialog, as an experiment.
 
 	void load_content(mapping(string:mixed) info)
 	{
@@ -1315,7 +1311,7 @@ class connect_menu
 		if (zero_type(info->use_ka)) win->use_ka->set_active(1);
 	}
 
-	void action_callback()
+	void save_and_connect()
 	{
 		pb_save();
 		string kwd=selecteditem();
@@ -1352,7 +1348,7 @@ class connect_menu
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->pb_connect,"clicked",action_callback),
+			gtksignal(win->pb_connect,"clicked",save_and_connect),
 		});
 	}
 }
