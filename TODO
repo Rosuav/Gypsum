@@ -4,7 +4,6 @@
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Cross-platform safety check: copy/paste of huge amounts of text, does it crash? Do I need to protect against it?
-* Performance check: is the constant resizing of the display slowing things down?
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Save scrollback as HTML, or some other color-retaining format
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
