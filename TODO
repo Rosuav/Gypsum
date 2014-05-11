@@ -26,4 +26,7 @@ Vague theories of maybe-this-would-be-nice:
   - though this might be possible as a separately-runnable executable, which communicates with
   - the main process via a pipe whose name is stored in persist[], and signals it; this could be
   - then given two keystrokes in an OS-dependent way (one for hide, one for unhide).
+  - Note that pipe creation is itself OS-dependent, so this may end up working with completely
+  - different code on each OS. :( Alternatively, this could be done with a TCP socket, but that
+  - seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
 * 256 color support
