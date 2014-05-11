@@ -45,6 +45,25 @@ menu items, nor a notebook. But what *should* it be? Or maybe I should actually 
 the options a bit. Maybe having window and connection logging is superfluous. Can I
 do the whole thing as a single logging feature, with maybe a tick box "include input
 lines"???
+
+20140511: Still very much not happy with this :( But I might just drop filtered logs
+altogether, and code that later as a dedicated plugin for grabbing guild titles. It
+would then just be a matter of sorting out window and connection logging, and maybe
+it would be best to simplify that down to just window logging, with autolog being
+"independent, and happens to be a bit different", maybe. I don't like that idea, but
+it's no worse than any other ideas I've had about this. TinyFugue had world logging
+and global logging, but it had only one window (at least, the version I used was a
+single-window system), so there was no confusion there; and also, the difference
+between global and world was far more significant (as global would interleave worlds
+according to your navigation between them - NOT what you will normally want).
+
+20140511 (also): It's probably best to do these logs in the way REXX handles open
+files: any given file name will only ever be open once. So if you point two worlds
+to the same log file, they will interleave by lines as the content arrives. (Note
+that connection logging is already done per-line, so you don't have to worry about
+interleaved partial lines.) Easiest way to do that, I think, would be to have a
+'mapping(string:Stdio.File) logfiles' in global state somewhere, and continue to
+reference the files directly.
 */
 inherit command;
 inherit plugin_menu;
