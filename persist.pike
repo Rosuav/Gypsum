@@ -13,7 +13,7 @@ object persist=class(string savefn)
 	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - especially if your code is itself happening on the backend thread.
 	 **/
 
-	/* Idea: Encrypt the file with a password.
+	/* Idea: Encrypt the file with a password. This isn't high-grade security but might be good for some people.
 	string pwd;
 	string key=Crypto.SHA256.hash("Gypsum"+string_to_utf8(pwd)+"Gypsum");
 	string content=encode_value(data);
