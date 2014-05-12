@@ -614,3 +614,30 @@ string line_text(array line)
 	if (string t=line[0]->text) return t;
 	return line[0]->text=filter(line,stringp)*"";
 }
+
+//Redirect a stream to a specified file
+//Undoes the redirect on destruction, for safety.
+class redirect(Stdio.File file,string|Stdio.File|void target)
+{
+	Stdio.File dup;
+	void create()
+	{
+		dup=file->dup();
+		if (!target)
+		{
+			//Is there a cross-platform way to find the null device? Python has os.devnull for that.
+			#ifdef __NT__
+			target="nul";
+			#else
+			target="/dev/null";
+			#endif
+		}
+		if (stringp(target)) target=Stdio.File(target,"wct");
+		file->assign(target);
+	}
+	void destroy()
+	{
+		//Undo the redirection by assigning the old copy back in.
+		file->assign(dup);
+	}
+}
