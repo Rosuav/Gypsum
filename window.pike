@@ -112,8 +112,8 @@ GTK2.PangoFontDescription getfont(string category)
 void settabs(int w)
 {
 	//This currently produces a spew of warnings. I don't know of a way to suppress them, and
-	//everything does seem to be functioning correctly. I may need to actually redirect stderr
-	//to nowhere temporarily, which feels really REALLY dirty. :(
+	//everything does seem to be functioning correctly. So we suppress stderr for the moment.
+	object silence_errors=redirect(Stdio.stderr);
 	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed)
 	for (int i=1;i<20;++i) //Number of tab stops to place
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
