@@ -25,6 +25,7 @@ inherit statustext;
 int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 array(GTK2.PangoTabArray) tabstops;
+constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -198,7 +199,7 @@ void paste(object self,mapping subw)
 
 GTK2.Widget makestatus()
 {
-	statustxt->paused=GTK2.Label("<PAUSED>");
+	statustxt->paused=GTK2.Label(pausedmsg);
 	statustxt->paused->set_size_request(statustxt->paused->size_request()->width,-1)->set_text(""); //Have it consume space for the PAUSED message even without having it
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label(""))->add(statustxt->paused);
 }
@@ -599,7 +600,7 @@ int keypress(object self,array|object ev,mapping subw)
 				//The value will be clamped to the range, so the worst effect is that
 				//it'll take an extra hit of PgUp to get to normality. Not a big deal.
 				if (subw->last_activity) subw->scr->set_value(subw->last_activity);
-				subw->paused=1; statustxt->paused->set_text("<PAUSED>");
+				subw->paused=1; statustxt->paused->set_text(pausedmsg);
 				return 1;
 			}
 			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
@@ -1061,7 +1062,7 @@ constant options_pause=({"Pause scroll",all_constants()["COMPAT_PAUSEKEY"]?0xFFF
 void pause()
 {
 	paused=!paused;
-	statustxt->paused->set_text("<PAUSED>"*paused);
+	statustxt->paused->set_text(pausedmsg*paused);
 }
 
 constant options_monochrome="_Monochrome";
