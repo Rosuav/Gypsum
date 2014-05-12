@@ -622,7 +622,14 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 	Stdio.File dup;
 	void create()
 	{
+		#if __VERSION__ < 8.0
+		//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
+		//so we reach into stderr's internals.
+		dup=Stdio.File();
+		dup->assign(Stdio.stderr->_fd->dup());
+		#else
 		dup=file->dup();
+		#endif
 		if (!target)
 		{
 			//Is there a cross-platform way to find the null device? Python has os.devnull for that.
@@ -634,10 +641,6 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 		}
 		if (stringp(target)) target=Stdio.File(target,"wct");
 		target->dup2(file);
-		//Note: Failing to close target seems to prevent Windows from properly performing the
-		//redirection. Worse, the file->dup() call above completely doesn't work on Pike 7.8, so
-		//the un-redirection fails utterly! Once you create one of these on Windows, that's it,
-		//it's redirected forever. Argh!
 		target->close();
 	}
 	void destroy()
