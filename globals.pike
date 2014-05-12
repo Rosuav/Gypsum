@@ -633,11 +633,11 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 			#endif
 		}
 		if (stringp(target)) target=Stdio.File(target,"wct");
-		file->assign(target);
+		target->dup2(file);
 	}
 	void destroy()
 	{
 		//Undo the redirection by assigning the old copy back in.
-		file->assign(dup);
+		dup->dup2(file);
 	}
 }
