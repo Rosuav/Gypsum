@@ -635,7 +635,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 		if (stringp(target)) target=Stdio.File(target,"wct");
 		target->dup2(file);
 		//Note: Failing to close target seems to prevent Windows from properly performing the
-		//redirection. Worse, the file->dup() call above completely doesn't work on Windows, so
+		//redirection. Worse, the file->dup() call above completely doesn't work on Pike 7.8, so
 		//the un-redirection fails utterly! Once you create one of these on Windows, that's it,
 		//it's redirected forever. Argh!
 		target->close();
