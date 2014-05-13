@@ -626,7 +626,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 		//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
 		//so we reach into stderr's internals.
 		dup=Stdio.File();
-		dup->assign(Stdio.stderr->_fd->dup());
+		dup->assign(file->_fd->dup());
 		#else
 		dup=file->dup();
 		#endif
