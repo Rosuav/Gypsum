@@ -624,7 +624,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 	{
 		#if __VERSION__ < 8.0
 		//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
-		//so we reach into stderr's internals.
+		//so we reach into the object's internals.
 		dup=Stdio.File();
 		dup->assign(file->_fd->dup());
 		#else
