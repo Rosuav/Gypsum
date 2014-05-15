@@ -327,6 +327,19 @@ class movablewindow
 }
 
 //Base class for a configuration dialog. Permits the setup of anything where you have a list of keyworded items, can create/retrieve/update/delete them by keyword.
+/* Idea: Allow the displayed name to differ from the items[] key. This could be
+done with a translation mapping, for instance; and a standard rule of "0 means
+-- New --" could allow us to distinguish the 'real' New from one that happens
+to have that keyword value. I can think of two ways to do this within GTK: one,
+subclass ListStore to return different values; two, subclass CellRendererText
+to display certain strings differently. Obviously the latter is better! But I
+can't get either to work, at the moment. The key functions don't seem to come
+back to Pike code. It might require writing C level code, which would mean I
+can't depend on this technique (as it won't work on all platforms and old Pike
+versions). Still, if this could be done, it would be handy. Maybe it can be
+pulled off by having a two-column ListStore, where the first is the keyword
+and the second is the display text?? Might have synchronization problems,
+though. Would need to dig into it and see how well it actually works. */
 class configdlg
 {
 	inherit window;
