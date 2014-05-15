@@ -887,6 +887,8 @@ class fontdlg
 }
 
 //TODO: For the standard ones (0xffb[0-9]), show a more friendly description, not just the hex code
+//This may require a generalized system of model changes, where the TreeModel doesn't simply report
+//the keys of the mapping, but does some processing on them. Experimentation required.
 constant options_keyboard="_Keyboard";
 class keyboard
 {
