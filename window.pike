@@ -886,6 +886,7 @@ class fontdlg
 	}
 }
 
+//TODO: For the standard ones (0xffb[0-9]), show a more friendly description, not just the hex code
 constant options_keyboard="_Keyboard";
 class keyboard
 {
