@@ -52,7 +52,9 @@ protected string bytes_to_string(string bytes)
 	//replace a handful of byte values that have no meaning in Unicode anyway.
 	//Seems to work well for Threshold RPG, and isn't incompatible with the
 	//normal handling of UTF-8. (I ought to use an actual CP-1252 decoder, but
-	//the Charset module isn't available on Windows Pike 7.8.700.)
+	//the Charset module isn't available on Windows Pike 7.8.700.) I could add
+	//in translations for all 27 byte values that CP-1252 defines and ISO-8859-1
+	//doesn't, but it's unlikely to be significant in most cases.
 	return replace(bytes,({"\x80","\x91","\x92","\x93","\x94"}),({"\u20ac","\u2018","\u2019","\u201c","\u201d"}));
 }
 
