@@ -389,6 +389,7 @@ void ka(mapping conn)
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=(["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
+	if (display->conn_debug) conn->debug_textread=conn->ansiread=conn->sockread=1;
 	if ((<"0.0.0.0","::">)[info->host])
 	{
 		//Passive mode. (Currently hacked in by the specific IPs; may
