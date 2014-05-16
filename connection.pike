@@ -5,7 +5,7 @@
  * 
  * Stdio.File sock;
  * object sockthrd;
- * array curmsg=({0,""});
+ * array curmsg;
  * int fg,bg,bold; //Current color, in original ANSI form
  * mixed curcolor;
  * string worldname;
@@ -349,7 +349,7 @@ void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
-	conn->curmsg=({([]),0,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
+	conn->curmsg=({([]),conn->curcolor,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->sockets[conn->sock]=1;
