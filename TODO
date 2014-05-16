@@ -6,6 +6,7 @@
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Save scrollback as HTML, or some other color-retaining format
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs. Seen 20140407; not seen again for a while 20140514.
+* Bug: The first line received on a new socket seems to be lost (???)
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
