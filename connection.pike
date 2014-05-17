@@ -80,8 +80,9 @@ void textread(mapping conn,string data,int end_of_block)
 	data=replace(data,({"\r\n","\n\r","\r"}),"\n");
 	if (has_value(data,7))
 	{
-		data-="\7";
-		beep();
+		string newdata=data-"\7";
+		beep(sizeof(data)-sizeof(newdata)); //ie the number of \7 in the string
+		data=newdata;
 	}
 	if (array old_prompt=m_delete(conn,"real_prompt"))
 	{
