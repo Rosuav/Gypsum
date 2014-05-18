@@ -1,6 +1,7 @@
 inherit hook;
 inherit movablewindow;
 
+//Persist key chosen to allow separate components display for alchies. This may or may not be useful.
 mapping(string:mapping(string:mixed)) components=persist->setdefault("components/mage",([]));
 
 void setcount(string name,int cnt)
