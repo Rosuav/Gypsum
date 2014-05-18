@@ -22,6 +22,13 @@ int diff(string cur,string last)
 	return (int)(cur-","-" ")-(int)(last-","-" ");
 }
 
+void updstatus()
+{
+	string status="";
+	foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
+	setstatus(status[..<2]);
+}
+
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	foreach (monitors;string kwd;array fmt) if (sscanf(line,fmt[0],string cur) && cur)
@@ -34,9 +41,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		persist["wealth/last_"+kwd]=cur;
 		persist["wealth/diff_"+kwd]=diff(cur,first);
 		if (!persist["wealth/stats_since"]) persist["wealth/stats_since"]=time();
-		string status="";
-		foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
-		setstatus(status[..<2]);
+		updstatus();
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
 		if (sscanf(replace(line,({" ",","}),""),type+":%d%s",int val,string after)==2 && after=="")
@@ -126,4 +131,5 @@ void create(string name)
 	::create(name);
 	G->G->commands->party=party;
 	G->G->commands->split=split;
+	updstatus();
 }
