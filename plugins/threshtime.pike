@@ -114,6 +114,7 @@ class menu_clicked
 		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,10)
 			->add(timebox("Local time","loc",terramonth))
 			->add(timebox("New York time (EST/EDT)","est",terramonth))
+			->add(timebox("UTC","utc",terramonth))
 			->add(timebox("Threshold time","th",threshmonth))
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
@@ -126,7 +127,7 @@ class menu_clicked
 	void dosignals()
 	{
 		::dosignals();
-		foreach (({"loc","est","th"}),string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
+		foreach (({"loc","est","utc","th"}),string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
 			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",this["convert_"+pfx])});
 		win->signals+=({
 			gtksignal(win->set_now,"clicked",set_time_now),
@@ -135,14 +136,15 @@ class menu_clicked
 
 	void set_rl_time(int time,string|void which)
 	{
-		if (!which) {set_rl_time(time,"loc"); set_rl_time(time,"est"); return;}
+		if (!which) {set_rl_time(time,"loc"); set_rl_time(time,"est"); set_rl_time(time,"utc"); return;}
 		if (win->signals) destruct(win->signals[*]); //Suppress 'changed' signals from this.
 		Calendar.Gregorian.Second tm=Calendar.Gregorian.Second(time);
 		if (which=="est") tm=tm->set_timezone("America/New_York");
+		else if (which=="utc") tm=tm->set_timezone("UTC");
 		//Transfer cal->year_no() into win->est_year->set_text() or win->loc_year->set_text(), etc.
 		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no"]);string ef;string cal)
 			win[which+"_"+ef]->set_text((string)tm[cal]());
-		win[which+"_mon"]->set_active(tm->month_no()-1);
+		win[which+"_mon"]->set_active(tm->month_no());
 		if (win->signals) dosignals(); //Un-suppress changed signals.
 	}
 
@@ -177,6 +179,7 @@ class menu_clicked
 
 	void convert_loc() {call_out(convert_rl,0,"loc");}
 	void convert_est() {call_out(convert_rl,0,"est");}
+	void convert_utc() {call_out(convert_rl,0,"utc");}
 
 	void convert_rl(string source)
 	{
@@ -188,6 +191,7 @@ class menu_clicked
 				(int)win[source+"_day"]->get_text()
 			);
 			if (source=="est") day=day->set_timezone("America/New_York");
+			else if (source=="utc") day=day->set_timezone("UTC");
 			int hr=(int)win[source+"_hour"]->get_text();
 			int min=(int)win[source+"_min"]->get_text();
 			Calendar.Gregorian.Second tm=day->second(3600*hr+60*min);
@@ -201,7 +205,7 @@ class menu_clicked
 			int ts=tm->unix_time(); //Work with Unix time for simplicity
 			if (ts==win->last_rl_time) return; //No change, no updates
 			win->last_rl_time=ts;
-			set_rl_time(ts,source=="est"?"loc":"est");
+			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the others
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
 		};
 	}
