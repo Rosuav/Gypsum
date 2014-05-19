@@ -1,7 +1,13 @@
+//For Threshold RPG: keep track of your currently-held components in a separate window.
 inherit hook;
 inherit movablewindow;
 
 //Persist key chosen to allow separate components display for alchies. This may or may not be useful.
+//It might be worth having two or three of these, and any which have content will be displayed in
+//columns. So if (sizeof(components/mage)), the mage components run down the line (there are 16, I
+//think); and if (sizeof(components/alchemist)), correspondingly (maybe in two cols as there are 30).
+//I don't know if sorcs are at all different from mages; possibly their spams differ but their
+//components don't (and maybe no difference at all). I also don't know what necros and bards do.
 mapping(string:mapping(string:mixed)) components=persist->setdefault("components/mage",([]));
 
 void setcount(string name,int cnt)
