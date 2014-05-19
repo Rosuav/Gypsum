@@ -96,6 +96,7 @@ constant menu_label="Thresh Time converter";
 class menu_clicked
 {
 	inherit window;
+	void create() {::create();}
 
 	GTK2.Entry ef(string name,int|void width)
 	{
@@ -155,6 +156,7 @@ class menu_clicked
 		win->th_hour->set_text((string)(time%24)); time/=24;
 		win->th_day->set_text((string)(time%30+1)); time/=30;
 		win->th_mon->set_active(time%12); time/=12;
+
 		win->th_year->set_text((string)time);
 		if (win->signals) dosignals();
 	}
