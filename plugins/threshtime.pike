@@ -102,21 +102,19 @@ class menu_clicked
 		return noex(win[name]=GTK2.Entry((["width-chars":width||2])));
 	}
 
+	GTK2.Frame timebox(string label,string pfx,array months)
+	{
+		return GTK2.Frame(label)->add(GTK2Table(({
+			({"Year","Month","Day","Time",0}),
+			({ef(pfx+"_year",4),win[pfx+"_mon"]=SelectBox(months),ef(pfx+"_day",3),ef(pfx+"_hour"),ef(pfx+"_min")}),
+		})));
+	}
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,10)
-			->add(GTK2.Frame("Local time")->add(GTK2Table(({
-				({"Year","Month","Day","Time",0}),
-				({ef("loc_year",4),win->loc_mon=SelectBox(terramonth),ef("loc_day",3),ef("loc_hour"),ef("loc_min")}),
-			}))))
-			->add(GTK2.Frame("New York time (EST/EDT)")->add(GTK2Table(({
-				({"Year","Month","Day","Time",0}),
-				({ef("est_year",4),win->est_mon=SelectBox(terramonth),ef("est_day",3),ef("est_hour"),ef("est_min")}),
-			}))))
-			->add(GTK2.Frame("Threshold time")->add(GTK2Table(({
-				({"Year","Month","Day","Time",0}),
-				({ef("th_year",4),win->th_mon=SelectBox(threshmonth),ef("th_day",3),ef("th_hour"),ef("th_min")}),
-			}))))
+			->add(timebox("Local time","loc",terramonth))
+			->add(timebox("New York time (EST/EDT)","est",terramonth))
+			->add(timebox("Threshold time","th",threshmonth))
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
 				->add(GTK2.HbuttonBox()->add(stock_close()))
