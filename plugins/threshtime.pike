@@ -145,7 +145,7 @@ class menu_clicked
 		//Transfer cal->year_no() into win->est_year->set_text() or win->loc_year->set_text(), etc.
 		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no"]);string ef;string cal)
 			win[which+"_"+ef]->set_text((string)tm[cal]());
-		win[which+"_mon"]->set_active(tm->month_no());
+		win[which+"_mon"]->set_active(tm->month_no()-1);
 		if (win->signals) dosignals(); //Un-suppress changed signals.
 	}
 
@@ -189,7 +189,7 @@ class menu_clicked
 		{
 			Calendar.Gregorian.Day day=Calendar.Gregorian.Day(
 				(int)win[source+"_year"]->get_text(),
-				(int)win[source+"_mon"]->get_active(),
+				(int)win[source+"_mon"]->get_active()+1,
 				(int)win[source+"_day"]->get_text()
 			);
 			if (source=="est") day=day->set_timezone("America/New_York");
