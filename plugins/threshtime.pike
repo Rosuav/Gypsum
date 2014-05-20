@@ -207,7 +207,7 @@ class menu_clicked
 			int ts=tm->unix_time(); //Work with Unix time for simplicity
 			if (ts==win->last_rl_time) return; //No change, no updates
 			win->last_rl_time=ts;
-			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the others
+			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the other RL time boxes
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
 		};
 	}
