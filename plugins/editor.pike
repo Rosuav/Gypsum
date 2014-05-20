@@ -1,6 +1,8 @@
+//Pop-out editor - triggered by a specially-formatted line from the server.
 inherit hook;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog.
+//TODO: Client-side invocation (maybe inherit plugin_menu?)
 
 constant plugin_active_by_default = 1;
 
