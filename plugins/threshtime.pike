@@ -176,7 +176,7 @@ class menu_clicked
 			(int)win->th_day->get_text() * 1440 - 1440 +
 			(int)win->th_hour->get_text() * 60 +
 			(int)win->th_min->get_text();
-		set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5);
+		set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5); //Reverse the usual calculation and turn Thresh into RL time
 	}
 
 	void convert_loc() {call_out(convert_rl,0,"loc");}
