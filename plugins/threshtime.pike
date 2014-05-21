@@ -1,3 +1,7 @@
+//Time converter - primarily for Threshold RPG's game time and official OOC time (EST/EDT),
+//but also has UTC which makes it useful for other time conversions too. It'll happily
+//convert between any of the above and your own local time, complete with timezone shifts
+//based on historical and future tzdata; obviously it's only as accurate as your tzdata.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent;
