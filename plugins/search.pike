@@ -1,3 +1,4 @@
+//Status bar search box - hit Ctrl-F to put the cursor in there, enter something to search.
 constant plugin_active_by_default = 1;
 
 //TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
