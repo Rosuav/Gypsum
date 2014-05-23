@@ -356,6 +356,8 @@ void autoscroll(mapping subw)
  * If msg is an array, it is assumed to be alternating colors and text.
  * Otherwise, additional arguments will be processed with sprintf().
  */
+//NOTE: Currently, this is accessed from everywhere via a bouncer. TODO: Don't.
+//This has some consequences at update time, eg plugins/gtk.pike, so take care.
 void say(mapping|void subw,string|array msg,mixed ... args)
 {
 	if (!subw) subw=current_subw();
