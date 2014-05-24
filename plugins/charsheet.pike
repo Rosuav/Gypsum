@@ -351,9 +351,23 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					),0,0,0)
 				,0,0,0)
 			,GTK2.Label("Gear"))
-			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
-				({({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})})
-				+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),noex(num("inven_qty_"+i)),noex(num("inven_wgt_"+i))});})
+			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(({
+				({GTK2Table(({ //Yep, a table in a table. Tidier than a Vbox with two tables.
+					({"Total weight",calc(sprintf("0%{+inven_qty_%d*inven_wgt_%<d%}",enumerate(20)),"inven_tot_weight","float"),
+					"Size mod",GTK2.Hbox(0,0)
+						->add(GTK2.Label("")) //Center the important info by absorbing spare space at the two ends
+						->pack_start(GTK2.Label("*"),0,0,0)
+						->pack_start(calc("([\"Small\":3,\"Large\":2,\"Huge\":4,\"Gargantuan\":8,\"Colossal\":16])[size] || \"1\"","size_mul","string"),0,0,0)
+						->pack_start(GTK2.Label("/"),0,0,0)
+						->pack_start(calc("([\"Small\":4,\"Tiny\":2,\"Diminutive\":4,\"Fine\":8])[size] || \"1\"","size_div","string"),0,0,0)
+						->add(GTK2.Label("")),
+					"Light load",calc("inven_hvy_load/3"),"Med load",calc("inven_hvy_load*2/3"),"Heavy load",calc("(STR<0 ? 0 :" //Negative STR shouldn't happen
+						"STR<20 ? ({0,10,20,30,40,50,60,70,80,90,100,115,130,150,175,200,230,260,300,350})[STR] :" //Normal range strengths
+						"({400,460,520,600,700,800,920,1040,1200,1400})[STR_mod%10] * pow(4,STR/10-2)" //Tremendous strength
+					") * size_mul / size_div","inven_hvy_load")})
+				})),0,0}),
+				({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})
+				})+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),noex(num("inven_qty_"+i)),noex(num("inven_wgt_"+i))});})
 			))
 			,GTK2.Label("Inven"))
 			->append_page(GTK2.Vbox(0,20)
