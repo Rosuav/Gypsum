@@ -1,5 +1,6 @@
 //Pop-out editor - triggered by a specially-formatted line from the server.
 inherit hook;
+inherit plugin_menu;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog.
 //TODO: Client-side invocation (maybe inherit plugin_menu?)
@@ -136,4 +137,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 		conn->editor_eax+=line+"\n";
 		return 0;
 	}
+}
+
+constant menu_label="Editor";
+void menu_clicked()
+{
+	editor(G->G->window->current_subw(),"");
 }
