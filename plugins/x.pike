@@ -14,6 +14,22 @@ the input to be properly terminated (usually that means adding a semicolon). It 
 needed to complete the current command.
 */
 
+string calculate(mapping(string:mixed) subw,string expr)
+{
+	catch
+	{
+		int explain=has_prefix(expr,"#");
+		mixed prev=subw->last_calc_result;
+		if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
+		else prev="";
+		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
+		if (explain) val=expr[1..]+" = "+val;
+		subw->last_calc_result=val;
+		return val;
+	};
+	return expr;
+}
+
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (!subw->hilfe_saved_prompt)
@@ -21,19 +37,10 @@ int inputhook(string line,mapping(string:mixed) subw)
 		if (!has_prefix(line,"pike ")) //Normal input
 		{
 			//Check for the special "calculator notation"
-			if (sscanf(line,"calc %s",string expr) || sscanf(line,"%s$[%s]%s",string before,expr,string after)) catch
-			{
-				int explain=has_prefix(expr,"#");
-				mixed prev=subw->last_calc_result;
-				if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
-				else prev="";
-				int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
-				if (explain) val=expr[1..]+" = "+val;
-				if (before) nexthook(subw,before+val+(after||"")); //Command with embedded expression
-				else say(subw,"%% "+val); //"calc" command
-				subw->last_calc_result=val;
-				return 1;
-			};
+			if (sscanf(line,"calc %s",string expr)) {say(subw,"%% "+calculate(subw,expr)); return 1;}
+			string newcmd="";
+			while (sscanf(line,"%s$[%s]%s",string before,string expr,string after)) {newcmd+=before+calculate(subw,expr); line=after||"";}
+			if (newcmd!="") {nexthook(subw,newcmd+line); return 1;}
 			return 0;
 		}
 		line=line[5..]; //Command starting "pike " - skip the prefix.
