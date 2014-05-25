@@ -23,8 +23,8 @@ string calculate(mapping(string:mixed) subw,string expr)
 		if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
 		else prev="";
 		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
-		if (explain) val=expr[1..]+" = "+val;
 		subw->last_calc_result=val;
+		if (explain) val=expr[1..]+" = "+val;
 		return val;
 	};
 	return expr;
