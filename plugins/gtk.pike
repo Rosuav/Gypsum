@@ -136,7 +136,7 @@ void create()
 %% Pike program tree. As these files are covered by the GNU LGPL,
 %% source code is available, at the above URL; you do not need this
 %% to run Pike or Gypsum, however.");
-	say(0,"%% Target directory: "+target);
+	say(0,"%% Target directory: "+target); //TODO: Allow the user to open this directory and ./newgtk as folders (if it'd help, maybe it wouldn't)
 	if ((string)GTK2.version()=="\2\30\12")
 	{
 		G->globals->MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Already on GTK 2.24.10, nothing to do.",0);
