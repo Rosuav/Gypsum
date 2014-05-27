@@ -10,7 +10,7 @@ object persist=class(string savefn)
 	 * retrieved_value=persist["some/string/identifier"];
 	 * old_value=m_delete(persist,"some/string/identifier");
 	 * Saves to disk after every change. Loads from disk only on initialization - /update this file to reload.
-	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - especially if your code is itself happening on the backend thread.
+	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - all code runs on one thread anyway.
 	 **/
 
 	/* Idea: Encrypt the file with a password. This isn't high-grade security but might be good for some people.
