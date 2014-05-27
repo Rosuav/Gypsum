@@ -50,16 +50,11 @@ mixed say(mixed ... args) {return G->G->window->say(@args);}
 protected string bytes_to_string(string bytes)
 {
 	catch {return utf8_to_string(bytes);}; //Normal case: Decode as UTF-8
-	//Failure case: Decode as Latin-1 with a bit of CP-1252.
-	//Use Latin-1 (the decoder for which in Pike is the identity function), but
-	//replace a handful of byte values that have no meaning in Unicode anyway.
-	//Seems to work well for Threshold RPG, and isn't incompatible with the
-	//normal handling of UTF-8. (I ought to use an actual CP-1252 decoder, but
-	//the Charset module isn't available on Windows Pike 7.8.700.) I could add
-	//in translations for all 27 byte values that CP-1252 defines and ISO-8859-1
-	//doesn't, but it's unlikely to be significant in most cases. Then again, it
-	//probably won't materially impact performance, so I might try it as a test.
-	//return replace(bytes,({"\x80","\x91","\x92","\x93","\x94"}),({"\u20ac","\u2018","\u2019","\u201c","\u201d"}));
+	//Failure case: Decode as CP-1252.
+	//Mostly use Latin-1 (the decoder for which in Pike is the identity function),
+	//and then replace the handful of byte values that mean Unicode characters
+	//in other planes. (I ought to use an actual CP-1252 decoder, but the Charset
+	//module isn't available on Windows Pike 7.8.700. This is good enough.)
 	return replace(bytes,"\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f"/"",
 		("\u20AC\uFFFD\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\uFFFD\u017D\uFFFD"
 		"\uFFFD\u2018\u2019\u201C\u201D\u2022\u2013\u2014\u02DC\u2122\u0161\u203A\u0153\uFFFD\u017E\u0178")/"");
