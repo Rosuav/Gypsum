@@ -9,8 +9,10 @@ object persist=class(string savefn)
 	 * persist["some/string/identifier"]=any_value;
 	 * retrieved_value=persist["some/string/identifier"];
 	 * old_value=m_delete(persist,"some/string/identifier");
-	 * Saves to disk after every change. Loads from disk only on initialization - /update this file to reload.
-	 * Note that saving is done with a call_out(0), so you can freely batch your modifications without grinding the disk too much - all code runs on one thread anyway.
+	 * Saves to disk after every change, or on persist->save() calls.
+	 * Loads from disk only on initialization - /update this file to reload.
+	 * Note that saving is done with a call_out(0), so you can freely batch mutations
+	 * without grinding the disk too much - saving will happen next idleness, probably.
 	 **/
 
 	/* Idea: Encrypt the file with a password. This isn't high-grade security but might be good for some people.
