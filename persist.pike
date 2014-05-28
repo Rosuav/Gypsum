@@ -19,7 +19,7 @@ object persist=class(string savefn)
 	string pwd;
 	string key=Crypto.SHA256.hash("Gypsum"+string_to_utf8(pwd)+"Gypsum");
 	string content=encode_value(data);
-	int pad=16-sizeof(content)%16; //Will always add at least 1 byte of padding; if the data happens to be a multiple of 16 bytes, will add an entire leading block of padding.
+	int pad=16-sizeof(content)%16; //Add bytes to make up exact blocks, adding an entire block if necessary.
 	content=(string)allocate(pad,pad)+content;
 	string enc=Crypto.AES.encrypt(key,content);
 
