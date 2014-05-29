@@ -21,7 +21,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 {
 	inherit movablewindow;
 	constant pos_key="charsheet/winpos";
-	mapping(string:multiset(function)) depends=([]); //Whenever something changes, recalculate all its depends.
+	mapping(string:array(function)) depends=([]); //Whenever something changes, recalculate all its depends.
 
 	void create()
 	{
@@ -42,16 +42,15 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 	void set_value(string kwd,string val,multiset|void beenthere)
 	{
 		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
-		//but without succumbing to refloops (eg x: "y+1", y: "x+1"). Or maybe sort depends
-		//by name or something and then craft the names accordingly. Or maybe retain order,
-		//which will mean they get recalculated in the order of their original calc() calls.
+		//but without succumbing to refloops (eg x: "y+1", y: "x+1"). Currently, depends are
+		//recalculated in the order they were added, which may not always be perfect.
 		if (val=="0") val="";
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
 		send(conn,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val));
-		if (depends[kwd]) indices(depends[kwd])(data,beenthere);
+		if (depends[kwd]) depends[kwd](data,beenthere); //Call all the functions, in order
 	}
 
 	void checkchanged(object self,mixed ... args)
@@ -183,8 +182,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				lbl->set_text(val);
 			};
 			foreach ((array)symbols,string dep)
-				if (!depends[dep]) depends[dep]=(<f2>);
-				else depends[dep][f2]=1;
+				if (!depends[dep]) depends[dep]=({f2});
+				else depends[dep]+=({f2});
 			f2(data,(<name>));
 		};
 		return lbl;
@@ -502,8 +501,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 								->show_all();
 						});
 						foreach (synergies,[string dep,int type,string desc])
-							if (!depends[dep]) depends[dep]=(<recalc>);
-							else depends[dep][recalc]=1;
+							if (!depends[dep]) depends[dep]=({recalc});
+							else depends[dep]+=({recalc});
 						recalc(data,(<kwd+"_synergy">));
 					}
 					return ({
