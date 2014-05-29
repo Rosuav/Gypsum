@@ -41,6 +41,9 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 
 	void set_value(string kwd,string val,multiset|void beenthere)
 	{
+		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
+		//but without succumbing to refloops (eg x: "y+1", y: "x+1"). Or maybe sort depends
+		//by name or something and then craft the names accordingly.
 		if (val=="0") val="";
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
