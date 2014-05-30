@@ -127,7 +127,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 		//Try to show the caption of the window, if it exists.
 		string desc="["+name+"]"; //Note that this also covers movablewindow and configdlg, which are special cases of window.
 		if (data->mainwindow) desc=data->mainwindow->get_title(); 
-		if (reallydelete(data->self,"Window: "+desc)) ({m_delete(G->G->windows,name)->mainwindow})->destroy();
+		if (object win=reallydelete(data->self,"Window: "+desc) && m_delete(G->G->windows,name)->mainwindow) win->destroy();
 	}
 	foreach (G->G->statustexts;string name;mapping data) if (origin(data->self)==param)
 	{
