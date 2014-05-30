@@ -69,6 +69,19 @@ int process(string param,mapping(string:mixed) subw)
 		}]));
 		return 1;
 	}
+	if (param=="zip")
+	{
+		say(subw,"%% Sorry, zip-based update not implemented yet.");
+		/* TODO: Download https://github.com/Rosuav/Gypsum/archive/master.zip and unzip it into
+		the current directory. Note that the zip will have an unnecessary directory level in it,
+		so strip that off. Note also that Windows doesn't come with an unzip utility, and Pike
+		doesn't (as far as I know) have any easy way to unzip stuff, so this will either mean
+		writing an unzip here inside Gypsum (using Gz.inflate) or downloading a binary, probably
+		from rosuav.com somewhere, and running that. Obviously everything should be done through
+		callbacks, async download etc; when everything appears to be done, an 'update all' will
+		be needed to make the changes actually happen. */
+		return 1;
+	}
 	//Update everything by updating globals; everything's bound to use at least something.
 	//NOTE: Does NOT update persist.pike, deliberately.
 	if (param=="all") param="globals.pike";
