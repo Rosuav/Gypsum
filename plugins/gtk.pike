@@ -32,6 +32,12 @@ Never-updated globals like say() are safe, though - they can't be triggered.
 Awkwardness: I can't actually be sure of having any sort of 'unzip' utility on
 the user's computer. Most Windows systems do have some way to unzip files, but
 not necessarily exposed as a program. So... fetch all the files individually.
+
+(Although it's not hard to write an unzip, based on Gz.inflate and some very
+simple parsing. I'm writing one for elsewhere, so it might be worth using it
+here as well. For now, not worth changing, and it's entirely possible the next
+Windows Pike release will have the latest GTK2 anyway, which would mean this
+gets stripped out completely.)
 */
 
 //The files we need to fetch, mapped to their SHA256 signatures
