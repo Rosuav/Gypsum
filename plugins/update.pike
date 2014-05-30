@@ -45,6 +45,20 @@ string fn(mapping subw,string param)
 	return param;
 }
 
+//Callbacks for 'update zip'
+void data_available(object q,mapping(string:mixed) subw)
+{
+	string err=unzip(q->data(),lambda(string fn,string data)
+	{
+		fn-="Gypsum-master/";
+		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
+	});
+	if (err) {say(subw,"%% "+err); return;}
+	process("all",subw);
+}
+void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
+void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
+
 /**
  * Recompiles the provided plugin
  *
@@ -71,15 +85,9 @@ int process(string param,mapping(string:mixed) subw)
 	}
 	if (param=="zip")
 	{
-		say(subw,"%% Sorry, zip-based update not implemented yet.");
-		/* TODO: Download https://github.com/Rosuav/Gypsum/archive/master.zip and unzip it into
-		the current directory. Note that the zip will have an unnecessary directory level in it,
-		so strip that off. Note also that Windows doesn't come with an unzip utility, and Pike
-		doesn't (as far as I know) have any easy way to unzip stuff, so this will either mean
-		writing an unzip here inside Gypsum (using Gz.inflate) or downloading a binary, probably
-		from rosuav.com somewhere, and running that. Obviously everything should be done through
-		callbacks, async download etc; when everything appears to be done, an 'update all' will
-		be needed to make the changes actually happen. */
+		Protocols.HTTP.do_async_method("GET","https://github.com/Rosuav/Gypsum/archive/master.zip",0,0,
+			Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,subw));
+		say(subw,"%% Downloading https://github.com/Rosuav/Gypsum/archive/master.zip ...");
 		return 1;
 	}
 	//Update everything by updating globals; everything's bound to use at least something.
