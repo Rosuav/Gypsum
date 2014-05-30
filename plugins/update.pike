@@ -85,7 +85,8 @@ int process(string param,mapping(string:mixed) subw)
 	}
 	if (param=="zip")
 	{
-		Protocols.HTTP.do_async_method("GET","https://github.com/Rosuav/Gypsum/archive/master.zip",0,0,
+		//Note that the canonical URL is the one in the message, but Pike 7.8 doesn't follow redirects.
+		Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
 			Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,subw));
 		say(subw,"%% Downloading https://github.com/Rosuav/Gypsum/archive/master.zip ...");
 		return 1;
