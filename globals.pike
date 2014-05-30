@@ -664,3 +664,45 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 		dup->dup2(file);
 	}
 }
+
+//Unzip the specified data (should be exactly what could be read from/written to a .zip file)
+//and call the callback for each file, with two args: file name and data. Returns 0 if all
+//is successful, otherwise returns an error message.
+string unzip(string data,function callback)
+{
+	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
+	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%+-4c%-4c%-4c%-2c%-2c%s",
+		int minver,int flags,int method,int modtime,int moddate,int crc32,
+		int compsize,int uncompsize,int fnlen,int extralen,data))
+	{
+		string fn=data[..fnlen-1]; data=data[fnlen..]; //I can't use %-2H for these, because the two lengths come first and then the two strings. :(
+		string extra=data[..extralen-1]; data=data[extralen..];
+		string zip=data[..compsize-1]; data=data[compsize..];
+		if (flags&8) {zip=data; data=0;} //compsize will be 0 in this case.
+		string result,eos;
+		switch (method)
+		{
+			case 0: result=zip; eos=""; break; //Stored (incompatible with flags&8 mode, I think)
+			case 8:
+				object infl=Gz.inflate(-15);
+				result=infl->inflate(zip);
+				eos=infl->end_of_stream();
+				break;
+			default: return sprintf("ERROR - unknown compression method %d (%s)",method,fn); 
+		}
+		if (flags&8)
+		{
+			//The next block should be the CRC and size marker, optionally prefixed with "PK\7\b". Not sure
+			//what happens if the crc32 happens to be exactly those four bytes and the header's omitted...
+			if (eos[..3]=="PK\7\b") eos=eos[4..]; //Trim off the marker
+			sscanf(eos,"%-4c%-4c%-4c%s",crc32,compsize,uncompsize,data);
+		}
+		else if (eos!="") return sprintf("ERROR - malformed ZIP file (bad end-of-stream on %s)",fn);
+		if (sizeof(result)!=uncompsize) return sprintf("ERROR - malformed ZIP file (bad file size on %s)",fn);
+		if (Gz.crc32(result)!=crc32) return sprintf("ERROR - malformed ZIP file (bad CRC on %s)",fn);
+		callback(fn,result);
+	}
+	if (data[..3]!="PK\1\2") return sprintf("ERROR - malformed ZIP file (bad signature)");
+	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
+	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
+}
