@@ -668,7 +668,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 //Unzip the specified data (should be exactly what could be read from/written to a .zip file)
 //and call the callback for each file, with two args: file name and data. Returns 0 if all
 //is successful, otherwise returns an error message.
-string unzip(string data,function callback)
+string unzip(string data,function callback,mixed|void callback_arg)
 {
 	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
 	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%+-4c%-4c%-4c%-2c%-2c%s",
@@ -700,7 +700,7 @@ string unzip(string data,function callback)
 		else if (eos!="") return sprintf("ERROR - malformed ZIP file (bad end-of-stream on %s)",fn);
 		if (sizeof(result)!=uncompsize) return sprintf("ERROR - malformed ZIP file (bad file size on %s)",fn);
 		if (Gz.crc32(result)!=crc32) return sprintf("ERROR - malformed ZIP file (bad CRC on %s)",fn);
-		callback(fn,result);
+		callback(fn,result,callback_arg);
 	}
 	if (data[..3]!="PK\1\2") return sprintf("ERROR - malformed ZIP file (bad signature)");
 	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
