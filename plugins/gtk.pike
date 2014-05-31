@@ -24,8 +24,6 @@ G->globals->some_name, which avoids creating a useless lookup entry. It's not
 particularly likely that someone will be bugged by this (all it means is that
 updating GTK and then updating globals will re-update GTK), but simpler to do
 the lookups in such a way as to not have the problem in the first place.
-
-Never-updated globals like say() are safe, though - they can't be triggered.
 */
 
 /*
@@ -39,6 +37,8 @@ here as well. For now, not worth changing, and it's entirely possible the next
 Windows Pike release will have the latest GTK2 anyway, which would mean this
 gets stripped out completely.)
 */
+
+function say=G->globals->say;
 
 //The files we need to fetch, mapped to their SHA256 signatures
 mapping(string:string) files=([
