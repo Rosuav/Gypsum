@@ -16,7 +16,8 @@ void create(string n,string which)
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
 //Note that this is relatively slow (a run-time lookup every time), and should normally
-//be avoided in favour of a reload-time replacement.
+//be avoided in favour of a reload-time replacement. As of 20140602, this is not used
+//anywhere in core code, but is available if needed/wanted.
 class bouncer(string ... keys)
 {
 	mixed `()(mixed ... args)
