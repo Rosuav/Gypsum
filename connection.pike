@@ -25,12 +25,14 @@ void create(string name)
 	G->G->connection=this;
 	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
 	else G->G->sockets=(<>);
-	#if !constant(send)
-	add_gypsum_constant("send",bouncer("connection","send"));
-	#endif
+	add_gypsum_constant("send",send);
 }
 
 //On first load, there won't be a global say, so use a local bouncer.
+//This resolves the bootstrap problem of circular references between
+//window.pike (say) and connection.pike (send). The alternative is to
+//bootstrap this file twice, which would run faster (by removing the
+//bouncer).
 #if !constant(say)
 mixed say(mixed ... args) {return G->G->window->say(@args);}
 #endif
