@@ -100,7 +100,7 @@ reloaded. Should store all GTK object references etc inside win[].
 The plugin's main window should be stored in win->mainwindow; set
 (or consider setting) the following properties on it:
 	"title":"some useful string, even if you suppress its display"
-	"transient-for":G->G->window->mainwindow /* mandatory */
+	"transient-for":G->G->window->mainwindow /* always do this */
 	"modal":1 /* may be useful for config dialogs */
 After creating the window, call ::makewindow() in case further setup
 needs to be done.
