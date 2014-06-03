@@ -220,8 +220,24 @@ object build(string param)
 	else return compiled(param);
 }
 
+//TODO: Make it easier to parameterize plugin menu_labels! This is just wrong.
+class menuitem_zip
+{
+	inherit plugin_menu;
+	constant menu_label="Update Gypsum (zip)";
+	void menu_clicked() {process("zip",G->G->window->current_subw());}
+}
+
+class menuitem_git
+{
+	inherit plugin_menu;
+	constant menu_label="Update Gypsum (git)";
+	void menu_clicked() {process("git",G->G->window->current_subw());}
+}
+
 void create(string name)
 {
+	if (file_stat(".git")) menuitem_git(name); else menuitem_zip(name);
 	::create(name);
 	G->G->commands->unload=unload;
 }
