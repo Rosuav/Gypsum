@@ -215,9 +215,7 @@ considered ADVISORY as the details may change, but the intent is to
 provide an easy way to respond to mouse clicks. The simplest form is
 standardized: inherit this, don't override makestatus(), and implement
 a statusbar_double_click function, which will be called when the user
-double-clicks on your statusbar entry. The recommended name for that
-function MAY be changed, but if it is, a default bouncer will be
-provided so that statusbar_double_click() will still work.
+double-clicks on your statusbar entry.
 
 The event box itself is available as statustxt->evbox and can be, for
 instance, recolored. Using this to provide a colored statustext should
