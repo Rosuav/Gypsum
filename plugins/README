@@ -12,7 +12,10 @@ Upgrading Gypsum within the same major version should not violate any
 promised behaviour, and any departure from these promises is a bug. More
 promises can be added at any minor version, so backward compatibility is
 guaranteed only as far as that minor version. Semantic Versioning v2.0.0
-is applicable here - see http://semver.org/ for details.
+is applicable here - see http://semver.org/ for details. (Note: Due to a
+misreading of my own notes, I errantly released a v1.2.1 which, in theory,
+added pledges to this file. A followup v1.3.0 release corrects this; all
+1.2.1 and 1.2.2-git releases should be considered buggy.)
 
 Every plugin has a name, which is the file name without any path or the
 ".pike" extension. Plugins are loaded in directory-walk order, but once
