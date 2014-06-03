@@ -703,7 +703,7 @@ string unzip(string data,function callback,mixed|void callback_arg)
 		if (Gz.crc32(result)!=crc32) return sprintf("ERROR - malformed ZIP file (bad CRC on %s)",fn);
 		callback(fn,result,callback_arg);
 	}
-	if (data[..3]!="PK\1\2") return sprintf("ERROR - malformed ZIP file (bad signature)");
+	if (data[..3]!="PK\1\2") return sprintf("ERROR - malformed ZIP file (bad signature)"); //This might trip on an empty zip file, haven't checked.
 	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
 	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
 }
