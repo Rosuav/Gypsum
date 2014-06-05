@@ -284,8 +284,7 @@ int sockclosed(mapping conn)
  */
 void sockwrite(mapping conn)
 {
-	if (!conn->sock) return;
-	if (conn->writeme!="") conn->writeme=conn->writeme[conn->sock->write(conn->writeme)..];
+	if (conn->sock && conn->writeme!="") conn->writeme=conn->writeme[conn->sock->write(conn->writeme)..];
 }
 
 /**
