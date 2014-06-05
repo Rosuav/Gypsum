@@ -190,7 +190,7 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
  * Socket read callback. Handles TELNET protocol, then passes actual socket text along to ansiread().
  *
  * @param conn Current connection
- * @param data Raw bytes received from the socket (note, assumed to be UTF-8 encoded except for TELNET codes)
+ * @param data Raw bytes received from the socket (encoded text with embedded TELNET codes)
  */
 void sockread(mapping conn,string data)
 {
