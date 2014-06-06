@@ -39,7 +39,7 @@ class gtksignal(object obj)
 
 //Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
 //Recognizes a subset of strftime(3)'s formatting codes - notably not the locale-based ones.
-//Month/day names are not localized.
+//Month/day names are not localized. Unrecognized percent codes are copied through unchanged.
 string strftime(string format,int|mapping(string:int) tm)
 {
 	if (intp(tm)) tm=gmtime(tm);
