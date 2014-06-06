@@ -50,7 +50,7 @@ void data_available(object q,mapping(string:mixed) subw)
 {
 	string err=unzip(q->data(),lambda(string fn,string data)
 	{
-		fn-="Gypsum-master/";
+		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
 		if (fn=="") return; //Ignore the first-level directory entry
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
 	});
