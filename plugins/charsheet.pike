@@ -367,7 +367,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					"Light load",calc("inven_hvy_load/3"),"Med load",calc("inven_hvy_load*2/3"),"Heavy load",calc("(STR<0 ? 0 :" //Negative STR shouldn't happen
 						"STR<20 ? ({0,10,20,30,40,50,60,70,80,90,100,115,130,150,175,200,230,260,300,350})[STR] :" //Normal range strengths
 						"({400,460,520,600,700,800,920,1040,1200,1400})[STR_mod%10] * pow(4,STR/10-2)" //Tremendous strength
-					") * size_mul / size_div","inven_hvy_load")})
+					") * (size_mul||1) / (size_div||1)","inven_hvy_load")})
 				})),0,0}),
 				({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})
 				})+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),noex(num("inven_qty_"+i)),noex(num("inven_wgt_"+i))});})
