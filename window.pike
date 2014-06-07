@@ -1431,6 +1431,7 @@ void savepos()
 	mapping sz=mainwindow->get_size();
 	persist["window/winpos"]=({pos->x,pos->y,sz->width,sz->height});
 	pos=0;
+	redraw(current_subw()); //Update the scroll bar in case the height changed
 }
 
 //Reset the urgency hint when focus arrives.

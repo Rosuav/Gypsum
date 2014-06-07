@@ -7,7 +7,6 @@
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
   - Seen 20140407; not seen again for a while 20140514.
 * Bug: Passive Mode seems to be spewing out-of-bounds errors from something - investigate.
-* Bug: Resizing the window vertically leaves the scroll bar range wrong.
 * Bug: Closing and quickly reopening charsheet on Windows can crash Pike (??)
 
 Eventually, drop support for Pike 7.8. This means:
