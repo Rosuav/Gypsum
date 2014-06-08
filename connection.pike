@@ -25,7 +25,7 @@ void create(string name)
 	G->G->connection=this;
 	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
 	else G->G->sockets=(<>);
-	add_gypsum_constant("send",send);
+	if (!objectp(G->globals->send)) add_gypsum_constant("send",bouncer("connection","send"));
 }
 
 //On first load, there won't be a global say, so use a local bouncer.
