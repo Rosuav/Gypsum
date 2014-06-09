@@ -545,9 +545,10 @@ int keypress(object self,array|object ev,mapping subw)
 			}
 			if (!subw->histpos) return 1;
 			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
-			string pfx = subw->ef->get_text()[..pos-1];
+			string txt = subw->ef->get_text();
+			string pfx = txt[..pos-1];
 			int hp=subw->histpos;
-			while (hp && !has_prefix(subw->cmdhist[--hp],pfx));
+			while (hp && (!has_prefix(subw->cmdhist[--hp],pfx) || subw->cmdhist[hp]==txt));
 			if (has_prefix(subw->cmdhist[hp],pfx)) settext(subw,subw->cmdhist[subw->histpos=hp]);
 			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
 			return 1;
@@ -564,9 +565,10 @@ int keypress(object self,array|object ev,mapping subw)
 				default: return 1;
 			}
 			int pos = (ev->state&GTK2.GDK_CONTROL_MASK) && subw->ef->get_position();
-			string pfx = subw->ef->get_text()[..pos-1];
+			string txt = subw->ef->get_text();
+			string pfx = txt[..pos-1];
 			int hp=subw->histpos;
-			while (++hp<sizeof(subw->cmdhist) && !has_prefix(subw->cmdhist[hp],pfx));
+			while (++hp<sizeof(subw->cmdhist) && (!has_prefix(subw->cmdhist[hp],pfx) || subw->cmdhist[hp]==txt));
 			if (hp<sizeof(subw->cmdhist)) settext(subw,subw->cmdhist[subw->histpos=hp]);
 			else if (pfx=="" && persist["window/uparr"]) {settext(subw,subw->last_ef); subw->histpos=-1;}
 			else {subw->ef->set_text(pfx); subw->histpos=-1;}
