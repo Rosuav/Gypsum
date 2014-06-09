@@ -4,6 +4,8 @@
  */
 mapping(string:mixed) G=([]); 
 
+//G->globals->whatever is equivalent to the bare name whatever, and can be used
+//in situations where it'd be awkward to use #if constant(whatever) or equiv.
 mapping(string:mixed) globals=([]);
 mapping(string:array(string)) globalusage=([]); //Every time a file looks for something that's in globals, its filename is added to here.
 array(string) needupdate=({}); //Any time anything is found to be in need of updating, it'll be added to this array. Whatever triggered the update should then go through this list and process them all.
