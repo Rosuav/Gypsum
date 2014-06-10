@@ -412,9 +412,9 @@ mapping connect(object display,mapping info)
 		sockclosed(conn);
 		return conn;
 	}
-	string fn=info->logfile && strftime(info->logfile,localtime(time(1)));
 	if (info->logfile && info->logfile!="")
 	{
+		string fn=strftime(info->logfile,localtime(time(1)));
 		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
 		else say(conn->display,"%%%% Logging to %O",fn);
 	}
