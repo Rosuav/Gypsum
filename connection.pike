@@ -32,7 +32,8 @@ void create(string name)
 //This resolves the bootstrap problem of circular references between
 //window.pike (say) and connection.pike (send). The alternative is to
 //bootstrap this file twice, which would run faster (by removing the
-//bouncer).
+//bouncer). Conversely, it may be worth having "function say=G->globals->say;"
+//and then having window.pike's update autoreplace this. TODO: Test.
 #if !constant(say)
 mixed say(mixed ... args) {return G->G->window->say(@args);}
 #endif
