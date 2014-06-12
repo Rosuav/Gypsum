@@ -667,6 +667,8 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 
 //Unzip the specified data (should be exactly what could be read from/written to a .zip file)
 //and call the callback for each file, with the file name, contents, and the provided arg.
+//Note that content errors will be thrown, but previously-parsed content has already been
+//passed to the callback. This may be considered a feature.
 void unzip(string data,function callback,mixed|void callback_arg)
 {
 	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
