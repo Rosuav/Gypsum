@@ -583,7 +583,7 @@ int keypress(object self,array|object ev,mapping subw)
 		{
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
-				//Note: Not using notebook->{next|prev}_page() as they don't cycle.
+				//Not using notebook->{next|prev}_page() as they don't cycle.
 				int page=notebook->get_current_page();
 				if (ev->state&GTK2.GDK_SHIFT_MASK) {if (--page<0) page=notebook->get_n_pages()-1;}
 				else {if (++page>=notebook->get_n_pages()) page=0;}
