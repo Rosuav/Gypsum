@@ -371,6 +371,7 @@ void connfailed(mapping conn)
  */
 void ka(mapping conn)
 {
+	if (!conn->sock) return;
 	send_bytes(conn,"\xFF\xF9");
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
