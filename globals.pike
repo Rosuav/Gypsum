@@ -671,6 +671,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 //passed to the callback. This may be considered a feature.
 void unzip(string data,function callback,mixed|void callback_arg)
 {
+	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
 	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
 	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%+-4c%-4c%-4c%-2c%-2c%s",
 		int minver,int flags,int method,int modtime,int moddate,int crc32,
@@ -703,7 +704,7 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		if (Gz.crc32(result)!=crc32) error("Malformed ZIP file (bad CRC on %s)",fn);
 		callback(fn,result,callback_arg);
 	}
-	if (data[..3]!="PK\1\2") error("Malformed ZIP file (bad signature)"); //This might trip on an empty zip file, haven't checked.
+	if (data[..3]!="PK\1\2") error("Malformed ZIP file (bad signature)");
 	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
 	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
 }
