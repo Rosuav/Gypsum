@@ -31,7 +31,7 @@ class mymaster /* Oh, my master! */
 /**
  * Compile one file into memory and permit it to register itself
  *
- * @param c   File name of the pike file to be compiled.
+ * Errors are sent to stderr, unlike the similar function in update.pike.
  */
 void bootstrap(string c)
 {

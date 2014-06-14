@@ -203,7 +203,7 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
 /**
  * Compile one pike file and let it initialize itself, similar to bootstrap()
  *
- * @param param	the pike file to be compiled.
+ * Unlike bootstrap(), sends errors to a local subw.
  */
 object build(string param)
 {
