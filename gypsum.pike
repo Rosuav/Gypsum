@@ -1,7 +1,4 @@
-/* 
- * Generic globally accessible data
- * Accessible everywhere as G->G->whatever.
- */
+//Generic globally accessible data. Accessible everywhere as G->G->whatever.
 mapping(string:mixed) G=([]); 
 
 //G->globals->whatever is equivalent to the bare name whatever, and can be used
