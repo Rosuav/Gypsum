@@ -219,6 +219,14 @@ object build(string param)
 	else return compiled(param);
 }
 
+#ifdef DO_THINGS_HOW_I_WANT_TO
+string mode = file_stat(".git") ? "git" : "zip";
+string menu_label="Update Gypsum ("+mode+")";
+void menu_clicked() {process(mode,G->G->window->current_subw());}
+
+void create(string name)
+{
+#else
 //TODO: Make it easier to parameterize plugin menu_labels! This is just wrong.
 class menuitem_zip
 {
@@ -237,6 +245,7 @@ class menuitem_git
 void create(string name)
 {
 	if (file_stat(".git")) menuitem_git(name); else menuitem_zip(name);
+#endif
 	::create(name);
 	G->G->commands->unload=unload;
 }
