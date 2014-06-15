@@ -48,12 +48,12 @@ string fn(mapping subw,string param)
 //Callbacks for 'update zip'
 void data_available(object q,mapping(string:mixed) subw)
 {
-	if (mixed err=unzip(q->data(),lambda(string fn,string data)
+	if (mixed err=catch {unzip(q->data(),lambda(string fn,string data)
 	{
 		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
 		if (fn=="") return; //Ignore the first-level directory entry
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
-	}) {say(subw,"%% "+describe_error(err)); return;}
+	});}) {say(subw,"%% "+describe_error(err)); return;}
 	process("all",subw);
 }
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
