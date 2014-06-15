@@ -146,3 +146,5 @@ void menu_clicked()
 {
 	editor(G->G->window->current_subw(),"");
 }
+
+void create(string name) {::create(name);}
