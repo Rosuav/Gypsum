@@ -252,7 +252,8 @@ intrusive than a window.
 DEPRECATED: If a menu_label is not provided, the plugin name will be used.
 This is inadvisable, as it's not usually the most helpful piece of text that
 could be put on a menu item. This fallback may be removed in a future version
-and should be avoided.
+and should be avoided. (Note that technically, explicitly setting it to 0 was
+equivalent to omitting it. This is definitely not supported.)
 
 General notes
 -------------
