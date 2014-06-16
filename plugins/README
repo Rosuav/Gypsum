@@ -255,6 +255,10 @@ could be put on a menu item. This fallback may be removed in a future version
 and should be avoided. (Note that technically, explicitly setting it to 0 was
 equivalent to omitting it. This is definitely not supported.)
 
+FUTURE PLANS: There may in future be a way to designate a different menu for
+the menu item to be added to. Accepting submissions as to the best way to
+notate this.
+
 General notes
 -------------
 
