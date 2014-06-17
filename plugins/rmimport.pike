@@ -185,13 +185,14 @@ class menu_clicked
 				//Again, copied straight in, just changing the ampersands into 'int' declarations and declaring the string :)
 				sscanf(args,"%d %d %d %d %d %d %d \xFE%[^\n]",int AnsiCol,int LocalEcho,int showtoolbar,int showstatusbar,int boxsel,int inputcol,int wipepseudo,string promptchars);
 				//AnsiCol not applicable (Gypsum's monochrome mode is transient)
-				//LocalEcho not supported (currently Gypsum can't disable it)
 				//showtoolbar, showstatusbar not supported - Gypsum never has the former and always has the latter, and there's no real reason to do otherwise
 				//boxsel not supported (Gypsum always defaults to stream, use Shift-drag for box)
 				//inputcol not supported (currently Gypsum always uses color 6, cyan)
 				//RosMud has "wipepseudo" but Gypsum has "retain_pseudo". Same functionality, different name, negated condition.
 				box->pack_start(cb("Retain pseudo-prompts: "+({"Yes","No"})[wipepseudo],({"prompt/retain_pseudo"}),!wipepseudo),0,0,0);
 				box->pack_start(cb(sprintf("Pseudo-prompt markers: %O",promptchars),({"prompt/pseudo"}),promptchars),0,0,0);
+				//RosMud has "local echo" but Gypsum has "hide input". As above, negated condition.
+				box->pack_start(cb("Hide input: "+({"Yes","No"})[LocalEcho],({"window/hideinput"}),!LocalEcho),0,0,0);
 				break;
 			}
 			case "Keys":
