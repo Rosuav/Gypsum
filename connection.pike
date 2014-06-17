@@ -359,6 +359,7 @@ void connected(mapping conn)
  */
 void connfailed(mapping conn)
 {
+	if (!conn->sock) return; //If the user disconnects and reattempts, don't wipe stuff out unnecessarily
 	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
 	conn->sock->close();
 	sockclosed(conn);
