@@ -205,7 +205,7 @@ class menu_clicked
 				//zero, ignore the Numpad line (which, in a normal Rosmud.ini file, will come after
 				//this one).
 				if (!numpadnav) ignore_numpad=1;
-				//cursoratend not supported (currently Gypsum always puts it at the end)
+				//cursoratend not supported (Gypsum always puts it at the end if you don't use Ctrl-Up/Dn)
 				box->pack_start(cb("Down arrow on no history: "+({"Lock","Clear","Save & clear"})[downarr],({"window/downarr"}),downarr),0,0,0);
 				//cpgup not supported (Gypsum always pauses, which is the sanest mode anyway)
 				break;
