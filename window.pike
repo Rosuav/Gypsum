@@ -570,6 +570,7 @@ int keypress(object self,array|object ev,mapping subw)
 			int hp=subw->histpos;
 			while (++hp<sizeof(subw->cmdhist) && (!has_prefix(subw->cmdhist[hp],pfx) || subw->cmdhist[hp]==txt));
 			if (hp<sizeof(subw->cmdhist)) settext(subw,subw->cmdhist[subw->histpos=hp]);
+			//Note that the handling of this feature of the up arrow is actually here in the *down* arrow's code.
 			else if (pfx=="" && persist["window/uparr"]) {settext(subw,subw->last_ef); subw->histpos=-1;}
 			else {subw->ef->set_text(pfx); subw->histpos=-1;}
 			if (ev->state&GTK2.GDK_CONTROL_MASK) subw->ef->set_position(pos);
