@@ -141,15 +141,22 @@ class menu_clicked
 	{
 		object timer=function_object(G->G->commands->timer);
 		if (!persist["timer/timers"]) persist["timer/timers"]=timer->timers||([]);
-		sscanf(data,"%*s\n%s",data); //Currently ignoring the numeric info in the first line. May want to use some of that (???).
+		sscanf(data,"%*d %*d %d %d %d%*s\n%s",int hpregen,int spregen,int epregen,data);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import timers:"),0,0,0);
 		function format_time=timer->format_time,makelabels=timer->makelabels;
-		foreach (data/"\n",string line) if (sscanf(line,"|%s|%d|%s",string kw,int interval,string trigger) && trigger)
+		function maketimer=lambda(string kw,int interval,string trigger)
+		{
 			box->pack_start(cb(
 				kw+" - "+format_time(interval,interval),
 				({"timer/timers",kw}),(["time":interval,"trigger":trigger]),
 				makelabels,
 			),0,0,0);
+		};
+		if (hpregen) maketimer(" HP",hpregen,"");
+		if (spregen) maketimer(" SP",spregen,"");
+		if (epregen) maketimer(".EP",epregen,"");
+		foreach (data/"\n",string line) if (sscanf(line,"|%s|%d|%s",string kw,int interval,string trigger) && trigger)
+			maketimer(kw,interval,trigger);
 		win->notebook->append_page(box->show_all(),GTK2.Label("Timers"));
 	}
 
