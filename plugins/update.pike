@@ -195,7 +195,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
  * Catch compilation errors and warnings and send them to the current subwindow
  *
  * @param fn 	unused
- * @param l		the line which caused the compile error.
+ * @param l	the line which caused the compile error.
  * @param msg	the compile error
  */
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
