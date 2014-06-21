@@ -202,7 +202,7 @@ class hook
 class plugin_menu
 {
 	//Provide:
-	constant menu_label=""; //(string) The label that goes on your menu. If not provided, will use the plugin name.
+	constant menu_label=0; //(string) The initial label for your menu item. If not provided, will use the plugin name.
 	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
 	constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
 	void menu_clicked() { }
@@ -218,15 +218,17 @@ class plugin_menu
 		mi->self=this;
 		if (mi->menuitem)
 		{
-			mi->menuitem->get_child()->set_text(menu_label==""?name:menu_label);
+			set_menu_text(menu_label||name);
 			mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 		}
 		else make_menuitem(name);
 	}
 
+	void set_menu_text(string text) {mi->menuitem->get_child()->set_text(text);}
+
 	void make_menuitem(string name)
 	{
-		mi->menuitem=GTK2.MenuItem(menu_label==""?name:menu_label);
+		mi->menuitem=GTK2.MenuItem(menu_label||name);
 		if (menu_accel_key) mi->menuitem->add_accelerator("activate",G->G->accel,menu_accel_key,menu_accel_mods,GTK2.ACCEL_VISIBLE);
 		G->G->plugin_menu[0]->add(mi->menuitem->show());
 		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});

@@ -1,4 +1,5 @@
 inherit command;
+inherit plugin_menu;
 
 constant plugin_active_by_default = 1;
 
@@ -219,33 +220,13 @@ object build(string param)
 	else return compiled(param);
 }
 
-#ifdef DO_THINGS_HOW_I_WANT_TO
 string mode = file_stat(".git") ? "git" : "zip";
-string menu_label="Update Gypsum ("+mode+")";
+constant menu_label="Update Gypsum";
 void menu_clicked() {process(mode,G->G->window->current_subw());}
 
 void create(string name)
 {
-#else
-//TODO: Make it easier to parameterize plugin menu_labels! This is just wrong.
-class menuitem_zip
-{
-	inherit plugin_menu;
-	constant menu_label="Update Gypsum (zip)";
-	void menu_clicked() {process("zip",G->G->window->current_subw());}
-}
-
-class menuitem_git
-{
-	inherit plugin_menu;
-	constant menu_label="Update Gypsum (git)";
-	void menu_clicked() {process("git",G->G->window->current_subw());}
-}
-
-void create(string name)
-{
-	if (file_stat(".git")) menuitem_git(name); else menuitem_zip(name);
-#endif
 	::create(name);
+	set_menu_text(menu_label+" ("+mode+")");
 	G->G->commands->unload=unload;
 }
