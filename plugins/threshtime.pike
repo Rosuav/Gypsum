@@ -127,6 +127,7 @@ class menu_clicked
 			)
 		);
 		set_time_now(); //Before signals get connected.
+		::makewindow();
 	}
 
 	void dosignals()
