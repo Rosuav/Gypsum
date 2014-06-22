@@ -241,7 +241,7 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 		int y2=(max(subw->selstartline,subw->selendline)+1)*subw->lineheight;
 		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 	}
-	if (line1==-1) {m_delete(subw,"selstartline"); return;} //Unhighlight.
+	if (line1==-1) {m_delete(subw,"selstartline"); subw->display->queue_draw(); return;} //Unhighlight (with a full redraw for safety)
 	subw->selstartline=line1; subw->selstartcol=col1; subw->selendline=line2; subw->selendcol=col2;
 	int y1= min(line1,line2)   *subw->lineheight;
 	int y2=(max(line1,line2)+1)*subw->lineheight;
