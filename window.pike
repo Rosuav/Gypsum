@@ -260,6 +260,7 @@ void mouseup(object self,object ev,mapping subw)
 {
 	int mouse_down=m_delete(subw,"mouse_down"); //Destructive query
 	if (!mouse_down) return; //Mouse wasn't registered as down, do nothing.
+	subw->autoscroll=0; //When the mouse comes up, we stop scrolling.
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string content;
 	if (mouse_down==1)
@@ -345,7 +346,7 @@ void mousemove(object self,object ev,mapping subw)
 
 void autoscroll(mapping subw)
 {
-	if (!subw->autoscroll) {m_delete(subw,"autoscroll_callout"); return;}
+	if (!subw->autoscroll || !subw->mouse_down) {m_delete(subw,"autoscroll_callout"); return;}
 	subw->autoscroll_callout=call_out(autoscroll,0.1,subw);
 	subw->scr->set_value(limit(0.0,subw->scr->get_value()-subw->autoscroll,subw->scr->get_property("upper")-subw->scr->get_property("page size")));
 	//Optional: Trigger a mousemove with the mouse at its current location, to update highlight. Not a big deal if not (just a display oddity).
