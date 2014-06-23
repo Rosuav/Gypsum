@@ -169,7 +169,15 @@ class menu_clicked
 		foreach (data/"\n",string line) if (sscanf(line,"%s: %s",string type,string args) && args) switch (type)
 		{
 			case "Font": break; //No point trying to import font config, Windows/Wine vs Linux will likely have different fonts available anyway
-			case "Color": break; //TODO: Import the basics of colors, and possibly the configurations of the sixteen (into persist["colors/sixteen"])
+			case "Color":
+			{
+				//Note that, for reasons which presently escape me (something to do with 0 being a problem?), the
+				//colors are in reverse order, starting with bold white and going down to black as the last entry.
+				sscanf(args,"%d %d%{ %d%}",int FGCol,int BGCol,array(array(int)) colors);
+				//FGCol, BGCol not supported (currently Gypsum doesn't allow those to be configured)
+				//TODO: Import colors into persist["colors/sixteen"], but don't import them if they're the defaults
+				break;
+			}
 			case "Sound": break; //Maybe want to import this later. Can't be bothered for now.
 			case "Window":
 			{
