@@ -169,7 +169,7 @@ class menu_clicked
 		foreach (data/"\n",string line) if (sscanf(line,"%s: %s",string type,string args) && args) switch (type)
 		{
 			case "Font": break; //No point trying to import font config, Windows/Wine vs Linux will likely have different fonts available anyway
-			case "Color": break; //TODO: Import the basics of colors, and possibly the configurations of the sixteen (if I make that configurable)
+			case "Color": break; //TODO: Import the basics of colors, and possibly the configurations of the sixteen (into persist["colors/sixteen"])
 			case "Sound": break; //Maybe want to import this later. Can't be bothered for now.
 			case "Window":
 			{
