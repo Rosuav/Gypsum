@@ -763,7 +763,7 @@ class zadvoptions
 	constant allow_rename=0;
 	constant allow_delete=0;
 	mapping(string:mixed) windowprops=(["title":"Advanced Options"]);
-	void create() {::create("advoptions");}
+	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -795,7 +795,7 @@ class channelsdlg
 	constant ints=({"r","g","b"});
 	constant persist_key="color/channels";
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
-	void create() {::create("channelsdlg");}
+	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -828,7 +828,7 @@ class colorsdlg
 	{
 		items=([]);
 		foreach (color_defs;int i;[int r,int g,int b]) items[sprintf("%2d: %s%s",i,"bold "*(i>7),colnames[i&7])]=(["r":r,"g":g,"b":b]);
-		::create("colorsdlg");
+		::create();
 	}
 
 	GTK2.Widget make_content()
@@ -862,7 +862,7 @@ class fontdlg
 	inherit configdlg;
 	constant persist_key="window/font";
 	constant allow_new=0;
-	void create() {::create("fontdlg");}
+	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -972,7 +972,7 @@ constant help_aboutdlg="_About";
 class aboutdlg
 {
 	inherit window;
-	void create() {::create("help/about");}
+	void create() {::create();}
 
 	void makewindow()
 	{
@@ -996,7 +996,7 @@ constant options_promptsdlg="_Prompts";
 class promptsdlg
 {
 	inherit window;
-	void create() {::create("window/prompts");}
+	void create() {::create();}
 
 	string wrap(string txt)
 	{
