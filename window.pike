@@ -277,7 +277,7 @@ void mouseup(object self,object ev,mapping subw)
 			col+=sizeof(x); //Go back to the beginning of this color block - we've found something.
 			foreach (x/" ",string word)
 			{
-				col-=sizeof(word); if (col>0) continue;
+				col-=sizeof(word)+1; if (col>=0) continue;
 				//We now have the exact word, delimited by color boundary and blank space.
 				if (has_prefix(word,"http://") || has_prefix(word,"https://") || has_prefix(word,"www."))
 					invoke_browser(word);
