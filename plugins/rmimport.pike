@@ -24,7 +24,7 @@ inherit plugin_menu;
 
 constant plugin_active_by_default = 1;
 
-constant menu_label="Import settings";
+constant menu_label="Import RosMud settings";
 class menu_clicked
 {
 	inherit window;
