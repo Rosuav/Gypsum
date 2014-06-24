@@ -1396,9 +1396,6 @@ void savewinpos()
 }
 #endif
 
-/**
- *
- */
 int switchpage(object self,mixed segfault,int page,mixed otherarg)
 {
 	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and it
