@@ -663,7 +663,7 @@ void enterpressed(mapping subw,string|void cmd)
 		}
 		else subw->lines+=({subw->prompt});
 	}
-	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself for the moment
+	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself; it's execcommand's job to remove it.
 	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page size");
 	if (has_prefix(cmd,"//")) cmd=cmd[1..];
 	else if (has_prefix(cmd,"/"))
