@@ -1,0 +1,22 @@
+Gypsum is fully supported on Microsoft Windows platforms; however, be aware
+that I have access to only a limited number of versions of Windows, and there
+may be unforeseen issues. Contact me for direct help if you need it!
+
+Start with this installer for the Pike interpreter:
+http://pike.lysator.liu.se/pub/pike/all/7.8.700/Pike-v7.8.700.msi
+
+Then download a ZIP file of the latest Gypsum:
+https://github.com/Rosuav/Gypsum/archive/master.zip
+
+Unzip this file into a convenient location, such as C:\Gypsum, and double-click
+on gypsum.pike (which may be shown as simply "gypsum" if file extensions are
+being hidden). This will normally work. Otherwise, open up a command prompt,
+change to the Gypsum directory, and type "pike gypsum". If neither method works
+for you, get in touch with me and I'll see what I can do. (Note that installing
+Gypsum into Program Files is unnecessary and may cause permissions issues.)
+
+Once you have this installed and working, you can normally keep up-to-date with
+the latest Gypsum improvements by using the Plugins|Update Gypsum menu item in
+the program itself.
+
+Some display issues may be improved by typing "/update gtk" inside Gypsum.
