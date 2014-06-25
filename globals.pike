@@ -258,7 +258,6 @@ class window
 	}
 	void create(string|void name)
 	{
-		if (G->G->windows[name]) win=m_delete(G->G->windows,name); //Compat - the entries were renamed CJA 20140408.
 		if (name) sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
 		win->self=this;
