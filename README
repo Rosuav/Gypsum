@@ -7,6 +7,10 @@ Hall myself, but any will do.
 
 You will need a Pike interpreter - see http://pike.lysator.liu.se/
 
+Installation information and tips for Windows and for Mac OS X can be found in
+README.WIN and README.OSX respectively. Installation on Linux depends on your
+distribution; check your package manager for "pike" or see the above web site.
+
 To keep up-to-date with changes in Gypsum, add this to your RSS reader:
 https://github.com/Rosuav/Gypsum/commits/master.atom
 
