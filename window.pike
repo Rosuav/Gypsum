@@ -1302,6 +1302,40 @@ void create(string name)
 
 int window_destroy() {exit(0);}
 
+constant file_save_html="Save as _HTML";
+void save_html()
+{
+	object dlg=GTK2.FileChooserDialog("Save scrollback as HTML",mainwindow,
+		GTK2.FILE_CHOOSER_ACTION_SAVE,({(["text":"Save","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})
+	)->show_all();
+	dlg->signal_connect("response",save_html_response);
+	dlg->set_filename(".");
+}
+
+void save_html_response(object self,int btn)
+{
+	string fn=self->get_filename();
+	self->destroy();
+	if (btn!=GTK2.RESPONSE_OK) return;
+	mapping(string:mixed) subw=current_subw();
+	Stdio.File f=Stdio.File(fn,"wct");
+	//TODO: Batch up the writes for efficiency
+	f->write("<!doctype html><html><head><title>Gypsum session - Save as HTML</title><style type=\"text/css\">\n");
+	//Write out styles, foreground and background
+	foreach (colors;int i;GDK2.Color col) f->write(sprintf("%%{.%%sg%d {%%scolor: #%02X%02X%02X}\n%%}",i,@col->rgb()),({({"f",""}),({"b","background-"})}));
+	f->write("</style></head><body class=bg0><hr><pre><tt>\n");
+	foreach (subw->lines;int lineno;array line)
+	{
+		f->write("<span title=\"%s\">",hovertext(subw,lineno));
+		for (int i=1;i<sizeof(line);i+=2)
+			f->write("<span class='fg%d bg%d'>%s</span>",line[i]&15,(line[i]>>16)&15,Parser.encode_html_entities(line[i+1]));
+		f->write("</span>\n");
+	}
+	f->write("</tt></pre><hr></body></html>\n");
+	f->close();
+	say(subw,"%%%% Saved to %s",fn);
+}
+
 constant file_window_close="E_xit";
 int window_close()
 {
