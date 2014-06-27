@@ -1,11 +1,9 @@
 /**
  * Load up the globals and apply those which need changing
  */
-void create(string n,string which)
+void create(string n)
 {
-	array(string) arr=indices(this);
-	if (which && which!="") arr=which/" ";
-	foreach (arr,string f) if (f!="create") add_gypsum_constant(f,this[f]);
+	foreach (indices(this),string f) if (f!="create") add_gypsum_constant(f,this[f]);
 	//TODO: Have some way to 'declare' these down below, rather than
 	//coding them here.
 	if (!G->G->commands) G->G->commands=([]);

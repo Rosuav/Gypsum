@@ -208,16 +208,13 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
  */
 object build(string param)
 {
-	string param2;
-	if (has_prefix(param,"globals")) sscanf(param,"%s %s",param,param2);
 	if (!(param=fn(0,param))) return 0;
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
-	if (has_prefix(param,"globals.pike")) compiled(param,param2); //Note: Does *not* return the object. A partial build followed by a cleanup would break stuff badly.
-	else return compiled(param);
+	return compiled(param);
 }
 
 string mode = file_stat(".git") ? "git" : "zip";
