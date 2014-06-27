@@ -2,12 +2,6 @@ inherit command;
 
 constant plugin_active_by_default = 1;
 
-/**
- * Displays the connection window dialog or attempts a connection to a world.
- *
- * @param 	The world to which to connect, or dlg option.
- * @return 	always returns 1
- */
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" && !(param=subw->world)) return listworlds("",subw);
@@ -21,17 +15,8 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-/**
- * Disconnect from current world
- */
 int dc(string param,mapping(string:mixed) subw) {G->G->window->connect(0,subw); return 1;}
 
-/**
- * List all the worlds in the global list to the provided sub window
- *
- * @param param Unused
- * @param subw	The window in which to print the world list.
- */
 int listworlds(string param,mapping(string:mixed) subw)
 {
 	say(subw,"%% The following worlds are recognized:");
