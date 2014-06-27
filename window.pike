@@ -312,9 +312,8 @@ void mouseup(object self,object ev,mapping subw)
 	subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(content);
 }
 
-void mousemove(object self,object ev,mapping subw)
+string hovertext(mapping subw,int line)
 {
-	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
 	catch
 	{
@@ -330,7 +329,13 @@ void mousemove(object self,object ev,mapping subw)
 		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
 	}; //Ignore errors
-	setstatus(txt);
+	return txt;
+}
+
+void mousemove(object self,object ev,mapping subw)
+{
+	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	setstatus(hovertext(subw,line));
 	if (!subw->mouse_down) return; //All below depends on having the mouse button held down.
 	if (line!=subw->selendline || col!=subw->selendcol)
 	{
