@@ -1320,18 +1320,18 @@ void save_html_response(object self,int btn)
 	mapping(string:mixed) subw=current_subw();
 	Stdio.File f=Stdio.File(fn,"wct");
 	//TODO: Batch up the writes for efficiency
-	f->write("<!doctype html><html><head><title>Gypsum session - Save as HTML</title><style type=\"text/css\">\n");
+	f->write("<!doctype html><html><head><meta charset=\"UTF-8\"><title>Gypsum session - Save as HTML</title><style type=\"text/css\">\n");
 	//Write out styles, foreground and background
 	foreach (colors;int i;GDK2.Color col) f->write(sprintf("%%{.%%sg%d {%%scolor: #%02X%02X%02X}\n%%}",i,@col->rgb()),({({"f",""}),({"b","background-"})}));
-	f->write("</style></head><body class=bg0><hr><pre><tt>\n");
+	f->write("</style></head><body class=bg0><hr><pre><code>\n");
 	foreach (subw->lines;int lineno;array line)
 	{
 		f->write("<span title=\"%s\">",hovertext(subw,lineno));
 		for (int i=1;i<sizeof(line);i+=2)
-			f->write("<span class='fg%d bg%d'>%s</span>",line[i]&15,(line[i]>>16)&15,Parser.encode_html_entities(line[i+1]));
+			f->write("<span class='fg%d bg%d'>%s</span>",line[i]&15,(line[i]>>16)&15,string_to_utf8(Parser.encode_html_entities(line[i+1])));
 		f->write("</span>\n");
 	}
-	f->write("</tt></pre><hr></body></html>\n");
+	f->write("</code></pre><hr></body></html>\n");
 	f->close();
 	say(subw,"%%%% Saved to %s",fn);
 }
