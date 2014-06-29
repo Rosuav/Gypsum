@@ -1333,7 +1333,7 @@ void save_html_response(object self,int btn)
 	}
 	f->write("</code></pre><hr></body></html>\n");
 	f->close();
-	say(subw,"%%%% Saved to %s",fn);
+	MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Saved to "+fn,mainwindow);
 }
 
 constant file_window_close="E_xit";
