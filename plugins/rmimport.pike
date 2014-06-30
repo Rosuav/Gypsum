@@ -109,7 +109,7 @@ class menu_clicked
 			for (int i=win->notebook->get_n_pages()-1;i>1;--i) win->notebook->remove_page(i);
 			foreach (sort(indices(this)),string func) if (sscanf(func,"import_%s",string inifile) && inifile)
 			{
-				string data=Stdio.read_file(sprintf("%s/%s.ini",win->dir,inifile));
+				string data=Stdio.read_file(sprintf("%s/%s.ini",win->dir,inifile)); //TODO: Detect files case insensitively, even on a case sensitive file system
 				if (!data || data=="") continue;
 				data-="\r";
 				this[func](data);
