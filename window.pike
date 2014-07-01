@@ -728,7 +728,7 @@ constant file_closetab=({"Close Tab",'w',GTK2.GDK_CONTROL_MASK});
 void closetab()
 {
 	int removeme=notebook->get_current_page();
-	if (!tabs[removeme]->connection || !tabs[removeme]->connection->sock) real_closetab(removeme); //TODO post 7.8: Use ?->sock for this
+	if (persist["window/confirmclose"]==-1 || !tabs[removeme]->connection || !tabs[removeme]->connection->sock) real_closetab(removeme); //TODO post 7.8: Use ?->sock for this
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
@@ -753,6 +753,7 @@ class zadvoptions
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, try toggling this."COMPAT("pausekey")]),
 
+		"Confirm on Close":(["path":"window/confirmclose","type":"int","default":0,"desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.\n\n0: Default - confirm only if there are active connections.\n1: Always confirm.\n-1: Never confirm, just close immediately. This also disables the prompt on closing a connected tab."]),
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
 		"Hide input":(["path":"window/hideinput","type":"int","default":0,"desc":"Local echo is active by default, but set this to 1 to disable it and hide all your commands."]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
@@ -1339,8 +1340,10 @@ void save_html_response(object self,int btn)
 constant file_window_close="E_xit";
 int window_close()
 {
+	int confirmclose=persist["window/confirmclose"];
+	if (confirmclose==-1) exit(0);
 	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? but I need to support 7.8).
-	if (!conns) exit(0);
+	if (!conns && !confirmclose) exit(0);
 	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
 	return 1; //Used as the delete-event, so it should return 1 for that.
 }
