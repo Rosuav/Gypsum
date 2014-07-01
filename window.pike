@@ -741,9 +741,12 @@ class zadvoptions
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
 		//Keep these in alphabetical order for convenience - they'll be shown in that order anyway
-		//TODO: Have a "type":"boolean" for flags, or maybe a "type":({"option","other option"}) to make a drop-down.
-		//Although a drop-down would mean chopping and changing the window a bit, which mightn't be as useful. Hmm.
-		//Maybe have three objects, only one of which is ever visible?? (Entry field, check box, DDCB)
+		//TODO: Have an options mapping which, if present, specifies that a SelectBox be shown
+		//instead of the main entry field. Its keys are the persist[] values; the corresponding
+		//value will be the description to be shown to the user. The select box's strings are
+		//therefore sort(values(items[...]->options)), and on save, search() the mapping for the
+		//selected string. If options exists, hide win->value and show win->options; otherwise,
+		//do the opposite.
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Beep":(["path":"notif/beep","type":"int","default":0,"desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
