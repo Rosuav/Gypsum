@@ -186,7 +186,8 @@ class menu_clicked
 				box->pack_start(cb("Wrap width: "+wrapwidth,({"window/wrap"}),wrapwidth),0,0,0);
 				box->pack_start(cb("Wrap indent: "+wrapindent+" spaces",({"window/wrapindent"})," "*wrapindent),0,0,0);
 				//wraptochar not supported (currently Gypsum always wraps to word)
-				//promptonclose not supported (currently Gypsum always and only prompts if there are connections)
+				//promptonclose: 0 = never, 1 = if activity, 2 = always. confirmclose: -1 = never, 0 = default (ie if activity), 1 = always.
+				box->pack_start(cb("Confirm on close: "+promptonclose,({"window/confirmclose"}),promptonclose-1),0,0,0);
 				box->pack_start(cb("Activity alert: "+activityflash,({"notif/activity"}),activityflash),0,0,0);
 				int ka=idletimeout*60-10; //RosMud records an idle timeout in minutes, and backs off by 10 seconds (so "4" means it sends a KA every four minutes minus a bit).
 				box->pack_start(cb(sprintf("Keep-alive: %ds (approx %d minute(s))",ka,idletimeout),({"ka/delay"}),ka),0,0,0);
