@@ -131,6 +131,11 @@ class SelectBox(array(string) strings)
 		int idx=get_active();
 		return (idx>=0 && idx<sizeof(strings)) && strings[idx];
 	}
+	void set_strings(array(string) newstrings)
+	{
+		foreach (strings,string str) remove_text(0);
+		foreach (strings=newstrings,string str) append_text(str);
+	}
 }
 
 //Advisory note that this widget should be packed without the GTK2.Expand|GTK2.Fill options
