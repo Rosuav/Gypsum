@@ -734,7 +734,7 @@ void closetab()
 
 /* This is called "zadvoptions" rather than "advoptions" to force its menu item
 to be at the end of the Options menu. It's a little odd, but that's the only
-case that needs to be fiddled with to make the menu work how I want it to. */
+one that needs to be tweaked to let the menu simply be in funcname order. */
 constant options_zadvoptions="Ad_vanced options";
 class zadvoptions
 {
