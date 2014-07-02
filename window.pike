@@ -741,22 +741,16 @@ class zadvoptions
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
 		//Keep these in alphabetical order for convenience - they'll be shown in that order anyway
-		//TODO: Have an options mapping which, if present, specifies that a SelectBox be shown
-		//instead of the main entry field. Its keys are the persist[] values; the corresponding
-		//value will be the description to be shown to the user. The select box's strings are
-		//therefore sort(values(items[...]->options)), and on save, search() the mapping for the
-		//selected string. If options exists, hide win->value and show win->options; otherwise,
-		//do the opposite.
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. Should this happen:\n\n0: Never\n1: When there's activity in the currently-active tab\n2: When there's activity in any tab?"]),
 		"Beep":(["path":"notif/beep","type":"int","default":0,"desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
-		#define COMPAT(x) " Requires restart.\n\n0: Autodetect\n1: Force compatibility mode\n2: Disable compatibility mode"+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive."),"type":"int","default":0,"path":"compat/"+x
+		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive."),"type":"int","default":0,"path":"compat/"+x,"options":([0:"Autodetect",1:"Force compatibility mode",2:"Disable compatibility mode"])
 		"Compat: Scroll":(["desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar."COMPAT("scroll")]),
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, try toggling this."COMPAT("pausekey")]),
 
-		"Confirm on Close":(["path":"window/confirmclose","type":"int","default":0,"desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.\n\n0: Default - confirm only if there are active connections.\n1: Always confirm.\n-1: Never confirm, just close immediately. This also disables the prompt on closing a connected tab."]),
+		"Confirm on Close":(["path":"window/confirmclose","type":"int","default":0,"desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
 		"Down arrow":(["path":"window/downarr","type":"int","default":0,"desc":"When you press Down when you haven't been searching back through command history, what should be done?\n\n0: Do nothing, leave the text there.\n1: Clear the input field.\n2: Save the current text into history and then clear input."]),
 		"Hide input":(["path":"window/hideinput","type":"int","default":0,"desc":"Local echo is active by default, but set this to 1 to disable it and hide all your commands."]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
@@ -778,7 +772,8 @@ class zadvoptions
 	{
 		return GTK2.Vbox(0,10)
 			->pack_start(win->kwd=GTK2.Label((["yalign":1.0])),0,0,0)
-			->pack_start(win->value=GTK2.Entry(),0,0,0)
+			->pack_start(win->value=GTK2.Entry()->set_no_show_all(1),0,0,0)
+			->pack_start(win->select=SelectBox(({}))->set_no_show_all(1),0,0,0)
 			->pack_end(win->desc=GTK2.Label((["xalign":0.0,"yalign":0.0]))->set_size_request(300,150)->set_line_wrap(1),1,1,0)
 		;
 	}
@@ -786,13 +781,24 @@ class zadvoptions
 	void save_content(mapping(string:mixed) info)
 	{
 		mixed value=win->value->get_text();
-		if (info->type=="int") value=(int)value;
+		if (info->options) value=search(info->options,win->select->get_text());
+		if (info->type=="int") value=(int)value; else value=(string)value;
 		persist[info->path]=value;
 	}
 
 	void load_content(mapping(string:mixed) info)
 	{
-		win->value->set_text((string)(persist[info->path] || info->default));
+		if (mapping opt=info->options)
+		{
+			win->value->hide(); win->select->show();
+			win->select->set_strings(sort(values(opt)));
+			win->select->set_text(opt[persist[info->path] || info->default]);
+		}
+		else
+		{
+			win->select->hide(); win->value->show();
+			win->value->set_text((string)(persist[info->path] || info->default));
+		}
 		win->desc->set_text(info->desc);
 	}
 }
