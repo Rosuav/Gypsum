@@ -744,7 +744,8 @@ class zadvoptions
 		"Activity alert":(["path":"notif/activity","type":"int","default":0,"desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. When should this happen?","options":([0:"Never present the window",1:"Present on activity in current tab",2:"Present on any activity"])]),
 		"Beep":(["path":"notif/beep","type":"int","default":0,"desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
-		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive.")+"\n\nYou do NOT normally need to change this.","type":"int","default":0,"path":"compat/"+x,"options":([0:"Autodetect",1:"Enable compatibility mode",2:"Disable compatibility mode"])
+		//Compat note (about COMPAT(), yes, I am aware of the irony): The ?: check is to cope with having been booted with a driver pre 6e7681.
+		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive.")+"\n\nYou do NOT normally need to change this.","type":"int","default":0,"path":"compat/"+x,"options":([0:"Autodetect"+(G->compat?({" (disable)"," (enable)"})[G->compat[x]]:""),1:"Enable compatibility mode",2:"Disable compatibility mode"])
 		"Compat: Scroll":(["desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar."COMPAT("scroll")]),
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
