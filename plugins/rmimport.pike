@@ -185,7 +185,7 @@ class menu_clicked
 				sscanf(args,"%d %d %d %d %d %d %d %[^\xFE\n]\xFE%d",int wrapwidth,int wrapindent,int wraptochar,int promptonclose,int activityflash,int idletimeout,int inputlines,string htf,int hovertimesz);
 				box->pack_start(cb("Wrap width: "+wrapwidth,({"window/wrap"}),wrapwidth),0,0,0);
 				box->pack_start(cb("Wrap indent: "+wrapindent+" spaces",({"window/wrapindent"})," "*wrapindent),0,0,0);
-				//wraptochar not supported (currently Gypsum always wraps to word)
+				box->pack_start(cb("Wrap to: "+({"words","chars"})[wraptochar],({"window/wraptochar"}),wraptochar),0,0,0);
 				//promptonclose: 0 = never, 1 = if activity, 2 = always. confirmclose: -1 = never, 0 = default (ie if activity), 1 = always.
 				box->pack_start(cb("Confirm on close: "+promptonclose,({"window/confirmclose"}),promptonclose-1),0,0,0);
 				box->pack_start(cb("Activity alert: "+activityflash,({"notif/activity"}),activityflash),0,0,0);
