@@ -393,7 +393,7 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 		if (sizeof(part)>end)
 		{
 			int wrappos=end;
-			while (wrappos && part[wrappos]!=' ') --wrappos;
+			if (!persist["window/wraptochar"]) while (wrappos && part[wrappos]!=' ') --wrappos;
 			//If there are no spaces, break at the color change (if there's text before it), or just break where there's no space.
 			//Note that this will refuse to break at or within the wrapindent, on subsequent lines (to prevent an infinite loop).
 			if ((!wrappos || (sizeof(lines) && wrappos<=sizeof(wrapindent))) && !pos) wrappos=wrap;
@@ -762,6 +762,7 @@ class zadvoptions
 		"Up arrow":(["path":"window/uparr","type":"int","default":0,"desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?","options":([0:"No",1:"Yes"])]),
 		"Wrap":(["path":"window/wrap","default":0,"desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
 		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text - a number of spaces works well."]),
+		"Wrap to chars":(["path":"window/wraptochar","type":"int","desc":"Normally it makes sense to wrap at word boundaries (spaces) where possible, but you can disable this if you wish.","options":([0:"Default - wrap to words",1:"Wrap to characters"])]),
 	]);
 	constant allow_new=0;
 	constant allow_rename=0;
