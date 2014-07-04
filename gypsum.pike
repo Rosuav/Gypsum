@@ -83,7 +83,7 @@ int main(int argc,array(string) argv)
 		if (config==1 || (!config && dflt)) add_constant("COMPAT_"+upper_case(kwd),1);
 	}
 
-	//These are in dependency order. Globals are used by everyone, connection::send is used by window (that's
+	//These are initialized in dependency order. Everyone uses globals, window uses connection::send (that's
 	//actually circular, but connection has a patch hook for say), and plugins (loaded by window) depend on core.
 	bootstrap("globals.pike");
 	add_constant("INIT_GYPSUM_VERSION",globals->gypsum_version());
