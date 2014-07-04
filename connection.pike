@@ -25,18 +25,12 @@ void create(string name)
 	G->G->connection=this;
 	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
 	else G->G->sockets=(<>);
-	if (!objectp(G->globals->send)) add_gypsum_constant("send",bouncer("connection","send"));
+	add_gypsum_constant("send",send);
 }
 
-//On first load, there won't be a global say, so use a local bouncer.
-//This resolves the bootstrap problem of circular references between
-//window.pike (say) and connection.pike (send). The alternative is to
-//bootstrap this file twice, which would run faster (by removing the
-//bouncer). Conversely, it may be worth having "function say=G->globals->say;"
-//and then having window.pike's update autoreplace this. TODO: Test.
-#if !constant(say)
-mixed say(mixed ... args) {return G->G->window->say(@args);}
-#endif
+//On first load, there won't be a global say, so any usage will bomb until
+//window.pike gets loaded.
+function say=G->globals->say;
 
 /**
  * Convert a stream of 8-bit data into Unicode

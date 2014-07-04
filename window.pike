@@ -1189,6 +1189,7 @@ class configure_plugins
 void create(string name)
 {
 	add_gypsum_constant("say",say);
+	G->G->connection->say=say;
 	if (!G->G->window)
 	{
 		GTK2.setup_gtk();
