@@ -927,7 +927,7 @@ class keyboard
 	{
 		return two_column(({
 			"Key (hex code)",win->kwd=GTK2.Entry(),
-			"Press key here ->",win->key=GTK2.Entry(),
+			"Press key here ->",win->key=GTK2.Entry(), //TODO: Explain this field, somehow - another label on the window??
 			"Command",win->cmd=GTK2.Entry(),
 		}));
 	}
