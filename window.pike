@@ -812,7 +812,7 @@ class channelsdlg
 	constant ints=({"r","g","b"});
 	constant persist_key="color/channels";
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
-	void create() {::create();}
+	void create() {::create();} //Pass on no args to the parent
 
 	GTK2.Widget make_content()
 	{
