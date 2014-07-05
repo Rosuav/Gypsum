@@ -203,8 +203,7 @@ class menu_clicked
 				//AnsiCol not applicable (Gypsum's monochrome mode is transient)
 				//showtoolbar, showstatusbar not supported - Gypsum never has the former and always has the latter, and there's no real reason to do otherwise
 				//boxsel not supported (Gypsum always defaults to stream, use Shift-drag for box)
-				string colname=(string)inputcol; catch {colname=G->G->window->enumcolors[inputcol];};
-				box->pack_start(cb("Input color: "+colname,({"window/inputcol"}),inputcol),0,0,0);
+				//inputcol not supported (Gypsum always colors the input box appropriately)
 				//RosMud has "wipepseudo" but Gypsum has "retain_pseudo". Same functionality, different name, negated condition.
 				box->pack_start(cb("Retain pseudo-prompts: "+({"Yes","No"})[wipepseudo],({"prompt/retain_pseudo"}),!wipepseudo),0,0,0);
 				box->pack_start(cb(sprintf("Pseudo-prompt markers: %O",promptchars),({"prompt/pseudo"}),promptchars),0,0,0);
