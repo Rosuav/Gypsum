@@ -191,7 +191,7 @@ class menu_clicked
 				box->pack_start(cb("Activity alert: "+activityflash,({"notif/activity"}),activityflash),0,0,0);
 				int ka=idletimeout*60-10; //RosMud records an idle timeout in minutes, and backs off by 10 seconds (so "4" means it sends a KA every four minutes minus a bit).
 				box->pack_start(cb(sprintf("Keep-alive: %ds (approx %d minute(s))",ka,idletimeout),({"ka/delay"}),ka),0,0,0);
-				//inputlines not supported (currently Gypsum works only with a one-line EF)
+				//inputlines not supported (Gypsum always uses a one-line EF; multi-line input is better served by the pop-out editor)
 				box->pack_start(cb("Hover time format: "+htf,({"window/timestamp"}),htf),0,0,0);
 				//hovertimesz is the size in pixels of htf - unnecessary, let GTK work that out
 				break;
