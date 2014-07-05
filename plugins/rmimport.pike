@@ -168,7 +168,7 @@ class menu_clicked
 		int ignore_numpad; //If set to 1 because numpadnav is disabled, will prevent the importing of numpad nav
 		foreach (data/"\n",string line) if (sscanf(line,"%s: %s",string type,string args) && args) switch (type)
 		{
-			case "Font": break; //No point trying to import font config, Windows/Wine vs Linux will likely have different fonts available anyway
+			case "Font": break; //No point trying to import font config, Win32 vs GTK (esp Windows vs Linux) will likely have different fonts available anyway
 			case "Color":
 			{
 				//Note that, for reasons which presently escape me (something to do with 0 being a problem?), the
