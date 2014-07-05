@@ -1,6 +1,7 @@
 //GUI handler.
 
-constant colnames=({"black","red","green","orange","blue","magenta","cyan","white"}); //Plus bold of the same
+constant colnames=({"black","red","green","orange","blue","magenta","cyan","white"});
+constant enumcolors=sprintf("%2d: ",enumerate(16)[*])[*]+(colnames+("bold "+colnames[*]))[*]; //Non-bold, then bold, of the same names, all prefixed with numbers.
 array(array(int)) color_defs;
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
 array(GTK2.GdkColor) colors;
@@ -844,7 +845,7 @@ class colorsdlg
 	void create()
 	{
 		items=([]);
-		foreach (color_defs;int i;[int r,int g,int b]) items[sprintf("%2d: %s%s",i,"bold "*(i>7),colnames[i&7])]=(["r":r,"g":g,"b":b]);
+		foreach (color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
 		::create();
 	}
 
