@@ -1,6 +1,9 @@
 Gypsum is fully supported on Microsoft Windows platforms; however, be aware
 that I have access to only a limited number of versions of Windows, and there
-may be unforeseen issues. Contact me for direct help if you need it!
+may be unforeseen issues. Contact me for direct help if you need it! Support
+is primarily defined by Pike's support, which may change as versions change;
+with Pike 7.8.700, anything back as far as Windows XP should work (possibly
+Win2K but I haven't tested Gypsum there).
 
 Start with this installer for the Pike interpreter:
 http://pike.lysator.liu.se/pub/pike/all/7.8.700/Pike-v7.8.700.msi
