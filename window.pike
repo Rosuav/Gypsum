@@ -791,16 +791,17 @@ class zadvoptions
 
 	void load_content(mapping(string:mixed) info)
 	{
+		mixed val=persist[info->path]; if (zero_type(val) && !zero_type(info->default)) val=info->default;
 		if (mapping opt=info->options)
 		{
 			win->value->hide(); win->select->show();
 			win->select->set_strings(sort(values(opt)));
-			win->select->set_text(opt[persist[info->path] || info->default]);
+			win->select->set_text(opt[val]);
 		}
 		else
 		{
 			win->select->hide(); win->value->show();
-			win->value->set_text((string)(persist[info->path] || info->default));
+			win->value->set_text((string)val);
 		}
 		win->desc->set_text(info->desc);
 	}
