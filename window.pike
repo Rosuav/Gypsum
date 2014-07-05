@@ -665,7 +665,8 @@ void enterpressed(mapping subw,string|void cmd)
 		if (!subw->passwordmode)
 		{
 			if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-			say(subw,subw->prompt+({6,cmd}));
+			int inputcol=persist["window/inputcol"]; if (zero_type(inputcol)) inputcol=6;
+			say(subw,subw->prompt+({inputcol,cmd}));
 		}
 		else subw->lines+=({subw->prompt});
 	}
@@ -755,6 +756,7 @@ class zadvoptions
 		"Confirm on Close":(["path":"window/confirmclose","type":"int","desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
 		"Down arrow":(["path":"window/downarr","type":"int","desc":"When you press Down when you haven't been searching back through command history, what should be done?","options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"])]),
 		"Hide input":(["path":"window/hideinput","type":"int","desc":"Local echo is active by default, but set this to disable it and hide all your commands.","options":([0:"Disabled (show commands)",1:"Enabled (hide commands)"])]),
+		"Input color":(["path":"window/inputcol","type":"int","default":6,"desc":"If input is not hidden, commands will be echoed locally, following the prompt, in some color. The specific color can be configured here.","options":mkmapping(enumerate(16),enumcolors)]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Numpad Nav echo":(["path":"window/numpadecho","desc":"Enable this to have numpad navigation commands echoed as if you'd typed them; disabling gives a cleaner display.","type":"int","options":([0:"Disabled",1:"Enabled"])]),
 		"Present action":(["path":"notif/present","type":"int","desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour depends somewhat on your window manager.","options":([0:"Mark the window as 'urgent'",1:"Request immediate presentation"])]),
