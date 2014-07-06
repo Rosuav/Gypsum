@@ -967,10 +967,10 @@ class keyboard
 			else numpadnav["ffb"+i]->cmd=cmd;
 		}
 		persist->save();
-		selchanged();
+		sig_sel_changed();
 	}
 
-	void pb_std()
+	void sig_pb_std_clicked()
 	{
 		confirm(0,"Adding/updating standard nav keys will overwrite anything you currently have on those keys. Really do it?",win->mainwindow,stdkeys);
 	}
@@ -984,7 +984,6 @@ class keyboard
 			#else
 			gtksignal(win->key,"key_press_event",keypress,0,UNDEFINED,1),
 			#endif
-			gtksignal(win->pb_std,"clicked",pb_std),
 		});
 	}
 }
@@ -1067,20 +1066,12 @@ class promptsdlg
 		win->retainpseudo->set_active(persist["prompt/retain_pseudo"]);
 	}
 
-	void pb_ok_click()
+	void sig_pb_ok_clicked()
 	{
 		if (win->allpseudo->get_active()) persist["prompt/pseudo"]=1.0;
 		else persist["prompt/pseudo"]=win->promptpseudo->get_text();
 		persist["prompt/suffix"]=win->promptsuffix->get_text();
 		persist["prompt/retain_pseudo"]=win->retainpseudo->get_active();
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			gtksignal(win->pb_ok,"clicked",pb_ok_click),
-		});
 	}
 }
 
@@ -1382,9 +1373,9 @@ class connect_menu
 		if (zero_type(info->use_ka)) win->use_ka->set_active(1);
 	}
 
-	void save_and_connect()
+	void sig_pb_connect_clicked()
 	{
-		pb_save();
+		sig_pb_save_clicked();
 		string kwd=selecteditem();
 		if (!kwd) return;
 		mapping info=items[kwd];
@@ -1413,14 +1404,6 @@ class connect_menu
 				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
 			),0,0,0)
 		;
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			gtksignal(win->pb_connect,"clicked",save_and_connect),
-		});
 	}
 }
 

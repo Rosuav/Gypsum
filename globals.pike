@@ -395,7 +395,7 @@ class configdlg
 		return (kwd!="-- New --") && kwd; //TODO: Recognize the "New" entry by something other than its text
 	}
 
-	void pb_save()
+	void sig_pb_save_clicked()
 	{
 		string oldkwd=selecteditem();
 		string newkwd=allow_rename?win->kwd->get_text():oldkwd;
@@ -432,7 +432,7 @@ class configdlg
 		if (persist_key) persist->save();
 	}
 
-	void selchanged()
+	void sig_sel_changed()
 	{
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
@@ -466,7 +466,7 @@ class configdlg
 					->add(stock_close())
 				,0,0,0)
 			);
-		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); selchanged();
+		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
 	}
 
@@ -475,9 +475,7 @@ class configdlg
 		::dosignals();
 		win->signals+=({
 			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
-			gtksignal(win->pb_save,"clicked",pb_save),
 			allow_delete && gtksignal(win->pb_delete,"clicked",pb_delete),
-			gtksignal(win->sel,"changed",selchanged),
 		});
 	}
 }

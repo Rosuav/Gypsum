@@ -68,7 +68,7 @@ class editor(mapping(string:mixed) subw)
 		return lines*"\n";
 	}
 
-	void pb_send_click()
+	void sig_pb_send_clicked()
 	{
 		//Note that we really need the conn, but are retaining the subw in case
 		//the connection breaks and is reconnected. Alternatively, we could use
@@ -97,7 +97,7 @@ class editor(mapping(string:mixed) subw)
 		win->curpos->set_text(iter->get_line()+","+iter->get_line_offset());
 	}
 
-	void wrap_input()
+	void sig_pb_wrap_clicked()
 	{
 		int wrap=persist["editor/wrap"] || 80; //Default to 80 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
@@ -109,7 +109,6 @@ class editor(mapping(string:mixed) subw)
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->pb_send,"clicked",pb_send_click),
 			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
 			//(whatever it is). Am disabling this code until a patch is deployed.
 			//The solution is deep inside the Pike GTK support code and can't be worked
@@ -118,7 +117,6 @@ class editor(mapping(string:mixed) subw)
 			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
 			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
-			gtksignal(win->pb_wrap,"clicked",wrap_input),
 		});
 	}
 }

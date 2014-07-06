@@ -227,8 +227,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		);
 	}
 
-	void clear_prepared() {clear("prepared");}
-	void clear_cast() {clear("cast");}
+	void sig_clear_prepared_clicked() {clear("prepared");}
+	void sig_clear_cast_clicked() {clear("cast");}
 	void clear(string which)
 	{
 		foreach (data;string kw;string val)
@@ -560,20 +560,10 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		::makewindow();
 	}
 
-	void window_destroy()
+	void sig_mainwindow_destroy()
 	{
 		charsheets[owner][this]=0;
 		destruct();
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			gtksignal(win->mainwindow,"destroy",window_destroy),
-			gtksignal(win->clear_prepared,"clicked",clear_prepared),
-			gtksignal(win->clear_cast,"clicked",clear_cast),
-		});
 	}
 }
 

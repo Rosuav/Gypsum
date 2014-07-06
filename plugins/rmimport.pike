@@ -59,15 +59,13 @@ class menu_clicked
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->pb_find,"clicked",pb_find_click),
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
-			gtksignal(win->pb_import,"clicked",pb_import_click),
 			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
 
-	void pb_import_click()
+	void sig_pb_import_clicked()
 	{
 		multiset(function) funcs=(<>);
 		foreach (win->checkboxes;GTK2.CheckButton cb;[array(string) path,mixed value,function callme]) if (cb->get_active())
@@ -87,7 +85,7 @@ class menu_clicked
 		win->mainwindow->destroy();
 	}
 
-	void pb_find_click()
+	void sig_pb_find_clicked()
 	{
 		win->filedlg=GTK2.FileChooserDialog("Locate RosMud directory to import from",win->mainwindow,
 			GTK2.FILE_CHOOSER_ACTION_SELECT_FOLDER,({(["text":"Import","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})

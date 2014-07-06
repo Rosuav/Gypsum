@@ -126,7 +126,7 @@ class menu_clicked
 				->add(GTK2.HbuttonBox()->add(stock_close()))
 			)
 		);
-		set_time_now(); //Before signals get connected.
+		sig_set_now_clicked(); //Before signals get connected.
 		::makewindow();
 	}
 
@@ -135,9 +135,6 @@ class menu_clicked
 		::dosignals();
 		foreach (({"loc","est","utc","th"}),string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
 			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",this["convert_"+pfx])});
-		win->signals+=({
-			gtksignal(win->set_now,"clicked",set_time_now),
-		});
 	}
 
 	void set_rl_time(int time,string|void which)
@@ -166,7 +163,7 @@ class menu_clicked
 		if (win->signals) dosignals();
 	}
 
-	void set_time_now()
+	void sig_set_now_clicked()
 	{
 		int tm=time();
 		set_rl_time(tm);
