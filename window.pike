@@ -1072,6 +1072,7 @@ class promptsdlg
 		else persist["prompt/pseudo"]=win->promptpseudo->get_text();
 		persist["prompt/suffix"]=win->promptsuffix->get_text();
 		persist["prompt/retain_pseudo"]=win->retainpseudo->get_active();
+		closewindow();
 	}
 }
 
