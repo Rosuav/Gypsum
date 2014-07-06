@@ -116,6 +116,10 @@ Should look up GTK objects from win[] and use gtksignal() thus:
 		gtksignal(win->someobj,"some_event",callback),
 		//... as many as needed
 	});
+As a shortcut for this, you can define signal handlers thus:
+	void sig_someobj_some_event() {...}
+This will be equivalent to naming it 'callback' and using the above code. In
+many cases, this will mean that dosignals() need not be overridden at all.
 
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
