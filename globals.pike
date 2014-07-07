@@ -723,7 +723,9 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		}
 		else if (eos!="") error("Malformed ZIP file (bad end-of-stream on %s)",fn);
 		if (sizeof(result)!=uncompsize) error("Malformed ZIP file (bad file size on %s)",fn);
+		#if constant(Gz)
 		if (Gz.crc32(result)!=crc32) error("Malformed ZIP file (bad CRC on %s)",fn);
+		#endif
 		callback(fn,result,callback_arg);
 	}
 	if (data[..3]!="PK\1\2") error("Malformed ZIP file (bad signature)");
