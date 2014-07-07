@@ -704,9 +704,13 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		{
 			case 0: result=zip; eos=""; break; //Stored (incompatible with flags&8 mode, I think)
 			case 8:
+				#if constant(Gz)
 				object infl=Gz.inflate(-15);
 				result=infl->inflate(zip);
 				eos=infl->end_of_stream();
+				#else
+				error("Gz module unavailable, cannot decompress");
+				#endif
 				break;
 			default: error("Unknown compression method %d (%s)",method,fn); 
 		}
