@@ -502,6 +502,33 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	}
 }
 
+/* Idea: Forget all about a constant/stable character width.
+
+Since painttext() already measures each piece that it displays, rather than
+just counting characters and multiplying, we're already most of the way there.
+The main change would be the abolition of subw->charwidth, which mostly affects
+point_to_char(). In fact, this would make the calculation of character position
+quite costly, so point_to_char() would need to be broken out into two separate
+functions - one cheap one that gives a line based on a y position, and one slow
+one that actually measures out the text (ignoring the color codes, probably, so
+it could just use line_text()) and converts an x position into a character pos.
+This would allow tab handling to be rather cleaner, and Unicode character width
+specifications would be automatically handled (which would fix a long-standing
+bug with highlighting), and maybe, with just a smidge more effort, RTL text
+could be handled too. (Note that zero-width characters, and presumably also
+combining characters, would just never be returned as the current position; the
+base character, or the previous non-zero-width character, would be returned.)
+
+This would even allow for proportionally-spaced fonts, although I doubt anyone
+would want that. The only absolute hard-and-fast requirement would be for the
+height of a line of text to be a predictable and constant value, which AFAIK is
+not something anyone would fiddle with.
+
+(For the purposes of anything that actually *does* require measurement, such as
+the TELNET NAWS option, measuring an 'n' would be the best way. In a monospaced
+font, that's going to be right for anything of normal width; in a prop font, it
+should be a reasonable average.)
+*/
 int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
