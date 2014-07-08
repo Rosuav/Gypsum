@@ -452,7 +452,7 @@ int mkcolor(int fg,int bg)
 	return fg | (bg<<16);
 }
 
-//Paint one piece of text at (x,y), returns the x for the next text.
+//Paint one piece of text at (x,y), updates state with the x for the next text.
 void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return;
