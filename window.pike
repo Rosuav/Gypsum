@@ -528,6 +528,9 @@ not something anyone would fiddle with.
 the TELNET NAWS option, measuring an 'n' would be the best way. In a monospaced
 font, that's going to be right for anything of normal width; in a prop font, it
 should be a reasonable average.)
+
+It may be of value to retain the pixel positions of the beginnings of color
+blocks, to simplify repainting. It may also not be of value.
 */
 int paint(object self,object ev,mapping subw)
 {
