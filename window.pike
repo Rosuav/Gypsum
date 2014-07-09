@@ -1161,6 +1161,8 @@ void discover_plugins(string dir)
 			add_constant("COMPILE_ONLY",1);
 			program compiled; catch {compiled=compile_file(fn);};
 			add_constant("COMPILE_ONLY");
+			//Note that if compilation fails, this will still put in an entry. It'd then require manual
+			//overriding to say "go and activate this"; the active_by_default marker will no longer work.
 			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
 		}
 	}
