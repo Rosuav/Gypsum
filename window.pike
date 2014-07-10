@@ -477,7 +477,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
 	mapping sz=layout->index_to_pos(sizeof(txt)-1);
-	if (bg!=colors[0]) //Why can't I just set_background and then tell draw_text to cover any background pixels? Meh.
+	if (bg!=colors[0]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
 	{
 		gc->set_foreground(bg); //(sic)
 		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
