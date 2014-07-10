@@ -530,7 +530,11 @@ font, that's going to be right for anything of normal width; in a prop font, it
 should be a reasonable average.)
 
 It may be of value to retain the pixel positions of the beginnings of color
-blocks, to simplify repainting. It may also not be of value.
+blocks, to simplify repainting. It may also not be of value; retention of such
+would cost in terms of rewriting etc (it would need to be decached as per the
+line_text requirements), and it's probably not going to be useful all that
+often, as most point_to_char() calls are just looking for the line, not the
+column.
 */
 int paint(object self,object ev,mapping subw)
 {
