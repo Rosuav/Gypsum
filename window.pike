@@ -131,6 +131,8 @@ void setfonts(mapping(string:mixed) subw)
 	subw->display->modify_font(getfont("display"));
 	subw->ef->modify_font(getfont("input"));
 	mapping dimensions=subw->display->create_pango_layout("n")->index_to_pos(0);
+	//Note that lineheight is the expected height of every line, but charwidth
+	//is simply an average - it's used for tab widths and such, that's all.
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	settabs(subw->charwidth);
 }
