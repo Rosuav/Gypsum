@@ -207,13 +207,19 @@ GTK2.Widget makestatus()
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label(""))->add(statustxt->paused);
 }
 
+//Convert a y coordinate into a line number - like point_to_char() but gives only the line.
+int point_to_line(mapping subw,int y)
+{
+	return (y-(int)subw->scr->get_property("page size"))/subw->lineheight;
+}
+	
 //Convert (x,y) into (line,col) - yes, that switches their order.
 //Depends on the current scr->pagesize.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
 array(int) point_to_char(mapping subw,int x,int y)
 {
-	int line=(y-(int)subw->scr->get_property("page size"))/subw->lineheight;
+	int line=point_to_line(subw,y);
 	array l;
 	if (line<0) line=0;
 	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
@@ -337,9 +343,13 @@ string hovertext(mapping subw,int line)
 
 void mousemove(object self,object ev,mapping subw)
 {
+	if (!subw->mouse_down)
+	{
+		setstatus(hovertext(subw,point_to_line(subw,(int)ev->y)));
+		return;
+	}
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	setstatus(hovertext(subw,line));
-	if (!subw->mouse_down) return; //All below depends on having the mouse button held down.
 	if (line!=subw->selendline || col!=subw->selendcol)
 	{
 		subw->mouse_down=2; //Mouse has moved.
