@@ -210,7 +210,7 @@ GTK2.Widget makestatus()
 //Convert a y coordinate into a line number - like point_to_char() but gives only the line.
 int point_to_line(mapping subw,int y)
 {
-	return (y-(int)subw->scr->get_property("page size"))/subw->lineheight;
+	return limit(0,(y-(int)subw->scr->get_property("page size"))/subw->lineheight,sizeof(subw->lines)+1);
 }
 	
 //Convert (x,y) into (line,col) - yes, that switches their order.
@@ -220,10 +220,7 @@ int point_to_line(mapping subw,int y)
 array(int) point_to_char(mapping subw,int x,int y)
 {
 	int line=point_to_line(subw,y);
-	array l;
-	if (line<0) line=0;
-	if (line>=sizeof(subw->lines)) {line=sizeof(subw->lines); l=subw->prompt;}
-	else l=subw->lines[line];
+	array l=(line==sizeof(subw->lines))?subw->prompt:subw->lines[line];
 	string str=line_text(l);
 	int pos=(x-3)/subw->charwidth;
 	if (!has_value(str,'\t')) return ({line,limit(0,pos,sizeof(str))}); //There are no tabs in the line, simple.
