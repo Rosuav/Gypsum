@@ -130,7 +130,7 @@ void setfonts(mapping(string:mixed) subw)
 {
 	subw->display->modify_font(getfont("display"));
 	subw->ef->modify_font(getfont("input"));
-	mapping dimensions=subw->display->create_pango_layout("asdf")->index_to_pos(3);
+	mapping dimensions=subw->display->create_pango_layout("n")->index_to_pos(0);
 	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
 	settabs(subw->charwidth);
 }
