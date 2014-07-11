@@ -110,8 +110,8 @@ class menu_clicked
 	GTK2.Frame timebox(string label,string pfx,array months)
 	{
 		return GTK2.Frame(label)->add(GTK2Table(({
-			({"Year","Month","Day","Time",0}),
-			({ef(pfx+"_year",4),win[pfx+"_mon"]=SelectBox(months),ef(pfx+"_day",3),ef(pfx+"_hour"),ef(pfx+"_min")}),
+			({"Year","Month","Day","","Time",0}),
+			({ef(pfx+"_year",4),win[pfx+"_mon"]=SelectBox(months),ef(pfx+"_day",3),win[pfx+"_dow"]=GTK2.Label(""),ef(pfx+"_hour"),ef(pfx+"_min")}),
 		})));
 	}
 	void makewindow()
@@ -145,7 +145,7 @@ class menu_clicked
 		if (which=="est") tm=tm->set_timezone("America/New_York");
 		else if (which=="utc") tm=tm->set_timezone("UTC");
 		//Transfer cal->year_no() into win->est_year->set_text() or win->loc_year->set_text(), etc.
-		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no"]);string ef;string cal)
+		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no","dow":"week_day_shortname"]);string ef;string cal)
 			win[which+"_"+ef]->set_text((string)tm[cal]());
 		win[which+"_mon"]->set_active(tm->month_no()-1);
 		if (win->signals) dosignals(); //Un-suppress changed signals.
@@ -210,6 +210,7 @@ class menu_clicked
 			if (ts==win->last_rl_time) return; //No change, no updates
 			win->last_rl_time=ts;
 			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the other RL time boxes
+			//TODO: Update the _dow for the current box, without touching the rest
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
 		};
 	}
