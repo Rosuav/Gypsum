@@ -279,6 +279,8 @@ void mouseup(object self,object ev,mapping subw)
 			{
 				col-=sizeof(word)+1; if (col>=0) continue;
 				//We now have the exact word, delimited by color boundary and blank space.
+				//TODO: Detect URLs if they follow punctuation, eg "Check this out:http://....."
+				//TODO: Detect URLs that got wrapped across multiple lines, maybe only if a key held
 				if (has_prefix(word,"http://") || has_prefix(word,"https://") || has_prefix(word,"www."))
 					invoke_browser(word);
 				return;
