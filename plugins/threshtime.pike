@@ -137,15 +137,17 @@ class menu_clicked
 			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",this["convert_"+pfx])});
 	}
 
-	void set_rl_time(int time,string|void which)
+	void set_rl_time(int time,string|void which,int|void dowonly)
 	{
 		if (!which) {set_rl_time(time,"loc"); set_rl_time(time,"est"); set_rl_time(time,"utc"); return;}
-		if (win->signals) destruct(win->signals[*]); //Suppress 'changed' signals from this.
 		Calendar.Gregorian.Second tm=Calendar.Gregorian.Second(time);
 		if (which=="est") tm=tm->set_timezone("America/New_York");
 		else if (which=="utc") tm=tm->set_timezone("UTC");
+		win[which+"_dow"]->set_text(tm->week_day_shortname()); //Could be part of the foreach except for the dowonly flag
+		if (dowonly) return;
+		if (win->signals) destruct(win->signals[*]); //Suppress 'changed' signals from this.
 		//Transfer cal->year_no() into win->est_year->set_text() or win->loc_year->set_text(), etc.
-		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no","dow":"week_day_shortname"]);string ef;string cal)
+		foreach ((["year":"year_no","day":"month_day","hour":"hour_no","min":"minute_no"]);string ef;string cal)
 			win[which+"_"+ef]->set_text((string)tm[cal]());
 		win[which+"_mon"]->set_active(tm->month_no()-1);
 		if (win->signals) dosignals(); //Un-suppress changed signals.
@@ -210,7 +212,7 @@ class menu_clicked
 			if (ts==win->last_rl_time) return; //No change, no updates
 			win->last_rl_time=ts;
 			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the other RL time boxes
-			//TODO: Update the _dow for the current box, without touching the rest
+			set_rl_time(ts,source,1); //Update day of week without touching anything else
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
 		};
 	}
