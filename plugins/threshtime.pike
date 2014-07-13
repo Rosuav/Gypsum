@@ -4,7 +4,7 @@
 //based on historical and future tzdata; obviously it's only as accurate as your tzdata.
 inherit hook;
 inherit plugin_menu;
-inherit statusevent;
+inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
 
 constant plugin_active_by_default = 1;
 
