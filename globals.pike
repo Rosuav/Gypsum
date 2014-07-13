@@ -558,6 +558,19 @@ class statusevent
 	void statusbar_double_click() {/* Override me */}
 }
 
+//Like statustext, but keeps track of it greatest width and never shrinks from it
+//The width is measured and set on statustxt->lbl.
+//Currently considered ADVISORY for plugins as the name may change.
+class statustext_maxwidth
+{
+	inherit statustext;
+	void setstatus(string txt)
+	{
+		statustxt->lbl->set_text(txt);
+		statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,statustxt->lbl->size_request()->width),-1);
+	}
+}
+
 string gypsum_version()
 {
 	return String.trim_all_whites(Stdio.read_file("VERSION"));
