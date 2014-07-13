@@ -123,6 +123,8 @@ class editor(mapping(string:mixed) subw)
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
+	//TODO: Accept parameters on this opening line, eg line number and
+	//possibly column (and maybe column==-1 would mean "end of line").
 	if (line=="===> Editor <===")
 	{
 		conn->editor_eax="";
