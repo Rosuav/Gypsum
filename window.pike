@@ -22,7 +22,7 @@ GTK2.Hbox statusbar;
 array(object) signals;
 int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
-inherit statustext;
+inherit statustext_maxwidth;
 int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 array(GTK2.PangoTabArray) tabstops;
@@ -204,7 +204,7 @@ GTK2.Widget makestatus()
 {
 	statustxt->paused=GTK2.Label(pausedmsg);
 	statustxt->paused->set_size_request(statustxt->paused->size_request()->width,-1)->set_text(""); //Have it consume space for the PAUSED message even without having it
-	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label(""))->add(statustxt->paused);
+	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label((["xalign":1.0])))->add(statustxt->paused);
 }
 
 //Convert a y coordinate into a line number - like point_to_char() but gives only the line.
