@@ -1,4 +1,4 @@
-//Pop-out editor - triggered by a specially-formatted line from the server.
+//Pop-out editor - triggered by a special marker line from the server.
 inherit hook;
 inherit plugin_menu;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
