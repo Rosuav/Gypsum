@@ -21,6 +21,15 @@ class editor(mapping(string:mixed) subw)
 
 	void makewindow()
 	{
+		//Parameters, not part of the editable.
+		//This is minorly incompatible with the RosMud editor; it would be majorly incompatible to put these params onto the initial
+		//or final marker line, so this is the preferable form. Normally the edited content will begin with a command, so this should
+		//be safe from false positives, but it does mean that the RosMud editor will send those back to the server. Hopefully a hash
+		//followed by a space will never be a problem to any server (both Threshold RPG and Minstrel Hall respond with just "What?").
+		//Currently-recognized parameters:
+		//	line - line number for initial cursor position, default 0 ie first line of file
+		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
+		sscanf(win->initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string))|mapping(string:string) params,win->initial);
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
@@ -38,6 +47,16 @@ class editor(mapping(string:mixed) subw)
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
+		params=(mapping)(params||([]));
+		int line=(int)params->line,col=(int)params->col;
+		GTK2.TextIter iter;
+		if (col==-1)
+		{
+			iter=win->buf->get_iter_at_line(line+1);
+			iter->backward_cursor_position();
+		}
+		else iter=win->buf->get_iter_at_line_offset(line,col);
+		win->buf->select_range(iter,iter);
 		win->mle->modify_font(G->G->window->getfont("input"));
 		win->buf->set_modified(0);
 		::makewindow();
@@ -123,8 +142,6 @@ class editor(mapping(string:mixed) subw)
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
-	//TODO: Accept parameters on this opening line, eg line number and
-	//possibly column (and maybe column==-1 would mean "end of line").
 	if (line=="===> Editor <===")
 	{
 		conn->editor_eax="";
