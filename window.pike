@@ -189,7 +189,10 @@ void paste(object self,mapping subw)
 	//signal_stop() method, which was implemented in Pike 8.0.1+ and
 	//7.8.820+. If that method is not available, the signal will not be
 	//connected to (see above), so in this function, we assume that it
-	//exists and can be used.
+	//exists and can be used. Attempting to paste multiple lines of text
+	//in older Pikes will result in newlines in the entry field, despite
+	//it being a single-line field; this is distinctly unideal, and will
+	//be surprising, but is unavoidable.
 	string txt=self->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->wait_for_text();
 	if (!txt || !has_value(txt,'\n')) return; //No text? Nothing will happen. One line of text? Let it go with the default.
 	self->signal_stop("paste_clipboard"); //Prevent the full paste, we'll do it ourselves.
