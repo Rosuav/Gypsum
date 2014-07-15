@@ -29,7 +29,7 @@ void create(string name)
 }
 
 //On first load, there won't be a global say, so any usage will bomb until
-//window.pike gets loaded.
+//window.pike gets loaded (trying to call the integer 0).
 function say=G->globals->say;
 
 /**
