@@ -68,6 +68,7 @@ Should it be context sensitive? It could be reconfigured in colorcheck().
 	array(object) signals; //Collection of gtksignal objects - replaced after code reload
 	int selstartline,selstartcol,selendline,selendcol; //Highlight start/end positions. If no highlight, selstartline will not even exist.
 */
+//Note that this is called from other files, eg when a new passive-mode connection is established, hence the parameterization of txt.
 mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
