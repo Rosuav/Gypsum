@@ -26,7 +26,9 @@ timer will be shortened by how long ago the line came in. So if something says
 
 /* TODO: "Highlight when zero" timers. They'll need to go into EventBoxes, and
 they go to normal color whenever the time is nonzero, and to a highlight color
-when they're blank. Good for the ones that are normally nonzero. */
+when they're blank. Good for the ones that are normally nonzero. (This may mean
+it's simpler to put *all* timers into EventBoxes, but that'd be less efficient,
+so better to not.) */
 
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
