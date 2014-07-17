@@ -24,6 +24,10 @@ timers. Pick a line, it'll parse it as best it can, and give you a result; the
 timer will be shortened by how long ago the line came in. So if something says
 "1h2m30s" and it happened 14s ago, the timer countdown will be 1:02:16. */
 
+/* TODO: "Highlight when zero" timers. They'll need to go into EventBoxes, and
+they go to normal color whenever the time is nonzero, and to a highlight color
+when they're blank. Good for the ones that are normally nonzero. */
+
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
