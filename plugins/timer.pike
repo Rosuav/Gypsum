@@ -30,6 +30,11 @@ when they're blank. Good for the ones that are normally nonzero. (This may mean
 it's simpler to put *all* timers into EventBoxes, but that'd be less efficient,
 so better to not.) */
 
+/* TODO maybe: Instead of constantly sorting the mapping, retain the array of
+sort(indices(timers)) somewhere. This would add complication but improve the
+efficiency of certain regular paths. CHECK if this would actually be at all
+advantageous before implementing; if not checked, just keep this note. */
+
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
