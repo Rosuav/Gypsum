@@ -346,7 +346,9 @@ plugins need not go to this level of hassle.)
 ADVISORY: Everything in globals.pike can be used simply by referencing
 its name. Explore the file for what can be used; most of it is stable,
 even if not explicitly part of this file's pledge. They're omitted for
-brevity and to avoid duplicating documentation more than necessary.
+brevity and to avoid duplicating documentation more than necessary. Other
+files are similarly available, and are similarly stable, though less likely
+to be of use to plugins.
 
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
