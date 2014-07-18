@@ -17,7 +17,6 @@ int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 inherit statustext_maxwidth;
 int mono; //Set to 1 to paint the screen in monochrome
-mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 mapping(string:mixed) win=([]); //Temporary for transitional purposes
@@ -1309,9 +1308,9 @@ void create(string name)
 		if (plugins[fn]->active)
 		{
 			int mtime=file_stat(fn)->mtime;
-			if (mtime!=plugin_mtime[fn] && !catch {G->bootstrap(fn);}) plugin_mtime[fn]=mtime;
+			if (mtime!=win->plugin_mtime[fn] && !catch {G->bootstrap(fn);}) win->plugin_mtime[fn]=mtime;
 		}
-		else m_delete(plugin_mtime,fn);
+		else m_delete(win->plugin_mtime,fn);
 	}
 	settabs(win->tabs[0]->charwidth);
 }
