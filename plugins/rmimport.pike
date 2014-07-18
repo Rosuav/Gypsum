@@ -160,7 +160,6 @@ class menu_clicked
 
 	void import_Rosmud(string data) //Oddly named, but it reads general settings from Rosmud.ini
 	{
-		if (!persist["color/channels"]) persist["color/channels"]=G->G->window->channels||([]);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import general settings:"),0,0,0);
 		GTK2.Vbox channels;
 		int ignore_numpad; //If set to 1 because numpadnav is disabled, will prevent the importing of numpad nav
