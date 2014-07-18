@@ -151,7 +151,6 @@ This will be used as the persist[] key in which the window position
 is stored. Optionally also provide:
 
 constant load_size=1; //To resize on startup to the last saved size
-int x,y; //Set the default position (for when there's no saved pos)
 
 Otherwise is identical to window above.
 
