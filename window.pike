@@ -1293,7 +1293,7 @@ void create(string name)
 	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=name && G->G->plugin_menu[name])
 		if (!mi->menuitem) mi->self->make_menuitem(name);
 
-	mainwsignals();
+	dosignals();
 
 	//Scan for plugins now that everything else is initialized.
 	mapping(string:mapping(string:mixed)) plugins=persist->setdefault("plugins/status",([]));
@@ -1495,7 +1495,7 @@ void savepos()
 //window; it'll never fire when we don't have window focus, so it's safe.
 void window_focus() {mainwindow->set_urgency_hint(0);}
 
-void mainwsignals()
+void dosignals()
 {
 	signals=({
 		gtksignal(mainwindow,"destroy",window_destroy),
