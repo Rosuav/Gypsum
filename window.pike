@@ -15,7 +15,7 @@ GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used exte
 int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 inherit statustext_maxwidth;
-inherit window;
+inherit movablewindow;
 constant is_subwindow=0;
 int mono; //Set to 1 to paint the screen in monochrome
 array(GTK2.PangoTabArray) tabstops;
@@ -1213,11 +1213,6 @@ void makewindow()
 	win->defbutton->grab_default();
 	#endif
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
-	if (array pos=persist[pos_key])
-	{
-		if (sizeof(pos)>3 && load_size) win->mainwindow->set_default_size(pos[2],pos[3]);
-		mainwindow->move(pos[0],pos[1]);
-	}
 	::makewindow();
 }
 
@@ -1242,10 +1237,10 @@ void create(string name)
 	if (!win->tabs) win->tabs=({ });
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
-	window::create(""); //This one MUST be called first, and it's convenient to put a different name in.
+	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in.
 	mainwindow=win->mainwindow;
 	addtab();
-	(::create-({window::create}))(name); //Call all other constructors, in any order.
+	(::create-({movablewindow::create}))(name); //Call all other constructors, in any order.
 
 	if (!win->color_defs)
 	{
@@ -1441,11 +1436,7 @@ int enterpressed_glo(object self)
  * COMPAT_SIGNAL window position saver hack
  */
 constant options_savewinpos="Save all window positions";
-void savewinpos()
-{
-	windowmoved();
-	values(G->G->windows)->save_position_hook();
-}
+void savewinpos() {values(G->G->windows)->save_position_hook();}
 #endif
 
 int switchpage(object self,mixed segfault,int page,mixed otherarg)
@@ -1472,21 +1463,6 @@ int switchpage(object self,mixed segfault,int page,mixed otherarg)
 	},0,page,subw);
 }
 
-mapping(string:int) pos;
-void windowmoved()
-{
-	if (!pos) call_out(savepos,0.1); //Save a moment after the window moves. "Sweep" movement creates a spew of these events, don't keep saving.
-	pos=mainwindow->get_position(); //Will return x and y
-}
-
-void savepos()
-{
-	mapping sz=mainwindow->get_size();
-	persist[pos_key]=({pos->x,pos->y,sz->width,sz->height});
-	pos=0;
-	redraw(current_subw()); //Update the scroll bar in case the height changed
-}
-
 //Reset the urgency hint when focus arrives.
 //Ideally I want to do this at the exact moment when mainwindow->is_active()
 //changes from 0 to 1, but I can't find that. In lieu of such an event, I'm
@@ -1503,8 +1479,6 @@ void dosignals()
 		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(win->defbutton,"clicked",enterpressed_glo),
-		#else
-		gtksignal(win->mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
 		#endif
 		gtksignal(win->mainwindow,"focus_in_event",window_focus),
 	});
