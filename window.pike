@@ -1192,12 +1192,8 @@ class configure_plugins
 	}
 }
 
-void create(string name)
+void makewindow()
 {
-	add_gypsum_constant("say",say);
-	G->G->connection->say=say;
-	if (!G->G->window)
-	{
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum");
 		if (array pos=persist["window/winpos"])
@@ -1228,7 +1224,13 @@ void create(string name)
 		#endif
 		addtab();
 		call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
-	}
+}
+
+void create(string name)
+{
+	add_gypsum_constant("say",say);
+	G->G->connection->say=say;
+	if (!G->G->window) makewindow();
 	else
 	{
 		object other=G->G->window;
