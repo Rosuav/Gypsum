@@ -127,6 +127,11 @@ For the less common cases, just override dosignals and be explicit.)
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
 
+Normally, the window will be hidden from pagers and task bars (under window
+manager control; Gypsum simply sets the appropriate hints). Disable this by
+marking that your window is not a subwindow:
+constant is_subwindow=0;
+
 Certain stock objects with obvious events can be created with simple
 function calls. Use of these functions guarantees a consistent look, and
 also automatically connects the appropriate signal handler. The following
