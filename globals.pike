@@ -262,6 +262,7 @@ class window
 		foreach (indices(this),string key) if (has_prefix(key,"sig_") && callablep(this[key]))
 		{
 			//Function names of format sig_x_y become a signal handler for win->x signal y.
+			//(Note that classes are callable, so they can be used as signal handlers too.)
 			//This may pose problems, as it's possible for x and y to have underscores in
 			//them, so we scan along and find the shortest such name that exists in win[].
 			//If there's none, ignore it. This can create ambiguities, but only in really
