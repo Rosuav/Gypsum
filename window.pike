@@ -12,14 +12,14 @@ mapping(string:mapping(string:mixed)) numpadnav=persist->setdefault("window/nump
 multiset(string) numpadspecial=persist["window/numpadspecial"] || (<"look", "glance", "l", "gl">); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used externally
-array(object) signals;
 int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 inherit statustext_maxwidth;
+inherit window;
+constant is_subwindow=0;
 int mono; //Set to 1 to paint the screen in monochrome
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
-mapping(string:mixed) win=([]); //Temporary for transitional purposes
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -1223,7 +1223,7 @@ void create(string name)
 {
 	add_gypsum_constant("say",say);
 	G->G->connection->say=say;
-	if (!G->G->window) makewindow();
+	if (!G->G->window) ; //Normal case
 	else if (!G->G->window->win) //Compat
 	{
 		object other=G->G->window;
@@ -1236,11 +1236,12 @@ void create(string name)
 		if (other->menu) win->menu=other->menu;
 		if (other->plugin_mtime) win->plugin_mtime=other->plugin_mtime;
 	}
-	else win=G->G->window->win; //Temporary for transitional purposes
+	else win=G->G->window->win; //Compat
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
-	::create(name);
+	window::create(""); //This one MUST be called first, and it's convenient to put a different name in.
 	mainwindow=win->mainwindow;
+	(::create-({window::create}))(name); //Call all other constructors, in any order.
 
 	if (!win->color_defs)
 	{
@@ -1288,8 +1289,6 @@ void create(string name)
 	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=name && G->G->plugin_menu[name])
 		if (!mi->menuitem) mi->self->make_menuitem(name);
 
-	dosignals();
-
 	//Scan for plugins now that everything else is initialized.
 	mapping(string:mapping(string:mixed)) plugins=persist->setdefault("plugins/status",([]));
 	//Compat: Pull in the list from plugins/more.pike's config
@@ -1302,6 +1301,7 @@ void create(string name)
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
+	if (!win->plugin_mtime) win->plugin_mtime=([]);
 	foreach (sort(indices(plugins)),string fn)
 	{
 		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
@@ -1492,9 +1492,10 @@ void window_focus() {mainwindow->set_urgency_hint(0);}
 
 void dosignals()
 {
-	signals=({
-		gtksignal(mainwindow,"destroy",window_destroy),
-		gtksignal(mainwindow,"delete_event",closewindow),
+	::dosignals();
+	win->signals+=({
+		gtksignal(win->mainwindow,"destroy",window_destroy),
+		gtksignal(win->mainwindow,"delete_event",closewindow),
 		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(win->defbutton,"clicked",enterpressed_glo),
