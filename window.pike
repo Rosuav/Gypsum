@@ -1198,7 +1198,6 @@ void create(string name)
 	G->G->connection->say=say;
 	if (!G->G->window)
 	{
-		GTK2.setup_gtk();
 		mainwindow=GTK2.Window(GTK2.WindowToplevel);
 		mainwindow->set_title("Gypsum");
 		if (array pos=persist["window/winpos"])
