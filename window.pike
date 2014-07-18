@@ -20,6 +20,7 @@ constant is_subwindow=0;
 int mono; //Set to 1 to paint the screen in monochrome
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
+constant pos_key="window/winpos";
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -1189,7 +1190,7 @@ void makewindow()
 {
 	win->mainwindow=mainwindow=GTK2.Window(GTK2.WindowToplevel);
 	mainwindow->set_title("Gypsum");
-	if (array pos=persist["window/winpos"])
+	if (array pos=persist[pos_key])
 	{
 		pos+=({800,600}); mainwindow->set_default_size(pos[2],pos[3]);
 		mainwindow->move(pos[0],pos[1]);
@@ -1479,7 +1480,7 @@ void windowmoved()
 void savepos()
 {
 	mapping sz=mainwindow->get_size();
-	persist["window/winpos"]=({pos->x,pos->y,sz->width,sz->height});
+	persist[pos_key]=({pos->x,pos->y,sz->width,sz->height});
 	pos=0;
 	redraw(current_subw()); //Update the scroll bar in case the height changed
 }
