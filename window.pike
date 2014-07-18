@@ -2,9 +2,8 @@
 
 constant colnames=({"black","red","green","orange","blue","magenta","cyan","white"});
 constant enumcolors=sprintf("%2d: ",enumerate(16)[*])[*]+(colnames+("bold "+colnames[*]))[*]; //Non-bold, then bold, of the same names, all prefixed with numbers.
-array(array(int)) color_defs;
 constant default_ts_fmt="%Y-%m-%d %H:%M:%S UTC";
-array(GTK2.GdkColor) colors;
+array(GTK2.GdkColor) colors; //Convenience alias for win->colors - also used externally but not pledged
 
 mapping(string:mapping(string:mixed)) channels=persist->setdefault("color/channels",([]));
 constant deffont="Monospace 10";
@@ -12,13 +11,7 @@ mapping(string:mapping(string:mixed)) fonts=persist->setdefault("window/font",([
 mapping(string:mapping(string:mixed)) numpadnav=persist->setdefault("window/numpadnav",([])); //Technically doesn't have to be restricted to numpad.
 multiset(string) numpadspecial=persist["window/numpadspecial"] || (<"look", "glance", "l", "gl">); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
-array(mapping(string:mixed)) tabs=({ }); //In the same order as the notebook's internal tab objects
-GTK2.Window mainwindow;
-GTK2.Notebook notebook;
-#if constant(COMPAT_SIGNAL)
-GTK2.Button defbutton;
-#endif
-GTK2.Hbox statusbar;
+GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used externally
 array(object) signals;
 int paused;
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
@@ -27,6 +20,7 @@ int mono; //Set to 1 to paint the screen in monochrome
 mapping(string:int) plugin_mtime=([]); //Map a plugin name to its file's mtime as of last update
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
+mapping(string:mixed) win=([]); //Temporary for transitional purposes
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -72,15 +66,15 @@ Should it be context sensitive? It could be reconfigured in colorcheck().
 mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
-	tabs+=({subw});
+	win->tabs+=({subw});
 	//Build the subwindow
-	notebook->append_page(subw->page=GTK2.Vbox(0,0)
+	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
 			->add(subw->display=GTK2.DrawingArea())
 			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
-	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(tabs)-1);
+	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
 	//Note: It'd be nice if Ctrl-Z could do an Undo in in subw->ef. It's
 	//probably impractical though - GTK doesn't offer that directly, I'd
 	//have to do the work myself.
@@ -97,7 +91,7 @@ mapping(string:mixed) subwindow(string txt)
 /**
  * Return the subw mapping for the currently-active tab.
  */
-mapping(string:mixed) current_subw() {return tabs[notebook->get_current_page()];}
+mapping(string:mixed) current_subw() {return win->tabs[win->notebook->get_current_page()];}
 
 /**
  * Get a suitable Pango font for a particular category. Will cache based on font name.
@@ -452,7 +446,7 @@ void redraw(mapping subw)
 	if (subw==current_subw()) subw->activity=0;
 	//Check the current tab text before overwriting, to minimize flicker
 	string tabtext="* "*subw->activity+subw->tabtext;
-	if (notebook->get_tab_label_text(subw->page)!=tabtext) notebook->set_tab_label_text(subw->page,tabtext);
+	if (win->notebook->get_tab_label_text(subw->page)!=tabtext) win->notebook->set_tab_label_text(subw->page,tabtext);
 	subw->maindisplay->queue_draw();
 }
 
@@ -600,11 +594,11 @@ int keypress(object self,array|object ev,mapping subw)
 		{
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
-				//Not using notebook->{next|prev}_page() as they don't cycle.
-				int page=notebook->get_current_page();
-				if (ev->state&GTK2.GDK_SHIFT_MASK) {if (--page<0) page=notebook->get_n_pages()-1;}
-				else {if (++page>=notebook->get_n_pages()) page=0;}
-				notebook->set_current_page(page);
+				//Not using win->notebook->{next|prev}_page() as they don't cycle.
+				int page=win->notebook->get_current_page();
+				if (ev->state&GTK2.GDK_SHIFT_MASK) {if (--page<0) page=win->notebook->get_n_pages()-1;}
+				else {if (++page>=win->notebook->get_n_pages()) page=0;}
+				win->notebook->set_current_page(page);
 				return 1;
 			}
 			subw->ef->set_position(subw->ef->insert_text("\t",1,subw->ef->get_position()));
@@ -725,11 +719,11 @@ void addtab() {subwindow("New tab");}
  */
 void real_closetab(int removeme)
 {
-	if (sizeof(tabs)<2) addtab();
-	tabs[removeme]->signals=0; connect(0,0,tabs[removeme]);
-	tabs=tabs[..removeme-1]+tabs[removeme+1..];
-	notebook->remove_page(removeme);
-	if (!sizeof(tabs)) addtab();
+	if (sizeof(win->tabs)<2) addtab();
+	win->tabs[removeme]->signals=0; connect(0,0,win->tabs[removeme]);
+	win->tabs=win->tabs[..removeme-1]+win->tabs[removeme+1..];
+	win->notebook->remove_page(removeme);
+	if (!sizeof(win->tabs)) addtab();
 }
 
 /**
@@ -738,8 +732,8 @@ void real_closetab(int removeme)
 constant file_closetab=({"Close Tab",'w',GTK2.GDK_CONTROL_MASK});
 void closetab()
 {
-	int removeme=notebook->get_current_page();
-	if (persist["window/confirmclose"]==-1 || !tabs[removeme]->connection || !tabs[removeme]->connection->sock) real_closetab(removeme); //TODO post 7.8: Use ?->sock for this
+	int removeme=win->notebook->get_current_page();
+	if (persist["window/confirmclose"]==-1 || !win->tabs[removeme]->connection || !win->tabs[removeme]->connection->sock) real_closetab(removeme); //TODO post 7.8: Use ?->sock for this
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
@@ -856,7 +850,7 @@ class colorsdlg
 	void create()
 	{
 		items=([]);
-		foreach (color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
+		foreach (win->color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
 		::create();
 	}
 
@@ -877,10 +871,10 @@ class colorsdlg
 	{
 		int idx=(int)win->kwd->get_text(); //Will ignore a leading space and everything from the colon on.
 		array val=({info->r,info->g,info->b});
-		if (equal(val,color_defs[idx])) return; //No change.
-		color_defs[idx]=val;
+		if (equal(val,win->color_defs[idx])) return; //No change.
+		win->color_defs[idx]=val;
 		colors[idx]=GTK2.GdkColor(@val);
-		persist["colors/sixteen"]=color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
+		persist["colors/sixteen"]=win->color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
 		redraw(current_subw());
 	}
 }
@@ -908,9 +902,9 @@ class fontdlg
 		if (info->name==name) return; //No change, no need to dump the cached object
 		info->name=name;
 		m_delete(fontdesc,name);
-		setfonts(tabs[*]);
-		redraw(tabs[*]);
-		tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
+		setfonts(win->tabs[*]);
+		redraw(win->tabs[*]);
+		win->tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
 	}
 
 	void load_content(mapping(string:mixed) info)
@@ -1194,7 +1188,7 @@ class configure_plugins
 
 void makewindow()
 {
-	mainwindow=GTK2.Window(GTK2.WindowToplevel);
+	win->mainwindow=mainwindow=GTK2.Window(GTK2.WindowToplevel);
 	mainwindow->set_title("Gypsum");
 	if (array pos=persist["window/winpos"])
 	{
@@ -1213,14 +1207,14 @@ void makewindow()
 			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)(G->G->plugin_menu[0]=GTK2.Menu())))
 			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
 		,0,0,0)
-		->add(notebook=GTK2.Notebook())
-		->pack_end(statusbar=GTK2.Hbox(0,0),0,0,0)
+		->add(win->notebook=GTK2.Notebook())
+		->pack_end(win->statusbar=GTK2.Hbox(0,0),0,0,0)
 		#if constant(COMPAT_SIGNAL)
-		->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
+		->pack_end(win->defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		#endif
 	)->show_all();
 	#if constant(COMPAT_SIGNAL)
-	defbutton->grab_default();
+	win->defbutton->grab_default();
 	#endif
 	addtab();
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
@@ -1231,43 +1225,50 @@ void create(string name)
 	add_gypsum_constant("say",say);
 	G->G->connection->say=say;
 	if (!G->G->window) makewindow();
-	else if (!G->G->window->win)
+	else if (!G->G->window->win) //Compat
 	{
 		object other=G->G->window;
-		colors=other->colors; color_defs=other->color_defs; notebook=other->notebook; mainwindow=other->mainwindow;
+		win->colors=other->colors; win->color_defs=other->color_defs; win->notebook=other->notebook; win->mainwindow=other->mainwindow;
 		#if constant(COMPAT_SIGNAL)
-		defbutton=other->defbutton;
+		win->defbutton=other->defbutton;
 		#endif
-		tabs=other->tabs; statusbar=other->statusbar;
+		win->tabs=other->tabs; win->statusbar=other->statusbar;
 		if (other->signals) other->signals=0; //Clear them out, just in case.
-		if (other->menu) menu=other->menu;
-		if (other->plugin_mtime) plugin_mtime=other->plugin_mtime;
-		foreach (tabs,mapping subw) subwsignals(subw);
+		if (other->menu) win->menu=other->menu;
+		if (other->plugin_mtime) win->plugin_mtime=other->plugin_mtime;
+		foreach (win->tabs,mapping subw) subwsignals(subw);
+	}
+	else
+	{
+		win=G->G->window->win; //Temporary for transitional purposes
+		foreach (win->tabs,mapping subw) subwsignals(subw);
 	}
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
+	mainwindow=win->mainwindow;
 
-	if (!color_defs)
+	if (!win->color_defs)
 	{
-		color_defs=persist["color/sixteen"]; //Note: Assumed to be exactly sixteen arrays of exactly three ints each.
-		if (!color_defs)
+		win->color_defs=persist["color/sixteen"]; //Note: Assumed to be exactly sixteen arrays of exactly three ints each.
+		if (!win->color_defs)
 		{
 			//Default color definitions: the standard ANSI colors.
 			array bits = map(enumerate(8),lambda(int x) {return ({x&1,!!(x&2),!!(x&4)});});
-			color_defs = (bits[*][*]*127) + (bits[*][*]*255);
+			win->color_defs = (bits[*][*]*127) + (bits[*][*]*255);
 			//The strict bitwise definition would have bold black looking black. It should be a bit darker than nonbold white, so we change it.
-			color_defs[8] = color_defs[7]; color_defs[7] = ({192,192,192});
+			win->color_defs[8] = win->color_defs[7]; win->color_defs[7] = ({192,192,192});
 		}
 	}
-	if (!colors) colors = Function.splice_call(color_defs[*],GTK2.GdkColor); //Note that the @ short form can't replace splice_call here.
+	if (!win->colors) win->colors = Function.splice_call(win->color_defs[*],GTK2.GdkColor); //Note that the @ short form can't replace splice_call here.
+	colors=win->colors;
 
 	/* Not quite doing what I want, but it's a start...
 
 	GTK2.ListStore ls=GTK2.ListStore(({"string"}));
 	GTK2.EntryCompletion compl=GTK2.EntryCompletion()->set_model(ls)->set_text_column(0)->set_minimum_key_length(2);
 	foreach (sort(indices(G->G->commands)),string kwd) ls->set_value(ls->append(),0,"/"+kwd);
-	tabs[0]->ef->set_completion(compl);
+	win->tabs[0]->ef->set_completion(compl);
 	*/
 
 	//Build or rebuild the menus
@@ -1317,7 +1318,7 @@ void create(string name)
 		}
 		else m_delete(plugin_mtime,fn);
 	}
-	settabs(tabs[0]->charwidth);
+	settabs(win->tabs[0]->charwidth);
 }
 
 int window_destroy() {exit(0);}
@@ -1361,7 +1362,7 @@ int closewindow()
 {
 	int confirmclose=persist["window/confirmclose"];
 	if (confirmclose==-1) exit(0);
-	int conns=sizeof((tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? but I need to support 7.8).
+	int conns=sizeof((win->tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? but I need to support 7.8).
 	if (!conns && !confirmclose) exit(0);
 	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
 	return 1; //Used as the delete-event, so it should return 1 for that.
@@ -1434,7 +1435,7 @@ int enterpressed_glo(object self)
 	if (function f=G->G->enterpress[focus]) return f();
 	object parent=focus->get_parent();
 	while (parent->get_name()!="GtkNotebook") parent=(focus=parent)->get_parent();
-	enterpressed(tabs[parent->page_num(focus)]);
+	enterpressed(win->tabs[parent->page_num(focus)]);
 	return 1;
 }
 
@@ -1458,7 +1459,7 @@ int switchpage(object self,mixed segfault,int page,mixed otherarg)
 	//sort of documentation, hence it includes an 'otherarg' arg (which I'm not using -
 	//an additional argument to signal_connect/gtksignal would provide that value here)
 	//and names all the arguments. All I really need is 'page'. End caution.
-	mapping subw=tabs[page];
+	mapping subw=win->tabs[page];
 	subw->activity=0;
 	//Reset the cursor pos based on where it was last time focus entered the EF. This is
 	//distinctly weird, but it prevents the annoying default behaviour of selecting all.
@@ -1467,8 +1468,8 @@ int switchpage(object self,mixed segfault,int page,mixed otherarg)
 		//NOTE: Doing this work inside the signal handler can segfault Pike, so do it
 		//on the backend. (Probably related to the above caution.) The same applies
 		//if the args are omitted (making this a closure).
-		notebook->set_tab_label_text(subw->page,subw->tabtext);
-		if (notebook->get_current_page()==page) subw->ef->grab_focus();
+		win->notebook->set_tab_label_text(subw->page,subw->tabtext);
+		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
 		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 	},0,page,subw);
 }
@@ -1500,13 +1501,13 @@ void dosignals()
 	signals=({
 		gtksignal(mainwindow,"destroy",window_destroy),
 		gtksignal(mainwindow,"delete_event",closewindow),
-		gtksignal(notebook,"switch_page",switchpage),
+		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
-		gtksignal(defbutton,"clicked",enterpressed_glo),
+		gtksignal(win->defbutton,"clicked",enterpressed_glo),
 		#else
-		gtksignal(mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
+		gtksignal(win->mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
 		#endif
-		gtksignal(mainwindow,"focus_in_event",window_focus),
+		gtksignal(win->mainwindow,"focus_in_event",window_focus),
 	});
 	#if constant(COMPAT_SIGNAL)
 	if (!G->G->enterpress) G->G->enterpress=([]);
