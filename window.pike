@@ -1354,8 +1354,8 @@ void save_html_response(object self,int btn)
 	MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Saved to "+fn,mainwindow);
 }
 
-constant file_window_close="E_xit";
-int window_close()
+constant file_closewindow="E_xit";
+int closewindow()
 {
 	int confirmclose=persist["window/confirmclose"];
 	if (confirmclose==-1) exit(0);
@@ -1497,7 +1497,7 @@ void mainwsignals()
 {
 	signals=({
 		gtksignal(mainwindow,"destroy",window_destroy),
-		gtksignal(mainwindow,"delete_event",window_close),
+		gtksignal(mainwindow,"delete_event",closewindow),
 		gtksignal(notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(defbutton,"clicked",enterpressed_glo),
