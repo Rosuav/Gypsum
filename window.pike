@@ -1006,7 +1006,7 @@ class aboutdlg
 	{
 		string ver=gypsum_version();
 		if (ver!=INIT_GYPSUM_VERSION) ver=sprintf("%s (upgraded from %s)",ver,INIT_GYPSUM_VERSION);
-		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":mainwindow]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Label(#"Pike MUD client for Windows/Linux/Mac (and others)
 
 Free software - see README for license terms
@@ -1034,7 +1034,7 @@ class promptsdlg
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Configure prompts","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,20)
+		win->mainwindow=GTK2.Window((["title":"Configure prompts","transient-for":mainwindow]))->add(GTK2.Vbox(0,20)
 			->add(GTK2.Label("Prompts from the server are easy for a human to\nrecognize, but not always for the computer."))
 			->add(GTK2.Frame("TELNET codes")
 				->add(GTK2.Label("The ideal is for prompts to be marked with\nIAC GA. This works perfectly and is guaranteed."))
@@ -1389,7 +1389,7 @@ class connect_menu
 		string kwd=selecteditem();
 		if (!kwd) return;
 		mapping info=items[kwd];
-		G->G->window->connect(info,kwd,0);
+		connect(info,kwd,0);
 		win->mainwindow->destroy();
 	}
 
