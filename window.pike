@@ -929,7 +929,7 @@ class keyboard
 	constant strings=({"cmd"});
 	constant persist_key="window/numpadnav";
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
-	void create() {::create("keyboard");}
+	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -1159,7 +1159,7 @@ class configure_plugins
 	//NOTE: Cannot use simple bindings as it needs to know the previous state
 	//Note also: This does not unload plugins on deactivation. Maybe it should?
 
-	void create() {discover_plugins("plugins"); ::create("plugins/configure");}
+	void create() {discover_plugins("plugins"); ::create();}
 
 	GTK2.Widget make_content()
 	{
