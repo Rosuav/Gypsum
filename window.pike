@@ -1236,13 +1236,8 @@ void create(string name)
 		if (other->signals) other->signals=0; //Clear them out, just in case.
 		if (other->menu) win->menu=other->menu;
 		if (other->plugin_mtime) win->plugin_mtime=other->plugin_mtime;
-		foreach (win->tabs,mapping subw) subwsignals(subw);
 	}
-	else
-	{
-		win=G->G->window->win; //Temporary for transitional purposes
-		foreach (win->tabs,mapping subw) subwsignals(subw);
-	}
+	else win=G->G->window->win; //Temporary for transitional purposes
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
 	::create(name);
@@ -1512,4 +1507,5 @@ void dosignals()
 	#if constant(COMPAT_SIGNAL)
 	if (!G->G->enterpress) G->G->enterpress=([]);
 	#endif
+	foreach (win->tabs,mapping subw) subwsignals(subw);
 }
