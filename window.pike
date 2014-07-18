@@ -1212,7 +1212,6 @@ void makewindow()
 	#if constant(COMPAT_SIGNAL)
 	win->defbutton->grab_default();
 	#endif
-	addtab();
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 	if (array pos=persist[pos_key])
 	{
@@ -1245,6 +1244,7 @@ void create(string name)
 	statustxt->tooltip="Hover a line to see when it happened";
 	window::create(""); //This one MUST be called first, and it's convenient to put a different name in.
 	mainwindow=win->mainwindow;
+	addtab();
 	(::create-({window::create}))(name); //Call all other constructors, in any order.
 
 	if (!win->color_defs)
