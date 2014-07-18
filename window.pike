@@ -1194,36 +1194,36 @@ class configure_plugins
 
 void makewindow()
 {
-		mainwindow=GTK2.Window(GTK2.WindowToplevel);
-		mainwindow->set_title("Gypsum");
-		if (array pos=persist["window/winpos"])
-		{
-			pos+=({800,600}); mainwindow->set_default_size(pos[2],pos[3]);
-			mainwindow->move(pos[0],pos[1]);
-		}
-		else mainwindow->set_default_size(800,500);
-		GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
-		G->G->plugin_menu=([]);
-		mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
-			->pack_start(GTK2.MenuBar()
-				//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
-				//reason won't accept a GTK2.Menu, which is a subclass of Widget.
-				->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
-				->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
-				->add(GTK2.MenuItem("_Plugins")->set_submenu((object)(G->G->plugin_menu[0]=GTK2.Menu())))
-				->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
-			,0,0,0)
-			->add(notebook=GTK2.Notebook())
-			->pack_end(statusbar=GTK2.Hbox(0,0),0,0,0)
-			#if constant(COMPAT_SIGNAL)
-			->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
-			#endif
-		)->show_all();
+	mainwindow=GTK2.Window(GTK2.WindowToplevel);
+	mainwindow->set_title("Gypsum");
+	if (array pos=persist["window/winpos"])
+	{
+		pos+=({800,600}); mainwindow->set_default_size(pos[2],pos[3]);
+		mainwindow->move(pos[0],pos[1]);
+	}
+	else mainwindow->set_default_size(800,500);
+	GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
+	G->G->plugin_menu=([]);
+	mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
+		->pack_start(GTK2.MenuBar()
+			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
+			//reason won't accept a GTK2.Menu, which is a subclass of Widget.
+			->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
+			->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
+			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)(G->G->plugin_menu[0]=GTK2.Menu())))
+			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
+		,0,0,0)
+		->add(notebook=GTK2.Notebook())
+		->pack_end(statusbar=GTK2.Hbox(0,0),0,0,0)
 		#if constant(COMPAT_SIGNAL)
-		defbutton->grab_default();
+		->pack_end(defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		#endif
-		addtab();
-		call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
+	)->show_all();
+	#if constant(COMPAT_SIGNAL)
+	defbutton->grab_default();
+	#endif
+	addtab();
+	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 }
 
 void create(string name)
