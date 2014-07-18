@@ -5,13 +5,19 @@ constant plugin_active_by_default = 1;
 
 /* Command executor and expression evaluator
 
-Has two distinct modes, similar but with a few different operations. One is simpler, the other more flexible, and it's worth keeping both.
+Has two distinct modes, similar but with a few different operations. One is
+simpler, the other more flexible, and it's worth keeping both.
 
-Classic mode is convenient as a calculator and so on; it is primarily designed for a simple expression, and must handle but a single line of input. It is accessed by the "/x" command.
+Classic mode is convenient as a calculator and so on; it is primarily designed
+for a simple expression, and must handle but a single line of input. It is
+accessed by the "/x" command.
 
-Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode), and can handle multi-line expressions/commands, but is less convenient for simple actions as it requires
-the input to be properly terminated (usually that means adding a semicolon). It is accessed by the "pike" command, eg "pike 1+1;", and will consume all input if it believes that more is
-needed to complete the current command.
+Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode),
+and can handle multi-line expressions/commands, but is less convenient for
+simple actions as it requires the input to be properly terminated (usually that
+means adding a semicolon). It is accessed by the "pike" command, eg "pike 1+1;",
+and will consume all input if it believes that more is needed to complete the
+current command.
 */
 
 string calculate(mapping(string:mixed) subw,string expr)
