@@ -1212,7 +1212,7 @@ void makewindow()
 		#if constant(COMPAT_SIGNAL)
 		->pack_end(win->defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		#endif
-	)->show_all();
+	);
 	#if constant(COMPAT_SIGNAL)
 	win->defbutton->grab_default();
 	#endif
