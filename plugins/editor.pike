@@ -4,6 +4,9 @@ inherit plugin_menu;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog.
 
+//TODO: "Once-use" option. Auto-close after send; maybe make it say "Save/quit" instead of "Send".
+//Possibly also have it auto-send before close?? Or maybe have a magic "send this on close" cmd??
+
 constant plugin_active_by_default = 1;
 
 class editor(mapping(string:mixed) subw)
