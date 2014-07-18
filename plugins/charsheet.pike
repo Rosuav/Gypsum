@@ -20,6 +20,7 @@ mapping(string:multiset(object)) charsheets;
 class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
+	constant is_subwindow=0;
 	constant pos_key="charsheet/winpos";
 	mapping(string:array(function)) depends=([]); //Whenever something changes, recalculate all its depends.
 
@@ -28,7 +29,6 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (!charsheets[owner]) charsheets[owner]=(<>);
 		charsheets[owner][this]=1;
 		::create(); //No name. Each one should be independent.
-		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
 
 	//Allow XP (and only XP) to be entered as a sum, eg 4000+1000 will be replaced with 5000

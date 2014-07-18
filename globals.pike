@@ -241,6 +241,7 @@ class plugin_menu
 class window
 {
 	mapping(string:mixed) win=([]);
+	constant is_subwindow=1; //Set to 0 to disable the taskbar/pager hinting
 
 	//Replace this and call the original after assigning to win->mainwindow.
 	void makewindow() { }
@@ -282,7 +283,7 @@ class window
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
 		win->self=this;
 		if (!win->mainwindow) makewindow();
-		win->mainwindow->set_skip_taskbar_hint(1)->set_skip_pager_hint(1)->show_all();
+		win->mainwindow->set_skip_taskbar_hint(is_subwindow)->set_skip_pager_hint(is_subwindow)->show_all();
 		dosignals();
 	}
 	void showwindow()

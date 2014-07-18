@@ -9,6 +9,7 @@ constant plugin_active_by_default = 1;
 class editor(mapping(string:mixed) subw)
 {
 	inherit movablewindow;
+	constant is_subwindow=0;
 	constant pos_key="editor/winpos";
 	constant load_size=1;
 
@@ -16,7 +17,6 @@ class editor(mapping(string:mixed) subw)
 	{
 		win->initial=initial;
 		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
-		win->mainwindow->set_skip_taskbar_hint(0)->set_skip_pager_hint(0); //Undo the hinting done by default
 	}
 
 	void makewindow()
