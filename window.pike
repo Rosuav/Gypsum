@@ -1231,7 +1231,7 @@ void create(string name)
 	add_gypsum_constant("say",say);
 	G->G->connection->say=say;
 	if (!G->G->window) makewindow();
-	else
+	else if (!G->G->window->win)
 	{
 		object other=G->G->window;
 		colors=other->colors; color_defs=other->color_defs; notebook=other->notebook; mainwindow=other->mainwindow;
