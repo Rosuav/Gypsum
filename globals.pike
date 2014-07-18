@@ -305,7 +305,6 @@ class window
 }
 
 //Subclass of window that handles save/load of position automatically.
-//TODO: Merge code with the corresponding functionality in window.pike.
 class movablewindow
 {
 	inherit window;
