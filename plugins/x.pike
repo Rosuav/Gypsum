@@ -18,6 +18,12 @@ simple actions as it requires the input to be properly terminated (usually that
 means adding a semicolon). It is accessed by the "pike" command, eg "pike 1+1;",
 and will consume all input if it believes that more is needed to complete the
 current command.
+
+Note that typing "pike" on its own does not enter you into a different-prompt
+mode. This has sometimes surprised me, but I don't think it's really worth the
+trouble of fixing; for one thing, it'd require some means of knowing when to
+revert to MUD mode. Leave this as an unresolved issue unless some superb
+solution can be found.
 */
 
 string calculate(mapping(string:mixed) subw,string expr)
