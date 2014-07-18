@@ -21,6 +21,7 @@ int mono; //Set to 1 to paint the screen in monochrome
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
+constant load_size=1;
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -1190,12 +1191,7 @@ void makewindow()
 {
 	win->mainwindow=mainwindow=GTK2.Window(GTK2.WindowToplevel);
 	mainwindow->set_title("Gypsum");
-	if (array pos=persist[pos_key])
-	{
-		pos+=({800,600}); mainwindow->set_default_size(pos[2],pos[3]);
-		mainwindow->move(pos[0],pos[1]);
-	}
-	else mainwindow->set_default_size(800,500);
+	mainwindow->set_default_size(800,500);
 	GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 	G->G->plugin_menu=([]);
 	mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
@@ -1218,6 +1214,11 @@ void makewindow()
 	#endif
 	addtab();
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
+	if (array pos=persist[pos_key])
+	{
+		if (sizeof(pos)>3 && load_size) win->mainwindow->set_default_size(pos[2],pos[3]);
+		mainwindow->move(pos[0],pos[1]);
+	}
 	::makewindow();
 }
 
