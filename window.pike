@@ -1217,6 +1217,7 @@ void makewindow()
 	#endif
 	addtab();
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
+	::makewindow();
 }
 
 void create(string name)
