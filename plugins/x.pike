@@ -5,7 +5,7 @@ constant plugin_active_by_default = 1;
 
 /* Command executor and expression evaluator
 
-Has two distinct modes, similar but with a few different operations. In the future one of them may be deprecated in favour of the other, but for now I'm undecided.
+Has two distinct modes, similar but with a few different operations. One is simpler, the other more flexible, and it's worth keeping both.
 
 Classic mode is convenient as a calculator and so on; it is primarily designed for a simple expression, and must handle but a single line of input. It is accessed by the "/x" command.
 
