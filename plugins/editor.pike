@@ -29,6 +29,7 @@ class editor(mapping(string:mixed) subw)
 		//or final marker line, so this is the preferable form. Normally the edited content will begin with a command, so this should
 		//be safe from false positives, but it does mean that the RosMud editor will send those back to the server. Hopefully a hash
 		//followed by a space will never be a problem to any server (both Threshold RPG and Minstrel Hall respond with just "What?").
+		//And of course, the hash line will be sent back only if the server sent it, so that really means only MH has to deal with it.
 		//Currently-recognized parameters:
 		//	line - line number for initial cursor position, default 0 ie first line of file
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
