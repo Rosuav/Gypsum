@@ -4,9 +4,6 @@ inherit plugin_menu;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog.
 
-//TODO: "Once-use" option. Auto-close after send; maybe make it say "Save/quit" instead of "Send".
-//Possibly also have it auto-send before close?? Or maybe have a magic "send this on close" cmd??
-
 constant plugin_active_by_default = 1;
 
 class editor(mapping(string:mixed) subw)
@@ -35,12 +32,13 @@ class editor(mapping(string:mixed) subw)
 		//Currently-recognized parameters:
 		//	line - line number for initial cursor position, default 0 ie first line of file
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
+		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
 			)
 			->pack_end(GTK2.HbuttonBox()
-				->add(win->pb_send=GTK2.Button((["label":"_Send","use-underline":1,"focus-on-click":0])))
+				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":"_Send","use-underline":1,"focus-on-click":0])))
 				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
 				#elif constant(COMPAT_SIGNAL)
@@ -100,7 +98,7 @@ class editor(mapping(string:mixed) subw)
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
 		if (int wrap=persist["editor/wrap"]) txt=wrap_text(txt,wrap);
 		send(subw,replace(txt,"\n","\r\n")+"\r\n");
-		win->buf->set_modified(0);
+		if (params->once_use) ::closewindow(); else win->buf->set_modified(0);
 	}
 
 	int closewindow()
