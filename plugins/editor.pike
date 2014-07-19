@@ -161,7 +161,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 //Note that the empty editor window brought up is tied to whichever subw was active when you hit it.
 //This may be a bit surprising, so it might be better to go with the current subw as of when you hit
 //Send, although that too can be surprising. Which is going to be less so?
-constant menu_label="Editor";
+constant menu_label="_Editor";
 void menu_clicked()
 {
 	editor(G->G->window->current_subw(),"");
