@@ -1001,6 +1001,9 @@ class aboutdlg
 	{
 		string ver=gypsum_version();
 		if (ver!=INIT_GYPSUM_VERSION) ver=sprintf("%s (upgraded from %s)",ver,INIT_GYPSUM_VERSION);
+		int up=time()-started;
+		string uptime=format_time(up%86400);
+		if (up>=86400) uptime=(up/86400)+" days, "+uptime;
 		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":mainwindow]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Label(#"Pike MUD client for Windows/Linux/Mac (and others)
 
@@ -1008,7 +1011,10 @@ Free software - see README for license terms
 
 By Chris Angelico, rosuav@gmail.com
 
-Version "+ver+", as far as can be ascertained :)"))
+Version "+ver+#", as far as can be ascertained :)
+
+This invocation of Gypsum has been running since:
+"+strftime("%a %b %d %Y %H:%M:%S",localtime(started))+" - "+uptime))
 			->add(GTK2.HbuttonBox()->add(stock_close()))
 		);
 		::makewindow();
