@@ -226,7 +226,7 @@ class plugin_menu
 		else make_menuitem(name);
 	}
 
-	void set_menu_text(string text) {mi->menuitem->get_child()->set_text(text);}
+	void set_menu_text(string text) {mi->menuitem->get_child()->set_text_with_mnemonic(text);}
 
 	void make_menuitem(string name)
 	{
