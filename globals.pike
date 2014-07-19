@@ -745,3 +745,26 @@ void unzip(string data,function callback,mixed|void callback_arg)
 	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
 	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
 }
+
+/*
+ * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
+ */
+string format_time(int delay,int|void base,int|void resolution)
+{
+	/*
+	Open question: Is it better to show 60 seconds as "60" or as "01:00"?
+
+	Previously, this would show it as 60 (unless it's ticking down from a longer time, of course),
+	but this makes HP/SP/EP display - which can't know what they're ticking down from - to look
+	a bit odd. Changing it 20140117 to show as 01:00. Question is still open as to how it ought
+	best to be done. There are arguments on both sides.
+	*/
+	if (resolution) delay-=delay%resolution;
+	if (delay<=0) return "";
+	switch (max(delay,base))
+	{
+		case 0..59: return sprintf("%02d",delay);
+		case 60..3599: return sprintf("%02d:%02d",delay/60,delay%60);
+		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
+	}
+}

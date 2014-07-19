@@ -40,35 +40,7 @@ constant pos_key="timer/winpos";
 
 mapping(string:mapping(string:mixed)) timers=persist->setdefault("timer/timers",([]));
 
-int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display. Minimum 1 - do not set to 0 or you will bomb the display :)
-
-/**
- * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
- *
- * @param 	delay 	the integer to be formated
- * @param 	base	a value that determines if the integer is formatted to sec, min, hour
- * @return 	string	the formatted integer value
- */
-string format_time(int delay,int base)
-{
-	/*
-	Open question: Is it better to show 60 seconds as "60" or as "01:00"?
-
-	Previously, this would show it as 60 (unless it's ticking down from a longer time, of course),
-	but this makes HP/SP/EP display - which can't know what they're ticking down from - to look
-	a bit odd. Changing it 20140117 to show as 01:00. Question is still open as to how it ought
-	best to be done. There are arguments on both sides.
-	*/
-	delay-=delay%resolution;
-	if (delay<=0) return "";
-	switch (max(delay,base))
-	{
-		case 0..59: return sprintf("%02d",delay);
-		case 60..3599: return sprintf("%02d:%02d",delay/60,delay%60);
-		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
-	}
-}
-
+int resolution=persist["timer/resolution"] || 10; //Higher numbers for more stable display, lower numbers for finer display.
 
 class config
 {
@@ -94,7 +66,7 @@ class config
 
 	void load_content(mapping(string:mixed) info)
 	{
-		win->time->set_text(format_time(info->time,info->time));
+		win->time->set_text(format_time(info->time,info->time,resolution));
 	}
 
 	void save_content(mapping(string:mixed) info)
@@ -132,7 +104,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (tm->trigger!="" && has_value(line,tm->trigger))
 		{
 			tm->next=time(1)+tm->time;
-			win->timers[i]->set_text(format_time(tm->next-time(1),tm->time));
+			win->timers[i]->set_text(format_time(tm->next-time(1),tm->time,resolution));
 			persist->save();
 		}
 	}
@@ -147,7 +119,7 @@ void showtimes()
 	foreach (sort(indices(timers));int i;string kwd)
 	{
 		mapping tm=timers[kwd]; if (!tm->next) continue;
-		string time=format_time(tm->next-time(1),tm->time);
+		string time=format_time(tm->next-time(1),tm->time,resolution);
 		win->timers[i]->set_text(time);
 		if (time=="") {tm->next=0; if (tm->present) G->G->window->mainwindow->present();}
 	}
