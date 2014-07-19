@@ -1239,7 +1239,7 @@ void create(string name)
 	statustxt->tooltip="Hover a line to see when it happened";
 	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in.
 	mainwindow=win->mainwindow;
-	addtab();
+	if (!sizeof(win->tabs)) addtab();
 	(::create-({movablewindow::create}))(name); //Call all other constructors, in any order.
 
 	if (!win->color_defs)
