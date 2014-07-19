@@ -34,6 +34,7 @@ class editor(mapping(string:mixed) subw)
 		//	line - line number for initial cursor position, default 0 ie first line of file
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
 		sscanf(win->initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string))|mapping(string:string) params,win->initial);
+		params=(mapping)(params||([]));
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
@@ -51,7 +52,6 @@ class editor(mapping(string:mixed) subw)
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
-		params=(mapping)(params||([]));
 		int line=(int)params->line,col=(int)params->col;
 		GTK2.TextIter iter;
 		if (col==-1)
