@@ -121,7 +121,7 @@ void showtimes()
 		mapping tm=timers[kwd]; if (!tm->next) continue;
 		string time=format_time(tm->next-time(1),tm->time,resolution);
 		win->timers[i]->set_text(time);
-		if (time=="") {tm->next=0; if (tm->present) G->G->window->mainwindow->present();}
+		if (time=="") {tm->next=0; if (m_delete(tm,"presnext") || tm->present) G->G->window->mainwindow->present();}
 	}
 }
 
@@ -194,6 +194,13 @@ int process(string param,mapping(string:mixed) subw)
 		persist->save();
 		showtimes();
 		say(subw,"%% Loaded.");
+	}
+	if (sscanf(param,"next %s",string kwd))
+	{
+		mapping tm=timers[kwd];
+		if (!tm->next) {say(subw,"%% Not active."); return 1;}
+		tm->presnext=1;
+		say(subw,"%% Will present.");
 	}
 	return 1;
 }
