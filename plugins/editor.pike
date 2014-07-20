@@ -6,7 +6,7 @@ inherit plugin_menu;
 
 constant plugin_active_by_default = 1;
 
-class editor(mapping(string:mixed) subw)
+class editor(mapping(string:mixed) subw,string initial)
 {
 	inherit movablewindow;
 	constant is_subwindow=0;
@@ -14,9 +14,9 @@ class editor(mapping(string:mixed) subw)
 	constant load_size=1;
 	mapping(string:string) params;
 
-	void create(string initial)
+	void create()
 	{
-		sscanf(win->initial=initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,win->initial);
+		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
 		params=(mapping)(parm||([]));
 		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
 	}
@@ -35,7 +35,7 @@ class editor(mapping(string:mixed) subw)
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
-				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(win->initial)))
+				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(initial)))
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":"_Send","use-underline":1,"focus-on-click":0])))
