@@ -8,7 +8,8 @@
 //character, type this: /x persist["plugins/vote/character"]="yourname"
 //TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
 //across Gypsums, but more importantly, means it needs to somehow detect its
-//external IP and re-highlight accordingly.
+//external IP and re-highlight accordingly. Reference separate timestamps as
+//persist["plugins/vote/nexttime/"+ip] or similar.
 inherit plugin_menu;
 inherit statusevent;
 
