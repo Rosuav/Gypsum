@@ -82,6 +82,7 @@ void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on 
 
 int process(string param,mapping(string:mixed) subw)
 {
+	sscanf(param,"[%s] %s",string cmdpfx,param);
 	program tmp; mixed err;
 	err=catch {tmp=compile_string(#"
 	GTK2.Window mw=G->G->window->mainwindow;
@@ -97,7 +98,8 @@ int process(string param,mapping(string:mixed) subw)
 	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
 	err=catch {G->G->last_x_result=tmp()->foo(subw,G->G->last_x_result);};
 	if (err) {say(subw,"Error in execution: %O\n",err); return 1;}
-	say(subw,"%O\n",G->G->last_x_result);
+	if (cmdpfx) send(subw,replace(sprintf("\n%O",G->G->last_x_result),"\n","\r\n"+cmdpfx+" ")[2..]+"\r\n");
+	else say(subw,"%O\n",G->G->last_x_result);
 	return 1;
 }
 
