@@ -1425,10 +1425,8 @@ void disconnect_menu(object self) {connect(0,0,0);}
 int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
 
 #if constant(COMPAT_SIGNAL)
-/**
- * COMPAT_SIGNAL bouncer
- */
-int enterpressed_glo(object self)
+//In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than keypress.
+int sig_defbutton_clicked(object self)
 {
 	object focus=mainwindow->get_focus();
 	if (function f=G->G->enterpress[focus]) return f();
@@ -1480,9 +1478,6 @@ void dosignals()
 {
 	::dosignals();
 	win->signals+=({
-		#if constant(COMPAT_SIGNAL)
-		gtksignal(win->defbutton,"clicked",enterpressed_glo),
-		#endif
 		gtksignal(win->mainwindow,"focus_in_event",window_focus),
 	});
 	#if constant(COMPAT_SIGNAL)
