@@ -159,7 +159,7 @@ void subwsignals(mapping(string:mixed) subw)
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
-//Snapshot the selection bounds so the switchpage handler can reset them
+//Snapshot the selection bounds so the switch_page handler can reset them
 int focus(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
 
 /**
@@ -1445,7 +1445,7 @@ constant options_savewinpos="Save all window positions";
 void savewinpos() {values(G->G->windows)->save_position_hook();}
 #endif
 
-int switchpage(object self,mixed segfault,int page,mixed otherarg)
+int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {
 	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and it
 	//comes through as a Pike object - which it isn't. Doing *ANYTHING* with that value
@@ -1480,7 +1480,6 @@ void dosignals()
 {
 	::dosignals();
 	win->signals+=({
-		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(win->defbutton,"clicked",enterpressed_glo),
 		#endif
