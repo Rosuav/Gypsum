@@ -1472,14 +1472,11 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 //changes from 0 to 1, but I can't find that. In lieu of such an event, I'm
 //going for something that fires on various focus movements within the main
 //window; it'll never fire when we don't have window focus, so it's safe.
-void window_focus() {mainwindow->set_urgency_hint(0);}
+void sig_mainwindow_focus_in_event() {mainwindow->set_urgency_hint(0);}
 
 void dosignals()
 {
 	::dosignals();
-	win->signals+=({
-		gtksignal(win->mainwindow,"focus_in_event",window_focus),
-	});
 	#if constant(COMPAT_SIGNAL)
 	if (!G->G->enterpress) G->G->enterpress=([]);
 	#endif
