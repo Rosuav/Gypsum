@@ -1477,5 +1477,5 @@ void sig_mainwindow_focus_in_event() {mainwindow->set_urgency_hint(0);}
 void dosignals()
 {
 	::dosignals();
-	foreach (win->tabs,mapping subw) subwsignals(subw);
+	subwsignals(win->tabs[*]);
 }
