@@ -22,6 +22,7 @@ array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
 constant load_size=1;
+mapping(string:mixed) mainwin; //Set equal to win[] and thus available to subclass
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -851,7 +852,7 @@ class colorsdlg
 	void create()
 	{
 		items=([]);
-		foreach (win->color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
+		foreach (mainwin->color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
 		::create();
 	}
 
@@ -872,10 +873,10 @@ class colorsdlg
 	{
 		int idx=(int)win->kwd->get_text(); //Will ignore a leading space and everything from the colon on.
 		array val=({info->r,info->g,info->b});
-		if (equal(val,win->color_defs[idx])) return; //No change.
-		win->color_defs[idx]=val;
+		if (equal(val,mainwin->color_defs[idx])) return; //No change.
+		mainwin->color_defs[idx]=val;
 		colors[idx]=GTK2.GdkColor(@val);
-		persist["colors/sixteen"]=win->color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
+		persist["colors/sixteen"]=mainwin->color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
 		redraw(current_subw());
 	}
 }
@@ -903,9 +904,9 @@ class fontdlg
 		if (info->name==name) return; //No change, no need to dump the cached object
 		info->name=name;
 		m_delete(fontdesc,name);
-		setfonts(win->tabs[*]);
-		redraw(win->tabs[*]);
-		win->tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
+		setfonts(mainwin->tabs[*]);
+		redraw(mainwin->tabs[*]);
+		mainwin->tabs->display->set_background(colors[0]); //For some reason, failing to do this results in the background color flipping to grey when fonts are changed. Weird.
 	}
 
 	void load_content(mapping(string:mixed) info)
@@ -1244,7 +1245,7 @@ void create(string name)
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
 	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in.
-	mainwindow=win->mainwindow;
+	mainwindow=win->mainwindow; mainwin=win;
 	if (!sizeof(win->tabs)) addtab();
 	(::create-({movablewindow::create}))(name); //Call all other constructors, in any order.
 
