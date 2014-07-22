@@ -1481,7 +1481,6 @@ void dosignals()
 	::dosignals();
 	win->signals+=({
 		gtksignal(win->mainwindow,"destroy",window_destroy),
-		gtksignal(win->mainwindow,"delete_event",closewindow),
 		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(win->defbutton,"clicked",enterpressed_glo),
