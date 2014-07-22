@@ -1477,8 +1477,5 @@ void sig_mainwindow_focus_in_event() {mainwindow->set_urgency_hint(0);}
 void dosignals()
 {
 	::dosignals();
-	#if constant(COMPAT_SIGNAL)
-	if (!G->G->enterpress) G->G->enterpress=([]);
-	#endif
 	foreach (win->tabs,mapping subw) subwsignals(subw);
 }

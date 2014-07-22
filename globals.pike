@@ -10,6 +10,9 @@ void create(string n)
 	if (!G->G->hooks) G->G->hooks=([]);
 	if (!G->G->windows) G->G->windows=([]);
 	if (!G->G->statustexts) G->G->statustexts=([]);
+	#if constant(COMPAT_SIGNAL)
+	if (!G->G->enterpress) G->G->enterpress=([]);
+	#endif
 }
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
