@@ -1320,7 +1320,7 @@ void create(string name)
 	settabs(win->tabs[0]->charwidth);
 }
 
-int window_destroy() {exit(0);}
+int sig_mainwindow_destroy() {exit(0);}
 
 constant file_save_html="Save as _HTML";
 void save_html()
@@ -1480,7 +1480,6 @@ void dosignals()
 {
 	::dosignals();
 	win->signals+=({
-		gtksignal(win->mainwindow,"destroy",window_destroy),
 		gtksignal(win->notebook,"switch_page",switchpage),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(win->defbutton,"clicked",enterpressed_glo),
