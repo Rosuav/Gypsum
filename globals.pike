@@ -570,7 +570,7 @@ class statustext_maxwidth
 	void setstatus(string txt)
 	{
 		statustxt->lbl->set_text(txt);
-		statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,statustxt->lbl->size_request()->width),-1);
+		statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
 	}
 }
 
