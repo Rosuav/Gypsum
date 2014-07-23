@@ -703,6 +703,7 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 //and call the callback for each file, with the file name, contents, and the provided arg.
 //Note that content errors will be thrown, but previously-parsed content has already been
 //passed to the callback. This may be considered a feature.
+//Note that this can't cope with prefixed zip data (eg a self-extracting executable).
 void unzip(string data,function callback,mixed|void callback_arg)
 {
 	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
