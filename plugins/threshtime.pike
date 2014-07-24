@@ -2,6 +2,9 @@
 //but also has UTC which makes it useful for other time conversions too. It'll happily
 //convert between any of the above and your own local time, complete with timezone shifts
 //based on historical and future tzdata; obviously it's only as accurate as your tzdata.
+
+//TODO: Configurable timezones, where there's magic on "Thresh" and "local", and special
+//code on "UTC", and everything else is a straight-forward name like "America/New_York".
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
