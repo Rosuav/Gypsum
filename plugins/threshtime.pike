@@ -2,9 +2,6 @@
 //but also has UTC which makes it useful for other time conversions too. It'll happily
 //convert between any of the above and your own local time, complete with timezone shifts
 //based on historical and future tzdata; obviously it's only as accurate as your tzdata.
-
-//TODO: Configurable timezones, where there's magic on "Thresh" and "local", and special
-//code on "UTC", and everything else is a straight-forward name like "America/New_York".
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
@@ -103,7 +100,8 @@ constant menu_label="Thresh Time converter";
 class menu_clicked
 {
 	inherit window;
-	void create() {::create();}
+	array(string) zones;
+	void create() {zones=(persist["threshtime/zones"]||"local America/New_York UTC Thresh")/" "; ::create();}
 
 	GTK2.Entry ef(string name,int|void width)
 	{
@@ -119,11 +117,10 @@ class menu_clicked
 	}
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,10)
-			->add(timebox("Local time","loc",terramonth))
-			->add(timebox("New York time (EST/EDT)","est",terramonth))
-			->add(timebox("UTC","utc",terramonth))
-			->add(timebox("Threshold time","th",threshmonth))
+		GTK2.Vbox box=GTK2.Vbox(0,10);
+		mapping(string:string) desc=(["local":"Local time","America/New_York":"New York time (EST/EDT)","Thresh":"Threshold time"]);
+		foreach (zones,string zone) box->add(timebox(desc[zone] || zone, zone, zone=="Thresh"?threshmonth:terramonth));
+		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(box
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
 				->add(GTK2.HbuttonBox()->add(stock_close()))
@@ -136,16 +133,15 @@ class menu_clicked
 	void dosignals()
 	{
 		::dosignals();
-		foreach (({"loc","est","utc","th"}),string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
-			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",this["convert_"+pfx])});
+		foreach (zones,string pfx) foreach (({"year","mon","day","hour","min"}),string sfx)
+			win->signals+=({gtksignal(win[pfx+"_"+sfx],"changed",pfx=="Thresh"?convert_th:convert_rl,pfx)});
 	}
 
 	void set_rl_time(int time,string|void which,int|void dowonly)
 	{
-		if (!which) {set_rl_time(time,"loc"); set_rl_time(time,"est"); set_rl_time(time,"utc"); return;}
+		if (!which) {set_rl_time(time,(zones-({"Thresh"}))[*]); return;}
 		Calendar.Gregorian.Second tm=Calendar.Gregorian.Second(time);
-		if (which=="est") tm=tm->set_timezone("America/New_York");
-		else if (which=="utc") tm=tm->set_timezone("UTC");
+		if (which!="local") tm=tm->set_timezone(which);
 		win[which+"_dow"]->set_text(tm->week_day_shortname()); //Could be part of the foreach except for the dowonly flag
 		if (dowonly) return;
 		if (win->signals) destruct(win->signals[*]); //Suppress 'changed' signals from this.
@@ -159,12 +155,11 @@ class menu_clicked
 	void set_th_time(int time)
 	{
 		if (win->signals) destruct(win->signals[*]); //As above, in set_rl_time
-		win->th_min->set_text((string)(time%60)); time/=60;
-		win->th_hour->set_text((string)(time%24)); time/=24;
-		win->th_day->set_text((string)(time%30+1)); time/=30;
-		win->th_mon->set_active(time%12); time/=12;
-
-		win->th_year->set_text((string)time);
+		win->Thresh_min->set_text((string)(time%60)); time/=60;
+		win->Thresh_hour->set_text((string)(time%24)); time/=24;
+		win->Thresh_day->set_text((string)(time%30+1)); time/=30;
+		win->Thresh_mon->set_active(time%12); time/=12;
+		win->Thresh_year->set_text((string)time);
 		if (win->signals) dosignals();
 	}
 
@@ -178,19 +173,15 @@ class menu_clicked
 	void convert_th()
 	{
 		int tm=
-			(int)win->th_year->get_text() * 518400 +
-			(int)win->th_mon->get_active() * 43200 +
-			(int)win->th_day->get_text() * 1440 - 1440 +
-			(int)win->th_hour->get_text() * 60 +
-			(int)win->th_min->get_text();
+			(int)win->Thresh_year->get_text() * 518400 +
+			(int)win->Thresh_mon->get_active() * 43200 +
+			(int)win->Thresh_day->get_text() * 1440 - 1440 +
+			(int)win->Thresh_hour->get_text() * 60 +
+			(int)win->Thresh_min->get_text();
 		set_rl_time(persist["threshtime/sync_rl"]+(tm-persist["threshtime/sync_th"])*5); //Reverse the usual calculation and turn Thresh into RL time
 	}
 
-	void convert_loc() {call_out(convert_rl,0,"loc");}
-	void convert_est() {call_out(convert_rl,0,"est");}
-	void convert_utc() {call_out(convert_rl,0,"utc");}
-
-	void convert_rl(string source)
+	void convert_rl(object self,string source)
 	{
 		catch //If error, just don't convert.
 		{
@@ -199,8 +190,7 @@ class menu_clicked
 				(int)win[source+"_mon"]->get_active()+1,
 				(int)win[source+"_day"]->get_text()
 			);
-			if (source=="est") day=day->set_timezone("America/New_York");
-			else if (source=="utc") day=day->set_timezone("UTC");
+			if (source!="local") day=day->set_timezone(source);
 			int hr=(int)win[source+"_hour"]->get_text();
 			int min=(int)win[source+"_min"]->get_text();
 			Calendar.Gregorian.Second tm=day->second(3600*hr+60*min);
@@ -214,7 +204,7 @@ class menu_clicked
 			int ts=tm->unix_time(); //Work with Unix time for simplicity
 			if (ts==win->last_rl_time) return; //No change, no updates
 			win->last_rl_time=ts;
-			foreach (({"loc","est","utc"}),string which) if (which!=source) set_rl_time(ts,which); //Update the other RL time boxes
+			set_rl_time(ts,(zones-({"Thresh",source}))[*]); //Update the other RL time boxes
 			set_rl_time(ts,source,1); //Update day of week without touching anything else
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
 		};
