@@ -169,7 +169,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 			GTK2.Widget cur=m_delete(G->G->statustexts,name)->lbl;
 			while (GTK2.Widget parent=cur->get_parent())
 			{
-				if (parent==G->G->window->statusbar) {cur->destroy(); break;}
+				if (parent==G->G->windows[""]->statusbar) {cur->destroy(); break;}
 				cur=parent;
 			}
 		}
