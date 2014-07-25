@@ -1243,7 +1243,7 @@ void create(string name)
 	if (!win->tabs) win->tabs=({ });
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
-	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in.
+	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in - prevents collisions, other code can reliably find this.
 	mainwindow=win->mainwindow; mainwin=win;
 	if (!sizeof(win->tabs)) addtab();
 	(::create-({movablewindow::create}))(name); //Call all other constructors, in any order.
