@@ -1240,7 +1240,6 @@ void create(string name)
 		if (other->menu) win->menu=other->menu;
 		if (other->plugin_mtime) win->plugin_mtime=other->plugin_mtime;
 	}
-	else win=G->G->window->win; //Compat
 	if (!win->tabs) win->tabs=({ });
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
