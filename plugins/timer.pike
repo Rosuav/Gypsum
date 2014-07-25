@@ -199,7 +199,6 @@ int process(string param,mapping(string:mixed) subw)
 	if (sscanf(param,"next %s",string kwd))
 	{
 		mapping tm=timers[kwd];
-		if (!tm->next) {say(subw,"%% Not active."); return 1;}
 		tm->presnext=1;
 		say(subw,"%% Will present.");
 	}
