@@ -104,6 +104,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (tm->trigger!="" && has_value(line,tm->trigger))
 		{
 			tm->next=time(1)+tm->time;
+			if (m_delete(tm,"presnext")) G->G->window->mainwindow->present();
 			win->timers[i]->set_text(format_time(tm->next-time(1),tm->time,resolution));
 			persist->save();
 		}
