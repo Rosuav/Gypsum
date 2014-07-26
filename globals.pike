@@ -738,6 +738,12 @@ void unzip(string data,function callback,mixed|void callback_arg)
 			if (eos[..3]=="PK\7\b") eos=eos[4..]; //Trim off the marker
 			sscanf(eos,"%-4c%-4c%-4c%s",crc32,compsize,uncompsize,data);
 		}
+		#if __REAL__VERSION__<8.0
+		//There seems to be a weird bug with Pike 7.8.866 on Windows which means that a correctly-formed ZIP
+		//file will have end_of_stream() return 0 instead of "". No idea why. This is resulting in spurious
+		//errors, For the moment, I'm just suppressing this error in that case.
+		else if (!eos) ;
+		#endif
 		else if (eos!="") error("Malformed ZIP file (bad end-of-stream on %s)",fn);
 		if (sizeof(result)!=uncompsize) error("Malformed ZIP file (bad file size on %s)",fn);
 		#if constant(Gz)
