@@ -15,6 +15,8 @@ constant plugin_active_by_default = 1;
 //TODO: Colorize the background (subtly, not intrusively) to show season - esp summer vs non-summer.
 //We're already in an EventBox so that shouldn't cost much more.
 
+//TODO: Config dialog. Now that timezones are fully configurable, it'll be that much more important.
+
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
