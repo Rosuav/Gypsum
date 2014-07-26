@@ -86,14 +86,25 @@ int outputhook(string line,mapping(string:mixed) conn)
 void showtime()
 {
 	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
-	int th_year,th_mon,th_day,th_hour,th_min;
-	int threshtime=persist["threshtime/sync_th"]+(time()-persist["threshtime/sync_rl"])/5;
-	th_min=threshtime%60; threshtime/=60;
-	th_hour=threshtime%24; threshtime/=24;
-	th_day=threshtime%30; threshtime/=30;
-	th_mon=threshtime%12; threshtime/=12;
-	th_year=threshtime;
-	setstatus(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
+	string zone=persist["threshtime/statuszone"] || "Thresh";
+	if (zone=="Thresh")
+	{
+		int th_year,th_mon,th_day,th_hour,th_min;
+		int threshtime=persist["threshtime/sync_th"]+(time()-persist["threshtime/sync_rl"])/5;
+		th_min=threshtime%60; threshtime/=60;
+		th_hour=threshtime%24; threshtime/=24;
+		th_day=threshtime%30; threshtime/=30;
+		th_mon=threshtime%12; threshtime/=12;
+		th_year=threshtime;
+		setstatus(sprintf("%s %d, %d at %d:%02d",threshmonth[th_mon],th_day+1,th_year,th_hour,th_min));
+		return;
+	}
+	Calendar.Gregorian.Second tm=Calendar.Gregorian.Second();
+	if (zone!="local") tm=tm->set_timezone(zone);
+	mapping t=tm->datetime();
+	int tzhr=-t->timezone/3600,tzmin=abs(t->timezone/60%60);
+	if (tzmin && tzhr<0) ++tzhr; //Modulo arithmetic produces odd results here. What I want is a four-digit number, but with the last two digits capped at 60 not 100.
+	setstatus(sprintf("%s %d, %d at %02d:%02d %+03d%02d",terramonth[t->month-1],t->day,t->year,t->hour,t->minute,tzhr,tzmin));
 }
 
 constant menu_label="Thresh Time converter";
