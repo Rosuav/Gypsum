@@ -128,6 +128,7 @@ class menu_clicked
 			({ef(pfx+"_year",4),win[pfx+"_mon"]=SelectBox(months),ef(pfx+"_day",3),win[pfx+"_dow"]=GTK2.Label(""),ef(pfx+"_hour"),ef(pfx+"_min")}),
 		})));
 	}
+
 	void makewindow()
 	{
 		GTK2.Vbox box=GTK2.Vbox(0,10);
