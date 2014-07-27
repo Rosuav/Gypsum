@@ -13,8 +13,6 @@ constant plugin_active_by_default = 1;
 //TODO: Colorize the background (subtly, not intrusively) to show season - esp summer vs non-summer.
 //We're already in an EventBox so that shouldn't cost much more.
 
-//TODO: Config dialog. Now that timezones are fully configurable, it'll be that much more important.
-
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
@@ -137,6 +135,7 @@ class menu_clicked
 		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion","transient-for":G->G->window->mainwindow]))->add(box
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
+				->add(win->config=GTK2.Button("Configure"))
 				->add(GTK2.HbuttonBox()->add(stock_close()))
 			)
 		);
@@ -176,6 +175,35 @@ class menu_clicked
 		win->Thresh_mon->set_active(time%12); time/=12;
 		win->Thresh_year->set_text((string)time);
 		if (win->signals) dosignals();
+	}
+
+	class sig_config_clicked()
+	{
+		inherit window;
+		void create() {::create();}
+
+		void makewindow()
+		{
+			win->mainwindow=GTK2.Window((["title":"Choose time zones for display","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+				->add(two_column(({
+					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"Thresh"),
+					"Converter timezones",win->convzone=GTK2.Entry()->set_width_chars(30)->set_text(zones*" "),
+				})))
+				->add(GTK2.HbuttonBox()
+					->add(win->pb_ok=GTK2.Button("OK"))
+					->add(stock_close())
+				)
+			);
+			::makewindow();
+		}
+
+		void sig_pb_ok_clicked()
+		{
+			//TODO: Validate the timezones
+			persist["threshtime/zones"]=win->convzone->get_text();
+			persist["threshtime/statuszone"]=win->sbzone->get_text();
+			closewindow();
+		}
 	}
 
 	void sig_set_now_clicked()
