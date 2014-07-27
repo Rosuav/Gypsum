@@ -1,7 +1,9 @@
-//Time converter - primarily for Threshold RPG's game time and official OOC time (EST/EDT),
-//but also has UTC which makes it useful for other time conversions too. It'll happily
-//convert between any of the above and your own local time, complete with timezone shifts
-//based on historical and future tzdata; obviously it's only as accurate as your tzdata.
+//Time zone converter - handles two magical zones "local" (your local time,
+//whatever that be) and "Thresh" (Threshold RPG in-character time), plus all
+//timezones listed in tzdata. Puts one clock on the status bar and can convert
+//between any pre-specified set. There's quite a bit of Thresh-specific code,
+//and persist keys all begin "threshtime/", but this can happily be used with
+//no Threshold times.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
@@ -82,9 +84,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 }
 
-/**
- * Update the display with the current Thresh time
- */
+//Update the display with the current time
 void showtime()
 {
 	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
@@ -109,7 +109,7 @@ void showtime()
 	setstatus(sprintf("%s %d, %d at %02d:%02d %+03d%02d",terramonth[t->month-1],t->day,t->year,t->hour,t->minute,tzhr,tzmin));
 }
 
-constant menu_label="Thresh Time converter";
+constant menu_label="Time zone converter";
 class menu_clicked
 {
 	inherit window;
@@ -133,7 +133,7 @@ class menu_clicked
 		GTK2.Vbox box=GTK2.Vbox(0,10);
 		mapping(string:string) desc=(["local":"Local time","America/New_York":"New York time (EST/EDT)","Thresh":"Threshold time"]);
 		foreach (zones,string zone) box->add(timebox(desc[zone] || zone, zone, zone=="Thresh"?threshmonth:terramonth));
-		win->mainwindow=GTK2.Window((["title":"Threshold Time Conversion","transient-for":G->G->window->mainwindow]))->add(box
+		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion","transient-for":G->G->window->mainwindow]))->add(box
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
 				->add(GTK2.HbuttonBox()->add(stock_close()))
