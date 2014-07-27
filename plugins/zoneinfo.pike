@@ -2,10 +2,6 @@
 //but also has UTC which makes it useful for other time conversions too. It'll happily
 //convert between any of the above and your own local time, complete with timezone shifts
 //based on historical and future tzdata; obviously it's only as accurate as your tzdata.
-
-//TODO: Rename this, as it's now a more generic time converter. Avoid name similarity with
-//timer.pike, and preferably, find a letter that isn't already used ("clock" is joining the
-//next most common letter in plugin names).
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
