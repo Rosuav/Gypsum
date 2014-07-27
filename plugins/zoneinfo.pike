@@ -167,6 +167,7 @@ class menu_clicked
 
 	void set_th_time(int time)
 	{
+		if (!win->Thresh_year) return; //No Thresh time on the window, do nothing
 		if (win->signals) destruct(win->signals[*]); //As above, in set_rl_time
 		win->Thresh_min->set_text((string)(time%60)); time/=60;
 		win->Thresh_hour->set_text((string)(time%24)); time/=24;
