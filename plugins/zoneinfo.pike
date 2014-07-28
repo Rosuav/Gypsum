@@ -187,6 +187,7 @@ class menu_clicked
 			win->mainwindow=GTK2.Window((["title":"Choose time zones for display","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
 				->add(two_column(({
 					GTK2.Label("Time zones should be taken from the tzdata list."),0,
+					//TODO: Make a timezone picker, based on the two parts ("America" and "New_York" separately)
 					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"Thresh"),
 					"Converter timezones",win->convzone=GTK2.Entry()->set_width_chars(30)->set_text(zones*" "),
 				})))
