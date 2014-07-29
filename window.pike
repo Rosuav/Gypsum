@@ -183,8 +183,8 @@ void paste(object self,mapping subw)
 {
 	//At this point, the clipboard contents haven't been put into the EF.
 	//Preventing the normal behaviour depends on the widget having a
-	//signal_stop() method, which was implemented in Pike 8.0.1+ and
-	//7.8.820+. If that method is not available, the signal will not be
+	//signal_stop() method, which was implemented in Pike 8.0.2 and
+	//7.8.822. If that method is not available, the signal will not be
 	//connected to (see above), so in this function, we assume that it
 	//exists and can be used. Attempting to paste multiple lines of text
 	//in older Pikes will result in newlines in the entry field, despite
