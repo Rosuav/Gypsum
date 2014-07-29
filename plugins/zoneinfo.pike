@@ -119,19 +119,15 @@ class menu_clicked
 		return noex(win[name]=GTK2.Entry((["width-chars":width||2])));
 	}
 
-	GTK2.Frame timebox(string label,string pfx,array months)
-	{
-		return GTK2.Frame(label)->add(GTK2Table(({
-			({"Year","Month","Day","","Time",0}),
-			({ef(pfx+"_year",4),win[pfx+"_mon"]=SelectBox(months),ef(pfx+"_day",3),win[pfx+"_dow"]=GTK2.Label(""),ef(pfx+"_hour"),ef(pfx+"_min")}),
-		})));
-	}
-
 	void makewindow()
 	{
 		GTK2.Vbox box=GTK2.Vbox(0,10);
 		mapping(string:string) desc=(["local":"Local time","America/New_York":"New York time (EST/EDT)","Thresh":"Threshold time"]);
-		foreach (zones,string zone) box->add(timebox(desc[zone] || zone, zone, zone=="Thresh"?threshmonth:terramonth));
+		foreach (zones,string zone) box->add(GTK2.Frame(desc[zone] || zone)->add(GTK2Table(({
+			({"Year","Month","Day","","Time",0}),
+			({ef(zone+"_year",4), win[zone+"_mon"]=SelectBox(zone=="Thresh"?threshmonth:terramonth),
+				ef(zone+"_day",3), win[zone+"_dow"]=GTK2.Label(""), ef(zone+"_hour"), ef(zone+"_min")}),
+		}))));
 		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion","transient-for":G->G->window->mainwindow]))->add(box
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
