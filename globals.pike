@@ -142,7 +142,7 @@ class SelectBox(array(string) strings)
 }
 
 //Advisory note that this widget should be packed without the GTK2.Expand|GTK2.Fill options
-//As of 8.0.1 with CJA patch, this could safely be done with wid->set_data(), but it's not
+//As of Pike 8.0.2, this could safely be done with wid->set_data(), but it's not
 //safe to call get_data() with a keyword that hasn't been set (it'll segfault older Pikes).
 //So this works with a multiset instead.
 multiset(GTK2.Widget) noexpand=(<>);
