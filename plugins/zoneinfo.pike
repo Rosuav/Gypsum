@@ -198,9 +198,13 @@ class menu_clicked
 
 		void sig_pb_ok_clicked()
 		{
-			//TODO: Validate the timezones
-			persist["threshtime/zones"]=win->convzone->get_text();
-			persist["threshtime/statuszone"]=win->sbzone->get_text();
+			multiset(string) validzones=(multiset)(Calendar.TZnames.zonenames()+({"Thresh","local"})+indices(Calendar.TZnames.abbr2zones));
+			string convzone=win->convzone->get_text();
+			string sbzone=win->sbzone->get_text();
+			if (!validzones[sbzone]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Status bar timezone not recognized.",0); return;}
+			foreach (convzone/" ",string z) if (!validzones[z]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Timezone "+z+" not recognized.",0); return;}
+			persist["threshtime/zones"]=convzone;
+			persist["threshtime/statuszone"]=sbzone;
 			closewindow();
 		}
 	}
