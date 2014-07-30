@@ -214,7 +214,6 @@ int point_to_line(mapping subw,int y)
 }
 	
 //Convert (x,y) into (line,col) - yes, that switches their order.
-//Depends on the current scr->pagesize.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
 array(int) point_to_char(mapping subw,int x,int y)
