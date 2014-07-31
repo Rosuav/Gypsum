@@ -196,7 +196,7 @@ void sockread(mapping conn,string data)
 		ansiread(conn,bytes_to_string(data),0); conn->readbuffer="\xff"+iac;
 		switch (iac[0])
 		{
-			case IAC: data+="\xFF"; iac=iac[1..]; break;
+			case IAC: ansiread(conn,"\xFF",0); conn->readbuffer=conn->readbuffer[2..]; break;
 			case DO: case DONT: case WILL: case WONT:
 			{
 				switch (iac[1])
