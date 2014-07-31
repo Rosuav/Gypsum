@@ -488,34 +488,8 @@ class configdlg
 //but this can be altered by overriding makestatus(), which
 //must set statustxt->lbl and return either it or a parent of it.
 //For example, wrapping a label in an EventBox can be useful.
-//TODO: Make it possible to go onto a second row of statusbar entries.
-/* Possibility: Instead of putting them in an Hbox (see window.pike), put them into a TextView.
-
-int main()
-{
-	GTK2.setup_gtk();
-	object buf=GTK2.TextBuffer(),view=GTK2.TextView(buf)->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD)->set_cursor_visible(0);
-	view->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(240,240,240)); //Otherwise it has an ugly white background.
-	function add=lambda(GTK2.Widget wid) {view->add_child_at_anchor(wid,buf->create_child_anchor(buf->get_end_iter())); buf->insert(buf->get_end_iter(),"  ",-1);};
-	function frm=lambda(GTK2.Widget wid) {add(GTK2.Frame()->add(wid)->set_shadow_type(GTK2.SHADOW_ETCHED_OUT));};
-	foreach (({"Asdf","qwer","zxcv","Testing, testing","1, 2, 3, 4"}),string x) frm(GTK2.Label(x));
-	GTK2.Window(GTK2.WindowToplevel)->add(GTK2.Vbox(0,0)->add(GTK2.Button("This is the base width"))->add(view))->show_all()->signal_connect("delete_event",lambda() {exit(0);});
-	return -1;
-}
-
-add() and frm() would be coded here, the labels would be done by makestatus() as per current, and the rest would go in window.pike.
-
-TODO: Figure out how to change the base color to be "whatever the base color for a window is", rather than
-hard-coding F0F0F0. Or how to make the TextView simply not draw a bg. Have emailed gtk-app-devel for ideas.
-
-NOTE: This does not appear to work on Windows. GTK version is the same, and Pike 7.8.700 on Linux works,
-but for some reason it's failing me on Windows. Weird weird weird, and very annoying.
-*/
-//Note that the need for a second row is less pressing now that any plugin can be
-//removed, not just "non-core" ones. If someone finds the statusbar too wide, s/he can
-//simply deactivate some of them, and reclaim the space. It'd still be nice, but the
-//Windows issues mean it's not worth the hassle... for now, at least.
-
+//(Previously I had some notes here about wrapping to multiple lines. This
+//is no longer an issue, but see aa6a01 if you want to know what was said.)
 class statustext
 {
 	mapping(string:mixed) statustxt=([]);
