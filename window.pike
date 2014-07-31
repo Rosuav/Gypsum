@@ -1337,7 +1337,6 @@ void save_html_response(object self,int btn)
 	if (btn!=GTK2.RESPONSE_OK) return;
 	mapping(string:mixed) subw=current_subw();
 	Stdio.File f=Stdio.File(fn,"wct");
-	//TODO: Batch up the writes for efficiency
 	f->write("<!doctype html><html><head><meta charset=\"UTF-8\"><title>Gypsum session - Save as HTML</title><style type=\"text/css\">\n");
 	//Write out styles, foreground and background
 	foreach (colors;int i;object col) f->write(sprintf("%%{.%%sg%d {%%scolor: #%02X%02X%02X}\n%%}",i,@col->rgb()),({({"f",""}),({"b","background-"})}));
