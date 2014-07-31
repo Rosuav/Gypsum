@@ -84,7 +84,7 @@ object persist=class(string savefn)
 			call_out(dosave,60);
 		}
 	}
-}(".gypsumrc"); //Save file name. TODO: Make this configurable somewhere.
+}(".gypsumrc"); //Save file name. May be worth making this configurable somehow.
 
 void create()
 {
