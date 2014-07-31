@@ -228,6 +228,7 @@ void sockread(mapping conn,string data)
 						break;
 					default: break;
 				}
+				break;
 			}
 			case SE: break; //Shouldn't happen.
 			case GA:
