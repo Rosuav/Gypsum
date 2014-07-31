@@ -171,9 +171,8 @@ void scrchange(object self,mapping subw)
 	if (paused) return;
 	float upper=self->get_property("upper");
 	#if constant(COMPAT_SCROLL)
-	//On Windows, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
-	//TODO: Solve this properly. Failing that, find the least flickery way to do this scrolling (would it still work if painting is disabled?)
-	//Note that this is solved by updating GTK, so it may not be all that important after all.
+	//On old GTKs, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
+	//Since Pike 7.8.866 for Windows ships GTK 2.24.10, there'll soon be no reason to maintain this COMPAT code at all.
 	if (upper>32000.0) self->set_value(16000.0);
 	#endif
 	self->set_value(upper-self->get_property("page size"));
