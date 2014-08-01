@@ -729,9 +729,8 @@ void unzip(string data,function callback,mixed|void callback_arg)
 	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
 }
 
-/*
- * Format an integer seconds according to a base value. The base ensures that the display is stable as the time ticks down.
- */
+//Format an integer seconds according to a base value. The base ensures that
+//the display is stable as the time ticks down.
 string format_time(int delay,int|void base,int|void resolution)
 {
 	/*
