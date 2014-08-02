@@ -242,6 +242,13 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				set(kw,"");
 	}
 
+	void fixsizes(GTK2.Widget wid)
+	{
+		mapping sz=wid->size_request();
+		wid->set_size_request(sz->width,sz->height);
+		fixsizes(wid->get_children()[*]);
+	}
+
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
@@ -574,6 +581,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			,GTK2.Label("Help"))
 		);
 		::makewindow();
+		//call_out(fixsizes,0,win->mainwindow);
 	}
 
 	void sig_mainwindow_destroy()
