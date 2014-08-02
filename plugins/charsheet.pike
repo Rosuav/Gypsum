@@ -562,6 +562,16 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				),0,0,0)
 				->add(GTK2.Frame("Notes")->add(mle("notes")))
 			,GTK2.Label("Administrivia"))
+			->append_page(GTK2.Vbox(0,10)
+				->pack_start(GTK2.Frame("Styles")->add(two_column(({
+					"This is a string entry field. It takes words.",ef("help_ef"),
+					"This is a numeric entry field.",num("help_num"),
+					"This is a rarely-used field. You'll normally leave it blank.",rare(num("help_rare")),
+					"This field is calculated as the sum of the above two.",calc("help_num+help_rare"),
+					"This is something you'll want to read off.",readme("Save vs help",calc("10+help_num+help_rare")),
+				}))),0,0,0)
+				->add(GTK2.Label((["label":"Whenever you update something here, it can affect your roll aliases. Check 'help roll alias' in game for details.","wrap":1])))
+			,GTK2.Label("Help"))
 		);
 		::makewindow();
 	}
