@@ -278,7 +278,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 								({"Normal","Current"}),
 								({num("hp"),num("cur_hp")}),
 							}))))
-							->add(GTK2.Frame("Init")->add(GTK2.Hbox(0,10)
+							->add(GTK2.Frame("Initiative")->add(GTK2.Hbox(0,10)
 								->add(calc("DEX_mod"))->add(GTK2.Label("DEX +"))
 								->add(num("init_misc"))
 								->add(GTK2.Label("="))->add(calc("DEX_mod+init_misc","init"))
