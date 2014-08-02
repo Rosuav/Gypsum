@@ -551,7 +551,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 			,GTK2.Label("Spells"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
-					->pack_start(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names.","wrap":1])),0,0,0)
+					->pack_start(GTK2.Label((["label":"Your own account always has full access. You may grant access to any other account or character here; on save, the server will translate these names into canonical account names. You will normally want to name your Dungeon Master here, unless of course you are the DM.","wrap":1])),0,0,0)
 					->pack_start(ef("perms"),0,0,0)
 				),0,0,0)
 				->add(GTK2.Frame("Notes")->add(mle("notes")))
