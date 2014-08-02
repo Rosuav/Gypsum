@@ -140,6 +140,12 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
+	//Mark that an entry field or MLE is rarely used. Currently done with bg color.
+	GTK2.Widget rare(GTK2.Widget wid)
+	{
+		return wid->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(224,192,224));
+	}
+
 	//Highlight an object - probably a label or ef - as something the human
 	//should be looking at (as opposed to an intermediate calculation, for
 	//instance). It will be accompanied by the specified label.
@@ -243,7 +249,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				->pack_start(GTK2.Hbox(0,10)
 					->add(GTK2Table(({
 						({"Name",ef("name",12),0,0,"Char level",num("level",8)}),
-						({"Race",ef("race",8),"HD",ef("race_hd"),"Experience",num("xp",8)}),
+						({"Race",ef("race",8),"HD",rare(ef("race_hd")),"Experience",num("xp",8)}),
 						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",calc("`+(@enumerate(level,1000,1000))-xp")}),
 						({"Class",ef("class2",12),"Level",num("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
 						({"Class",ef("class3",12),"Level",num("level3"),
@@ -268,7 +274,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						({({"","Score","Eq","Temp","Mod"})})+
 						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
-							stat,num(stat),num(stat+"_eq"),num(stat+"_tmp"),
+							stat,num(stat),num(stat+"_eq"),rare(num(stat+"_tmp")),
 							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod") //TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former
 						});})
 					)))
@@ -286,9 +292,9 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						)
 						->add(GTK2.Frame("Saves")->add(GTK2Table(({
 							({"","Base","Ability","Misc","Total"}),
-							({"Fort",num("fort_base"),calc("CON_mod"),num("fort_misc"),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-							({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_misc"),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-							({"Will",num("will_base"),calc("WIS_mod"),num("will_misc"),calc("will_base+WIS_mod+will_misc","will_save")}),
+							({"Fort",num("fort_base"),calc("CON_mod"),rare(num("fort_misc")),calc("fort_base+CON_mod+fort_misc","fort_save")}),
+							({"Refl",num("refl_base"),calc("DEX_mod"),rare(num("refl_misc")),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
+							({"Will",num("will_base"),calc("WIS_mod"),rare(num("will_misc")),calc("will_base+WIS_mod+will_misc","will_save")}),
 						}))))
 					)
 				)
@@ -506,7 +512,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 						recalc(data,(<kwd+"_synergy">));
 					}
 					return ({
-						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),synergy_desc,noex(num(kwd+"_other")),
+						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),synergy_desc,rare(noex(num(kwd+"_other"))),
 						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
 						ef(kwd+"_notes",10),
 					});
