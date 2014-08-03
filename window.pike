@@ -1209,7 +1209,7 @@ void makewindow()
 			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
 		,0,0,0)
 		->add(win->notebook=GTK2.Notebook())
-		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0)
+		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0) //TODO: Make this optional. Some might want a shrinking statusbar, some might want to ensure they see everything.
 		#if constant(COMPAT_SIGNAL)
 		->pack_end(win->defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
 		#endif
