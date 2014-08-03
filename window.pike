@@ -698,8 +698,8 @@ void execcommand(mapping subw,string cmd,string|void skiphook)
 	if (!subw->passwordmode)
 	{
 		array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks); //Sort by name for consistency
-		for (int i=0;i<sizeof(hooks);++i) if (!skiphook || skiphook<names[i])
-			if (mixed ex=catch {if (hooks[i]->inputhook(cmd,subw)) {redraw(subw); return;}}) say(subw,"Error in input hook: "+describe_backtrace(ex));
+		foreach (hooks;int i;object hook) if (!skiphook || skiphook<names[i])
+			if (mixed ex=catch {if (hook->inputhook(cmd,subw)) {redraw(subw); return;}}) say(subw,"Error in input hook: "+describe_backtrace(ex));
 	}
 	subw->prompt=({([])}); redraw(subw);
 	send(subw->connection,cmd+"\r\n");
