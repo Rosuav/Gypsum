@@ -7,7 +7,7 @@ inherit plugin_menu;
 constant menu_label="Cluedo _Detective Notes";
 class menu_clicked
 {
-	inherit window;
+	inherit movablewindow;
 	void create() {::create();}
 
 	GTK2.Widget owner() {return GTK2.Entry((["width-chars":15]));}
