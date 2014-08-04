@@ -1419,8 +1419,6 @@ class connect_menu
 constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0,0);}
 
-int showev(object self,array ev,int dummy) {werror("%O->%O\n",self,(mapping)ev[0]);}
-
 #if constant(COMPAT_SIGNAL)
 //In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than keypress.
 int sig_defbutton_clicked(object self)
