@@ -69,7 +69,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% Attempting git-based update...");
 		Stdio.File stdout=Stdio.File(),stderr=Stdio.File();
 		int start_time=time(1)-60;
-		Process.create_process(({"git","pull","--rebase"}),(["stdout":stdout->pipe(Stdio.PROP_IPC),"stderr":stderr->pipe(Stdio.PROP_IPC),"callback":lambda()
+		Process.create_process(({"git","pull","--ff-only"}),(["stdout":stdout->pipe(Stdio.PROP_IPC),"stderr":stderr->pipe(Stdio.PROP_IPC),"callback":lambda()
 		{
 			say(subw,"git-> "+replace(String.trim_all_whites(stdout->read()),"\n","\ngit-> "));
 			say(subw,"git-> "+replace(String.trim_all_whites(stderr->read()),"\n","\ngit-> "));
