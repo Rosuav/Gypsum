@@ -47,6 +47,8 @@ shown. Beyond that, though, everything's a head-to-head among the players -
 good luck, and have fun!
 ";
 
+//TODO: Highlight the row/column the cursor's in
+
 constant menu_label="Cluedo _Detective Notes";
 class menu_clicked
 {
