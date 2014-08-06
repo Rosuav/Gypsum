@@ -4,6 +4,8 @@
 //between any pre-specified set. There's quite a bit of Thresh-specific code,
 //and persist keys all begin "threshtime/", but this can happily be used with
 //no Threshold times.
+//Note that when Stash is launched, it may have its own clock. Auto-sync may
+//be tricky, but we can at least provide "Stash" as another pseudo-timezone.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
