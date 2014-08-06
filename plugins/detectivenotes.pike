@@ -45,6 +45,10 @@ sixth must be the murder weapon - and therefore can't have been shown in any
 previous showing, which may tell you that it must have been the room that was
 shown. Beyond that, though, everything's a head-to-head among the players -
 good luck, and have fun!
+
+Note that you can use the up and down arrow keys to move vertically within the
+table structure, but you'll need tab and shift-tab to move horizontally (as the
+left and right arrows will move the cursor within the current field).
 ";
 
 //TODO: Highlight the row/column the cursor's in
