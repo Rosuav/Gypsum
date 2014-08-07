@@ -59,8 +59,20 @@ class menu_clicked
 	inherit movablewindow;
 	void create() {::create();}
 
-	GTK2.Widget owner() {return GTK2.Entry((["width-chars":15]));}
-	GTK2.Widget gridslot() {return GTK2.Entry((["width-chars":2]));}
+	object lastfocus;
+	void focus(object self)
+	{
+		if (lastfocus) lastfocus->modify_base(GTK2.STATE_NORMAL);
+		lastfocus=self->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(224,224,255));
+	}
+	GTK2.Entry entry(mapping props)
+	{
+		GTK2.Entry ef=GTK2.Entry(props);
+		ef->signal_connect("focus_in_event",focus);
+		return ef;
+	}
+	GTK2.Widget owner() {return entry((["width-chars":15]));}
+	GTK2.Widget gridslot() {return entry((["width-chars":2]));}
 	array(string|GTK2.Widget) row(string|GTK2.Widget heading) {return ({heading,owner()})+(({gridslot})*14)();}
 	GTK2.Widget bighead(string label) {return GTK2.Label(label)->modify_font(GTK2.PangoFontDescription("Bold 12"));}
 	GTK2.Widget subhead(string label) {return GTK2.Label(label)->modify_font(GTK2.PangoFontDescription("Bold"));}
