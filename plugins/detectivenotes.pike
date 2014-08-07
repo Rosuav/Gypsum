@@ -64,7 +64,7 @@ class menu_clicked
 		[int row,int col]=pos;
 		array(GTK2.Widget) unhighlight=rows[currow]+cols[curcol];
 		array(GTK2.Widget) highlight=rows[currow=row]+cols[curcol=col];
-		unhighlight-=highlight; //Don't unhighlight anything we're about to highlight.
+		unhighlight-=highlight; //Prevent flicker
 		unhighlight->modify_base(GTK2.STATE_NORMAL);
 		highlight->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,192));
 	}
