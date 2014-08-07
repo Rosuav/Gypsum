@@ -1,8 +1,6 @@
 //Cluedo Detective Notes
-//Currently not at all integrated with the MUD session, but might later on grow
-//an output hook - for instance, when someone shows you a card, it could catch
-//and record that.
 inherit plugin_menu;
+inherit hook;
 
 constant instructions=#"TODO: Put these somewhere user-facing.
 
@@ -51,12 +49,36 @@ table structure, but you'll need tab and shift-tab to move horizontally (as the
 left and right arrows will move the cursor within the current field).
 ";
 
+multiset(GTK2.Widget) lastchals=(<>);
+
+int outputhook(string line,mapping(string:mixed) conn)
+{
+	if (!sizeof(lastchals)) return 0; //No notes up, don't bother checking anything
+	if (sscanf(line,"%[^ ] challenges: %s with the %s in the %s",string player,string person,string weapon,string room)==4)
+	{
+		//TODO: Verify that person, weapon, and room are valid, otherwise it's a false positive
+		indices(lastchals)->set_text(line); //Overwrite them all - easy.
+		return 0;
+	}
+	if (sscanf(line,"%s shows a Cluedo card to %s.",string shower,string showee)==2
+		|| sscanf(line,"%s shows you a Cluedo card.",shower)==1
+		|| sscanf(line,"This Cluedo card represents %s.",string card)==1
+		|| sscanf(line,"You show a Cluedo card to %s.",showee)==1
+		|| sscanf(line,"%s declares that %s has no card to show.",shower,string pron)==2
+		|| line=="You declare that you have no card to show.")
+	{
+		foreach (lastchals;GTK2.Widget lbl;)
+			lbl->set_text(lbl->get_text()+"\n"+line);
+	}
+}
+
 constant menu_label="Cluedo _Detective Notes";
 class menu_clicked
 {
 	inherit movablewindow;
 	constant is_subwindow=0;
 	void create() {::create();}
+	void destroy() {lastchals[win->lastchal]=0;}
 
 	int currow=0,curcol=0;
 	array(array(GTK2.Widget)) rows=({({ })}),cols=({({ })});
@@ -91,35 +113,40 @@ class menu_clicked
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2Table(({
-			({bighead("Element"),bighead("Owner"),bighead("Notes")->set_alignment(0.0,0.5),0,0,0}),
-			({subhead("Persons"),"",""}),
-			row("Miss Scarlett"),
-			row("Col Mustard"),
-			row("Mrs White"),
-			row("Mrs Peacock"),
-			row("Prof Plum"),
-			row("Rev Green"),
-			({""}),
-			({subhead("Weapons")}),
-			row("Lead pipe [pipe]"),
-			row("Revolver"),
-			row("Spanner"),
-			row("Rope"),
-			row("Candlestick"),
-			row("Dagger"),
-			({""}),
-			({subhead("Rooms")}),
-			row("Hall"),
-			row("Conservatory"),
-			row("Ballroom"),
-			row("Billiard room [billiard]"),
-			row("Dining room [dining]"),
-			row("Kitchen"),
-			row("Study"),
-			row("Library"),
-			row("Lounge"),
-		}),(["xalign":1.0])));
+		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
+			->add(GTK2Table(({
+				({bighead("Element"),bighead("Owner"),bighead("Notes")->set_alignment(0.0,0.5),0,0,0}),
+				({subhead("Persons"),"",""}),
+				row("Miss Scarlett"),
+				row("Col Mustard"),
+				row("Mrs White"),
+				row("Mrs Peacock"),
+				row("Prof Plum"),
+				row("Rev Green"),
+				({""}),
+				({subhead("Weapons")}),
+				row("Lead pipe [pipe]"),
+				row("Revolver"),
+				row("Spanner"),
+				row("Rope"),
+				row("Candlestick"),
+				row("Dagger"),
+				({""}),
+				({subhead("Rooms")}),
+				row("Hall"),
+				row("Conservatory"),
+				row("Ballroom"),
+				row("Billiard room [billiard]"),
+				row("Dining room [dining]"),
+				row("Kitchen"),
+				row("Study"),
+				row("Library"),
+				row("Lounge"),
+			}),(["xalign":1.0])))
+			->add(bighead("Last challenge:")->set_alignment(0.0,0.5))
+			->add(win->lastchal=GTK2.Label("(none)")->set_alignment(0.0,0.0))
+		);
+		lastchals[win->lastchal]=1;
 		currow=curcol=0;
 		::makewindow();
 	}
@@ -130,3 +157,5 @@ class menu_clicked
 		return 1;
 	}
 }
+
+void create(string name) {::create(name);}
