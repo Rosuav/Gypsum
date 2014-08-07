@@ -66,7 +66,7 @@ class menu_clicked
 		array(GTK2.Widget) highlight=rows[currow=row]+cols[curcol=col];
 		unhighlight-=highlight; //Don't unhighlight anything we're about to highlight.
 		unhighlight->modify_base(GTK2.STATE_NORMAL);
-		highlight->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,224));
+		highlight->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,208));
 	}
 	GTK2.Entry entry(mapping props)
 	{
