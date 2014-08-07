@@ -55,6 +55,7 @@ constant menu_label="Cluedo _Detective Notes";
 class menu_clicked
 {
 	inherit movablewindow;
+	constant is_subwindow=0;
 	void create() {::create();}
 
 	int currow=0,curcol=0;
