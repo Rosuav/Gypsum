@@ -59,21 +59,34 @@ class menu_clicked
 	inherit movablewindow;
 	void create() {::create();}
 
-	object lastfocus;
-	void focus(object self)
+	int currow=0,curcol=0;
+	array(array(GTK2.Widget)) rows=({({ })}),cols=({({ })});
+	void focus(object self,object ev,array pos)
 	{
-		if (lastfocus) lastfocus->modify_base(GTK2.STATE_NORMAL);
-		lastfocus=self->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(224,224,255));
+		[int row,int col]=pos;
+		array(GTK2.Widget) unhighlight=rows[currow]+cols[curcol];
+		array(GTK2.Widget) highlight=rows[currow=row]+cols[curcol=col];
+		unhighlight-=highlight; //Don't unhighlight anything we're about to highlight.
+		unhighlight->modify_base(GTK2.STATE_NORMAL);
+		highlight->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,224));
 	}
 	GTK2.Entry entry(mapping props)
 	{
 		GTK2.Entry ef=GTK2.Entry(props);
-		ef->signal_connect("focus_in_event",focus);
+		++curcol;
+		if (curcol>=sizeof(cols)) cols+=({({ })});
+		cols[curcol]+=({ef});
+		ef->signal_connect("focus_in_event",focus,({currow,curcol}));
 		return ef;
 	}
 	GTK2.Widget owner() {return entry((["width-chars":15]));}
 	GTK2.Widget gridslot() {return entry((["width-chars":2]));}
-	array(string|GTK2.Widget) row(string|GTK2.Widget heading) {return ({heading,owner()})+(({gridslot})*14)();}
+	array(string|GTK2.Widget) row(string|GTK2.Widget heading)
+	{
+		++currow; curcol=0;
+		rows+=({({owner()})+(({gridslot})*14)()});
+		return ({heading})+rows[-1];
+	}
 	GTK2.Widget bighead(string label) {return GTK2.Label(label)->modify_font(GTK2.PangoFontDescription("Bold 12"));}
 	GTK2.Widget subhead(string label) {return GTK2.Label(label)->modify_font(GTK2.PangoFontDescription("Bold"));}
 
@@ -108,6 +121,7 @@ class menu_clicked
 			row("Library"),
 			row("Lounge"),
 		}),(["xalign":1.0])));
+		currow=curcol=0;
 		::makewindow();
 	}
 
