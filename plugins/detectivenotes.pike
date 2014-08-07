@@ -51,8 +51,6 @@ table structure, but you'll need tab and shift-tab to move horizontally (as the
 left and right arrows will move the cursor within the current field).
 ";
 
-//TODO: Highlight the row/column the cursor's in
-
 constant menu_label="Cluedo _Detective Notes";
 class menu_clicked
 {
