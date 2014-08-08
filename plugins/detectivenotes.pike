@@ -49,7 +49,7 @@ table structure, but you'll need tab and shift-tab to move horizontally (as the
 left and right arrows will move the cursor within the current field).
 ";
 
-multiset(GTK2.Widget) lastchals=(<>);
+multiset(GTK2.Widget) lastchals=(<>); //Cheat - if the code gets updated, this really ought to be referenced across.
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
