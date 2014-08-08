@@ -144,7 +144,6 @@ void subwsignals(mapping(string:mixed) subw)
 	subw->signals=({
 		gtksignal(subw->display,"expose_event",paint,subw),
 		gtksignal(subw->scr,"changed",scrchange,subw),
-		//gtksignal(subw->scr,"value_changed",lambda(mixed ... args) {write("value_changed: %O %O\n",subw->scr->get_value(),subw->scr->get_property("upper")-subw->scr->get_property("page size"));}),
 		#if constant(COMPAT_SIGNAL)
 		gtksignal(subw->ef,"key_press_event",keypress,subw),
 		#else
