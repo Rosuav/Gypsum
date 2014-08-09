@@ -118,11 +118,7 @@ void settabs(int w)
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
 }
 
-/**
- * Set/update fonts and font metrics
- *
- * @param subw Current subwindow
- */
+//Set/update fonts and font metrics
 void setfonts(mapping(string:mixed) subw)
 {
 	subw->display->modify_font(getfont("display"));
