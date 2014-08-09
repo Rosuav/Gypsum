@@ -453,7 +453,7 @@ class configdlg
 		if (persist_key && !items) items=persist[persist_key];
 		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
 		object new; if (allow_new) ls->set_value(new=ls->append(),0,"-- New --");
-		win->mainwindow=GTK2.Window(windowprops+(["transient-for":G->G->window->mainwindow]))
+		win->mainwindow=GTK2.Window(windowprops)
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
 					->add(win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.

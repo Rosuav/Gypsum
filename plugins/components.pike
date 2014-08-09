@@ -58,7 +58,7 @@ void makelabels()
 
 void makewindow()
 {
-	win->mainwindow=GTK2.Window((["title":"Components","transient-for":G->G->window->mainwindow]))
+	win->mainwindow=GTK2.Window((["title":"Components"]))
 		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":8])));
 	makelabels();
 	::makewindow();

@@ -998,7 +998,7 @@ class aboutdlg
 		int up=time()-started;
 		string uptime=format_time(up%86400);
 		if (up>=86400) uptime=(up/86400)+" days, "+uptime;
-		win->mainwindow=GTK2.Window((["title":"About Gypsum","transient-for":mainwindow]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"About Gypsum"]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Label(#"Pike MUD client for Windows/Linux/Mac (and others)
 
 Free software - see README for license terms
@@ -1029,7 +1029,7 @@ class promptsdlg
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Configure prompts","transient-for":mainwindow]))->add(GTK2.Vbox(0,20)
+		win->mainwindow=GTK2.Window((["title":"Configure prompts"]))->add(GTK2.Vbox(0,20)
 			->add(GTK2.Label("Prompts from the server are easy for a human to\nrecognize, but not always for the computer."))
 			->add(GTK2.Frame("TELNET codes")
 				->add(GTK2.Label("The ideal is for prompts to be marked with\nIAC GA. This works perfectly and is guaranteed."))

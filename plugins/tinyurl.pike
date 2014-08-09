@@ -216,7 +216,7 @@ class menu_clicked
 	void create() {::create();} //No args passed on
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Configure URL shortener","transient-for":G->G->window->mainwindow]))
+		win->mainwindow=GTK2.Window((["title":"Configure URL shortener"]))
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Frame("Proxy server")->set_sensitive(0)->add(GTK2.Hbox(0,10) //TODO: Proxy
 					->add(win->proxy_use=GTK2.CheckButton("Use"))

@@ -33,7 +33,7 @@ class menu_clicked
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Import settings from RosMud","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"Import settings from RosMud"]))->add(GTK2.Vbox(0,0)
 			->add(win->notebook=GTK2.Notebook()->append_page(GTK2.Vbox(0,0)
 				->pack_start(GTK2.Label("First step: Choose a directory to import settings from."),0,0,0)
 				->pack_start(GTK2.Frame("Import directory")->add(GTK2.Hbox(0,0)

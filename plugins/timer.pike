@@ -144,7 +144,7 @@ void makelabels()
 
 void makewindow()
 {
-	win->mainwindow=GTK2.Window((["title":"Timers","transient-for":G->G->window->mainwindow,"no-show-all":!sizeof(timers)]))
+	win->mainwindow=GTK2.Window((["title":"Timers","no-show-all":!sizeof(timers)]))
 		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":8])));
 	makelabels();
 	::makewindow();

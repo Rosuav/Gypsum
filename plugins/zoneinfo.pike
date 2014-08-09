@@ -130,7 +130,7 @@ class menu_clicked
 			({ef(zone+"_year",4), win[zone+"_mon"]=SelectBox(zone=="Thresh"?threshmonth:terramonth),
 				ef(zone+"_day",3), win[zone+"_dow"]=GTK2.Label(""), ef(zone+"_hour"), ef(zone+"_min")}),
 		}))));
-		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion","transient-for":G->G->window->mainwindow]))->add(box
+		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion"]))->add(box
 			->add(GTK2.HbuttonBox()
 				->add(win->set_now=GTK2.Button("Set today"))
 				->add(win->config=GTK2.Button("Configure"))
@@ -182,7 +182,7 @@ class menu_clicked
 
 		void makewindow()
 		{
-			win->mainwindow=GTK2.Window((["title":"Choose time zones for display","transient-for":G->G->window->mainwindow]))->add(GTK2.Vbox(0,0)
+			win->mainwindow=GTK2.Window((["title":"Choose time zones for display"]))->add(GTK2.Vbox(0,0)
 				->add(two_column(({
 					GTK2.Label("Time zones should be taken from the tzdata list."),0,
 					//TODO: Make a timezone picker, in two parts (pick a continent, then a city)
