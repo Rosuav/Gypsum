@@ -285,7 +285,7 @@ class window
 	{
 		if (name) sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
-		else if (is_subwindow) error("Nameless windows need to be marked is_subwindow 0\n");
+		else if (is_subwindow) werror("Nameless windows probably need to be marked is_subwindow 0 [%O]\n",this);
 		win->self=this;
 		if (!win->mainwindow) makewindow();
 		win->mainwindow->set_skip_taskbar_hint(is_subwindow)->set_skip_pager_hint(is_subwindow)->show_all();
