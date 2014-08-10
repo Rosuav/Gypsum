@@ -19,6 +19,10 @@ other considerations too), which is backwards. It's the importer that has
 the complexity, not everything else. Of course, this may mean that changes
 to other plugins might precipitate changes here, which is a cost, but even
 if that's missed somewhere, it means only that the importer is broken.
+(There are a lot of cases that do put a mapping back into persist - see the
+common use of setdefault() - but it's not usually done unless there's some
+other code that needs it, not just this importer. But when that's the case,
+this importer can take advantage of it.)
 */
 inherit plugin_menu;
 
