@@ -204,7 +204,6 @@ void sockread(mapping conn,string data)
 					case ECHO: if (iac[0]==WILL) G->G->window->password(conn->display); else G->G->window->unpassword(conn->display); break; //Password mode on/off
 					case NAWS: if (iac[0]==DO) send_bytes(conn,(string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
 					case TERMTYPE: if (iac[0]==DO) send_bytes(conn,(string)({IAC,WILL,TERMTYPE})); break;
-					case SUPPRESSGA: break; //Do we need this?
 					default: break;
 				}
 				iac=iac[2..];
