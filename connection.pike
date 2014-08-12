@@ -303,17 +303,6 @@ void send(mapping conn,string text)
 	sockwrite(conn);
 }
 
-/**
- * Send raw bytes to the socket
- * Do not use for text - this is for TELNET sequences etc.
- * In fact, do not use at all; use send_telnet() instead.
- */
-void send_bytes(mapping conn,string data)
-{
-	conn->writeme+=data;
-	sockwrite(conn);
-}
-
 //Send a TELNET sequence to the socket.
 //The passed string should begin just after the IAC, so (string)({GA}) will send IAC GA.
 //Subnegotiations will be implicitly terminated; (string)({SB,.....}) will have IAC SE appended.
