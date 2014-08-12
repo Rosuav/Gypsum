@@ -339,11 +339,7 @@ void sockaccept(mapping conn)
 	}
 }
 
-/**
- * Callback for when a connection is successfully established.
- *
- * @param conn Current connection
- */
+//Callback for when a connection is successfully established.
 void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened.
