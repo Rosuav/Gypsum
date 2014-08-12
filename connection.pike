@@ -307,10 +307,22 @@ void send(mapping conn,string text)
 /**
  * Send raw bytes to the socket
  * Do not use for text - this is for TELNET sequences etc.
- * TODO: Accept string|array as per Hogan
+ * In fact, do not use at all; use send_telnet() instead.
  */
 void send_bytes(mapping conn,string data)
 {
+	conn->writeme+=data;
+	sockwrite(conn);
+}
+
+//Send a TELNET sequence to the socket.
+//The passed string should begin just after the IAC, so (string)({GA}) will send IAC GA.
+//Subnegotiations will be implicitly terminated; (string)({SB,.....}) will have IAC SE appended.
+//IAC doubling is performed automatically.
+void send_telnet(mapping conn,string data)
+{
+	data="\xFF"+replace(data,"\xFF","\xFF\xFF");
+	if (data[1]==SB) data+=(string)({IAC,SE});
 	conn->writeme+=data;
 	sockwrite(conn);
 }
