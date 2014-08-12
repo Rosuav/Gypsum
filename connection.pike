@@ -307,6 +307,7 @@ void send(mapping conn,string text)
 /**
  * Send raw bytes to the socket
  * Do not use for text - this is for TELNET sequences etc.
+ * TODO: Accept string|array as per Hogan
  */
 void send_bytes(mapping conn,string data)
 {
