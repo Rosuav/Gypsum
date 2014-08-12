@@ -202,7 +202,14 @@ void sockread(mapping conn,string data)
 				switch (iac[1])
 				{
 					case ECHO: if (iac[0]==WILL) G->G->window->password(conn->display); else G->G->window->unpassword(conn->display); break; //Password mode on/off
-					case NAWS: if (iac[0]==DO) send_bytes(conn,(string)({IAC,SB,NAWS,0,80,0,0,IAC,SE})); break;
+					case NAWS: if (iac[0]==DO)
+					{
+						//TODO: Resend any time wrap width changes
+						int width=persist["window/wrap"] || 80; //If we're not wrapping, pretend screen width is 80, although that's a bit arbitrary
+						string data=(string)({SB,NAWS,width>>8,width&255,0,0});
+						send_bytes(conn,"\xFF"+replace(data,"\xFF","\xFF\xFF")+(string)({IAC,SE}));
+					}
+					break;
 					case TERMTYPE: if (iac[0]==DO) send_bytes(conn,(string)({IAC,WILL,TERMTYPE})); break;
 					default: break;
 				}
