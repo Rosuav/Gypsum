@@ -206,11 +206,10 @@ void sockread(mapping conn,string data)
 					{
 						//TODO: Resend any time wrap width changes
 						int width=persist["window/wrap"] || 80; //If we're not wrapping, pretend screen width is 80, although that's a bit arbitrary
-						string data=(string)({SB,NAWS,width>>8,width&255,0,0});
-						send_bytes(conn,"\xFF"+replace(data,"\xFF","\xFF\xFF")+(string)({IAC,SE}));
+						send_telnet(conn,(string)({SB,NAWS,width>>8,width&255,0,0}));
 					}
 					break;
-					case TERMTYPE: if (iac[0]==DO) send_bytes(conn,(string)({IAC,WILL,TERMTYPE})); break;
+					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string)({WILL,TERMTYPE})); break;
 					default: break;
 				}
 				iac=iac[2..];
@@ -228,10 +227,10 @@ void sockread(mapping conn,string data)
 				switch (subneg[1])
 				{
 					case TERMTYPE:
-						if (subneg[2]==SEND) send_bytes(conn,
-							(string)({IAC,SB,TERMTYPE,IS})
+						if (subneg[2]==SEND) send_telnet(conn,
+							(string)({SB,TERMTYPE,IS})
 							+sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
-							+(string)({IAC,SE}));
+						);
 						break;
 					default: break;
 				}
@@ -388,7 +387,7 @@ void connfailed(mapping conn)
 void ka(mapping conn)
 {
 	if (!conn->sock) return;
-	send_bytes(conn,"\xFF\xF9");
+	send_telnet(conn,(string)({GA}));
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
