@@ -315,7 +315,7 @@ void send_telnet(mapping conn,string data)
 	sockwrite(conn);
 }
 
-void makeconn(object display,mapping info)
+mapping(string:mixed) makeconn(object display,mapping info)
 {
 	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
 }
