@@ -315,6 +315,11 @@ void send_telnet(mapping conn,string data)
 	sockwrite(conn);
 }
 
+void makeconn(object display,mapping info)
+{
+	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
+}
+
 //Socket accept callback bouncer, because there's no documented way to
 //change the callback on a Stdio.Port(). Changing sock->_accept_callback
 //does work, but since it's undocumented (and since passive mode accept
@@ -374,11 +379,6 @@ void ka(mapping conn)
 	if (!conn->sock) return;
 	send_telnet(conn,(string)({GA}));
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
-}
-
-void makeconn(object display,mapping info)
-{
-	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
 }
 
 /**
