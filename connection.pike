@@ -317,7 +317,7 @@ void send_telnet(mapping conn,string data)
 
 mapping(string:mixed) makeconn(object display,mapping info)
 {
-	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
+	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0),"worldname":info->name||""]);
 }
 
 //Socket accept callback bouncer, because there's no documented way to
@@ -409,7 +409,6 @@ mapping connect(object display,mapping info)
 	}
 	//TODO: conn->host and conn->port don't seem to be used anywhere outside this function. Are they needed?
 	say(conn->display,"%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
-	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
 	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike patch not in trunk as of 20131206)
