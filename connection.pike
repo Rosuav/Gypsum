@@ -320,7 +320,7 @@ mapping(string:mixed) makeconn(object display,mapping info)
 	return ([
 		"display":display,"worldname":info->name||"",
 		"use_ka":info->use_ka || zero_type(info->use_ka),
-		"writeme":info->writeme||"",
+		"writeme":info->writeme||"","readbuffer":"","ansibuffer":"","curline":"",
 		"curcolor":G->G->window->mkcolor(7,0),
 	]);
 }
@@ -354,7 +354,7 @@ void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
-	conn->curmsg=({([]),conn->curcolor,""}); conn->readbuffer=conn->ansibuffer=conn->curline="";
+	conn->curmsg=({([]),conn->curcolor,""});
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->sockets[conn->sock]=1;
