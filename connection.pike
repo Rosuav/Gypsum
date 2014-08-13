@@ -317,7 +317,12 @@ void send_telnet(mapping conn,string data)
 
 mapping(string:mixed) makeconn(object display,mapping info)
 {
-	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0),"worldname":info->name||""]);
+	return ([
+		"display":display,"worldname":info->name||"",
+		"use_ka":info->use_ka || zero_type(info->use_ka),
+		"writeme":info->writeme||"",
+		"curcolor":G->G->window->mkcolor(7,0),
+	]);
 }
 
 //Socket accept callback bouncer, because there's no documented way to
