@@ -376,6 +376,11 @@ void ka(mapping conn)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
+void makeconn(object display,mapping info)
+{
+	return (["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
+}
+
 /**
  * Establishes a connection with with the provided world and links it to a display
  *
@@ -385,7 +390,7 @@ void ka(mapping conn)
  */
 mapping connect(object display,mapping info)
 {
-	mapping(string:mixed) conn=(["display":display,"use_ka":info->use_ka || zero_type(info->use_ka),"writeme":info->writeme||"","curcolor":G->G->window->mkcolor(7,0)]);
+	mapping(string:mixed) conn=makeconn(display,info);
 	if (display->conn_debug) conn->debug_textread=conn->debug_ansiread=conn->debug_sockread=1;
 	if ((<"0.0.0.0","::">)[info->host])
 	{
