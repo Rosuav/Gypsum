@@ -407,6 +407,7 @@ mapping connect(object display,mapping info)
 		sockclosed(conn);
 		return conn;
 	}
+	//TODO: conn->host and conn->port don't seem to be used anywhere outside this function. Are they needed?
 	say(conn->display,"%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
 	conn->worldname=info->name;
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
