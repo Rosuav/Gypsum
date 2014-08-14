@@ -358,11 +358,7 @@ void connected(mapping conn)
 	ka(conn);
 }
 
-/**
- * Callback for when the connection fails. Displays the disconnection error details.
- *
- * @param conn Current connection
- */
+//Callback for when the connection fails.
 void connfailed(mapping conn)
 {
 	if (!conn->sock) return; //If the user disconnects and reattempts, don't wipe stuff out unnecessarily
