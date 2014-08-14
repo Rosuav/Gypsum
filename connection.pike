@@ -355,7 +355,7 @@ void connected(mapping conn)
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->sockets[conn->sock]=1;
-	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
+	ka(conn);
 }
 
 /**
