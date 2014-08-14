@@ -333,7 +333,7 @@ mapping(string:mixed) makeconn(object display,mapping info)
 void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
 
 //Socket accept callback - creates a new subw with the connected socket.
-//NOTE: This has some hacks. Changes to other parts of Gypsum (eg in
+//Note that this has some hacks. Changes to other parts of Gypsum (eg in
 //window.pike) may break it. Be careful.
 void sockaccept(mapping conn)
 {
