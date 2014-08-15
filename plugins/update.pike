@@ -49,7 +49,7 @@ int process(string param,mapping(string:mixed) subw)
 	//Update everything by updating globals; everything's bound to use at least something.
 	//NOTE: Does NOT update persist.pike, deliberately.
 	if (param=="all") param="globals.pike";
-	if (!(param=fn(subw,param))) return 1;
+	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master object, we just need to process it (by recompiling things).
@@ -69,7 +69,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 {
 	int confirm=sscanf(param,"confirm %s",param);
 	if (keepme) confirm=1; //When we're doing a clean-up, always do the removal
-	if (!(param=fn(subw,param))) return 1;
+	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	say(subw,"%% "+param+" provides:");
 	multiset(object) selfs=(<>); //Might have multiple, if there've been several versions.
 

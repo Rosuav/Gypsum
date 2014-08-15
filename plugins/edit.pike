@@ -181,8 +181,7 @@ void menu_clicked()
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {menu_clicked(); return 1;}
-	param=fn(subw,param);
-	if (!param) return 1; //Assume an error has already been emitted to subw
+	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	say(subw,"%%%% Pop-out editing %s",param);
 	editor(0,param);
 	return 1;

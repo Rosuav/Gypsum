@@ -762,17 +762,17 @@ string origin(function|object func)
 
 //Figure out an actual file name based on the input
 //Returns the input unchanged if nothing is found, but tries hard to find something.
-//The provided subw is just for error messages. Will return 0 if there's an error.
-string fn(mapping subw,string param)
+//Throws exception on error, although this will often be more usefully just displayed.
+string fn(string param)
 {
 	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
 	{
 		//Allow "update /blah" to update the file where /blah is coded
 		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
 		function f=G->G->commands[param[1..]];
-		if (!f) {say(subw,"%% Command not found: "+param[1..]+"\n"); return 0;}
+		if (!f) error("Command not found: "+param[1..]+"\n");
 		string def=origin(f);
-		if (!def) {say(subw,"%% Function origin not found: "+param[1..]+"\n"); return 0;}
+		if (!def) error("%% Function origin not found: "+param[1..]+"\n");
 		param=def;
 	}
 
@@ -801,7 +801,7 @@ void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
 {
-	if (!(param=fn(0,param))) return 0;
+	if (!(param=fn(param))) return 0;
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
