@@ -9,7 +9,7 @@ constant plugin_active_by_default = 1;
 /**
  * The strings for which to monitor.
  */
-mapping(string:array) monitors=([
+mapping(string:array) monitors=persist["wealth/monitors"] || ([
 	//Monitors for Threshold RPG
 	"wealth":({" Total Wealth: %[0-9,]","%9s Prv: %s","Wealth"}),
 	"xp":({" Current experience points: %[ 0-9,]"," First:%13s; last: %s","XP"}),
