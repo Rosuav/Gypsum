@@ -57,6 +57,7 @@ int process(string param,mapping(string:mixed) subw)
 		monitors[addme]=allmonitors[addme];
 		persist["wealth/monitors"]=monitors;
 		say(subw,"%%%% Added monitoring of %s.",addme);
+		updstatus();
 		return 1;
 	}
 	if (sscanf(param,"remove %s",string delme) && monitors[delme])
@@ -64,6 +65,7 @@ int process(string param,mapping(string:mixed) subw)
 		m_delete(monitors,delme);
 		persist["wealth/monitors"]=monitors;
 		say(subw,"%%%% Removed monitoring of %s.",delme);
+		updstatus();
 		return 1;
 	}
 	if (persist["wealth/stats_since"]) say(subw,"%% Stats since "+ctime(persist["wealth/stats_since"]));
