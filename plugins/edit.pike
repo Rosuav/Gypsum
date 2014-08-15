@@ -34,12 +34,14 @@ class editor(mapping(string:mixed) subw,string initial)
 
 	void makewindow()
 	{
+		//When we don't have a subw, 'initial' is actually a file name. Normally it's a block of text.
+		string txt=subw?initial:String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
-				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(initial)))
+				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(txt)))
 			)
 			->pack_end(GTK2.HbuttonBox()
-				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":"_Send","use-underline":1,"focus-on-click":0])))
+				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":subw?"_Send":"_Save","use-underline":1,"focus-on-click":0])))
 				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
 				#elif constant(COMPAT_SIGNAL)
@@ -97,6 +99,15 @@ class editor(mapping(string:mixed) subw,string initial)
 		//current_subw(), or maybe a check (subw if valid else current_subw) to
 		//catch other cases.
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
+		if (!subw)
+		{
+			//Save to file instead of sending to the server.
+			Stdio.write_file(initial,string_to_utf8(txt+"\n"));
+			if (has_suffix(initial,".pike")) build(initial);
+			else say(0,"%%%% Saved %s.",initial);
+			win->buf->set_modified(0);
+			return;
+		}
 		if (int wrap=persist["editor/wrap"]) txt=wrap_text(txt,wrap);
 		send(subw,replace(txt,"\n","\r\n")+"\r\n");
 		if (params->once_use) ::closewindow(); else win->buf->set_modified(0);
@@ -170,7 +181,11 @@ void menu_clicked()
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {menu_clicked(); return 1;}
-	//TODO: If parameter given, edit that file
+	param=fn(subw,param);
+	if (!param) return 1; //Assume an error has already been emitted to subw
+	say(subw,"%%%% Pop-out editing %s",param);
+	editor(0,param);
+	return 1;
 }
 
 void create(string name) {::create(name);}
