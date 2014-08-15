@@ -1,6 +1,7 @@
 //Pop-out editor - triggered by a special marker line from the server.
 inherit hook;
 inherit plugin_menu;
+inherit command;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog.
 
@@ -164,6 +165,12 @@ constant menu_label="_Editor";
 void menu_clicked()
 {
 	editor(G->G->window->current_subw(),"");
+}
+
+int process(string param,mapping(string:mixed) subw)
+{
+	if (param=="") {menu_clicked(); return 1;}
+	//TODO: If parameter given, edit that file
 }
 
 void create(string name) {::create(name);}
