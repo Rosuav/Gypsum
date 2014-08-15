@@ -328,6 +328,8 @@ string hovertext(mapping subw,int line)
 		//the box suddenly narrow. Yes, there'll be some odd questions about why there's
 		//a timestamp of 1970 (or 1969 if you're behind UTC and showing localtime), but
 		//on the whole, that's going to bug people less than the flickering of width is.
+		//20140816: This is less of an issue now that the status bar slot's width isn't
+		//going to change, but it'd still look ugly to have the ts vanish suddenly.
 		mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
 		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
