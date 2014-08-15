@@ -4,7 +4,7 @@ inherit statustext;
 
 constant plugin_active_by_default = 1;
 
-//TODO: Per-world wealth stats (based on subw->world)
+//TODO: Per-world stats (based on subw->world)
 
 /**
  * The strings for which to monitor.
