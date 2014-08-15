@@ -1189,6 +1189,8 @@ class configure_plugins
 
 //Compile one pike file and let it initialize itself, similar to bootstrap()
 //Unlike bootstrap(), sends errors to a local subw.
+//This is conceptually part of globals.pike, and it's not actually used here in
+//window.pike at all, but since it references say(), it can't go into globals.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
