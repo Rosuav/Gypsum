@@ -217,7 +217,14 @@ array(int) point_to_char(mapping subw,int x,int y)
 	object layout=subw->display->create_pango_layout(txt);
 	mapping pos=layout->xy_to_index((x-3)*1024,0);
 	destruct(layout);
-	return ({line,pos?pos->index:sizeof(txt)});
+	if (!pos) return ({line,sizeof(txt)});
+	//In pos->index, we have a *byte* position. We need to convert this into
+	//a *character* position, as txt is Unicode. Presumably Pango is using
+	//UTF-8 under the covers; so let's do a rather ham-fisted byte->char
+	//calculation by converting to bytes, then truncating, then back to text.
+	int charpos=sizeof(utf8_to_string(string_to_utf8(txt)[..pos->index-1]));
+	//Yeah, ouch.
+	return ({line,charpos});
 }
 
 /**
