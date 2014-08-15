@@ -751,3 +751,46 @@ string format_time(int delay,int|void base,int|void resolution)
 		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
 	}
 }
+
+string origin(function|object func)
+{
+	//Always go via the program, in case the function actually comes from an inherited parent.
+	program pgm=functionp(func)?function_program(func):object_program(func);
+	string def=Program.defined(pgm);
+	return def && (def/":")[0]; //Assume we don't have absolute Windows paths here, which this would break
+}
+
+//Figure out an actual file name based on the input
+//Returns the input unchanged if nothing is found, but tries hard to find something.
+//The provided subw is just for error messages. Will return 0 if there's an error.
+string fn(mapping subw,string param)
+{
+	if (has_prefix(param,"/") && !has_suffix(param,".pike"))
+	{
+		//Allow "update /blah" to update the file where /blah is coded
+		//Normally this will be "plugins/blah.pike", which just means you can omit the path and extension, but it helps with aliasing.
+		function f=G->G->commands[param[1..]];
+		if (!f) {say(subw,"%% Command not found: "+param[1..]+"\n"); return 0;}
+		string def=origin(f);
+		if (!def) {say(subw,"%% Function origin not found: "+param[1..]+"\n"); return 0;}
+		param=def;
+	}
+
+	//Turn "cmd/update.pike:4" into "cmd/update.pike". This breaks on Windows path names, which
+	//may be a problem; to prevent issues, always use relative paths. Auto-discovered plugins
+	//use a relative path, but manually loaded ones could be problematic. (This is
+	//an issue for loading plugins off a different drive, obviously. It is unsolvable for now.)
+	if (has_value(param,":")) sscanf(param,"%s:",param);
+
+	//Attempt to turn a base-name-only and/or a pathless name into a real name
+	if (!has_value(param,".") && !file_stat(param) && file_stat(param+".pike")) param+=".pike";
+	if (!has_value(param,"/") && !file_stat(param))
+	{
+		foreach (({"plugins","plugins/zz_local"}),string dir)
+		{
+			if (file_stat(dir+"/"+param)) {param=dir+"/"+param; break;}
+			if (file_stat(dir+"/"+param+".pike")) {param=dir+"/"+param+".pike"; break;}
+		}
+	}
+	return param;
+}
