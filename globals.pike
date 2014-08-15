@@ -794,3 +794,18 @@ string fn(mapping subw,string param)
 	}
 	return param;
 }
+
+//Compile one pike file and let it initialize itself, similar to bootstrap()
+//Unlike bootstrap(), sends errors to a local subw.
+void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
+void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
+object build(string param)
+{
+	if (!(param=fn(0,param))) return 0;
+	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
+	say(0,"%% Compiling "+param+"...");
+	program compiled; catch {compiled=compile_file(param,this);};
+	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
+	say(0,"%% Compiled.");
+	return compiled(param);
+}

@@ -145,32 +145,6 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	return 1;
 }
 
-/**
- * Catch compilation errors and warnings and send them to the current subwindow
- *
- * @param fn 	unused
- * @param l	the line which caused the compile error.
- * @param msg	the compile error
- */
-void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
-void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
-
-/**
- * Compile one pike file and let it initialize itself, similar to bootstrap()
- *
- * Unlike bootstrap(), sends errors to a local subw.
- */
-object build(string param)
-{
-	if (!(param=fn(0,param))) return 0;
-	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;}
-	say(0,"%% Compiling "+param+"...");
-	program compiled; catch {compiled=compile_file(param,this);};
-	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
-	say(0,"%% Compiled.");
-	return compiled(param);
-}
-
 string mode = file_stat(".git") ? "git" : "zip";
 constant menu_label="Update Gypsum";
 void menu_clicked() {process(mode,G->G->window->current_subw());}
