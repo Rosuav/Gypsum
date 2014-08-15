@@ -6,16 +6,16 @@ constant plugin_active_by_default = 1;
 
 //TODO: Per-world stats (based on subw->world)
 
-/**
- * The strings for which to monitor.
- */
-mapping(string:array) monitors=persist["wealth/monitors"] || ([
+//A set of available monitors
+mapping(string:array) allmonitors=([
 	//Monitors for Threshold RPG
 	"wealth":({" Total Wealth: %[0-9,]","%9s Prv: %s","Wealth"}),
 	"xp":({" Current experience points: %[ 0-9,]"," First:%13s; last: %s","XP"}),
-	//"x":({"  Current expertise points: %[ 0-9,]"," First:%13s; last: %s","Exp"}),
+	"x":({"  Current expertise points: %[ 0-9,]"," First:%13s; last: %s","Exp"}),
 	//Feel free to add others, or replace these, according to what you play.
 ]);
+//The monitors to use.
+mapping(string:array) monitors=persist["wealth/monitors"] || (["wealth":allmonitors->wealth, "xp":allmonitors->xp]);
 
 int diff(string cur,string last)
 {
