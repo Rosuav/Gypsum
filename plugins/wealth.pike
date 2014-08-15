@@ -50,6 +50,22 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 int process(string param,mapping(string:mixed) subw)
 {
+	if (sscanf(param,"add %s",string addme) && allmonitors[addme])
+	{
+		//Note that this can also be used to update your monitor to the
+		//latest version, as allmonitors will always come from code.
+		monitors[addme]=allmonitors[addme];
+		persist["wealth/monitors"]=monitors;
+		say(subw,"%%%% Added monitoring of %s.",addme);
+		return 1;
+	}
+	if (sscanf(param,"remove %s",string delme) && monitors[delme])
+	{
+		m_delete(monitors,delme);
+		persist["wealth/monitors"]=monitors;
+		say(subw,"%%%% Removed monitoring of %s.",delme);
+		return 1;
+	}
 	if (persist["wealth/stats_since"]) say(subw,"%% Stats since "+ctime(persist["wealth/stats_since"]));
 	foreach (indices(monitors),string kwd) if (persist["wealth/first_"+kwd])
 	{
