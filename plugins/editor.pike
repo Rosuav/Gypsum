@@ -16,13 +16,6 @@ class editor(mapping(string:mixed) subw,string initial)
 
 	void create()
 	{
-		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
-		params=(mapping)(parm||([]));
-		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
-	}
-
-	void makewindow()
-	{
 		//Parameters, not part of the editable.
 		//This is minorly incompatible with the RosMud editor; it would be majorly incompatible to put these params onto the initial
 		//or final marker line, so this is the preferable form. Normally the edited content will begin with a command, so this should
@@ -33,6 +26,13 @@ class editor(mapping(string:mixed) subw,string initial)
 		//	line - line number for initial cursor position, default 0 ie first line of file
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
+		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
+		params=(mapping)(parm||([]));
+		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
+	}
+
+	void makewindow()
+	{
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(initial)))
