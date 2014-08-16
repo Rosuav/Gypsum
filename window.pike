@@ -491,7 +491,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		GTK2.GdkColor fg,bg;
-		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
+		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability (TODO: tell paintttext() that it doesn't need to block out rectangles now)
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
