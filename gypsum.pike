@@ -39,7 +39,7 @@ void bootstrap(string c)
 	mixed ex=catch {compiled=compile_file(c);};
 	if (ex) {werror("Exception in compile!\n"); werror(ex->describe()+"\n"); return;}
 	if (!compiled) werror("Compilation failed for "+c+"\n");
-	compiled(c); //Trigger a create() or create(string) function
+	if (mixed ex=catch {compiled(c);}) werror(describe_backtrace(ex)+"\n");
 	werror("Bootstrapped "+c+"\n");
 }
 
@@ -90,7 +90,7 @@ int main(int argc,array(string) argv)
 	add_constant("INIT_GYPSUM_VERSION",globals->gypsum_version());
 	bootstrap("connection.pike");
 	bootstrap("window.pike");
-	if (!globals->say) return 1;
+	if (!globals->say) {GTK2.MessageDialog(0,0,GTK2.BUTTONS_OK,"Startup error - see log for details.")->show()->signal_connect("response",lambda() {exit(0);}); return -1;}
 	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect) //Note that without this plugin, connecting sockets will be impossible. This MAY make Gypsum mostly useless.
 	{
