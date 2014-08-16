@@ -472,7 +472,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 		state[4]=sizeof((txt/"\t")[-1])%8;
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
-	mapping sz=layout->index_to_pos(sizeof(string_to_utf8(txt))-1); //Note that Pango's "index" is a byte index.
+	mapping sz=layout->index_to_pos(sizeof(string_to_utf8(txt))); //Note that Pango's "index" is a byte index.
 	if (bg!=colors[0]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
 	{
 		gc->set_foreground(bg); //(sic)
