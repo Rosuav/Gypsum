@@ -1482,6 +1482,7 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 		win->notebook->set_tab_label_text(subw->page,subw->tabtext);
 		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
 		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
+		redraw(subw);
 	},0,page,subw);
 }
 
