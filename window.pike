@@ -1248,19 +1248,6 @@ void create(string name)
 	add_gypsum_constant("say",say);
 	add_gypsum_constant("build",build);
 	G->G->connection->say=say;
-	if (!G->G->window) ; //Normal case
-	else if (!G->G->window->win) //Compat
-	{
-		object other=G->G->window;
-		win->colors=other->colors; win->color_defs=other->color_defs; win->notebook=other->notebook; win->mainwindow=other->mainwindow;
-		#if constant(COMPAT_SIGNAL)
-		win->defbutton=other->defbutton;
-		#endif
-		win->tabs=other->tabs; win->statusbar=other->statusbar;
-		if (other->signals) other->signals=0; //Clear them out, just in case.
-		if (other->menu) win->menu=other->menu;
-		if (other->plugin_mtime) win->plugin_mtime=other->plugin_mtime;
-	}
 	if (!win->tabs) win->tabs=({ });
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
