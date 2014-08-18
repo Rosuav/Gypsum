@@ -149,7 +149,7 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
 		gtksignal(subw->ef,"changed",colorcheck,subw),
-		GTK2.GObject()->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
+		subw->ef->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
 		gtksignal(subw->ef,"focus_in_event",focus,subw),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
