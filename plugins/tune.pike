@@ -103,15 +103,4 @@ class menu_clicked
 	}
 }
 
-void create(string name) 
-{
-	::create(name);
-	//Compatibility: Previously, the list was a set of character names, so convert
-	//that to a mapping if necessary. 20140201, can be removed once no longer needed.
-	if (multisetp(persist["tune/thresholdrpg"]))
-	{
-		tuned=([]);
-		foreach (persist["tune/thresholdrpg"]; mixed character; mixed value) tuned[character] = ([]);
-		persist["tune/thresholdrpg"]=tuned;
-	}
-}
+void create(string name) {::create(name);}
