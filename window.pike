@@ -1462,15 +1462,23 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 	//Reset the cursor pos based on where it was last time focus entered the EF. This is
 	//distinctly weird, but it prevents the annoying default behaviour of selecting all.
 	if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
+	//Note that it may be possible to guard this with a #if, and possibly get smoother
+	//display. I'm not sure how much we gain, though. Experiment. (Obviously this would
+	//become a COMPAT_ constant and be active by default, with the logic the other way
+	//around.)
+	#if !constant(GPOINTER_BUG_FIXED)
 	call_out(lambda(int page,mapping subw) {
+	#endif
 		//NOTE: Doing this work inside the signal handler can segfault Pike, so do it
 		//on the backend. (Probably related to the above caution.) The same applies
 		//if the args are omitted (making this a closure).
 		win->notebook->set_tab_label_text(subw->page,subw->tabtext);
 		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
 		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
-		redraw(subw);
+		call_out(redraw,0,subw);
+	#if !constant(GPOINTER_BUG_FIXED)
 	},0,page,subw);
+	#endif
 }
 
 //Reset the urgency hint when focus arrives.
