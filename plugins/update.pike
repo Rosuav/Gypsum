@@ -58,6 +58,8 @@ int process(string param,mapping(string:mixed) subw)
 	while (sizeof(G->needupdate))
 	{
 		string cur=G->needupdate[0]; G->needupdate-=({cur}); //Is there an easier way to take the first element off an array?
+		//TODO: If the file no longer exists, do an unload confirm... but make sure that's safe.
+		//This should then cope with renames. Kinda.
 		if (!has_value(been_there_done_that,cur)) {been_there_done_that+=({cur}); build(cur);}
 	}
 	if (cleanup && self) call_out(unload,.01,param,subw,self); //An update-force should do a cleanup, but let any waiting call_outs happen first.
