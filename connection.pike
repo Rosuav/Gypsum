@@ -144,7 +144,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, leave the unprocessed text and wait for more data from the socket.
 		{
 			case '0'..'9':
-				if (zero_type(curparam)) curparam=ansi[i]-'0';
+				if (undefinedp(curparam)) curparam=ansi[i]-'0';
 				else curparam=curparam*10+ansi[i]-'0';
 				break;
 			case ';': params+=({curparam}); curparam=UNDEFINED; break;
@@ -152,7 +152,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 			case 'A'..'Z': case 'a'..'z':
 			{
 				//We have a complete sequence now.
-				if (!zero_type(curparam)) params+=({curparam});
+				if (!undefinedp(curparam)) params+=({curparam});
 				switch (ansi[i]) //See if we understand the command.
 				{
 					case 'm': foreach (params,int|string param) if (intp(param)) switch (param)
@@ -320,7 +320,7 @@ mapping(string:mixed) makeconn(object display,mapping info)
 	mixed col=G->G->window->mkcolor(7,0);
 	return ([
 		"display":display,"worldname":info->name||"",
-		"use_ka":info->use_ka || zero_type(info->use_ka),
+		"use_ka":info->use_ka || undefinedp(info->use_ka),
 		"writeme":info->writeme||"","readbuffer":"","ansibuffer":"","curline":"",
 		"curcolor":col,"curmsg":({([]),col,""})
 	]);

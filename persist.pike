@@ -61,11 +61,11 @@ object persist=class(string savefn)
 		return m_delete(data,idx);
 	}
 
-	//Like the Python dict method of the same name, will save a default back in if nothing's set.
+	//Like the Python dict method of the same name, will save a default back in if it wasn't defined.
 	mixed setdefault(string idx,mixed def)
 	{
 		mixed ret=data[idx];
-		if (zero_type(ret)) return this[idx]=def;
+		if (undefinedp(ret)) return this[idx]=def;
 		return ret;
 	}
 

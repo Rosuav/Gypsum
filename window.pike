@@ -518,7 +518,7 @@ int paint(object self,object ev,mapping subw)
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
-	if (zero_type(ssl)) ssl=sel=-1;
+	if (undefinedp(ssl)) ssl=sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
 	if (subw->boxsel && ssc>sec) [ssc,sec]=({sec,ssc}); //With box selection, row and column are independent.
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
@@ -673,7 +673,7 @@ void enterpressed(mapping subw,string|void cmd)
 		if (!subw->passwordmode)
 		{
 			if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
-			int inputcol=persist["window/inputcol"]; if (zero_type(inputcol)) inputcol=6;
+			int inputcol=persist["window/inputcol"]; if (undefinedp(inputcol)) inputcol=6;
 			say(subw,subw->prompt+({inputcol,cmd}));
 		}
 		else subw->lines+=({subw->prompt});
@@ -800,7 +800,7 @@ class zadvoptions
 
 	void load_content(mapping(string:mixed) info)
 	{
-		mixed val=persist[info->path]; if (zero_type(val) && !zero_type(info->default)) val=info->default;
+		mixed val=persist[info->path]; if (zero_type(val) && !undefinedp(info->default)) val=info->default;
 		if (mapping opt=info->options)
 		{
 			win->value->hide(); win->select->show();
@@ -841,7 +841,7 @@ class channelsdlg
 
 	void load_content(mapping(string:mixed) info)
 	{
-		if (zero_type(info["r"])) {info->r=info->g=info->b=255; ({win->r,win->g,win->b})->set_text("255");}
+		if (undefinedp(info->r)) {info->r=info->g=info->b=255; ({win->r,win->g,win->b})->set_text("255");}
 	}
 }
 
@@ -1389,7 +1389,7 @@ class connect_menu
 	void load_content(mapping(string:mixed) info)
 	{
 		if (!info->port) {info->port=23; win->port->set_text("23");}
-		if (zero_type(info->use_ka)) win->use_ka->set_active(1);
+		if (undefinedp(info->use_ka)) win->use_ka->set_active(1);
 	}
 
 	void sig_pb_connect_clicked()
