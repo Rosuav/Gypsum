@@ -54,13 +54,13 @@ int process(string param,mapping(string:mixed) subw)
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master object, we just need to process it (by recompiling things).
 	//Note that I don't want to simply use foreach here, because the array may change.
-	array(string) been_there_done_that=({param}); //Don't update any file more than once. (I'm not sure what should happen if there's circular references. Let's just hope there aren't any.)
+	multiset(string) been_there_done_that=(<param>); //Don't update any file more than once. If there are circular references, stuff will be broken, but we won't infinite-loop.
 	while (sizeof(G->needupdate))
 	{
 		string cur=G->needupdate[0]; G->needupdate-=({cur}); //Is there an easier way to take the first element off an array?
 		//TODO: If the file no longer exists, do an unload confirm... but make sure that's safe.
 		//This should then cope with renames. Kinda.
-		if (!has_value(been_there_done_that,cur)) {been_there_done_that+=({cur}); build(cur);}
+		if (!been_there_done_that[cur]) {been_there_done_that[cur]=1; build(cur);}
 	}
 	if (cleanup && self) call_out(unload,.01,param,subw,self); //An update-force should do a cleanup, but let any waiting call_outs happen first.
 	return 1;
