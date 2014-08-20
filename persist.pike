@@ -80,7 +80,7 @@ object persist=class(string savefn)
 			saving=0;
 		})
 		{
-			werror("Unable to save .gypsumrc: %s\nWill retry in 60 seconds.\n",describe_error(ex));
+			werror("Unable to save %s: %s\nWill retry in 60 seconds.\n",savefn,describe_error(ex));
 			call_out(dosave,60);
 		}
 	}
