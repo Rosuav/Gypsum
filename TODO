@@ -9,6 +9,7 @@
 * Some kind of system for suppressing statusbar entries without each plugin having to do it.
   Maybe a multiset of plugin IDs (basenames) which should have their primary statusbar frames
   hidden instead of visible?
+* There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
