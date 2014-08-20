@@ -1207,13 +1207,15 @@ object build(string param)
 {
 	if (!(param=fn(param))) return 0;
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;} //TODO maybe: Unload the file, if possible and safe (see update.pike)
-	if (!G->G->buildlog) G->G->buildlog=([]);
-	if (!G->G->buildlog[param]) G->G->buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
+	mapping buildlog=G->G->buildlog; //Create this mapping to begin logging - destroy it to not.
+	if (buildlog && !buildlog[param]) buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
-	return G->G->buildlog[param][time()]=compiled(param);
+	object obj=compiled(param);
+	if (buildlog) buildlog[param][time()]=obj;
+	return obj;
 }
 
 void makewindow()
