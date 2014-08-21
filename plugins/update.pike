@@ -140,6 +140,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	#endif
 	if (confirm)
 	{
+		if (mapping info=!keepme && persist["plugins/status"][param]) info->active=0;
 		foreach (selfs;object self;) destruct(self);
 		if (keepme) say(subw,"%% All old removed."); else say(subw,"%% All above removed.");
 	}
