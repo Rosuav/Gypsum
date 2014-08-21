@@ -1118,6 +1118,27 @@ void colorcheck(object self,mapping subw)
 	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
+//Compile one pike file and let it initialize itself, similar to bootstrap()
+//Unlike bootstrap(), sends errors to a local subw.
+//This is conceptually part of globals.pike, and it's not actually used here in
+//window.pike at all, but since it references say(), it can't go into globals.
+void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
+void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
+object build(string param)
+{
+	if (!(param=fn(param))) return 0;
+	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;} //TODO maybe: Unload the file, if possible and safe (see update.pike)
+	mapping buildlog=G->G->buildlog; //Create this mapping to begin logging - destroy it to not.
+	if (buildlog && !buildlog[param]) buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
+	say(0,"%% Compiling "+param+"...");
+	program compiled; catch {compiled=compile_file(param,this);};
+	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
+	say(0,"%% Compiled.");
+	object obj=compiled(param);
+	if (buildlog) buildlog[param][time()]=obj;
+	return obj;
+}
+
 /*
 Policy note on core plugins (this belongs somewhere, but I don't know where): Unlike
 RosMud, where plugins were the bit you could reload separately and the core required
@@ -1195,27 +1216,6 @@ class configure_plugins
 		}
 		info->active=nowactive;
 	}
-}
-
-//Compile one pike file and let it initialize itself, similar to bootstrap()
-//Unlike bootstrap(), sends errors to a local subw.
-//This is conceptually part of globals.pike, and it's not actually used here in
-//window.pike at all, but since it references say(), it can't go into globals.
-void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
-void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
-object build(string param)
-{
-	if (!(param=fn(param))) return 0;
-	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;} //TODO maybe: Unload the file, if possible and safe (see update.pike)
-	mapping buildlog=G->G->buildlog; //Create this mapping to begin logging - destroy it to not.
-	if (buildlog && !buildlog[param]) buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
-	say(0,"%% Compiling "+param+"...");
-	program compiled; catch {compiled=compile_file(param,this);};
-	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
-	say(0,"%% Compiled.");
-	object obj=compiled(param);
-	if (buildlog) buildlog[param][time()]=obj;
-	return obj;
 }
 
 void makewindow()
