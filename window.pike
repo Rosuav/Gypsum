@@ -1128,7 +1128,7 @@ object build(string param)
 {
 	if (!(param=fn(param))) return 0;
 	if (!file_stat(param)) {say(0,"File not found: "+param+"\n"); return 0;} //TODO maybe: Unload the file, if possible and safe (see update.pike)
-	mapping buildlog=G->G->buildlog; //Create this mapping to begin logging - destroy it to not. TODO: Make a command to do this.
+	mapping buildlog=G->G->buildlog; //Controlled with the /buildlog command from plugins/buildlog.pike
 	if (buildlog && !buildlog[param]) buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
 	say(0,"%% Compiling "+param+"...");
 	program compiled; catch {compiled=compile_file(param,this);};
