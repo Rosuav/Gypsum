@@ -1,4 +1,4 @@
-//Debug help: show the build log
+//Debug help: enable/disable/show the build log
 inherit command;
 
 int process(string param,mapping(string:mixed) subw)
