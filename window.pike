@@ -650,6 +650,7 @@ int keypress(object self,array|object ev,mapping subw)
 	}
 	if (mapping numpad=numpadnav[sprintf("%x",ev->keyval)])
 	{
+		if (persist["window/numpadempty"] && subw->ef->get_text()!="") return 0;
 		string cmd=numpad->cmd;
 		//Should *all* slash commands be permitted? That might be clean.
 		if (cmd=="/lastnav") {G->G->commands->lastnav("",subw); return 1;}
@@ -766,6 +767,7 @@ class zadvoptions
 		"Input color":(["path":"window/inputcol","type":"int","default":6,"desc":"If input is not hidden, commands will be echoed locally, following the prompt, in some color. The specific color can be configured here.","options":mkmapping(enumerate(16),enumcolors)]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
 		"Numpad Nav echo":(["path":"window/numpadecho","desc":"Enable this to have numpad navigation commands echoed as if you'd typed them; disabling gives a cleaner display.","type":"int","options":([0:"Disabled",1:"Enabled"])]),
+		"Numpad empty only":(["path":"window/numpadempty","desc":"If you have conflicts with numpad nav keys and regular typing, you can prevent numpad nav from happening when there's anything typed.","type":"int","options":([0:"Always active",1:"Only when empty"])]),
 		"Present action":(["path":"notif/present","type":"int","desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour depends somewhat on your window manager.","options":([0:"Mark the window as 'urgent'",1:"Request immediate presentation"])]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
 		"Timestamp localtime":(["path":"window/timestamp_local","desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.","type":"int","options":([0:"Normal - use UTC",1:"Use your local time"])]),
