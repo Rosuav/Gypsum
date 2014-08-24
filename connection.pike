@@ -42,7 +42,7 @@ function say=G->globals->say;
  * 90, and 9D are not defined in CP-1252, and will be replaced by U+FFFD).
  *
  * @param bytes Incoming data, 8-bit string
- * @return string Resulting data, now to be treated as Unicode
+ * @return string Resulting Unicode text
  */
 #if constant(Charset)
 object cp1252=Charset.decoder("1252");
