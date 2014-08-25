@@ -55,6 +55,15 @@ protected string bytes_to_string(string bytes)
 	return cp1252->feed(bytes)->drain(); //Failure case: Decode as CP-1252.
 }
 
+//Mark the current text as a prompt
+void setprompt(mapping conn)
+{
+	conn->curmsg[0]->timestamp=time(1);
+	conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
+	conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+	G->G->window->redraw(conn->display);
+}
+
 /**
  * Handles a block of text after ANSI processing.
  *
@@ -102,11 +111,8 @@ void textread(mapping conn,string data,int end_of_block)
 	{
 		//Let's pretend this is a prompt. Unfortunately that's not guaranteed, but
 		//since it ends with the designated prompt suffix AND it's the end of a
-		//socket read, let's hope. Note that this code is duplicated from IAC GA.
-		conn->curmsg[0]->timestamp=time(1);
-		conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
-		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
-		G->G->window->redraw(conn->display);
+		//socket read, let's hope.
+		setprompt(conn);
 	}
 	else if (conn->curline!="") switch (persist["prompt/pseudo"] || ":>")
 	{
@@ -240,9 +246,7 @@ void sockread(mapping conn,string data)
 			case GA:
 			{
 				//Prompt! Woot!
-				conn->curmsg[0]->timestamp=time(1);
-				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
-				conn->curmsg=({([]),conn->curcolor,conn->curline=""});
+				setprompt(conn);
 				iac=iac[1..];
 				break;
 			}
