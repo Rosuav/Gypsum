@@ -58,6 +58,8 @@ protected string bytes_to_string(string bytes)
 //Mark the current text as a prompt
 void setprompt(mapping conn)
 {
+	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks);
+	hooks->outputprompt(conn,conn->curline);
 	conn->curmsg[0]->timestamp=time(1);
 	conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 	conn->curmsg=({([]),conn->curcolor,conn->curline=""});
