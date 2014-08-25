@@ -57,7 +57,7 @@ int process(string param,mapping(string:mixed) subw)
 	multiset(string) been_there_done_that=(<param>); //Don't update any file more than once. If there are circular references, stuff will be broken, but we won't infinite-loop.
 	while (sizeof(G->needupdate))
 	{
-		string cur=G->needupdate[0]; G->needupdate-=({cur}); //Is there an easier way to take the first element off an array?
+		string cur=G->needupdate[0]; G->needupdate=G->needupdate[1..]; //Is there an easier way to take the first element off an array?
 		//TODO: If the file no longer exists, do an unload confirm... but make sure that's safe.
 		//This should then cope with renames. Kinda.
 		if (!been_there_done_that[cur]) {been_there_done_that[cur]=1; build(cur);}
