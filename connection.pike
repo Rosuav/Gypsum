@@ -240,7 +240,6 @@ void sockread(mapping conn,string data)
 			case GA:
 			{
 				//Prompt! Woot!
-				conn->curmsg[-1]=bytes_to_string(conn->curmsg[-1]);
 				conn->curmsg[0]->timestamp=time(1);
 				conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 				conn->curmsg=({([]),conn->curcolor,conn->curline=""});
