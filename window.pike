@@ -165,11 +165,6 @@ void scrchange(object self,mapping subw)
 {
 	if (paused) return;
 	float upper=self->get_property("upper");
-	#if constant(COMPAT_SCROLL)
-	//On old GTKs, there's a problem with having more than 32767 of height. It seems to be resolved, though, by scrolling up to about 16K and then down again.
-	//Since Pike 7.8.866 for Windows ships GTK 2.24.10, there'll soon be no reason to maintain this COMPAT code at all.
-	if (upper>32000.0) self->set_value(16000.0);
-	#endif
 	self->set_value(upper-self->get_property("page size"));
 }
 
@@ -756,7 +751,6 @@ class zadvoptions
 		"Beep":(["path":"notif/beep","type":"int","desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
 		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive.")+"\n\nYou do NOT normally need to change this.","type":"int","path":"compat/"+x,"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compatibility mode",2:"Disable compatibility mode"])
-		"Compat: Scroll":(["desc":"Some platforms have display issues with having more than about 2000 lines of text. The fix is a slightly ugly 'flicker' of the scroll bar."COMPAT("scroll")]),
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, try toggling this."COMPAT("pausekey")]),
