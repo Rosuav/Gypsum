@@ -32,9 +32,8 @@ the user's computer. Most Windows systems do have some way to unzip files, but
 not necessarily exposed as a program. So... fetch all the files individually.
 
 (As of 20140531, I now have an unzip utility right there in globals, and thus
-could fix this. For now, not worth changing, and it's entirely possible the next
-Windows Pike release will have the latest GTK2 anyway, which would mean this
-gets stripped out completely.)
+could fix this. Not worth changing; the latest Pike builds have GTK 2.24.10, so
+this is needed only for the older builds.)
 */
 
 function say=G->globals->say;
