@@ -16,12 +16,15 @@ int process(string param,mapping(string:mixed) subw)
 			else say(subw,"%% Build log deactivated, '/buildlog on' to reactivate.");
 			return 1;
 		case "":
-			if (!G->G->buildlog) {say(subw,"%% Build log not active, '/buildlog on' to activate."); return 1;}
-			say(subw,"%%%% Running GC... %d",gc());
-			foreach (G->G->buildlog;string fn;mapping objects) if (sizeof(objects)>1)
-				say(subw,"%%%% %s:%{ %d%}",fn,sort(indices(objects)));
-			say(subw,"%%%% %d total file names listed.",sizeof(G->G->buildlog));
-			return 1;
+			if (G->G->buildlog)
+			{
+				say(subw,"%%%% Running GC... %d",gc());
+				foreach (G->G->buildlog;string fn;mapping objects) if (sizeof(objects)>1)
+					say(subw,"%%%% %s:%{ %d%}",fn,sort(indices(objects)));
+				say(subw,"%%%% %d total file names listed.",sizeof(G->G->buildlog));
+				return 1;
+			}
+			else {say(subw,"%% Build log not active, '/buildlog on' to activate."); return 1;}
 		default:
 			say(subw,"%% Unrecognized subcommand.");
 			return 1;
