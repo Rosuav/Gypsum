@@ -1,6 +1,8 @@
 //Debug help: enable/disable/parse the build log
 inherit command;
 
+constant plugin_active_by_default = 1;
+
 int process(string param,mapping(string:mixed) subw)
 {
 	switch (param)
