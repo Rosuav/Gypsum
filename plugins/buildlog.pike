@@ -24,9 +24,21 @@ int process(string param,mapping(string:mixed) subw)
 				say(subw,"%%%% %d total file names listed.",sizeof(G->G->buildlog));
 				return 1;
 			}
-			else {say(subw,"%% Build log not active, '/buildlog on' to activate."); return 1;}
-		default:
-			say(subw,"%% Unrecognized subcommand.");
+			//else fall through
+		case "help": default:
+			say(subw,"%% The build log keeps track of every file built this session.");
+			say(subw,"%% It's helpful for tracking down issues with plugins, or with");
+			say(subw,"%% code left lurking around for whatever reason. If there are");
+			say(subw,"%% multiple versions of a file in memory, it's possible that");
+			say(subw,"%% different ones will be called on by different code, which is");
+			say(subw,"%% potentially very confusing. You can safely ignore this if you");
+			say(subw,"%% are not developing/debugging something.");
+			say(subw,"%% Usage:");
+			say(subw,"%% /buildlog on - activate the log");
+			say(subw,"%% /buildlog off - deactivate the log");
+			say(subw,"%% /buildlog - garbage collect, then list which files have more");
+			say(subw,"%%     than one version active (and give a count of total files)");
+			say(subw,"%% /buildlog help - show this info");
 			return 1;
 	}
 }
