@@ -1,4 +1,4 @@
-/* GTK updater for Windows
+/* GTK updater for Windows - no longer needed as of 20140827.
 
 Pike 7.8.700 for Windows installs with GTK 2.12.11, which has scrolling issues.
 We can instead run 2.24.10 by downloading a bunch of DLLs and plopping them
