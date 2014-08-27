@@ -1,9 +1,9 @@
 /* GTK updater for Windows
 
-The current Pike installer for Windows installs 7.8.700 with GTK 2.12.11
+Pike 7.8.700 for Windows installs with GTK 2.12.11, which has scrolling issues.
 We can instead run 2.24.10 by downloading a bunch of DLLs and plopping them
 into the Pike binaries directory, over the top of the existing ones (backing
-them up just in case).
+them up just in case). The latest Pike (7.8.866) has 2.24.10, so it's easy.
 
 As the GTK libraries are licensed in ways that demand source code distribution
 (LGPL mainly; a few are more permissive, no source needed), I carry the sources
