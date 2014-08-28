@@ -468,7 +468,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
 	mapping sz=layout->index_to_pos(sizeof(string_to_utf8(txt))); //Note that Pango's "index" is a byte index.
-	if (bg!=colors[0]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
+	if (bg!=colors[mono&&15]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
 	{
 		gc->set_foreground(bg); //(sic)
 		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
@@ -486,7 +486,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		GTK2.GdkColor fg,bg;
-		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability (TODO: tell paintttext() that it doesn't need to block out rectangles now)
+		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
