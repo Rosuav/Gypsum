@@ -17,7 +17,7 @@ mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of th
 inherit statustext_maxwidth;
 inherit movablewindow;
 constant is_subwindow=0;
-int mono; //Set to 1 to paint the screen in monochrome
+int monochrome; //Not saved - updating window.pike will reset to normal mode
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
@@ -468,8 +468,8 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	}
 	else state[4]=(tabpos+sizeof(txt))%8;
 	mapping sz=layout->index_to_pos(sizeof(string_to_utf8(txt))); //Note that Pango's "index" is a byte index.
-	//TODO: "Know" what the background color is, rather than re-checking based on the mono flag
-	if (bg!=colors[mono&&15]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
+	//TODO: "Know" what the background color is, rather than re-checking based on the monochrome flag
+	if (bg!=colors[monochrome && 15]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
 	{
 		gc->set_foreground(bg); //(sic)
 		display->draw_rectangle(gc,1,x,y,(sz->x+sz->width)/1024,sz->height/1024);
@@ -487,7 +487,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	for (int i=mappingp(line[0]);i<sizeof(line);i+=2) if (sizeof(line[i+1]))
 	{
 		GTK2.GdkColor fg,bg;
-		if (mono) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
+		if (monochrome) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
@@ -510,7 +510,7 @@ int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
-	display->set_background(colors[mono && 15]); //In monochrome mode, background is all white.
+	display->set_background(colors[monochrome && 15]); //In monochrome mode, background is all white.
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	int y=(int)subw->scr->get_property("page size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
@@ -1095,10 +1095,10 @@ void pause()
 	statustxt->paused->set_text(pausedmsg*paused);
 }
 
-constant options_monochrome="_Monochrome";
-void monochrome()
+constant options_monochrome_mode="_Monochrome";
+void monochrome_mode()
 {
-	mono=!mono;
+	monochrome=!monochrome;
 	call_out(redraw,0,current_subw());
 }
 
