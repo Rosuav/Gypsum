@@ -59,7 +59,7 @@ protected string bytes_to_string(string bytes)
 void setprompt(mapping conn)
 {
 	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks);
-	hooks->outputprompt(conn,conn->curline);
+	hooks->outputprompt(conn,conn->curline); //Call any that exist, ignore the others
 	conn->curmsg[0]->timestamp=time(1);
 	conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 	conn->curmsg=({([]),conn->curcolor,conn->curline=""});
