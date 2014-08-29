@@ -44,11 +44,8 @@ function say=G->globals->say;
  * @param bytes Incoming data, 8-bit string
  * @return string Resulting Unicode text
  */
-#if constant(Charset)
-object cp1252=Charset.decoder("1252");
-#else
-object cp1252=Locale.Charset.decoder("1252"); //Pike 7.8 has Charset hidden behind Locale, but otherwise equivalently functional
-#endif
+//object cp1252=Charset.decoder("1252");
+object cp1252=Locale.Charset.decoder("1252"); //For compat with Pike 7.8, look it up from inside Locale.
 protected string bytes_to_string(string bytes)
 {
 	catch {return utf8_to_string(bytes);}; //Normal case: Decode as UTF-8
