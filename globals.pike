@@ -639,7 +639,7 @@ string line_text(array line)
 }
 
 //Redirect a stream to a specified file
-//Undoes the redirect on destruction, for safety.
+//Undoes the redirect on destruction automatically.
 class redirect(Stdio.File file,string|Stdio.File|void target)
 {
 	Stdio.File dup;
