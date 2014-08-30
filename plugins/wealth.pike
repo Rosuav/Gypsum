@@ -48,6 +48,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 			persist["wealth/"+type]=val;
 }
 
+//TODO: Show docs somehow - there are a lot of subcommands now.
 int process(string param,mapping(string:mixed) subw)
 {
 	if (sscanf(param,"add %s",string addme) && allmonitors[addme])
