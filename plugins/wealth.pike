@@ -73,7 +73,7 @@ int process(string param,mapping(string:mixed) subw)
 	{
 		say(subw,"%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
 			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" "));
-		if (param=="reset") persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
+		if (param=="reset" || param=="reset "+kwd) persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
 	}
 	if (param=="reset") {m_delete(persist,"wealth/stats_since"); say(subw,"%% Stats reset to zero.");}
 	return 1;
