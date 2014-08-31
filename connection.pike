@@ -132,7 +132,7 @@ void textread(mapping conn,string data,int end_of_block)
  * Handles a block of text after TELNET processing.
  *
  * @param conn Current connection
- * @param data Unicode data from socket, with ANSI codes marking colors
+ * @param data Text from socket, with ANSI codes marking colors
  * @param end_of_block 1 if we're at the very end of a block of reading
  */
 void ansiread(mapping conn,string data,int end_of_block)
