@@ -153,7 +153,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 				else curparam=curparam*10+ansi[i]-'0';
 				break;
 			case ';': params+=({curparam}); curparam=UNDEFINED; break;
-			//case '"': //Read a string (not currently supported)
+			//case '"': //Read a string (not supported or needed, but if this were a generic parser, it would be)
 			case 'A'..'Z': case 'a'..'z':
 			{
 				//We have a complete sequence now.
