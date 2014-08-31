@@ -98,7 +98,7 @@ mapping(string:mixed) current_subw() {return win->tabs[win->notebook->get_curren
 /**
  * Get a suitable Pango font for a particular category. Will cache based on font name.
  *
- * @param	category	the category of font for which to collect the description
+ * @param	category		the category of font for which to collect the description
  * @return	PangoFontDescription	Font object suitable for GTK2
  */
 GTK2.PangoFontDescription getfont(string category)
