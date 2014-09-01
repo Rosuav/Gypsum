@@ -132,7 +132,7 @@ class menu_clicked
 
 	void import_Alias(string data)
 	{
-		if (!persist["aliases/simple"]) persist["aliases/simple"]=function_object(G->G->commands->alias)->aliases||([]);
+		if (!persist["aliases/simple"]) persist["aliases/simple"]=([]);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import aliases:"),0,0,0);
 		foreach (data/"\n",string line) if (sscanf(line,"/alias %s %s",string kw,string expan) && expan)
 			box->pack_start(cb(kw+" -> "+expan,({"aliases/simple",kw,"expansion"}),expan),0,0,0);
@@ -142,7 +142,7 @@ class menu_clicked
 	void import_Timer(string data)
 	{
 		object timer=function_object(G->G->commands->timer);
-		if (!persist["timer/timers"]) persist["timer/timers"]=timer->timers||([]);
+		if (!persist["timer/timers"]) persist["timer/timers"]=([]);
 		sscanf(data,"%*d %*d %d %d %d%*s\n%s",int hpregen,int spregen,int epregen,data);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import timers:"),0,0,0);
 		function format_time=timer->format_time,makelabels=timer->makelabels;
