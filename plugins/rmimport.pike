@@ -175,7 +175,7 @@ class menu_clicked
 				//Note that, for reasons which presently escape me (something to do with 0 being a problem?), the
 				//colors are in reverse order, starting with bold white and going down to black as the last entry.
 				sscanf(args,"%d %d%{ %d%}",int FGCol,int BGCol,array(array(int)) colors);
-				//FGCol, BGCol not supported (currently Gypsum doesn't allow those to be configured)
+				//FGCol, BGCol not supported (currently Gypsum doesn't allow those to be configured - TODO)
 				//TODO: Import colors into persist["colors/sixteen"], but don't import them if they're the defaults
 				break;
 			}

@@ -1,5 +1,4 @@
 * Generally, anything that people expect RosMud to do.
-  (Easy way to find some of that is to grep plugins/rmimport.pike for "currently".)
 * Spell-checker?
 * OOCBox?
 * Graphical HP/SP/EP display?? Maybe on the statusbar??
