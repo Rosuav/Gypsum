@@ -47,7 +47,7 @@ Should it be context sensitive? It could be reconfigured in colorcheck().
 	//mean taking up more than one display line, though currently this is not implemented.
 	//Each entry must begin with a metadata mapping and then alternate between color and string, in that order.
 	array(array(mapping|int|string)) lines=({ });
-	array(mapping|int|string) prompt=({([])}); //NOTE: If this is ever reassigned, other than completely overwriting it, check pseudo-prompt handling.
+	array(mapping|int|string) prompt=({([])}); //NOTE: If this is ever reassigned, other than completely overwriting it, check pseudo-prompt handling (in connection.pike).
 	GTK2.DrawingArea display;
 	GTK2.ScrolledWindow maindisplay;
 	GTK2.Adjustment scr;
