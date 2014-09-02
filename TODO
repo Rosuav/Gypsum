@@ -10,6 +10,7 @@
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 * (Easy) Optionally save the list of subw->world and auto-reconnect on startup.
+* Config option for the error bell on the EF: subw->ef->get_settings()->set_property("gtk-error-bell",0);
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
