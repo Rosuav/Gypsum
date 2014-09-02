@@ -85,6 +85,7 @@ mapping(string:mixed) subwindow(string txt)
 	subw->ef->set_activates_default(1);
 	#endif
 	subwsignals(subw);
+	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	colorcheck(subw->ef,subw);
 	call_out(redraw,0,subw);
 	return subw;
@@ -739,6 +740,11 @@ void closetab()
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
+void set_error_bell(int state)
+{
+	win->tabs->ef->get_settings()->set_property("gtk-error-bell",state);
+}
+
 /* This is called "zadvoptions" rather than "advoptions" to force its menu item
 to be at the end of the Options menu. It's a little odd, but that's the only
 one that needs to be tweaked to let the menu simply be in funcname order. */
@@ -758,6 +764,7 @@ class zadvoptions
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int","desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
 		"Down arrow":(["path":"window/downarr","type":"int","desc":"When you press Down when you haven't been searching back through command history, what should be done?","options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"])]),
+		"Error bell":(["path":"window/errorbell","type":"int","desc":"Should pressing Backspace when the input field is empty result in a beep?","options":([0:"No - silently do nothing",1:"Yes - beep"]),"savefunc":set_error_bell]),
 		"Hide input":(["path":"window/hideinput","type":"int","desc":"Local echo is active by default, but set this to disable it and hide all your commands.","options":([0:"Disabled (show commands)",1:"Enabled (hide commands)"])]),
 		"Input color":(["path":"window/inputcol","type":"int","default":6,"desc":"If input is not hidden, commands will be echoed locally, following the prompt, in some color. The specific color can be configured here.","options":mkmapping(enumerate(16),enumcolors)]),
 		"Keep-Alive":(["path":"ka/delay","default":240,"desc":"Number of seconds between keep-alive messages. Set this to a little bit less than your network's timeout. Note that this should not reset the server's view of idleness and does not violate the rules of Threshold RPG.","type":"int"]),
@@ -793,6 +800,7 @@ class zadvoptions
 		if (info->options) value=search(info->options,win->select->get_text());
 		if (info->type=="int") value=(int)value; else value=(string)value;
 		persist[info->path]=value;
+		if (info->savefunc) info->savefunc(value);
 	}
 
 	void load_content(mapping(string:mixed) info)
