@@ -614,7 +614,7 @@ int keypress(object self,array|object ev,mapping subw)
 				//The value will be clamped to the range, so the worst effect is that
 				//it'll take an extra hit of PgUp to get to normality. Not a big deal.
 				if (subw->last_activity) subw->scr->set_value(subw->last_activity);
-				subw->paused=1; statustxt->paused->set_text(pausedmsg);
+				paused=1; statustxt->paused->set_text(pausedmsg);
 				return 1;
 			}
 			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
