@@ -12,7 +12,7 @@ mapping(string:mapping(string:mixed)) numpadnav=persist->setdefault("window/nump
 multiset(string) numpadspecial=persist["window/numpadspecial"] || (<"look", "glance", "l", "gl">); //Commands that don't get prefixed with 'go ' in numpadnav
 mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, for convenience (pruned on any font change even if something else was using it)
 GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used externally
-int paused;
+int paused; //Not saved across reloads
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 inherit statustext_maxwidth;
 inherit movablewindow;
