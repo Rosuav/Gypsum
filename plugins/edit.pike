@@ -142,10 +142,9 @@ class editor(mapping(string:mixed) subw,string initial)
 	{
 		::dosignals();
 		win->signals+=({
-			//NOTE: This currently crashes Pike, due to over-freeing of the top stack object
-			//(whatever it is). Am disabling this code until a patch is deployed.
-			//The solution is deep inside the Pike GTK support code and can't be worked
-			//around, so this depends on a Pike patch. For want of a better name, I'm calling
+			//This can crash old Pikes, due to over-freeing of the top stack object (whatever
+			//it is). It's fixed in the latest, but not in 7.8.700, which I support - eg that
+			//is what there's a Windows installer for. For want of a better name, I'm calling
 			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
 			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
