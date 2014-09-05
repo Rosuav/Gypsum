@@ -72,8 +72,6 @@ class MessageBox
 	{
 		if (!parent) parent=G->G->window->mainwindow;
 		callback=cb;
-		//NOTE: The parent window should always be specified (even as 0), but
-		//there's a bug in older Pikes that means we can't actually pass it on.
 		#if constant(COMPAT_MSGDLG)
 		::create(flags,type,buttons,message);
 		#else
