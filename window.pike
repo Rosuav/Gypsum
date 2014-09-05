@@ -1451,7 +1451,8 @@ void savewinpos() {values(G->G->windows)->save_position_hook();}
 
 int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {
-	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and it
+	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and in
+	//Pike versions prior to 8.0.4 and 7.8.872 (including 7.8.700 which I support), it
 	//comes through as a Pike object - which it isn't. Doing *ANYTHING* with that value
 	//is liable to segfault Pike. However, since it's a pretty much useless value anyway,
 	//ignore it and just use 'page' (which is the page index). I'm keeping this here as
@@ -1463,11 +1464,9 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 	//Reset the cursor pos based on where it was last time focus entered the EF. This is
 	//distinctly weird, but it prevents the annoying default behaviour of selecting all.
 	if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
-	//Note that it may be possible to guard this with a #if, and possibly get smoother
-	//display. I'm not sure how much we gain, though. Experiment. (Obviously this would
-	//become a COMPAT_ constant and be active by default, with the logic the other way
-	//around.)
-	#if !constant(GPOINTER_BUG_FIXED)
+	//Note that this, while not technically part of the boom2 bugfix, is fixed in the
+	//same Pike versions, and there's really not a lot of point separating them.
+	#if constant(COMPAT_BOOM2)
 	call_out(lambda(int page,mapping subw) {
 	#endif
 		//NOTE: Doing this work inside the signal handler can segfault Pike, so do it
@@ -1477,7 +1476,7 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
 		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 		call_out(redraw,0,subw);
-	#if !constant(GPOINTER_BUG_FIXED)
+	#if constant(COMPAT_BOOM2)
 	},0,page,subw);
 	#endif
 }
