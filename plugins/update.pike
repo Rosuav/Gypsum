@@ -46,9 +46,9 @@ int process(string param,mapping(string:mixed) subw)
 		#endif
 		return 1;
 	}
-	//Update everything by updating globals; everything's bound to use at least something.
+	//Update everything by updating the main routine, which then updates globals.
 	//NOTE: Does NOT update persist.pike, deliberately.
-	if (param=="all") param="globals.pike";
+	if (param=="all") param="gypsum.pike";
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
