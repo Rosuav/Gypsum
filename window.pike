@@ -1452,7 +1452,7 @@ void savewinpos() {values(G->G->windows)->save_position_hook();}
 int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {
 	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and in
-	//Pike versions prior to 8.0.4 and 7.8.872 (including 7.8.700 which I support), it
+	//Pike versions prior to 8.0.4 and 7.8.872 (including 7.8.866 which I support), it
 	//comes through as a Pike object - which it isn't. Doing *ANYTHING* with that value
 	//is liable to segfault Pike. However, since it's a pretty much useless value anyway,
 	//ignore it and just use 'page' (which is the page index). I'm keeping this here as

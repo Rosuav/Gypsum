@@ -143,7 +143,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		::dosignals();
 		win->signals+=({
 			//This can crash old Pikes, due to over-freeing of the top stack object (whatever
-			//it is). It's fixed in the latest, but not in 7.8.700, which I support - eg that
+			//it is). It's fixed in the latest, but not in 7.8.866, which I support - eg that
 			//is what there's a Windows installer for. For want of a better name, I'm calling
 			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
 			//imaginative), so that's what the COMPAT marker is called.
