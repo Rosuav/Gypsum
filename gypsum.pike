@@ -67,6 +67,16 @@ mapping(string:int) compat=([
 	"msgdlg":([7.8:876,8.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
 ]);
 
+void create(string|void name)
+{
+	if (name!="gypsum.pike") return; //Normal startup - do nothing. Do these checks only if we're '/update'd.
+	object G=all_constants()["G"];
+	G->needupdate+=({"globals.pike"}); //Update everything else (except persist)
+	//Add any new COMPAT options, based on their defaults
+	foreach (indices(compat)-indices(G->compat),string kwd) if (compat[kwd]) add_constant("COMPAT_"+upper_case(kwd),1);
+	G->compat=compat;
+}
+
 int main(int argc,array(string) argv)
 {
 	replace_master(mymaster());
