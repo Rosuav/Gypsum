@@ -64,6 +64,7 @@ mapping(string:int) compat=([
 	"signal":([7.8:734,8.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //Inability to connect 'before' a signal
 	"pausekey":0, //"Pause" key generates VoidSymbol 0xFFFFFF instead of Pause 0xFF13. No longer active by default as it causes problems on Windows 8.
 	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix - see usage
+	"msgdlg":([7.8:876,8.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
 ]);
 
 int main(int argc,array(string) argv)
