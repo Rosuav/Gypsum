@@ -71,7 +71,12 @@ void create(string|void name)
 {
 	if (name!="gypsum.pike") return; //Normal startup - do nothing. Do these checks only if we're '/update'd.
 	object G=all_constants()["G"];
-	G->needupdate+=({"globals.pike"}); //Update everything else (except persist)
+	//Update everything else (except persist). Note that the rules about what gets
+	//updated are here in this file, and not in update.pike itself; this means that
+	//it's the new version, not the old version, that defines it. Downloading (via
+	//git or http) a new set of files and then updating gypsum.pike from that set
+	//will be the standard way of grabbing new code from now on, I think.
+	G->needupdate+=({"globals.pike"});
 	//Add any new COMPAT options, based on their defaults
 	foreach (indices(compat)-indices(G->compat),string kwd) if (compat[kwd]) add_constant("COMPAT_"+upper_case(kwd),1);
 	G->compat=compat;
