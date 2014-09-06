@@ -10,6 +10,9 @@
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 * (Easy) Optionally save the list of subw->world and auto-reconnect on startup. May want to let people manually edit?? Or not.
+* Keyword highlight. Any word that's in some persist[] retained mapping gets shown with a different
+  background color, and double-clicking on it shows some editable info (maybe in a configdlg). Can
+  be used to take notes on... anything at all.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
