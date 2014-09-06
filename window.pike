@@ -806,7 +806,7 @@ class zadvoptions
 
 	void load_content(mapping(string:mixed) info)
 	{
-		mixed val=persist[info->path]; if (zero_type(val) && !undefinedp(info->default)) val=info->default;
+		mixed val=persist[info->path]; if (undefinedp(val) && !undefinedp(info->default)) val=info->default;
 		if (mapping opt=info->options)
 		{
 			win->value->hide(); win->select->show();
