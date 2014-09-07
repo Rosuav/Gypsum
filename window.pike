@@ -211,6 +211,7 @@ class highlightwords(mixed|void selectme)
 		return GTK2.Vbox(0,10)
 			->pack_start(two_column(({
 				"Word",win->kwd=GTK2.Entry(),
+				"Last change",win->lastchange=GTK2.Label(),
 				//And maybe color
 			})),0,0,0)
 			->add(GTK2.Frame("Description")->add(
@@ -225,8 +226,13 @@ class highlightwords(mixed|void selectme)
 		::makewindow();
 		if (stringp(selectme)) select_keyword(selectme) || win->kwd->set_text(selectme);
 	}
-	void save_content() {redraw(current_subw());}
-	void delete_content() {redraw(current_subw());}
+	void save_content(mapping(string:mixed) info)
+	{
+		info->lastchange=time(); load_content(info);
+		redraw(current_subw());
+	}
+	void load_content(mapping(string:mixed) info) {win->lastchange->set_text(ctime(info->lastchange));}
+	void delete_content(string kwd,mapping(string:mixed) info) {redraw(current_subw());}
 }
 
 //Convert a y coordinate into a line number - like point_to_char() but gives only the line.
