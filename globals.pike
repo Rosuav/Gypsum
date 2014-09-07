@@ -475,6 +475,21 @@ class configdlg
 		::makewindow();
 	}
 
+	//Attempt to select the given keyword - returns 1 if found, 0 if not
+	int select_keyword(string kwd)
+	{
+		object ls=win->list->get_model();
+		object iter=ls->get_iter_first();
+		do
+		{
+			if (ls->get_value(iter,0)==kwd)
+			{
+				win->sel->select_iter(iter); sig_sel_changed();
+				return 1;
+			}
+		} while (ls->iter_next(iter));
+	}
+
 	void dosignals()
 	{
 		::dosignals();
