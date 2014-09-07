@@ -248,6 +248,11 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 void mousedown(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	if (ev->type=="2button_press")
+	{
+		//Double-click. TODO: Do something.
+		return;
+	}
 	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
 	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
