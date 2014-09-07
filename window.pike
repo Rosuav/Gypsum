@@ -224,6 +224,25 @@ array(int) point_to_char(mapping subw,int x,int y)
 	return ({line,charpos});
 }
 
+string word_at_pos(mapping subw,int line,int col)
+{
+		//Go through the line clicked on. Find one single word in one single color, and that's
+		//what was clicked on. TODO: Optionally permit the user to click on something with a
+		//modifier key (eg Ctrl-Click) to execute something as a command - would play well with
+		//help files highlighted in color, for instance.
+		foreach ((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
+		{
+			col-=sizeof(x); if (col>0) continue;
+			col+=sizeof(x); //Go back to the beginning of this color block - we've found something.
+			foreach (x/" ",string word)
+			{
+				col-=sizeof(word)+1; if (col>=0) continue;
+				//We now have the exact word, delimited by color boundary and blank space.
+				return word;
+			}
+		}
+}
+
 /**
  * Clear any previous highlight, and highlight from (line1,col1) to (line2,col2)
  * Will trigger a repaint of all affected areas.
@@ -269,25 +288,11 @@ void mouseup(object self,object ev,mapping subw)
 	{
 		//Mouse didn't move between going down and going up. Consider it a click.
 		highlight(subw,-1,0,0,0);
-		//Go through the line clicked on. Find one single word in one single color, and that's
-		//what was clicked on. TODO: Optionally permit the user to click on something with a
-		//modifier key (eg Ctrl-Click) to execute something as a command - would play well with
-		//help files highlighted in color, for instance.
-		foreach ((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
-		{
-			col-=sizeof(x); if (col>0) continue;
-			col+=sizeof(x); //Go back to the beginning of this color block - we've found something.
-			foreach (x/" ",string word)
-			{
-				col-=sizeof(word)+1; if (col>=0) continue;
-				//We now have the exact word, delimited by color boundary and blank space.
+		string word=word_at_pos(subw,line,col);
 				//TODO: Detect URLs if they follow punctuation, eg "Check this out:http://....."
 				//TODO: Detect URLs that got wrapped across multiple lines, maybe only if shift held or something
 				if (has_prefix(word,"http://") || has_prefix(word,"https://") || has_prefix(word,"www."))
 					invoke_browser(word);
-				return;
-			}
-		}
 		//Couldn't find anything to click on.
 		return;
 	}
