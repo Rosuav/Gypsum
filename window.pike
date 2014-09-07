@@ -507,10 +507,10 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	if (txt=="") return;
 	if (!monochrome) foreach (highlightkeywords;string word;mapping info) if (word!="" && has_value(txt,word))
 	{
-		if (txt==word) {bg=colors[14]; break;} //Special case: If the highlight is the whole string, change background color and fall through (otherwise we have infinite recursion).
+		if (txt==word) {bg=colors[13]; break;} //Special case: If the highlight is the whole string, change background color and fall through (otherwise we have infinite recursion).
 		sscanf(txt,"%s"+word+"%s",string before,string after);
 		painttext(state,before,fg,bg); //Normal text before the keyword
-		painttext(state,word,fg,colors[14]); //Different background color for the keyword
+		painttext(state,word,fg,colors[13]); //Different background color for the keyword
 		painttext(state,after,fg,bg); //And normal text afterward.
 		return;
 	}
