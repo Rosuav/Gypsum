@@ -30,6 +30,8 @@ mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
 ]));
 
+mapping(string:mapping(string:mixed)) highlightkeywords=persist->setdefault("window/highlight",([]));
+
 /* I could easily add tab completion to the entry field. The only question is, what
 should be added as suggestions?
 1) Character names. Somehow it should figure out who's a character and who's not.
@@ -197,6 +199,36 @@ GTK2.Widget makestatus()
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label((["xalign":1.0])))->add(statustxt->paused);
 }
 
+constant options_highlightwords="_Highlight words";
+class highlightwords(mixed|void selectme)
+{
+	inherit configdlg;
+	constant persist_key="window/highlight";
+	constant strings=({"descr"});
+	void create() {::create();}
+	GTK2.Widget make_content()
+	{
+		return GTK2.Vbox(0,10)
+			->pack_start(two_column(({
+				"Word",win->kwd=GTK2.Entry(),
+				//And maybe color
+			})),0,0,0)
+			->add(GTK2.Frame("Description")->add(
+				win->descr=MultiLineEntryField()->set_size_request(250,70)
+			))
+			->pack_start(GTK2.Label((["label":"Any words listed here will be highlighted any time they occur"
+				" in the display. You can add notes to any word in this way.","wrap":1])),0,0,0)
+		;
+	}
+	void makewindow()
+	{
+		::makewindow();
+		if (stringp(selectme)) select_keyword(selectme) || win->kwd->set_text(selectme);
+	}
+	void save_content() {redraw(current_subw());}
+	void delete_content() {redraw(current_subw());}
+}
+
 //Convert a y coordinate into a line number - like point_to_char() but gives only the line.
 int point_to_line(mapping subw,int y)
 {
@@ -269,7 +301,10 @@ void mousedown(object self,object ev,mapping subw)
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	if (ev->type=="2button_press")
 	{
-		//Double-click. TODO: Do something.
+		//Double-click. Configure highlighting - if it's already a highlighted word, then
+		//any double-click will do, otherwise require ctrl-dbl-click.
+		string word=word_at_pos(subw,line,col);
+		if (highlightkeywords[word] || ev->state&GTK2.GDK_CONTROL_MASK) highlightwords(word);
 		return;
 	}
 	highlight(subw,line,col,line,col);
@@ -470,6 +505,15 @@ int mkcolor(int fg,int bg)
 void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return;
+	if (!monochrome) foreach (highlightkeywords;string word;mapping info) if (word!="" && has_value(txt,word))
+	{
+		if (txt==word) {bg=colors[14]; break;} //Special case: If the highlight is the whole string, change background color and fall through (otherwise we have infinite recursion).
+		sscanf(txt,"%s"+word+"%s",string before,string after);
+		painttext(state,before,fg,bg); //Normal text before the keyword
+		painttext(state,word,fg,colors[14]); //Different background color for the keyword
+		painttext(state,after,fg,bg); //And normal text afterward.
+		return;
+	}
 	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,int tabpos]=state;
 	object layout=display->create_pango_layout(txt);
 	if (has_value(txt,'\t'))
@@ -528,6 +572,7 @@ int paint(object self,object ev,mapping subw)
 	if (undefinedp(ssl)) ssl=sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
 	if (subw->boxsel && ssc>sec) [ssc,sec]=({sec,ssc}); //With box selection, row and column are independent.
+	if (ssl==sel && ssc==sec) ssl=sel=-1;
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
 	{
