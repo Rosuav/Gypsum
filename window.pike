@@ -202,7 +202,7 @@ int point_to_line(mapping subw,int y)
 {
 	return limit(0,(y-(int)subw->scr->get_property("page size"))/subw->lineheight,sizeof(subw->lines)+1);
 }
-	
+
 //Convert (x,y) into (line,col) - yes, that switches their order.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
@@ -215,7 +215,7 @@ array(int) point_to_char(mapping subw,int x,int y)
 	destruct(layout);
 	if (!pos) return ({line,sizeof(txt)});
 	//In pos->index, we have a *byte* position. We need to convert this into
-	//a *character* position, as txt is Unicode. Presumably Pango is using
+	//a *character* position, as txt is Unicode. Pango counts bytes using
 	//UTF-8 under the covers; so let's do a rather ham-fisted byte->char
 	//calculation by converting to bytes, then truncating, then back to text.
 	int bytepos=pos->index;
