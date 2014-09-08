@@ -334,7 +334,7 @@ void mouseup(object self,object ev,mapping subw)
 	{
 		//Mouse didn't move between going down and going up. Consider it a click.
 		highlight(subw,-1,0,0,0);
-		string word=word_at_pos(subw,line,col);
+		string word=word_at_pos(subw,line,col); if (!word) return;
 		//TODO: Detect URLs if they follow punctuation, eg "Check this out:http://....."
 		//TODO: Detect URLs that got wrapped across multiple lines, maybe only if shift held or something
 		if (has_prefix(word,"http://") || has_prefix(word,"https://") || has_prefix(word,"www."))
