@@ -231,7 +231,10 @@ class highlightwords(mixed|void selectme)
 		info->lastchange=time(); load_content(info);
 		redraw(current_subw());
 	}
-	void load_content(mapping(string:mixed) info) {win->lastchange->set_text(ctime(info->lastchange));}
+	void load_content(mapping(string:mixed) info)
+	{
+		win->lastchange->set_text(info->lastchange?ctime(info->lastchange)[..<1]:"");
+	}
 	void delete_content(string kwd,mapping(string:mixed) info) {redraw(current_subw());}
 }
 
