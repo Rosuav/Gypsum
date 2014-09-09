@@ -753,7 +753,7 @@ void enterpressed(mapping subw,string|void cmd)
 		say(subw,"%% Unknown command.");
 		return 0;
 	}
-	if (array nav=m_delete(subw,"lastnav")) subw->lastnav_desc=nav*", ";
+	if (array nav=m_delete(subw,"lastnav")) subw->lastnav_desc=nav*", "; //TODO: If window/numpadecho, does this destroy the value of /lastnav?
 	execcommand(subw,cmd,0);
 }
 
