@@ -109,8 +109,15 @@ int main(int argc,array(string) argv)
 	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect) //Note that without this plugin, connecting sockets will be impossible. This MAY make Gypsum mostly useless.
 	{
-		G->commands->connect((argv+({""}))[1],G->window->win->tabs[0]); //Connect to the first world, or give world list, in the initial tab.
-		if (argc>2) foreach (argv[2..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
+		array(string) worlds=argv[1..];
+		if (!sizeof(worlds))
+		{
+			//TODO: Optionally grab the saved list.
+			//For now, just ensure that it's not completely empty
+			worlds=({""});
+		}
+		G->commands->connect(worlds[0],G->window->win->tabs[0]); //Connect to the first world, or give world list, in the initial tab.
+		if (sizeof(worlds)>1) foreach (worlds[1..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
 	}
 	return -1;
 }
