@@ -301,6 +301,7 @@ void send(mapping conn,string text)
 {
 	if (!conn) return;
 	if (conn->lines && !(conn=conn->connection)) return; //Allow sending to a subw (quietly ignoring if it's not connected)
+	if (conn->passive) return; //Ignore sent text on passive masters
 	if (text) conn->writeme+=string_to_utf8(text);
 	sockwrite(conn);
 }
@@ -397,6 +398,7 @@ mapping connect(object display,mapping info)
 		//Passive mode. (Currently hacked in by the specific IPs; may
 		//later make a flag but that means people need to know about it.)
 		//Note: Does not currently respect autolog. Should it? It would have to interleave all connections.
+		conn->passive=1;
 		if (mixed ex=catch
 		{
 			conn->sock=Stdio.Port(conn->port=(int)info->port,sockacceptb,conn->host=info->host);
