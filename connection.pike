@@ -342,7 +342,7 @@ void sockaccept(mapping conn)
 	while (object sock=conn->sock->accept())
 	{
 		mapping newconn=makeconn(G->G->window->subwindow(conn->display->tabtext+" #"+(++conn->conncount)),conn);
-		newconn->sock=sock;
+		newconn->sock=sock; newconn->display->connection=newconn;
 		sock->set_id(newconn);
 		say(conn->display,"%%% Connection from "+sock->query_address()+" at "+ctime(time()));
 		sock->set_nonblocking(sockread,sockwrite,sockclosed);
