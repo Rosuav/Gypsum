@@ -15,7 +15,7 @@ Eventually, drop support for Pike 7.8. This means:
 2) Drop COMPAT_SIGNAL and possibly other COMPAT features
 3) Search the code for "7.8" and see what's commented
 4) (Optional, the current way works) Recode noex() to use [sg]et_data()
-5) Unconditionally connect to the paste_clipboard signal in window.pike
+5) Unconditionally connect to the paste_clipboard signal in window.pike (or just require 7.8.822)
 
 There are a few places around the code where magic happens. Ideally they should
 become less magical... but for now, their documentation here will give them at
