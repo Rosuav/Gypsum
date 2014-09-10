@@ -838,6 +838,7 @@ class zadvoptions
 		"Numpad Nav echo":(["path":"window/numpadecho","desc":"Enable this to have numpad navigation commands echoed as if you'd typed them; disabling gives a cleaner display.","type":"int","options":([0:"Disabled",1:"Enabled"])]),
 		"Numpad empty only":(["path":"window/numpadempty","desc":"If you have conflicts with numpad nav keys and regular typing, you can prevent numpad nav from happening when there's anything typed.","type":"int","options":([0:"Always active",1:"Only when empty"])]),
 		"Present action":(["path":"notif/present","type":"int","desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour depends somewhat on your window manager.","options":([0:"Mark the window as 'urgent'",1:"Request immediate presentation"])]),
+		"Reopen closed tabs":(["path":"reopentabs","type":"int","desc":"Bring back what once was yours... When Gypsum is invoked, you can have it reopen with whatever tabs were previously open. Or you can reopen some fixed set every time.","options":([0:"Do nothing",1:"Remember but don't retrieve",2:"Retrieve but don't remember",3:"Retrieve, and remember"])]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
 		"Timestamp localtime":(["path":"window/timestamp_local","desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.","type":"int","options":([0:"Normal - use UTC",1:"Use your local time"])]),
 		"Up arrow":(["path":"window/uparr","type":"int","desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?","options":([0:"No",1:"Yes"])]),
@@ -1434,6 +1435,9 @@ void save_html_response(object self,int btn)
 constant file_closewindow="E_xit";
 int closewindow()
 {
+	//Slight hack: Save the tab list every time a close is attempted.
+	//This really ought to be either actual closings only, or every time the tab list changes.
+	if (persist["reopentabs"]&1) persist["savedtablist"]=win->tabs->world-({0});
 	int confirmclose=persist["window/confirmclose"];
 	if (confirmclose==-1) exit(0);
 	int conns=sizeof((win->tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? but I need to support 7.8).
