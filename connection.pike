@@ -413,7 +413,7 @@ mapping connect(object display,mapping info)
 	say(conn->display,"%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
-	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike patch not in trunk as of 20131206)
+	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol, not in trunk 8.0)
 	conn->sock->set_nonblocking(0,connected,connfailed);
 	if (mixed ex=catch {conn->sock->connect(conn->host,conn->port);})
 	{
