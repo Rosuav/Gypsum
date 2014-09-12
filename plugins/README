@@ -331,7 +331,7 @@ done with persist[]), it should have the same base name as the plugin,
 the extension ".ini", and be placed in the main Gypsum directory.
 No such file should exist in the repository (to avoid overwriting
 a user's config), but a ".ini.example" file should be provided if
-appropriate. BEST PRACTICE: Use a configdlg instead.
+appropriate. BEST PRACTICE: Use a configdlg and save to persist[].
 
 A plugin will be loaded by default if it has this declaration at top-level:
 constant plugin_active_by_default = 1;
