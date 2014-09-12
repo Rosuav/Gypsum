@@ -401,21 +401,20 @@ mapping connect(object display,mapping info)
 		conn->passive=1;
 		if (mixed ex=catch
 		{
-			conn->sock=Stdio.Port(conn->port=(int)info->port,sockacceptb,conn->host=info->host);
+			conn->sock=Stdio.Port((int)info->port,sockacceptb,info->host);
 			conn->sock->set_id(conn);
-			if (!conn->sock->errno()) {say(conn->display,"%%% Bound to "+conn->host+" : "+conn->port); return conn;}
-			say(conn->display,"%%% Error binding to "+conn->host+" : "+conn->port+" - "+strerror(conn->sock->errno()));
+			if (!conn->sock->errno()) {say(conn->display,"%%% Bound to "+info->host+" : "+info->port); return conn;}
+			say(conn->display,"%%% Error binding to "+info->host+" : "+info->port+" - "+strerror(conn->sock->errno()));
 		}) say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
 		return conn;
 	}
-	//TODO: conn->host and conn->port don't seem to be used anywhere outside this function. Are they needed?
-	say(conn->display,"%%% Connecting to "+(conn->host=info->host)+" : "+(conn->port=(int)info->port)+"...");
+	say(conn->display,"%%% Connecting to "+info->host+" : "+info->port+"...");
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
 	if (conn->sock->nodelay) conn->sock->nodelay(); //Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol, not in trunk 8.0)
 	conn->sock->set_nonblocking(0,connected,connfailed);
-	if (mixed ex=catch {conn->sock->connect(conn->host,conn->port);})
+	if (mixed ex=catch {conn->sock->connect(info->host,(int)info->port);})
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
