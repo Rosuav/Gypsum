@@ -709,7 +709,7 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		string result,eos;
 		switch (method)
 		{
-			case 0: result=zip; eos=""; break; //Stored (incompatible with flags&8 mode, I think)
+			case 0: result=zip; eos=""; break; //Stored (incompatible with flags&8 mode)
 			case 8:
 				#if constant(Gz)
 				object infl=Gz.inflate(-15);
