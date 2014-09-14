@@ -73,14 +73,13 @@ int inputhook(string line,mapping(string:mixed) subw)
 			i=G->G->lasturl;
 			if (!i) {say(subw,"%% No URLs received this session."); return 1;}
 		}
-		--i; //We're 0-based, the user is 1-based :)
-		if (i>=sizeof(recvurl))
+		if (i>sizeof(recvurl))
 		{
 			say(subw,"%% URL index invalid - we haven't received that many URLs this session.");
 			say(subw,"%% Type 'url list' to get a full list.");
 			return 1;
 		}
-		string url=recvurl[i];
+		string url=recvurl[i-1]; //We're 0-based, the user is 1-based :)
 		switch (lower_case(param[0]))
 		{
 			case 'c': case 'C':
