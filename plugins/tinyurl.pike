@@ -22,7 +22,7 @@ G->G->lasturl=0 - last-received URL, index into recvurl[] (not saved across shut
 
 //Options: Retain URL array across reloads of the plugin, or across shutdown? If using persist[], also uncomment the assignment inside outputhook().
 //Note that this isn't actually working (since array append overwrites, and nothing ever sets it in G->G-> anyway), so it doesn't retain at all.
-array(string) recvurl=G->G->tinyurl_recvurl;
+array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 //array(string) recvurl=persist["tinyurl/recvurl"];
 
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
@@ -34,7 +34,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	if (sscanf(line,"%*shttp://%[^ ]",url)<2 && (https=sscanf(line,"%*shttps://%[^ ]",url))<2) return 0;
 	if (https) url="https://"+url; else url="http://"+url;
 	int i=search(recvurl,url);
-	if (i==-1) {i=sizeof(recvurl+=({url}))-1; /* persist["tinyurl/recvurl"]=recvurl; */ }
+	if (i==-1) {i=sizeof(recvurl+=({url}))-1; /*persist["tinyurl/recvurl"]=*/G->G->tinyurl_recvurl=recvurl;}
 	G->G->lasturl=i+1; //Which means that if a duplicate URL is received, it'll still become the one accessed by "url" on its own.
 	if (persist["tinyurl/announce"]) say(conn->display,"%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1);
 }
@@ -237,8 +237,4 @@ class menu_clicked
 	}
 }
 
-void create(string name)
-{
-	if (!recvurl) recvurl=G->G->tinyurl_recvurl=({ });
-	::create(name);
-}
+void create(string name) {::create(name);}
