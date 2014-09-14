@@ -22,7 +22,7 @@ G->G->lasturl=0 - last-received URL, index into recvurl[] (not saved across shut
 
 //Options: Retain URL array across reloads of the plugin, or across shutdown? If using persist[], also uncomment the assignment inside outputhook().
 //Note that this isn't actually working (since array append overwrites, and nothing ever sets it in G->G-> anyway), so it doesn't retain at all.
-array(string) recvurl=G->G->tinyurl_recvurl || ({ });
+array(string) recvurl=G->G->tinyurl_recvurl;
 //array(string) recvurl=persist["tinyurl/recvurl"];
 
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
@@ -236,4 +236,8 @@ class menu_clicked
 	}
 }
 
-void create(string name) {::create(name);}
+void create(string name)
+{
+	if (!recvurl) recvurl=G->G->tinyurl_recvurl=({ });
+	::create(name);
+}
