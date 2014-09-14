@@ -51,11 +51,12 @@ int inputhook(string line,mapping(string:mixed) subw)
 			say(subw,"%%%% Total URLs saved: %d",sizeof(recvurl));
 			return 1;
 		}
-		int i;
-		if (!param) i=G->G->lasturl;
-		else if (sscanf(param,"%d %s",i,param)<2) {i=(int)param; param="";}
-		if (!param || param=="") param=persist["tinyurl/defaultaction"]||"b";
-		if (param[0]=='h')
+		int idx;
+		sscanf((param||"")+" ","%s %s",string cmd,string rest);
+		if ((int)cmd) {idx=(int)cmd; cmd=rest;}
+		if (cmd=="") cmd=persist["tinyurl/defaultaction"]||"b";
+		int action=lower_case(cmd[0]);
+		if (action=='h')
 		{
 			say(subw,"%% Monitored URLs are given sequential numbers starting from 1.");
 			say(subw,"%% Type 'url 42 (action)' to use a URL. Only the first letter is significant:");
@@ -68,33 +69,33 @@ int inputhook(string line,mapping(string:mixed) subw)
 			say(subw,"%% Type 'url list' to generate a full list of this session's URLs.");
 			return 1;
 		}
-		if (i<=0)
+		if (idx<=0)
 		{
-			i=G->G->lasturl;
-			if (!i) {say(subw,"%% No URLs received this session."); return 1;}
+			idx=G->G->lasturl;
+			if (!idx) {say(subw,"%% No URLs received this session."); return 1;}
 		}
-		if (i>sizeof(recvurl))
+		if (idx>sizeof(recvurl))
 		{
 			say(subw,"%% URL index invalid - we haven't received that many URLs this session.");
 			say(subw,"%% Type 'url list' to get a full list.");
 			return 1;
 		}
-		string url=recvurl[i-1]; //We're 0-based, the user is 1-based :)
-		switch (lower_case(param[0]))
+		string url=recvurl[idx-1]; //We're 0-based, the user is 1-based :)
+		switch (action)
 		{
-			case 'c': case 'C':
+			case 'c':
 			{
 				subw->display->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->set_text(url);
 				say(subw,"%% Copied to clipboard.");
 				break;
 			}
-			case 'b': case 'B':
+			case 'b':
 			{
 				if (invoke_browser(url)) say(subw,"%% Browser invoked.");
 				else say(subw,"%% Unable to invoke browser on this platform - try the clipboard instead.");
 				break;
 			}
-			case 'r': case 'R':
+			case 'r':
 			{
 				say(subw,"%% Rendering URL...");
 				//TODO: Proxy
