@@ -52,7 +52,8 @@ int inputhook(string line,mapping(string:mixed) subw)
 			return 1;
 		}
 		int i;
-		if (!param) i=G->G->lasturl; else sscanf(param,"%d %s",i,param);
+		if (!param) i=G->G->lasturl;
+		else if (sscanf(param,"%d %s",i,param)<2) {i=(int)param; param="";}
 		if (!param || param=="") param=persist["tinyurl/defaultaction"]||"b";
 		if (param[0]=='h')
 		{
