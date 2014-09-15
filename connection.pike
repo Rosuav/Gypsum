@@ -67,7 +67,7 @@ void setprompt(mapping conn)
  * Handles a block of text after ANSI processing.
  *
  * @param conn Current connection
- * @param data Unicode data from socket, with newlines separating lines
+ * @param data Text from socket, with newlines separating lines
  * @param end_of_block 1 if we're at the very end of a block of reading
  */
 void textread(mapping conn,string data,int end_of_block)
