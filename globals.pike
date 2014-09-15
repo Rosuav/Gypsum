@@ -810,3 +810,6 @@ string fn(string param)
 	}
 	return param;
 }
+
+//Convenience function: convert a number to hex. Saves typing; intended for use in a /x or equivalent.
+string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
