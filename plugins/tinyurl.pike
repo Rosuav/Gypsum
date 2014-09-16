@@ -209,7 +209,6 @@ void tinify(object self,int response,array args)
 	if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 }
 
-//TODO: Actually make this, yaknow, functional...
 constant menu_label="TinyURL";
 class menu_clicked
 {
@@ -224,14 +223,20 @@ class menu_clicked
 					->add(GTK2.Label("Address:"))->add(win->proxy_addr=GTK2.Entry()->set_text(persist["tinyurl/proxy_host"]||""))
 					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry((["width-chars":5]))->set_text(persist["tinyurl/proxy_port"]||""))
 				))
-				->add(win->announce=GTK2.CheckButton("Announce incoming URLs with an explanatory note"))
+				->add(win->announce=GTK2.CheckButton("Announce incoming URLs with an explanatory note")->set_active(persist["tinyurl/announce"]))
 				->add(GTK2.Frame("Default action")->add(GTK2.Hbox(0,10)
-					->add(win->default_browse=GTK2.RadioButton("Browse"))
-					->add(win->default_copy=GTK2.RadioButton("Copy to clipboard",win->default_browse))
+					->add(win->default_browse=GTK2.RadioButton("Browse")->set_active(persist["tinyurl/defaultaction"]!="c"))
+					->add(win->default_copy=GTK2.RadioButton("Copy to clipboard",win->default_browse)->set_active(persist["tinyurl/defaultaction"]=="c"))
 				))
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
 		::makewindow();
+	}
+	int closewindow()
+	{
+		persist["tinyurl/announce"]=win->announce->get_active();
+		persist["tinyurl/defaultaction"]=win->default_browse->get_active()?"b":"c";
+		return ::closewindow();
 	}
 }
 
