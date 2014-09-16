@@ -2,8 +2,6 @@
 Monitor OOC channels for a long URL, and pass it direct to TinyUrl.com
 
 Thanks Thierran for helping me test the original RosMud version, of which this is a port.
-
-TODO: Allow other shorteners like bit.ly
 */
 
 inherit hook;
