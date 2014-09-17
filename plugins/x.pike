@@ -87,6 +87,7 @@ int process(string param,mapping(string:mixed) subw)
 	err=catch {tmp=compile_string(#"
 	GTK2.Window mw=G->G->window->mainwindow;
 	object window=G->G->window;
+	mixed x=Hex,tm=Time;
 	//Add any other 'convenience names' here
 
 	mixed foo(mapping(string:mixed) subw,mixed _)

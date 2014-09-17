@@ -816,7 +816,7 @@ string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 
 //Or perhaps more convenient: a hexadecimal integer, with its repr being 0xNNNN.
 //Basic operations on it will continue to return hex integers.
-class x(int num)
+class Hex(int num)
 {
 	mixed cast(string type) {if (type=="int") return num;}
 	int(0..1) is_type(string type) {if (type=="int") return 1;}
@@ -830,7 +830,7 @@ class x(int num)
 }
 
 //Similarly, show a time value.
-class tm
+class Time
 {
 	inherit x;
 	string _sprintf(int type,mapping|void params) {return type=='O'?format_time(num):sprintf((string)({'%','*',type}),params||([]),num);}
