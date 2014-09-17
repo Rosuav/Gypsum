@@ -813,3 +813,25 @@ string fn(string param)
 
 //Convenience function: convert a number to hex. Saves typing; intended for use in a /x or equivalent.
 string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
+
+//Or perhaps more convenient: a hexadecimal integer, with its repr being 0xNNNN.
+//Basic operations on it will continue to return hex integers.
+class x(int num)
+{
+	mixed cast(string type) {if (type=="int") return num;}
+	int(0..1) is_type(string type) {if (type=="int") return 1;}
+	#define lhs(x) mixed `##x(mixed ... others) {return this_program(`##x(num,@others));}
+	#define lhsrhs(x) mixed `##x(mixed other) {return this_program(num x other);} mixed ``##x(mixed other) {return this_program(other x num);}
+	lhs(!) lhs(~) lhs(<) lhs(>)
+	lhsrhs(%) lhsrhs(&) lhsrhs(*) lhsrhs(+) lhsrhs(-) lhsrhs(/) lhsrhs(<<) lhsrhs(>>) lhsrhs(^) lhsrhs(|)
+	#undef lhs
+	#undef lhsrhs
+	string _sprintf(int type,mapping|void params) {return sprintf(type=='O'?"0x%*x":(string)({'%','*',type}),params||([]),num);}
+}
+
+//Similarly, show a time value.
+class tm
+{
+	inherit x;
+	string _sprintf(int type,mapping|void params) {return type=='O'?format_time(num):sprintf((string)({'%','*',type}),params||([]),num);}
+}
