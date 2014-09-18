@@ -48,7 +48,9 @@ int inputhook(string line,mapping(string:mixed) subw)
 	{
 		if (!has_prefix(line,"pike ")) //Normal input
 		{
-			//Check for the special "calculator notation"
+			//Check for the special "calculator notation". Note that inline calculation should avoid
+			//subscripting, as it can't handle nested square brackets. The first ']' in the string
+			//ends the expression.
 			if (sscanf(line,"calc %s",string expr)) {say(subw,"%% "+calculate(subw,expr)); return 1;}
 			string newcmd="";
 			while (sscanf(line,"%s$[%s]%s",string before,string expr,string after)) {newcmd+=before+calculate(subw,expr); line=after||"";}
