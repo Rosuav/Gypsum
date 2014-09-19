@@ -10,7 +10,9 @@ simpler, the other more flexible, and it's worth keeping both.
 
 Classic mode is convenient as a calculator and so on; it is primarily designed
 for a simple expression, and must handle but a single line of input. It is
-accessed by the "/x" command.
+accessed by the "/x" command. It's the best way to manipulate the internals of
+Gypsum, and it has some convenience shorthands which can be seen by looking at
+the source.
 
 Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode),
 and can handle multi-line expressions/commands, but is less convenient for
