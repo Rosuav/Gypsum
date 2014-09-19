@@ -265,11 +265,7 @@ int dohooks(mapping conn,string line)
 	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) say(conn->display,"Error in hook: "+describe_backtrace(ex));
 }
 
-/**
- * Closes the socket connection for the provided connection.
- *
- * @param conn Current connection
- */
+//Closes the socket connection for the provided connection.
 int sockclosed(mapping conn)
 {
 	say(conn->display,"%%% Disconnected from server.");
