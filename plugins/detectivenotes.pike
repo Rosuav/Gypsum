@@ -56,7 +56,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 	if (!sizeof(lastchals)) return 0; //No notes up, don't bother checking anything
 	if (sscanf(line,"%[^ ] challenges: %s with the %s in the %s",string player,string person,string weapon,string room)==4)
 	{
-		//TODO: Verify that person, weapon, and room are valid, otherwise it's a false positive
+		//Maybe fix: Verify that person, weapon, and room are valid, otherwise it's a false positive
+		//Not terribly important, as we can generally assume that the server will be correct.
+		//And it's not particularly critical anyway; all it does is change the snapshot.
 		indices(lastchals)->set_text(line); //Overwrite them all - easy.
 		return 0;
 	}
