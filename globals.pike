@@ -832,6 +832,6 @@ class Hex(int num)
 //Similarly, show a time value.
 class Time
 {
-	inherit x;
+	inherit Hex;
 	string _sprintf(int type,mapping|void params) {return type=='O'?format_time(num):sprintf((string)({'%','*',type}),params||([]),num);}
 }
