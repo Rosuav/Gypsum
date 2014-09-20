@@ -49,7 +49,7 @@ table structure, but you'll need tab and shift-tab to move horizontally (as the
 left and right arrows will move the cursor within the current field).
 ";
 
-multiset(GTK2.Widget) lastchals=(<>); //Cheat - if the code gets updated, this really ought to be referenced across.
+multiset(GTK2.Widget) lastchals=G->G->cluedolastchals;
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
@@ -161,4 +161,8 @@ class menu_clicked
 	}
 }
 
-void create(string name) {::create(name);}
+void create(string name)
+{
+	if (!G->G->cluedolastchals) G->G->cluedolastchals=lastchals=(<>);
+	::create(name);
+}
