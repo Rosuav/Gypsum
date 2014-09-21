@@ -277,11 +277,7 @@ int sockclosed(mapping conn)
 	m_delete(conn,"logfile");
 }
 
-/**
- * Write buffered socket data as much as possible
- *
- * @param conn Current connection
- */
+//Write as much buffered socket data as possible
 void sockwrite(mapping conn)
 {
 	if (conn->sock && conn->writeme!="") conn->writeme=conn->writeme[conn->sock->write(conn->writeme)..];
