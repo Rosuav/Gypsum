@@ -12,10 +12,10 @@
  * mapping display; //References the subwindow data (see window.pike)
  * string conn_host;
  * int conn_port;
- * string readbuffer=""; //Raw socket read buffer (bytes) - normally empty except during input processing, but will retain data if there's an incomplete TELNET sequence
- * string ansibuffer="",curline=""; //Read buffers (text) at other levels - ditto (will retain if incomplete ANSI sequence, or partial line).
+ * bytes readbuffer=""; //Raw socket read buffer - normally empty except during input processing, but will retain data if there's an incomplete TELNET sequence
+ * string ansibuffer="",curline=""; //Read buffers at other levels - ditto (will retain if incomplete ANSI sequence, or partial line).
  * int lastcr; //Set to 1 if the last textread ended with \r - if the next one starts \n, the extra blank line is suppressed (it's a \r\n sequence broken over two socket reads)
- * string writeme=""; //Write buffer (bytes)
+ * bytes writeme=""; //Write buffer
  * Stdio.File logfile; //If non-zero, all text will be logged to this file, after TELNET/ANSI codes and prompts are removed.
  * 
  */
@@ -41,7 +41,7 @@ function say=G->globals->say;
  * some mojibake and even invalid characters (continuation bytes 81, 8D, 8F,
  * 90, and 9D are not defined in CP-1252, and will be replaced by U+FFFD).
  *
- * @param bytes Incoming data, 8-bit string
+ * @param bytes Incoming 8-bit data
  * @return string Resulting Unicode text
  */
 //object cp1252=Charset.decoder("1252");
@@ -192,7 +192,7 @@ enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF
  * @param conn Current connection
  * @param data Raw bytes received from the socket (encoded text with embedded TELNET codes)
  */
-void sockread(mapping conn,string data)
+void sockread(mapping conn,bytes data)
 {
 	if (conn->debug_sockread) say(conn->display,"sockread: %O\n",data);
 	conn->readbuffer+=data;
