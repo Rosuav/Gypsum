@@ -318,7 +318,7 @@ mapping(string:mixed) makeconn(object display,mapping info)
 	return ([
 		"display":display,"worldname":info->name||"",
 		"use_ka":info->use_ka || undefinedp(info->use_ka),
-		"writeme":info->writeme||"","readbuffer":"","ansibuffer":"","curline":"",
+		"writeme":string_to_utf8(info->writeme||""),"readbuffer":"","ansibuffer":"","curline":"",
 		"curcolor":col,"curmsg":({([]),col,""})
 	]);
 }
