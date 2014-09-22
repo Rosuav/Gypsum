@@ -15,6 +15,11 @@ void create(string n)
 	#endif
 }
 
+//In any place where binary data is used, use the type name "bytes" rather than "string"
+//for clarity. In all cases, "string" means "string(0..1114111)" aka Unicode; anything
+//binary should be clearly marked.
+typedef string(0..255) bytes;
+
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
 //Note that this is relatively slow (a run-time lookup every time), and should normally
 //be avoided in favour of a reload-time replacement.
