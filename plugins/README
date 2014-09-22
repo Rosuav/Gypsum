@@ -357,6 +357,12 @@ BEST PRACTICE: If call_out is used to delay or repeat a function call (eg to
 periodically update status text or other display), ensure that it will be
 safe against updates and unloads by checking that the module is still loaded.
 
+BEST PRACTICE: Every "string" inside Gypsum is (or ought to be) a string of
+Unicode characters. If you need to work with bytes (maybe read from/written to
+a file), don't call it "string", call it "bytes" (which is a global typedef for
+string(0..255) or string(8bit)); that way, it's clear what's text and what's
+binary data.
+
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
