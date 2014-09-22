@@ -232,6 +232,8 @@ void sockread(mapping conn,string data)
 				switch (subneg[1])
 				{
 					case TERMTYPE:
+						//Note that this is slightly abusive of the "terminal type" concept - it's more like a user-agent string.
+						//But it's already a bit stretched, as soon as specific clients get mentioned. And everybody does that.
 						if (subneg[2]==SEND) send_telnet(conn,
 							(string)({SB,TERMTYPE,IS})
 							+sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
