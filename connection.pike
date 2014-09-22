@@ -211,10 +211,10 @@ void sockread(mapping conn,bytes data)
 					{
 						//TODO: Resend any time wrap width changes
 						int width=persist["window/wrap"] || 80; //If we're not wrapping, pretend screen width is 80, although that's a bit arbitrary
-						send_telnet(conn,(string)({SB,NAWS,width>>8,width&255,0,0}));
+						send_telnet(conn,(string(0..255))({SB,NAWS,width>>8,width&255,0,0}));
 					}
 					break;
-					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string)({WILL,TERMTYPE})); break;
+					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
 					default: break;
 				}
 				iac=iac[2..];
@@ -235,8 +235,8 @@ void sockread(mapping conn,bytes data)
 						//Note that this is slightly abusive of the "terminal type" concept - it's more like a user-agent string.
 						//But it's already a bit stretched, as soon as specific clients get mentioned. And everybody does that.
 						if (subneg[2]==SEND) send_telnet(conn,
-							(string)({SB,TERMTYPE,IS})
-							+sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
+							(string(0..255))({SB,TERMTYPE,IS})
+							+[string(0..127)]sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
 						);
 						break;
 					default: break;
@@ -304,10 +304,10 @@ void send(mapping conn,string text)
 //The passed string should begin just after the IAC, so (string)({GA}) will send IAC GA.
 //Subnegotiations will be implicitly terminated; (string)({SB,.....}) will have IAC SE appended.
 //IAC doubling is performed automatically.
-void send_telnet(mapping conn,string data)
+void send_telnet(mapping conn,bytes data)
 {
 	data="\xFF"+replace(data,"\xFF","\xFF\xFF");
-	if (data[1]==SB) data+=(string)({IAC,SE});
+	if (data[1]==SB) data+=(string(0..255))({IAC,SE});
 	conn->writeme+=data;
 	sockwrite(conn);
 }
@@ -372,7 +372,7 @@ void connfailed(mapping conn)
 void ka(mapping conn)
 {
 	if (!conn->sock) return;
-	send_telnet(conn,(string)({GA}));
+	send_telnet(conn,(string(0..255))({GA}));
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
