@@ -46,10 +46,10 @@ function say=G->globals->say;
  */
 //object cp1252=Charset.decoder("1252");
 object cp1252=Locale.Charset.decoder("1252"); //For compat with Pike 7.8, look it up from inside Locale.
-protected string bytes_to_string(string bytes)
+protected string bytes_to_string(bytes data)
 {
-	catch {return utf8_to_string(bytes);}; //Normal case: Decode as UTF-8
-	return cp1252->feed(bytes)->drain(); //Failure case: Decode as CP-1252.
+	catch {return utf8_to_string(data);}; //Normal case: Decode as UTF-8
+	return cp1252->feed(data)->drain(); //Failure case: Decode as CP-1252.
 }
 
 //Mark the current text as a prompt
