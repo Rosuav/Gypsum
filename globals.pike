@@ -19,6 +19,9 @@ void create(string n)
 //for clarity. In all cases, "string" means "string(0..1114111)" aka Unicode; anything
 //binary should be clearly marked.
 typedef string(0..255) bytes;
+//Something that's ASCII-only can be trivially treated as either bytes or text (assuming
+//a UTF-8 transmission stream).
+typedef string(0..127) ascii;
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
 //Note that this is relatively slow (a run-time lookup every time), and should normally
@@ -570,12 +573,12 @@ class statustext_maxwidth
 	}
 }
 
-string gypsum_version()
+ascii gypsum_version()
 {
 	return String.trim_all_whites(Stdio.read_file("VERSION"));
 }
 
-string pike_version()
+ascii pike_version()
 {
 	return sprintf("%d.%d.%d %s",
 		__REAL_MAJOR__,__REAL_MINOR__,__REAL_BUILD__,
