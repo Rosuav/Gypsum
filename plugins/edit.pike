@@ -35,8 +35,9 @@ class editor(mapping(string:mixed) subw,string initial)
 	void makewindow()
 	{
 		//When we don't have a subw, 'initial' is actually a file name. Normally it's a block of text.
-		//Note that the file MUST be UTF-8 encoded; this will bomb, else.
-		string txt=subw?initial:String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";
+		string txt=subw && initial;
+		if (mixed ex=!txt && catch {txt=String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";})
+			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded files.\n\n"+describe_error(ex);
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(txt)))
