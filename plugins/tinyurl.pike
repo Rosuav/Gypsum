@@ -186,6 +186,7 @@ void tinify(object self,int response,array args)
 		else
 		{
 			lineparts+=({0}); //Add a spot for the shorter URL.
+			//TODO: Cope with non-ASCII URLs. Possibly by throwing an error, as they're most likely to be invalid.
 			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,
 				Protocols.HTTP.Query()->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
 				{
