@@ -9,7 +9,7 @@
   Maybe a multiset of plugin IDs (basenames) which should have their primary statusbar frames
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
-* Figure out whether file names are bytes or text, and design appropriately.
+* Figure out whether file names are bytes or text, and design appropriately. May be diff on diff platforms??
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
