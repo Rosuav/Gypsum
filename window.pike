@@ -1267,12 +1267,30 @@ class configure_plugins
 				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Active"),
 				"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
-			})),0,0,0);
+			})),0,0,0)
+			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
+				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
+				->add(win->docs=MultiLineEntryField()->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD))
+			))
+		;
 	}
 
 	void load_content(mapping(string:mixed) info)
 	{
 		win->active->set_active(info->active);
+		//TODO: Cache this somewhere, at least per-run; wipe out the cache any time
+		//the plugin is reloaded.
+		string docstring="";
+		if (string fn=selecteditem())
+		{
+			docstring="(unable to compile, see source)";
+			add_constant("COMPILE_ONLY",1);
+			catch {docstring=compile_file(fn)->docstring || "(undocumented, see source)";};
+			add_constant("COMPILE_ONLY");
+		}
+		//The MLE wraps, so we remove all newlines that aren't doubled.
+		docstring=replace((docstring/"\n\n")[*],"\n"," ")*"\n\n";
+		win->docs->set_text(String.trim_all_whites(docstring));
 	}
 
 	void save_content(mapping(string:mixed) info)
