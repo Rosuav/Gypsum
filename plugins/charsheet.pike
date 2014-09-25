@@ -1,4 +1,5 @@
-/* Pop-out character sheet renderer for Minstrel Hall
+constant docstring=#"
+Pop-out character sheet renderer for Minstrel Hall
 
 Carefully matched to the corresponding code on the server, this will pop out a
 character sheet based on data stored on the server.
@@ -9,7 +10,7 @@ referencing the names used. Full Pike syntax is available, but please be
 aware: The code broadly assumes that the person devising the formula knows
 what s/he is doing. It is entirely possible to break things by mucking that
 up. So take a bit of care, and don't deploy without knowing that it's right. :)
-*/
+";
 
 inherit hook;
 
