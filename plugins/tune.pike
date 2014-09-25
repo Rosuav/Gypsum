@@ -1,7 +1,7 @@
-/*
+constant docstring=#"
 Tune people out on Threshold. Ported from C++; some code modelled off Hurkle's oocbox.
 Way WAY simpler than the C++ version, though it doesn't (bother to) keep stats.
-*/
+";
 
 inherit command;
 inherit hook;
