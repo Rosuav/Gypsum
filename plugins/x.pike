@@ -3,30 +3,31 @@ inherit hook;
 
 constant plugin_active_by_default = 1;
 
-/* Command executor and expression evaluator
+constant docstring=#"
+Command executor and expression evaluator
 
 Has two distinct modes, similar but with a few different operations. One is
 simpler, the other more flexible, and it's worth keeping both.
 
 Classic mode is convenient as a calculator and so on; it is primarily designed
 for a simple expression, and must handle but a single line of input. It is
-accessed by the "/x" command. It's the best way to manipulate the internals of
+accessed by the \"/x\" command. It's the best way to manipulate the internals of
 Gypsum, and it has some convenience shorthands which can be seen by looking at
 the source.
 
 Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode),
 and can handle multi-line expressions/commands, but is less convenient for
 simple actions as it requires the input to be properly terminated (usually that
-means adding a semicolon). It is accessed by the "pike" command, eg "pike 1+1;",
+means adding a semicolon). It is accessed by the \"pike\" command, eg \"pike 1+1;\",
 and will consume all input if it believes that more is needed to complete the
 current command.
 
-Note that typing "pike" on its own does not enter you into a different-prompt
+Note that typing \"pike\" on its own does not enter you into a different-prompt
 mode. This has sometimes surprised me, but I don't think it's really worth the
 trouble of fixing; for one thing, it'd require some means of knowing when to
 revert to MUD mode. Leave this as an unresolved issue unless some superb
 solution can be found.
-*/
+";
 
 string calculate(mapping(string:mixed) subw,string expr)
 {
