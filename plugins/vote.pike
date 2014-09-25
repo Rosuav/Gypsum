@@ -1,11 +1,16 @@
-//Threshold RPG vote assistant
-//Ticks down 12 hours, then reminds you to vote.
-//By default, it's non-intrusive. If you'd like it to be a bit more visible,
-//type this: /x persist["plugins/vote/color"]=11
-//That'll make a yellow highlight. (Other numbers for other colors, per the
-//usual definitions.)
-//By default, you get a non-personalized link. To personalize it to your
-//character, type this: /x persist["plugins/vote/character"]="yourname"
+constant docstring=#"
+Threshold RPG vote assistant
+Ticks down 12 hours, then reminds you to vote.
+By default, it's non-intrusive. If you'd like it to be a bit more visible,
+type this: /x persist[\"plugins/vote/color\"]=11
+That'll make a yellow highlight. (Other numbers for other colors, per the
+usual definitions.)
+
+By default, you get a non-personalized link. To personalize it to your
+character, type this: /x persist[\"plugins/vote/character\"]=\"yourname\"
+
+TODO: Add a configdlg for the above.
+";
 //TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
 //across Gypsums, but more importantly, means it needs to somehow detect its
 //external IP and re-highlight accordingly. Reference separate timestamps as
