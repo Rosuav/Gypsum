@@ -1,9 +1,11 @@
-//Time zone converter - handles two magical zones "local" (your local time,
-//whatever that be) and "Thresh" (Threshold RPG in-character time), plus all
-//timezones listed in tzdata. Puts one clock on the status bar and can convert
-//between any pre-specified set. There's quite a bit of Thresh-specific code,
-//and persist keys all begin "threshtime/", but this can happily be used with
-//no Threshold times.
+constant docstring=#"
+Time zone converter - handles two magical zones \"local\" (your local time,
+whatever that be) and \"Thresh\" (Threshold RPG in-character time), plus all
+timezones listed in tzdata. Puts one clock on the status bar and can convert
+between any pre-specified set. There's quite a bit of Thresh-specific code,
+and persist keys all begin \"threshtime/\", but this can happily be used with
+no Threshold times.
+";
 //Note that when Stash is launched, it may have its own clock. Auto-sync may
 //be tricky, but we can at least provide "Stash" as another pseudo-timezone.
 inherit hook;
