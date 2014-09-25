@@ -297,7 +297,7 @@ specific (signals certainly are), but they will break the plugin unloading
 system, which is admittedly fragile already. Use this sort of thing ONLY if
 you are absolutely sure you know what you're doing.
 
-Documentation can be provided by a string constant:
+Documentation (for Plugins|Configure) can be provided by a string constant:
 constant docstring=#"
 blah blah blah
 ";
