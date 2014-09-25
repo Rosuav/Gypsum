@@ -1,4 +1,5 @@
-/* Attempt to import settings from RosMud's .ini files
+constant docstring=#"
+Attempt to import settings from RosMud's .ini files
 
 Note that this will work across platforms. Mount your RM directory from a
 remote system, or archive it and copy it across, or whatever you like.
@@ -10,7 +11,8 @@ differences between RM and Gypsum, plus platform differences, screen size
 issues, etc, etc, etc, it's not worth hoping that the numbers have the
 same meaning on both. So we just let the human deal with that. Same with
 things like font. Sorry, folks. Not really a lot to do about that.
-
+";
+/*
 In an inversion of the usual rules, this plugin is allowed to "reach in"
 to any other plugin's memory space. Otherwise, all other plugins would be
 forced to go to extra effort somewhere (the simplest would be to demand
