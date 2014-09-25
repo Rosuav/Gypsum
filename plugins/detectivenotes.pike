@@ -2,8 +2,7 @@
 inherit plugin_menu;
 inherit hook;
 
-constant instructions=#"TODO: Put these somewhere user-facing.
-
+constant docstring=#"
 When the game begins, you're dealt some cards. Start by putting your own name
 as 'Owner' for each of those cards. If you want to keep track of who you've
 shown each card to, you have the other columns available, otherwise they'll
