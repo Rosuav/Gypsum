@@ -1,6 +1,12 @@
 //Status bar search box - hit Ctrl-F to put the cursor in there, enter something to search.
 constant plugin_active_by_default = 1;
 
+constant docstring=#"
+Provides the status-bar search box. Press Ctrl-F to put the cursor into that
+box; Enter searches (again if the text is unchanged); Esc returns the cursor
+to the main input field.
+";
+
 //TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
 //keystroke while focus is on the Ctrl-F box).
 
