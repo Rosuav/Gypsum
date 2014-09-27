@@ -44,7 +44,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		string first=persist["wealth/first_"+kwd];
 		if (first) last+=sprintf(" -> %d",diff(cur,last));
 		else persist["wealth/first_"+kwd]=first=cur;
-		say(conn->display,fmt[1],first,last);
+		say(conn->display,fmt[1],first,last); //TODO: Govern this with an option
 		persist["wealth/last_"+kwd]=cur;
 		persist["wealth/diff_"+kwd]=diff(cur,first);
 		if (!persist["wealth/stats_since"]) persist["wealth/stats_since"]=time();
