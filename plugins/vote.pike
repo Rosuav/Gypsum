@@ -2,12 +2,17 @@ constant docstring=#"
 Threshold RPG vote assistant
 Ticks down 12 hours, then reminds you to vote.
 By default, it's non-intrusive. If you'd like it to be a bit more visible,
-type this: /x persist[\"plugins/vote/color\"]=11
+type this:
+
+/x persist[\"plugins/vote/color\"]=11
+
 That'll make a yellow highlight. (Other numbers for other colors, per the
 usual definitions.)
 
 By default, you get a non-personalized link. To personalize it to your
-character, type this: /x persist[\"plugins/vote/character\"]=\"yourname\"
+character, type this:
+
+/x persist[\"plugins/vote/character\"]=\"yourname\"
 
 TODO: Add a configdlg for the above.
 ";
