@@ -1,6 +1,18 @@
 inherit command;
 inherit plugin_menu;
 
+constant docstring=#"
+Live code updater
+
+In most cases, this is able to download and apply the latest Gypsum without
+requiring a restart. This plugin also handles the unloading of other plugins
+(and yes, it is capable of unloading itself, after which you will need to
+reenable it (using the plugin configuration menu) before you can unload any
+other plugins).
+
+Plugin developers, this will be your primary tool for loading in new code.
+";
+
 constant plugin_active_by_default = 1;
 
 //Callbacks for 'update zip'
