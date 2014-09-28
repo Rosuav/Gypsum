@@ -1285,7 +1285,12 @@ class configure_plugins
 		{
 			docstring="(unable to compile, see source)";
 			add_constant("COMPILE_ONLY",1);
-			catch {docstring=compile_file(fn)->docstring || "(undocumented, see source)";};
+			catch
+			{
+				program p=compile_file(fn);
+				docstring=String.trim_all_whites(p->docstring || "(undocumented, see source)");
+				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
+			};
 			add_constant("COMPILE_ONLY");
 		}
 		//The MLE wraps, so we remove all newlines that aren't doubled.
