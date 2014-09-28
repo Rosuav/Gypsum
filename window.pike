@@ -1248,6 +1248,11 @@ void discover_plugins(string dir)
 	}
 }
 
+//Alternate implementation of Program.all_inherits - see pike:rosuav/pgm_all_inherits branch
+array(program) all_inherits(program p)
+{
+	return Program.inherit_list(p) + all_inherits(Program.inherit_list(p)[*]) * ({ });
+}
 constant plugins_configure_plugins="_Configure";
 class configure_plugins
 {
@@ -1290,6 +1295,8 @@ class configure_plugins
 				program p=compile_file(fn);
 				docstring=String.trim_all_whites(p->docstring || "(undocumented, see source)");
 				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
+				string provides=(all_inherits(p)->provides-({0}))*", ";
+				if (provides!="") docstring+="\n\nProvides: "+provides;
 			};
 			add_constant("COMPILE_ONLY");
 		}

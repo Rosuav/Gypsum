@@ -187,6 +187,7 @@ GTK2.Table two_column(array(string|GTK2.Widget) contents) {return GTK2Table(cont
 //Plugin that implements a command derived from its name
 class command
 {
+	constant provides="slash command";
 	int process(string param,mapping(string:mixed) subw) {}
 	void create(string name)
 	{
@@ -198,6 +199,7 @@ class command
 //Plugin that hooks input and/or output
 class hook
 {
+	constant provides="input/output hook";
 	int inputhook(string line,mapping(string:mixed) subw) {}
 	int outputhook(string line,mapping(string:mixed) conn) {}
 	string hookname;
@@ -216,6 +218,7 @@ class hook
 //Wants a new name... Puts this plugin into the Plugins menu.
 class plugin_menu
 {
+	constant provides="Plugins menu entry";
 	//Provide:
 	constant menu_label=0; //(string) The initial label for your menu item. If not provided, will use the plugin name.
 	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
@@ -252,6 +255,7 @@ class plugin_menu
 //Generic window handler. If a plugin inherits this, it will normally show the window on startup and keep it there, though other patterns are available.
 class window
 {
+	constant provides="window";
 	mapping(string:mixed) win=([]);
 	constant is_subwindow=1; //Set to 0 to disable the taskbar/pager hinting
 
@@ -517,6 +521,7 @@ class configdlg
 //is no longer an issue, but see aa6a01 if you want to know what was said.)
 class statustext
 {
+	constant provides="status bar entry";
 	mapping(string:mixed) statustxt=([]);
 	void create(string name)
 	{
