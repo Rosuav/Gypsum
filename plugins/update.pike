@@ -143,7 +143,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 		//Doesn't use reallydelete() as it can't distinguish current from old (hence this whole block
 		//is done only if (!keepme) ie if it's a full unload).
 		say(subw,"%% Global usage: "+globl);
-		if (confirm) G->globalusage[globl]-=({param});
+		if (confirm) G->globalusage[globl]=usages-({param}); //20140929: For some reason -= isn't working properly here (??)
 	}
 	#if constant(COMPAT_SIGNAL)
 	foreach (G->G->enterpress;object focus;function callback) if (origin(callback)==param)
