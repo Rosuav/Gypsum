@@ -1287,7 +1287,7 @@ class configure_plugins
 			add_constant("COMPILE_ONLY",1);
 			catch
 			{
-				program p=compile_file(fn);
+				program p=compile_string(Stdio.read_file(fn),".probe");
 				docstring=String.trim_all_whites(p->docstring || "(undocumented, see source)");
 				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
 				string provides=(Program.all_inherits(p)->provides-({0}))*", ";
