@@ -1238,9 +1238,7 @@ void discover_plugins(string dir)
 		{
 			//Try to compile the plugin. If that succeeds, look for a constant plugin_active_by_default;
 			//if it's found, that's the default active state. (Normally, if it's present, it'll be 1.)
-			add_constant("COMPILE_ONLY",1);
-			program compiled; catch {compiled=compile_file(fn);};
-			add_constant("COMPILE_ONLY");
+			program compiled=probe_plugin(fn);
 			//Note that if compilation fails, this will still put in an entry. It'd then require manual
 			//overriding to say "go and activate this"; the active_by_default marker will no longer work.
 			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
@@ -1284,16 +1282,13 @@ class configure_plugins
 		if (string fn=selecteditem())
 		{
 			docstring="(unable to compile, see source)";
-			add_constant("COMPILE_ONLY",1);
-			catch
+			if (program p=probe_plugin(fn))
 			{
-				program p=compile_string(Stdio.read_file(fn),".probe");
 				docstring=String.trim_all_whites(p->docstring || "(undocumented, see source)");
 				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
 				string provides=(Program.all_inherits(p)->provides-({0}))*", ";
 				if (provides!="") docstring+="\n\nProvides: "+provides;
-			};
-			add_constant("COMPILE_ONLY");
+			}
 		}
 		//The MLE wraps, so we remove all newlines that aren't doubled.
 		docstring=replace((docstring/"\n\n")[*],"\n"," ")*"\n\n";

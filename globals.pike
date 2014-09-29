@@ -848,3 +848,19 @@ class Time
 	inherit Hex;
 	string _sprintf(int type,mapping|void params) {return type=='O'?format_time(num):sprintf((string)({'%','*',type}),params||([]),num);}
 }
+
+//Probe a plugin and return a program usable for retrieving constants, but not
+//for instantiation. This should be used any time the program won't be cloned,
+//as it avoids creating log entries under that file name, and also permits the
+//plugin to avoid loading itself completely. If there's any sort of exception,
+//UNDEFINED will be returned; compilation errors are silenced.
+void compile_error(string fn,int l,string msg) { }
+void compile_warning(string fn,int l,string msg) { }
+program probe_plugin(string filename)
+{
+	add_constant("COMPILE_ONLY",1);
+	program ret=UNDEFINED;
+	catch {ret=compile_string(Stdio.read_file(fn(filename)),".probe",this);};
+	add_constant("COMPILE_ONLY");
+	return ret;
+}
