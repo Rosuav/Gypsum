@@ -143,7 +143,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 		//Doesn't use reallydelete() as it can't distinguish current from old (hence this whole block
 		//is done only if (!keepme) ie if it's a full unload).
 		say(subw,"%% Global usage: "+globl);
-		if (confirm) G->globalusage[globl]=usages-({param}); //20140929: For some reason -= isn't working properly here (??)
+		if (confirm) G->globalusage[globl]=usages-({param}); //20140929: The obvious form using -= is broken as of Pike b2d25e, so we use this for now. 7.8.866 seems to be fine, so this can be reverted once it's fixed in 8.0.
 	}
 	#if constant(COMPAT_SIGNAL)
 	foreach (G->G->enterpress;object focus;function callback) if (origin(callback)==param)
