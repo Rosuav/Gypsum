@@ -829,6 +829,8 @@ string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 
 //Or perhaps more convenient: a hexadecimal integer, with its repr being 0xNNNN.
 //Basic operations on it will continue to return hex integers.
+//Note that it may be possible to simply subclass Gmp.mpz - test this, esp on
+//older Pikes.
 class Hex(int num)
 {
 	mixed cast(string type) {if (type=="int") return num;}
