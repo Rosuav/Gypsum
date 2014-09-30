@@ -10,6 +10,7 @@
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 * Figure out whether file names are bytes or text, and design appropriately. May be diff on diff platforms??
+* Generalized way for plugins to be configured??
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
