@@ -10,8 +10,6 @@
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 * Figure out whether file names are bytes or text, and design appropriately. May be diff on diff platforms??
-* Probing a plugin creates globalusage[] entries, which means subsequently updating globals will load them. BAD.
-  - Maybe prevent any globalusage[] creation while COMPILE_ONLY is set??
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
