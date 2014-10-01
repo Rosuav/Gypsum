@@ -11,6 +11,7 @@
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
 * Figure out whether file names are bytes or text, and design appropriately. May be diff on diff platforms??
 * Generalized way for plugins to be configured?? Only loaded plugins can be configured, so it may be awkward.
+  - Would require some kind of registration with the system, so this will need the proper enhancement protocol.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
