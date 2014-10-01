@@ -5,6 +5,7 @@
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
   - Seen 20140407; not seen again for a while 20140514. DNS issue maybe?? See also 77f192, may have solved it??
   - Still haven't seen it again 20140718, quite probably is solved.
+  - Hmm, might this be connected (huh huh) to Pike b1f196 / bug 7293?
 * Some kind of system for suppressing statusbar entries without each plugin having to do it.
   Maybe a multiset of plugin IDs (basenames) which should have their primary statusbar frames
   hidden instead of visible?
