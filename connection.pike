@@ -365,7 +365,7 @@ void connfailed(mapping conn)
 }
 
 /**
- * Sends a telnet keep alive packet.
+ * Repeater for telnet keep-alive packets.
  *
  * @param conn Current connection
  */
