@@ -377,7 +377,7 @@ void ka(mapping conn)
 }
 
 /**
- * Establishes a connection with with the provided world and links it to a display
+ * Establish a connection with with the provided world and link it to a display
  *
  * @param display 	The display (subwindow) to which the connection should be linked
  * @param info	  	The information about the world to which the connection should be established
