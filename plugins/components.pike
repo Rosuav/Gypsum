@@ -48,7 +48,9 @@ void makelabels()
 {
 	win->display->resize(sizeof(components)||1,2,0);
 	if (win->labels) ({win->labels,win->counts})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
-	win->labels=GTK2.Label(sort(indices(components))[*])->set_alignment(0.0,0.0); win->counts=allocate(sizeof(components));
+	win->labels=GTK2.Label(sort(indices(components))[*])->set_alignment(0.0,0.0);
+	if (!sizeof(win->labels)) win->labels=({GTK2.Label("(no components known yet)")});
+	win->counts=allocate(sizeof(win->labels));
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
 		->attach_defaults(win->counts[i]=GTK2.Label("")->set_alignment(1.0,0.0),1,2,i,i+1);
