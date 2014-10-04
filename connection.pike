@@ -331,7 +331,7 @@ void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
 
 //Socket accept callback - creates a new subw with the connected socket.
 //Note that this has some hacks. Changes to other parts of Gypsum (eg in
-//window.pike) may break it. Be careful.
+//window.pike) may break it. Be careful. (Last checked 20141004.)
 void sockaccept(mapping conn)
 {
 	while (object sock=conn->sock->accept())
