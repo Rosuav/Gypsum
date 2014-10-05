@@ -1260,7 +1260,7 @@ class configure_plugins
 
 	GTK2.Widget make_content()
 	{
-		return GTK2.Vbox(0,10) //Note that the "useless" Vbox here means that two_column doesn't expand to fill the height, which looks tidier.
+		return GTK2.Vbox(0,10)
 			->pack_start(two_column(({
 				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Active"),
