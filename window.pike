@@ -1264,7 +1264,7 @@ class configure_plugins
 			->pack_start(two_column(({
 				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Activate on startup"),
-				"",win->deactivate=GTK2.Button("Deactivate")->set_sensitive(0),
+				"",win->deactivate=GTK2.Button("Deactivate"),
 				//"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
 			})),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
@@ -1303,13 +1303,18 @@ class configure_plugins
 		info->active=nowactive;
 	}
 
+	string lastsel;
 	void sig_deactivate_clicked()
 	{
 		//TODO: Make this a toggle: activate or deactivate. Will need to somehow
 		//know whether a plugin is active or not; this may involve something like
 		//unload() does, or it may be better to have some external record of its
 		//active status (which doesn't, obviously, get saved to persist[]).
-		say(0,"%% TODO: /unload "+(selecteditem()||""));
+		if (!G->G->commands->unload) return;
+		string sel=selecteditem(); if (!sel) return;
+		int confirm=(sel==lastsel); lastsel=sel;
+		G->G->commands->unload("confirm "*confirm+sel,current_subw());
+		if (!confirm) say(0,"%% Or click the Deactivate button a second time.");
 	}
 }
 
