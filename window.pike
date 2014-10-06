@@ -1263,7 +1263,7 @@ class configure_plugins
 		return GTK2.Vbox(0,10)
 			->pack_start(two_column(({
 				"Filename",win->kwd=GTK2.Entry(),
-				"",win->active=GTK2.CheckButton("Active"),
+				"",win->active=GTK2.CheckButton("Activate on startup"),
 				"",win->deactivate=GTK2.Button("Deactivate")->set_sensitive(0),
 				//"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
 			})),0,0,0)
