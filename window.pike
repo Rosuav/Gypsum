@@ -1305,6 +1305,10 @@ class configure_plugins
 
 	void sig_deactivate_clicked()
 	{
+		//TODO: Make this a toggle: activate or deactivate. Will need to somehow
+		//know whether a plugin is active or not; this may involve something like
+		//unload() does, or it may be better to have some external record of its
+		//active status (which doesn't, obviously, get saved to persist[]).
 		say(0,"%% TODO: /unload "+(selecteditem()||""));
 	}
 }
