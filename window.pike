@@ -1264,7 +1264,8 @@ class configure_plugins
 			->pack_start(two_column(({
 				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Active"),
-				"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
+				"",win->deactivate=GTK2.Button("Deactivate")->set_sensitive(0),
+				//"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
 			})),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
@@ -1300,6 +1301,11 @@ class configure_plugins
 		int nowactive=win->active->get_active();
 		if (!info->active && nowactive) build(selecteditem());
 		info->active=nowactive;
+	}
+
+	void sig_deactivate_clicked()
+	{
+		say(0,"%% TODO: /unload "+(selecteditem()||""));
 	}
 }
 
