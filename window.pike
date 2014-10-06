@@ -1253,8 +1253,7 @@ class configure_plugins
 	mapping(string:mixed) windowprops=(["title":"Activate/deactivate plugins"]);
 	constant allow_rename=0;
 	constant persist_key="plugins/status";
-	//NOTE: Cannot use simple bindings as it needs to know the previous state
-	//Note also: This does not unload plugins on deactivation. Maybe it should?
+	constant bools=({"active"});
 
 	void create() {discover_plugins("plugins"); ::create();}
 
@@ -1264,6 +1263,7 @@ class configure_plugins
 			->pack_start(two_column(({
 				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Activate on startup"),
+				"",win->activate=GTK2.Button("Activate"),
 				"",win->deactivate=GTK2.Button("Deactivate"),
 				//"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
 			})),0,0,0)
@@ -1276,7 +1276,6 @@ class configure_plugins
 
 	void load_content(mapping(string:mixed) info)
 	{
-		win->active->set_active(info->active);
 		//TODO: Cache this somewhere, at least per-run; wipe out the cache any time
 		//the plugin is reloaded.
 		string docstring="";
@@ -1296,20 +1295,11 @@ class configure_plugins
 		win->docs->set_text(String.trim_all_whites(docstring));
 	}
 
-	void save_content(mapping(string:mixed) info)
-	{
-		int nowactive=win->active->get_active();
-		if (!info->active && nowactive) build(selecteditem());
-		info->active=nowactive;
-	}
+	void sig_activate_clicked() {build(selecteditem());}
 
 	string lastsel;
 	void sig_deactivate_clicked()
 	{
-		//TODO: Make this a toggle: activate or deactivate. Will need to somehow
-		//know whether a plugin is active or not; this may involve something like
-		//unload() does, or it may be better to have some external record of its
-		//active status (which doesn't, obviously, get saved to persist[]).
 		if (!G->G->commands->unload) return;
 		string sel=selecteditem(); if (!sel) return;
 		int confirm=(sel==lastsel); lastsel=sel;
