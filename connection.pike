@@ -20,6 +20,19 @@
  * 
  */
 
+/*
+Note that a subwindow (see window.pike and its mappings) has a maximum of one
+connection, and the "maximum of" part is fairly optional (could be replaced by
+"exactly" if desired). Why is it a separate mapping? Why not just pass the subw
+to all connection.pike code, and stash stuff directly in there?
+
+When a connection is reset, it's convenient and clean to completely replace the
+connection mapping, thus guaranteeing that all state has been reset. Or, if you
+look at it the other way around, stashing some piece of state in the connection
+instead of the subw is the way to say "reset this when the connection closes".
+Future policy: Ensure that everything retained is in subw[] not connection[].
+*/
+
 void create(string name)
 {
 	G->G->connection=this;
