@@ -9,6 +9,17 @@ inherit plugin_menu;
 
 constant plugin_active_by_default = 1;
 
+constant docstring=#"
+Simple client-side aliases: replace one command with another.
+
+Allows two forms of alias: global and per-world. Per-world aliases are
+configured by first connecting to that world, and then calling up the
+menu item 'Aliases - this world'; global aliases can be configured in a
+similar way, or via the /alias command - type '/alias help' for instructions.
+
+Aliases cannot expand to slash commands, and cannot expand to other aliases.
+";
+
 // Current Mapping:
 // Mapping     Mapping
 // |==========||=============================|
