@@ -11,8 +11,10 @@ Installation information and tips for Windows and for Mac OS X can be found in
 README.WIN and README.OSX respectively. Installation on Linux depends on your
 distribution; check your package manager for "pike" or see the above web site.
 
-To keep up-to-date with changes in Gypsum, add this to your RSS reader:
+To be notified of changes to Gypsum, add this to your RSS reader:
 https://github.com/Rosuav/Gypsum/commits/master.atom
+Updating can be done without disconnecting or restarting the program, via the
+plugins menu.
 
 Gypsum follows Semantic Versioning v2.0.0; other than explicitly tagged
 versions, the given version number will have the tag "-git". Versioning a
