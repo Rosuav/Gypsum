@@ -1,5 +1,7 @@
+#ifdef G
 inherit command;
 inherit plugin_menu;
+#endif
 
 constant docstring=#"
 Live code updater
@@ -29,6 +31,7 @@ void data_available(object q,mapping(string:mixed) subw)
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
 void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
 
+#ifdef G
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say(subw,"%% Update what?"); return 1;}
@@ -169,3 +172,18 @@ void create(string name)
 	set_menu_text(menu_label+" ("+mode+")");
 	G->G->commands->unload=unload;
 }
+#else
+mapping G=([]);
+function say=write,unzip;
+void process(string all,mapping subw) {exit(0,"Update complete.\n");}
+int main(int argc,array(string) argv)
+{
+	cd(combine_path(@explode_path(argv[0])[..<2]));
+	add_constant("G",this); add_constant("persist",this); add_constant("add_gypsum_constant",add_constant);
+	unzip=((object)"../globals")->unzip;
+	Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
+		Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,([])));
+	write("Downloading latest Gypsum...\n");
+	return -1;
+}
+#endif
