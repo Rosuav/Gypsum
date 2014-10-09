@@ -173,6 +173,8 @@ void create(string name)
 	G->G->commands->unload=unload;
 }
 #else
+//Stand-alone usage: '/update zip' but with minimal dependencies
+//Ideally, this will work even if startup is failing.
 mapping G=([]);
 function say=write,unzip;
 void process(string all,mapping subw) {exit(0,"Update complete.\n");}
