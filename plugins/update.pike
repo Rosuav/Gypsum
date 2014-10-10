@@ -16,6 +16,7 @@ Plugin developers, this will be your primary tool for loading in new code.
 ";
 
 constant plugin_active_by_default = 1;
+int simulate; //For command-line usage, allow a "don't actually save anything" test usage
 
 //Callbacks for 'update zip'
 void data_available(object q,mapping(string:mixed) subw)
@@ -24,6 +25,7 @@ void data_available(object q,mapping(string:mixed) subw)
 	{
 		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
 		if (fn=="") return; //Ignore the first-level directory entry
+		if (simulate) {++simulate; return;}
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
 	});}) {say(subw,"%% "+describe_error(err)); return;}
 	process("all",subw);
@@ -177,10 +179,11 @@ void create(string name)
 //Ideally, this will work even if startup is failing.
 mapping G=([]);
 function say=write,unzip;
-void process(string all,mapping subw) {exit(0,"Update complete.\n");}
+void process(string all,mapping subw) {exit(0,"Update complete [%d].\n",simulate);}
 int main(int argc,array(string) argv)
 {
 	cd(combine_path(@explode_path(argv[0])[..<2]));
+	simulate=argc>1 && argv[1]=="--simulate";
 	add_constant("G",this); add_constant("persist",this); add_constant("add_gypsum_constant",add_constant);
 	unzip=((object)"../globals")->unzip;
 	Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
