@@ -25,7 +25,7 @@ void data_available(object q,mapping(string:mixed) subw)
 	{
 		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
 		if (fn=="") return; //Ignore the first-level directory entry
-		if (simulate) {++simulate; return;}
+		if (simulate) {++simulate; return;} //Count up the files and directories to allow simple verification
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
 	});}) {say(subw,"%% "+describe_error(err)); return;}
 	process("all",subw);
