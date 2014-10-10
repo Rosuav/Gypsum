@@ -1,0 +1,7 @@
+#!/bin/bash
+# Install with `ln -s sancheck .git/hooks/pre-push` to ensure that the minimal
+# dependency update works before anything gets pushed.
+diff -u - <(pike plugins/update.pike --simulate 2>&1) <<EOF
+Downloading latest Gypsum...
+Update complete [43].
+EOF
