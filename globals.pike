@@ -707,6 +707,8 @@ class redirect(Stdio.File file,string|Stdio.File|void target)
 //Note that content errors will be thrown, but previously-parsed content has already been
 //passed to the callback. This may be considered a feature.
 //Note that this can't cope with prefixed zip data (eg a self-extracting executable).
+//Should this be shifted to update.pike? Nothing else uses it, currently, and it would
+//allow stand-alone updates to ignore all of globals.pike.
 void unzip(string data,function callback,mixed|void callback_arg)
 {
 	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
