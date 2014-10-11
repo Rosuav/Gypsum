@@ -1303,7 +1303,7 @@ class configure_plugins
 		if (!G->G->commands->unload) return;
 		string sel=selecteditem(); if (!sel) return;
 		int confirm=(sel==lastsel); lastsel=sel;
-		//TODO: Don't tie this to a command.
+		//TODO: Don't tie this to a plugin-provided command.
 		G->G->commands->unload("confirm "*confirm+sel,current_subw());
 		if (!confirm) say(0,"%% Or click the Deactivate button a second time.");
 	}
