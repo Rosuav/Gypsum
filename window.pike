@@ -1288,6 +1288,8 @@ class configure_plugins
 				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
 				string provides=(Program.all_inherits(p)->provides-({0}))*", ";
 				if (provides!="") docstring+="\n\nProvides: "+provides;
+				//Can also list any other "obvious" info, eg menu_label. Not sure how best to
+				//collect that, though, and it won't cope with plugins that create two of them.
 			}
 		}
 		//The MLE wraps, so we remove all newlines that aren't doubled.
