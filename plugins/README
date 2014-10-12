@@ -303,7 +303,8 @@ blah blah blah
 ";
 It will be rewrapped for display, so wrap it to whatever's convenient for the
 source code. Two newlines form a paragraph; there's currently no way to make
-preformatted text.
+preformatted text. There's no need to repeat the obvious; some information will
+be added based on inherits and such.
 
 ADVISORY: Commands can be synthesized directly to a subw or conn:
 send(conn,line+"\r\n");
