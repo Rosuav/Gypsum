@@ -105,7 +105,7 @@ int main(int argc,array(string) argv)
 	add_constant("INIT_GYPSUM_VERSION",globals->gypsum_version());
 	bootstrap("connection.pike");
 	bootstrap("window.pike");
-	//TODO maybe: Chain to update.pike to grab the latest.
+	//TODO maybe: Chain on errors to update.pike to grab the latest.
 	if (!globals->say) {GTK2.MessageDialog(0,0,GTK2.BUTTONS_OK,"Startup error - see log for details.")->show()->signal_connect("response",lambda() {exit(0);}); return -1;}
 	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
 	if (G->commands->connect) //Note that without this plugin, connecting sockets will be impossible. This MAY make Gypsum mostly useless.
