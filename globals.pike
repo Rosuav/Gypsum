@@ -516,7 +516,7 @@ class configdlg
 //By default you get a simple GTK2.Label (hence the name "text"),
 //but this can be altered by overriding makestatus(), which
 //must set statustxt->lbl and return either it or a parent of it.
-//For example, wrapping a label in an EventBox can be useful.
+//For example, wrapping a label in an EventBox can be useful - see statusevent below.
 //(Previously I had some notes here about wrapping to multiple lines. This
 //is no longer an issue, but see aa6a01 if you want to know what was said.)
 class statustext
