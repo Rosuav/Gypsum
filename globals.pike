@@ -327,6 +327,7 @@ class movablewindow
 	inherit window;
 	constant pos_key=0; //(string) Set this to the persist[] key in which to store and from which to retrieve the window pos
 	constant load_size=0; //If set to 1, will attempt to load the size as well as position. (It'll always be saved.)
+	constant provides=0;
 
 	void makewindow()
 	{
@@ -548,6 +549,7 @@ class statustext
 class statusevent
 {
 	inherit statustext;
+	constant provides=0;
 	void create(string name)
 	{
 		::create(name);
