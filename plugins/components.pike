@@ -1,6 +1,12 @@
-//For Threshold RPG: keep track of your currently-held components in a separate window.
 inherit hook;
 inherit movablewindow;
+
+constant docstring=#"
+For Threshold RPG: keep track of your currently-held components in a separate window.
+
+May well have been broken by the Mage/Sorc Merge of 2014; need a volunteer to assist
+with verification.
+";
 
 //Persist key chosen to allow separate components display for alchies. This may or may not be useful.
 //It might be worth having two or three of these, and any which have content will be displayed in
