@@ -1,4 +1,4 @@
-#ifdef G
+#if constant(G)
 inherit command;
 inherit plugin_menu;
 #endif
@@ -33,7 +33,7 @@ void data_available(object q,mapping(string:mixed) subw)
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
 void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
 
-#ifdef G
+#if constant(G)
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say(subw,"%% Update what?"); return 1;}
