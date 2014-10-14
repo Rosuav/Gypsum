@@ -543,6 +543,8 @@ class statustext
 }
 
 //Like statustext, but has an eventbox and responds to a double-click.
+//As well as being useful in itself, this can be a template for other non-text
+//statusbar usage - see makestatus() and imitate.
 class statusevent
 {
 	inherit statustext;
