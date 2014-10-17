@@ -31,7 +31,7 @@ connection mapping, thus guaranteeing that all state has been reset. Or, if you
 look at it the other way around, stashing some piece of state in the connection
 instead of the subw is the way to say "reset this when the connection closes".
 Future policy: Ensure that everything retained is in subw[] not connection[].
-Then it might be worth actually deleting the connection on close.
+Then it might be worth actually disposing of the connection mapping on close.
 */
 
 void create(string name)
