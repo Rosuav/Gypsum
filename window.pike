@@ -1265,7 +1265,6 @@ class configure_plugins
 				"",win->active=GTK2.CheckButton("Activate on startup"),
 				"",win->activate=GTK2.Button("Activate/Reload"),
 				"",win->deactivate=GTK2.Button("Deactivate"),
-				//"NOTE: Deactivating a plugin will not unload it.\nUse the /unload command or restart Gypsum.",0,
 			})),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
