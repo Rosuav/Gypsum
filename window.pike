@@ -1296,7 +1296,7 @@ class configure_plugins
 		win->docs->set_text(String.trim_all_whites(docstring));
 	}
 
-	void sig_activate_clicked() {build(selecteditem());}
+	void sig_activate_clicked() {if (string sel=selecteditem()) build(sel);}
 
 	void sig_deactivate_clicked()
 	{
