@@ -216,7 +216,7 @@ class highlightwords(mixed|void selectme)
 				"Last change",win->lastchange=GTK2.Label(),
 			})),0,0,0)
 			->add(GTK2.Frame("Description")->add(
-				win->descr=MultiLineEntryField()->set_size_request(250,70)
+				win->descr=MultiLineEntryField()->set_size_request(250,70)->set_wrap_mode(GTK2.WRAP_WORD)
 			))
 			->pack_start(GTK2.Label((["label":"Any words listed here will be highlighted any time they occur"
 				" in the display. You can add notes to any word in this way.","wrap":1])),0,0,0)
