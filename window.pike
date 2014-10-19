@@ -313,7 +313,10 @@ void mousedown(object self,object ev,mapping subw)
 	if (ev->type=="2button_press")
 	{
 		//Double-click. Configure highlighting - if it's already a highlighted word, then
-		//any double-click will do, otherwise require ctrl-dbl-click.
+		//any double-click will do, otherwise require ctrl-dbl-click. Note that this doesn't
+		//look to see if the mouse is over a highlight; it picks up a word, nothing more. If
+		//a phrase is highlighted, or only part of the word (imagine putting a highlight on
+		//a person's name, and then seeing that name with punctuation), this won't be hit.
 		string word=word_at_pos(subw,line,col);
 		if (highlightkeywords[word] || ev->state&GTK2.GDK_CONTROL_MASK) highlightwords(word);
 		return;
