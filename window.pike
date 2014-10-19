@@ -1305,7 +1305,10 @@ class configure_plugins
 	{
 		if (!G->G->commands->unload) return;
 		string sel=selecteditem(); if (!sel) return;
-		//TODO: Don't tie this to a plugin-provided command.
+		//TODO: Don't tie this to a plugin-provided command. However, unload() can't go into
+		//globals.pike for the same reason build() couldn't: it uses say(). So maybe there
+		//needs to be another file called plugins.pike which handles all this? Or else just
+		//have it all here in window.pike.
 		G->G->commands->unload("confirm "+sel,current_subw());
 	}
 }
