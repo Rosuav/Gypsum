@@ -473,16 +473,18 @@ class configdlg
 					->add(win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.
 						->append_column(GTK2.TreeViewColumn("Item",GTK2.CellRendererText(),"text",0))
 					)
-					->add(make_content())
+					->add(GTK2.Vbox(0,0)
+						->add(make_content())
+						->pack_end(
+							win->buttonbox=(actionbtn?GTK2.HbuttonBox()
+							->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
+							:GTK2.HbuttonBox())
+							->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
+							->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1,"sensitive":allow_delete])))
+						,0,0,0)
+					)
 				)
-				->pack_end(
-					win->buttonbox=(actionbtn?GTK2.HbuttonBox()
-					->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
-					:GTK2.HbuttonBox())
-					->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
-					->add(win->pb_delete=GTK2.Button((["label":"_Delete","use-underline":1,"sensitive":allow_delete])))
-					->add(stock_close())
-				,0,0,0)
+				->add(GTK2.HbuttonBox()->add(stock_close()))
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
