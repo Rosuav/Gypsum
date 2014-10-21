@@ -476,7 +476,7 @@ class configdlg
 					->add(GTK2.Vbox(0,0)
 						->add(make_content())
 						->pack_end(
-							win->buttonbox=(actionbtn?GTK2.HbuttonBox()
+							(actionbtn?GTK2.HbuttonBox()
 							->add(win->pb_action=GTK2.Button((["label":actionbtn,"use-underline":1])))
 							:GTK2.HbuttonBox())
 							->add(win->pb_save=GTK2.Button((["label":"_Save","use-underline":1])))
@@ -484,7 +484,7 @@ class configdlg
 						,0,0,0)
 					)
 				)
-				->add(GTK2.HbuttonBox()->add(stock_close()))
+				->add(win->buttonbox=GTK2.HbuttonBox()->pack_end(stock_close(),0,0,0))
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
