@@ -20,6 +20,8 @@ TODO: Add a configdlg for the above.
 //across Gypsums, but more importantly, means it needs to somehow detect its
 //external IP and re-highlight accordingly. Reference separate timestamps as
 //persist["plugins/vote/nexttime/"+ip] or similar.
+//The detection of external IP could ideally be tied in to Threshold RPG's
+//server, but otherwise, any What Is My IP service would do.
 inherit plugin_menu;
 inherit statusevent;
 
