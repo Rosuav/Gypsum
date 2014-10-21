@@ -432,7 +432,7 @@ class configdlg
 		if (newkwd!=oldkwd)
 		{
 			[object iter,object store]=win->sel->get_selected();
-			if (!oldkwd) win->sel->select_iter(iter=store->append());
+			if (!oldkwd) win->sel->select_iter(iter=store->insert_before(win->new_iter));
 			store->set_value(iter,0,newkwd);
 		}
 	}
@@ -466,7 +466,7 @@ class configdlg
 		object ls=GTK2.ListStore(({"string"}));
 		if (persist_key && !items) items=persist[persist_key];
 		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
-		object new; if (allow_new) ls->set_value(new=ls->append(),0,"-- New --");
+		if (allow_new) ls->set_value(win->new_iter=ls->append(),0,"-- New --");
 		win->mainwindow=GTK2.Window(windowprops)
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
@@ -486,7 +486,7 @@ class configdlg
 				)
 				->add(win->buttonbox=GTK2.HbuttonBox()->pack_end(stock_close(),0,0,0))
 			);
-		win->sel=win->list->get_selection(); win->sel->select_iter(new||ls->get_iter_first()); sig_sel_changed();
+		win->sel=win->list->get_selection(); win->sel->select_iter(win->new_iter||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
 	}
 
