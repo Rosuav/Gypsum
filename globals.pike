@@ -260,10 +260,15 @@ class window
 	constant is_subwindow=1; //Set to 0 to disable the taskbar/pager hinting
 
 	//Replace this and call the original after assigning to win->mainwindow.
-	void makewindow() { }
+	void makewindow() {if (win->accelgroup) win->mainwindow->add_accel_group(win->accelgroup);}
 
 	//Stock item creation: Close button. Calls closewindow(), same as clicking the cross does.
-	GTK2.Button stock_close() {return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]));}
+	GTK2.Button stock_close()
+	{
+		if (!win->accelgroup) win->accelgroup=GTK2.AccelGroup();
+		return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))
+			->add_accelerator("clicked",win->accelgroup,0xFF1B,0,0);
+	}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
