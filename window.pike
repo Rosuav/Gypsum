@@ -161,9 +161,7 @@ void subwsignals(mapping(string:mixed) subw)
 //Snapshot the selection bounds so the switch_page handler can reset them
 int focus(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
 
-/**
- * Update the scroll bar's range
- */
+//Snap the scroll bar to the bottom every time its range changes (ie when a line is added)
 void scrchange(object self,mapping subw)
 {
 	if (paused) return;
