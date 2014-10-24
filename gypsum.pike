@@ -61,10 +61,10 @@ void add_gypsum_constant(string name,mixed val)
 
 //Global so it can be queried by Advanced Options in window.pike
 mapping(string:int) compat=([
-	"signal":([7.8:734,8.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //Inability to connect 'before' a signal
+	"signal":([7.8:734])[__REAL_VERSION__]>__REAL_BUILD__, //Inability to connect 'before' a signal
 	"pausekey":0, //"Pause" key generates VoidSymbol 0xFFFFFF instead of Pause 0xFF13. No longer active by default as it causes problems on Windows 8.
 	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix - see usage
-	"msgdlg":([7.8:876,8.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
+	"msgdlg":([7.8:876])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
 ]);
 
 void create(string|void name)
