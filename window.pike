@@ -965,7 +965,7 @@ class fontdlg
 {
 	inherit configdlg;
 	constant persist_key="window/font";
-	constant allow_new=0;
+	constant allow_new=0,allow_rename=0,allow_delete=0;
 	void create() {::create();}
 
 	GTK2.Widget make_content()
