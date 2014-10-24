@@ -10,6 +10,8 @@ to the main input field.
 //TODO: Alternative search modes - regex maybe? Have an easy way to switch (eg
 //keystroke while focus is on the Ctrl-F box).
 
+//TODO: "Search from here". Something like "start the search at the scroll point".
+
 inherit statustext;
 inherit plugin_menu;
 
