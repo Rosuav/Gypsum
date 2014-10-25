@@ -391,5 +391,6 @@ string-for-string identical every time the same world is connected to.
 conn->worldname - descriptive name for the current world (used as tab text,
 for instance). Should be used as a human-readable world description.
 
-conn->sock - socket object, if connected. It's possible for there to be a
-subw->connection but for its sock to be 0/absent.
+conn->sock - socket object, if connected. It's currently possible for there to
+be a subw->connection but for its sock to be 0/absent; this may change in the
+future, with the entire connection mapping being disposed of.
