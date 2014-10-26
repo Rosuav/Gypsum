@@ -12,6 +12,9 @@ to the main input field.
 
 //TODO: "Search from here". Something like "start the search at the scroll point".
 
+//Note that Ctrl-Enter and Shift-Enter are currently the same as Enter. This could
+//be a source of extra controls for the above.
+
 inherit statustext;
 inherit plugin_menu;
 
