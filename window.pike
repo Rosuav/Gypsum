@@ -508,6 +508,8 @@ void redraw(mapping subw)
 	subw->maindisplay->queue_draw();
 }
 
+//Called externally to provide an opaque object representing a color state.
+//Whatever it returns is to be acceptable in say(); it's just a cookie.
 int mkcolor(int fg,int bg)
 {
 	return fg | (bg<<16);
