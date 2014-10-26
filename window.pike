@@ -510,6 +510,9 @@ void redraw(mapping subw)
 
 //Called externally to provide an opaque object representing a color state.
 //Whatever it returns is to be acceptable in say(); it's just a cookie.
+//Supporting 256 color mode would require changes here, plus changes to the
+//parsing code in connection.pike, but probably nothing else. Could be worth
+//doing, if someone wants to support it.
 int mkcolor(int fg,int bg)
 {
 	return fg | (bg<<16);
