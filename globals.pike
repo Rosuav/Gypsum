@@ -841,28 +841,22 @@ string fn(string param)
 string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 
 //Or perhaps more convenient: a hexadecimal integer, with its repr being 0xNNNN.
-//Basic operations on it will continue to return hex integers.
-//Note that it may be possible to simply subclass Gmp.mpz - test this, esp on
-//older Pikes. Or just wait for 8.0 stable, then drop 7.8 support, then do it.
-//TODO: This can hang if you subtract one from another. Fix.
-class Hex(int num)
+//Basic operations on it should continue to return hex integers.
+//Note that this method may not work on older Pikes, and therefore may need to be guarded with a
+//COMPAT option. Checkout 0209a4 for an alternative implementation (with its own flaws).
+//Note that explicit casts don't seem to work, without using mpz::this. Not sure why.
+class Hex
 {
-	mixed cast(string type) {if (type=="int") return num;}
-	int(0..1) is_type(string type) {if (type=="int") return 1;}
-	#define lhs(x) mixed `##x(mixed ... others) {return this_program(`##x(num,@others));}
-	#define lhsrhs(x) mixed `##x(mixed other) {return this_program(num x other);} mixed ``##x(mixed other) {return this_program(other x num);}
-	lhs(!) lhs(~) lhs(<) lhs(>)
-	lhsrhs(%) lhsrhs(&) lhsrhs(*) lhsrhs(+) lhsrhs(-) lhsrhs(/) lhsrhs(<<) lhsrhs(>>) lhsrhs(^) lhsrhs(|)
-	#undef lhs
-	#undef lhsrhs
-	string _sprintf(int type,mapping|void params) {return sprintf(type=='O'?"0x%*x":(string)({'%','*',type}),params||([]),num);}
+	inherit Gmp.mpz;
+	string _sprintf(int type,mapping|void params) {return sprintf(type=='O'?"0x%*x":(string)({'%','*',type}),params||([]),(int)mpz::this);}
 }
 
 //Similarly, show a time value.
 class Time
 {
-	inherit Hex;
-	string _sprintf(int type,mapping|void params) {return type=='O'?format_time(num):sprintf((string)({'%','*',type}),params||([]),num);}
+	inherit Gmp.mpz;
+	//Note that there's something odd about calling format_time(val) here, so I've simplified and inlined it.
+	string _sprintf(int type,mapping|void params) {int val=(int)mpz::this; return type=='O' ? sprintf("%02d:%02d:%02d",val/3600,(val/60)%60,val%60) : ::_sprintf(type,params);}
 }
 
 //Probe a plugin and return a program usable for retrieving constants, but not
