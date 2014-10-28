@@ -11,6 +11,7 @@ to the main input field.
 //keystroke while focus is on the Ctrl-F box).
 
 //TODO: "Search from here". Something like "start the search at the scroll point".
+//This already has to know a lot of internal layout details, so this would be no worse.
 
 //Note that Ctrl-Enter and Shift-Enter are currently the same as Enter. This could
 //be a source of extra controls for the above.
