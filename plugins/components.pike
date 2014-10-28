@@ -14,10 +14,6 @@ Could later be extended to support more guilds; again, need a volunteer.
 //It might be worth having two or three of these, and any which have content will be displayed in
 //columns. So if (sizeof(components/mage)), the mage components run down the line (there are 16, I
 //think); and if (sizeof(components/alchemist)), correspondingly (maybe in two cols as there are 30).
-//I don't know if sorcs are at all different from mages; possibly their spams differ but their
-//components don't (and maybe no difference at all). I also don't know what necros and bards do.
-//Actually, mages and sorcs are now merged. As I don't have a character in either guild, I have no
-//idea whether they used the mage-style spam or not. Must get someone to try it for me.
 mapping(string:mapping(string:mixed)) components=persist->setdefault("components/mage",([]));
 
 void setcount(string name,int cnt)
