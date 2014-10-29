@@ -10,7 +10,9 @@ no Threshold times.
 //be tricky, but we can at least provide "Stash" as another pseudo-timezone.
 
 //TODO: Make this externally runnable, somehow. It could make a useful
-//stand-alone time zone converter.
+//stand-alone time zone converter. The Thresh pseudo-zone would be less useful
+//than simply converting between Olsen/tzdata times, so the outputhook isn't
+//necessary there.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
