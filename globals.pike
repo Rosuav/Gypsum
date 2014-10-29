@@ -844,7 +844,7 @@ string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 //Basic operations on it should continue to return hex integers.
 //Note that this method may not work on older Pikes, and therefore may need to be guarded with a
 //COMPAT option. Checkout 0209a4 for an alternative implementation (with its own flaws).
-//Note that explicit casts don't seem to work, without using mpz::this. Not sure why.
+//Note that explicit casts don't work on some Pikes unless spelled (int)mpz::this, so that's how it's written.
 class Hex
 {
 	inherit Gmp.mpz;
