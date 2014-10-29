@@ -29,6 +29,9 @@ revert to MUD mode. Leave this as an unresolved issue unless some superb
 solution can be found.
 ";
 
+void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
+void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
+
 string calculate(mapping(string:mixed) subw,string expr)
 {
 	catch
@@ -75,16 +78,6 @@ int inputhook(string line,mapping(string:mixed) subw)
 }
 
 //Direct compilation mode - the original. Convenient for single expressions.
-/**
- * Catch compilation errors and warnings and send them to the current subwindow
- *
- * @param fn 	unused
- * @param l		the line which caused the compile error.
- * @param msg	the compile error
- */
-void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
-void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
-
 int process(string param,mapping(string:mixed) subw)
 {
 	sscanf(param,"[%s] %s",string cmdpfx,param);
