@@ -5,6 +5,12 @@ timezones listed in tzdata. Puts one clock on the status bar and can convert
 between any pre-specified set. There's quite a bit of Thresh-specific code,
 and persist keys all begin \"threshtime/\", but this can happily be used with
 no Threshold times.
+
+Note that the conversions depend on your system - your clock, your computer's
+time zone, and so on. Accuracy of the Threshold times depends on access to an
+in-game timepiece; without one, the clock can generally be correct to within
+an hour or two, but that's all. This is good enough for event planning, but
+not for predicting in-game events such as bank hours.
 ";
 //Note that when Stash is launched, it may have its own clock. Auto-sync may
 //be tricky, but we can at least provide "Stash" as another pseudo-timezone.
