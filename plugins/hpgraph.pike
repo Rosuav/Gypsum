@@ -49,9 +49,9 @@ void tick()
 	mapping subw=G->G->window->current_subw();
 	array hpg=subw->hpgraph || ({0,0,0,0});
 	int lvl=limit(0,fadespeed*(time()-hpg[0]),255);
-	statustxt->hp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,lvl,lvl))->set_size_request((int)(barwidth*hpg[1]),-1);
-	statustxt->sp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,lvl))->set_size_request((int)(barwidth*hpg[2]),-1);
-	statustxt->ep->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,255))->set_size_request((int)(barwidth*hpg[3]),-1);
+	statustxt->hp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,lvl,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[1]),barwidth),-1);
+	statustxt->sp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[2]),barwidth),-1);
+	statustxt->ep->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,255))->set_size_request(limit(0,(int)(barwidth*hpg[3]),barwidth),-1);
 }
 
 void create(string name)
