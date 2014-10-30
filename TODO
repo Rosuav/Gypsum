@@ -1,7 +1,6 @@
 * Generally, anything that people expect RosMud to do.
 * Spell-checker?
 * OOCBox?
-* Graphical HP/SP/EP display?? Maybe on the statusbar??
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
   - Seen 20140407; not seen again for a while 20140514. DNS issue maybe?? See also 77f192, may have solved it??
   - Still haven't seen it again 20140718, quite probably is solved.
