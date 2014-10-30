@@ -2,6 +2,8 @@ constant docstring=#"
 Show a graphical representation of your hitpoints, on the status bar.
 
 Displays vibrantly when you see your hitpoints; fades away after a while.
+
+Tracks status separately for each subwindow.
 ";
 
 inherit hook;
