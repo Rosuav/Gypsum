@@ -24,7 +24,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 	int chp,mhp,csp,msp,cep,mep;
 	array hpg=conn->display->hpgraph;
 	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==7)
+	{
 		conn->display->hpgraph=({time()+fadedelay,chp/(float)mhp,csp/(float)msp,cep/(float)mep});
+		if (conn->display==G->G->window->current_subw()) tick(); //If we changed current status, redraw immediately.
+	}
 	else if (hpg && line=="You are completely healed.") hpg[1]=1.0;
 	else if (hpg && line=="You sizzle with mystical energy.") hpg[2]=1.0;
 	else if (hpg && line=="Your body has recuperated.") hpg[3]=1.0;
@@ -41,6 +44,7 @@ GTK2.Widget makestatus()
 
 void tick()
 {
+	if (statustxt->ticker) remove_call_out(statustxt->ticker);
 	statustxt->ticker=call_out(this_function,1);
 	mapping subw=G->G->window->current_subw();
 	array hpg=subw->hpgraph || ({0,0,0,0});
@@ -53,6 +57,5 @@ void tick()
 void create(string name)
 {
 	::create(name);
-	if (statustxt->ticker) remove_call_out(statustxt->ticker);
 	tick();
 }
