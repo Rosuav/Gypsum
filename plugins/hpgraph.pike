@@ -11,7 +11,6 @@ inherit statustext;
 constant barwidth=100; //Number of pixels. Larger takes up more space but gives better resolution.
 constant fadedelay=60; //Number of seconds after update that the display fades
 constant fadespeed=8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
-constant hpcol=0x0000FF,spcol=0x00FF00,epcol=0xFFFF00;
 
 //Stashes some info in subw->hpgraph as an array:
 //({fadetime, hp, sp, ep})
