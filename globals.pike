@@ -41,7 +41,7 @@ class bouncer(string ... keys)
 class gtksignal(object obj)
 {
 	int signal_id;
-	void create(mixed ... args) {signal_id=obj->signal_connect(@args);}
+	void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
 	void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
 }
 
