@@ -18,7 +18,6 @@ constant fadespeed=8; //Speed of fade - each second (after fadedelay), this gets
 //({fadetime, hp, sp, ep})
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
 //hp, sp, ep: 0.0 <= x <= 1.0 for the proportion of the bar that should be colored.
-//If the entire array is absent, it's treated as ({0,0,0,0})
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
