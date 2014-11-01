@@ -1,11 +1,17 @@
 inherit hook;
-#if constant(SDL.Music) && !constant(COMPILE_ONLY)
+constant docstring=#"
+Play sounds in response to certain triggers.
 
-//Has a fixed number of "streams", with any given trigger attached to one particular stream
-//Whenever there's any trigger on a stream, that stream's entry is _replaced_ with the new one.
-//So there'll never be more than one SDL.Music() per stream.
-//Normal usage would be all on the default stream. But you can set up other streams, eg one for background sound that loops.
-//NOTE: Halt all sounds with G->G->sounds_playing=([]);
+Has a fixed number of \"streams\", with any given trigger attached to one particular stream
+
+Whenever there's any trigger on a stream, that stream's entry is _replaced_ with the new one.
+
+Normal usage would be all on the default stream. But you can set up other streams, eg one for background sound that loops.
+
+NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
+";
+
+#if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
 //Options available:
 //file: File name. If omitted, will cut off any other sound but not start another.
