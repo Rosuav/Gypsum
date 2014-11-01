@@ -329,10 +329,13 @@ void send_telnet(mapping conn,bytes data)
 mapping(string:mixed) makeconn(object display,mapping info)
 {
 	mixed col=G->G->window->mkcolor(7,0);
+	string writeme=string_to_utf8(info->writeme||"");
+	if (writeme!="" && writeme[-1]!='\n') writeme+="\n"; //Ensure that the initial text ends with at least one newline
+	writeme=replace(replace(writeme,"\n","\r\n"),"\r\r","\r"); //Clean up newlines just to be sure
 	return ([
 		"display":display,"worldname":info->name||"",
 		"use_ka":info->use_ka || undefinedp(info->use_ka),
-		"writeme":string_to_utf8(info->writeme||""),"readbuffer":"","ansibuffer":"","curline":"",
+		"writeme":writeme,"readbuffer":"","ansibuffer":"","curline":"",
 		"curcolor":col,"curmsg":({([]),col,""})
 	]);
 }
