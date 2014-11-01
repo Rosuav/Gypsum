@@ -9,10 +9,10 @@ Tracks status separately for each subwindow.
 inherit hook;
 inherit statustext;
 
-//Some of these can become configurable later.
-constant barwidth=100; //Number of pixels. Larger takes up more space but gives better resolution.
-constant fadedelay=60; //Number of seconds after update that the display fades
-constant fadespeed=8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
+//TODO: Make a configdlg.
+int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
+int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
+int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
 
 //Stashes some info in subw->hpgraph as an array:
 //({fadetime, hp, sp, ep})
@@ -35,7 +35,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 GTK2.Widget makestatus()
 {
-	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(GTK2.Vbox(1,0)->set_size_request(barwidth,-1)
+	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(statustxt->vbox=GTK2.Vbox(1,0)
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->hp=GTK2.EventBox(),0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->sp=GTK2.EventBox(),0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->ep=GTK2.EventBox(),0,0,0))
@@ -57,5 +57,6 @@ void tick()
 void create(string name)
 {
 	::create(name);
+	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1); //The condition is compat code for 1fc03f and earlier
 	tick();
 }
