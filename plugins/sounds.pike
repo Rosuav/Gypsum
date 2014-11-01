@@ -11,6 +11,8 @@ Normal usage would be all on the default stream. But you can set up other stream
 NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
 ";
 
+//TODO: Replace sounds.ini with persist[] and a configdlg.
+
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
 //Options available:
