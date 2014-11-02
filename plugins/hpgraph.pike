@@ -35,11 +35,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 GTK2.Widget makestatus()
 {
-	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(statustxt->vbox=GTK2.Vbox(1,0)
+	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(statustxt->vbox=GTK2.EventBox()->add(GTK2.Vbox(1,0)
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->hp=GTK2.EventBox(),0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->sp=GTK2.EventBox(),0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->ep=GTK2.EventBox(),0,0,0))
-	);
+	)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255)));
 }
 
 void tick()
@@ -57,6 +57,11 @@ void tick()
 void create(string name)
 {
 	::create(name);
-	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1); //The condition is compat code for 1fc03f and earlier
+	//The condition is compat code for 1fc03f and earlier
+	//The name "vbox" is now outdated (20141102) as it's actually another EventBox, and it now
+	//covers the background. At some point it's probably worth making a breaking change to
+	//rename it, but it'll still need to have its width set here - or anywhere else that the
+	//barwidth can be changed.
+	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1);
 	tick();
 }
