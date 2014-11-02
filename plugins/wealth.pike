@@ -16,9 +16,9 @@ constant plugin_active_by_default = 1;
 //A set of available monitors
 mapping(string:array) allmonitors=([
 	//Monitors for Threshold RPG
-	"wealth":({" Total Wealth: %[0-9,]","%9s Prv: %s","Wealth"}),
-	"xp":({" Current experience points: %[ 0-9,]"," First:%13s; last: %s","XP"}),
-	"x":({"  Current expertise points: %[ 0-9,]"," First:%13s; last: %s","Exp"}),
+	"wealth":({" Total Wealth: %[-0-9,]","%9s Prv: %s","Wealth"}),
+	"xp":({" Current experience points: %[- 0-9,]"," First:%13s; last: %s","XP"}),
+	"x":({"  Current expertise points: %[- 0-9,]"," First:%13s; last: %s","Exp"}),
 	//Feel free to add others, or replace these, according to what you play.
 ]);
 //The monitors to use.
