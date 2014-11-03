@@ -44,7 +44,7 @@ sort(indices(timers)) somewhere. This would add complication but improve the
 efficiency of certain regular paths. CHECK if this would actually be at all
 advantageous before implementing; until checked, just keep this note. */
 
-/* TODO: World-specific timers. They'll exist for all worlds, but retain
+/* TODO: Per-world timers. They'll exist for all worlds, but retain
 separate countdown times based on current_subw()->world. */
 
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
