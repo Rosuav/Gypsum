@@ -1,6 +1,13 @@
 inherit command;
 
 constant plugin_active_by_default = 1;
+constant docstring=#"
+Implements the /connect, /dc, /worlds, and /c commands.
+
+If you don't have this plugin active, you can still connect via the File menu,
+but will not be able to use the shortcut reconnect-to-last-world feature.
+There is generally no reason to unload this plugin.
+";
 
 int process(string param,mapping(string:mixed) subw)
 {
