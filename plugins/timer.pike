@@ -7,6 +7,15 @@ inherit plugin_menu;
 
 constant plugin_active_by_default = 1;
 
+constant docstring=#"
+Track ticking-down timers (in a separate window)
+
+Whenever a line of text matches a timer's trigger, that timer is reset, and will
+tick down from a pre-set time until it reaches zero and blanks out. This can
+optionally result in the Gypsum window being presented to the user, to highlight
+the timer's expiration.
+";
+
 /* TODO: Document me properly somewhere.
 
 To set up for Threshold RPG regeneration timers, create three timers with the
