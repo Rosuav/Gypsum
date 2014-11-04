@@ -14,6 +14,8 @@ int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger take
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
 
+//TODO: Incorporate the timer.pike code for tick-downs - if they can overlay the bands, that would be great.
+
 //Stashes some info in subw->hpgraph as an array:
 //({fadetime, hp, sp, ep})
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
