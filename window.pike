@@ -1182,7 +1182,7 @@ void monochrome_mode()
 {
 	monochrome=!monochrome;
 	call_out(redraw,0,current_subw());
-	call_out(redraw,0.1,current_subw()); //Forcing another complete redraw seems to help with repaint issues.
+	call_out(redraw,0.1,current_subw()); //Forcing another complete redraw seems to help with repaint issues on Windows.
 }
 
 /**
