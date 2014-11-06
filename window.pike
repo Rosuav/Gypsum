@@ -1169,7 +1169,8 @@ class promptsdlg
 }
 
 /* The official key value (GDK_KEY_Pause) is 0xFF13, but Windows produces 0xFFFFFF (GDK_KEY_VoidSymbol)
-instead - and also produces it for other keys, eg Caps Lock. */
+instead - and also produces it for other keys, eg Caps Lock. This makes it difficult, not to say
+dangerous, to provide the keystroke. TODO: Figure out if there's some other way to recognize the key. */
 constant options_pause=({"Pa_use scroll",all_constants()["COMPAT_PAUSEKEY"]?0xFFFFFF:0xFF13,0});
 void pause()
 {
