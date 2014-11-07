@@ -4,10 +4,8 @@ inherit movablewindow;
 constant docstring=#"
 For Threshold RPG: keep track of your currently-held components in a separate window.
 
-May well have been broken by the Mage/Sorc Merge of 2014; need a volunteer to assist
-with verification.
-
-Could later be extended to support more guilds; again, need a volunteer.
+Currently works only for mages. Could later be extended to support more guilds; need
+a volunteer to check the texts.
 ";
 
 //Persist key chosen to allow separate components display for alchies. This may or may not be useful.
