@@ -833,7 +833,7 @@ class zadvoptions
 		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that can result in a segfault with message boxes."COMPAT("msgdlg")]),
-		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, try toggling this."COMPAT("pausekey")]),
+		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, enable this to use Ctrl-P instead."COMPAT("pausekey")]),
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int","desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
 		"Down arrow":(["path":"window/downarr","type":"int","desc":"When you press Down when you haven't been searching back through command history, what should be done?","options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"])]),
