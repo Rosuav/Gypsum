@@ -20,7 +20,7 @@ void create(string n)
 //binary should be clearly marked.
 typedef string(0..255) bytes;
 //Something that's ASCII-only can be trivially treated as either bytes or text (assuming
-//a UTF-8 transmission stream).
+//a UTF-8 transmission stream, which most of this does).
 typedef string(0..127) ascii;
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
