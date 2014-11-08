@@ -40,6 +40,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 int process(string param,mapping(string:mixed) subw)
 {
+	if (param=="config") statusbar_double_click();
 	foreach (monitors;string kwd;mapping info) if (info->count)
 		say(subw,"%%%% %s: %d results %d-%d, averaging %.2f",kwd,info->count,info->min,info->max,info->total/(float)info->count);
 	return 1;
