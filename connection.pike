@@ -58,10 +58,10 @@ function say=G->globals->say;
  * @param bytes Incoming 8-bit data
  * @return string Resulting Unicode text
  */
-#if __REAL_MAJOR__ > 7
-object cp1252=Charset.decoder("1252");
+#if constant(Charset)
+object cp1252=Charset.decoder("1252"); //Pike 8.0 and 8.1 have Charset at top-level; 8.1 has it nowhere else.
 #else
-object cp1252=Locale.Charset.decoder("1252"); //For compat with Pike 7.8, look it up from inside Locale.
+object cp1252=Locale.Charset.decoder("1252"); //Pike 7.8 has Charset hidden behind Locale, but otherwise equivalently functional
 #endif
 protected string bytes_to_string(bytes data)
 {
