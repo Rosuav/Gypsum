@@ -130,12 +130,12 @@ void textread(mapping conn,string data,int end_of_block)
 		//socket read, let's hope.
 		setprompt(conn);
 	}
-	else if (conn->curline!="") switch (persist["prompt/pseudo"] || ":>")
+	else if (conn->curline!="") switch (mixed pseudo=persist["prompt/pseudo"] || ":>")
 	{
 		case "": break; //No pseudo-prompt handling.
 		default: //Only if the prompt ends with one of the specified characters (and maybe spaces).
 			string prompt=String.trim_all_whites(conn->curline);
-			if (prompt=="" || !has_value(persist["prompt/pseudo"]||":>",prompt[-1])) break; //Not one of those characters. Not a pseudo-prompt.
+			if (prompt=="" || !has_value(pseudo,prompt[-1])) break; //Not one of those characters. Not a pseudo-prompt.
 			//But if it is, then fall through.
 		case 1.0: //Treat everything as a pseudo-prompt.
 			conn->real_prompt=conn->display->prompt;
