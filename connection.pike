@@ -165,10 +165,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 		array(int|string) params=({ }); int|string curparam=UNDEFINED;
 		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, leave the unprocessed text and wait for more data from the socket.
 		{
-			case '0'..'9':
-				if (undefinedp(curparam)) curparam=ansi[i]-'0';
-				else curparam=curparam*10+ansi[i]-'0';
-				break;
+			case '0'..'9': curparam=curparam*10+ansi[i]-'0'; break;
 			case ';': params+=({curparam}); curparam=UNDEFINED; break;
 			//case '"': //Read a string (not supported or needed, but if this were a generic parser, it would be)
 			case 'A'..'Z': case 'a'..'z':
