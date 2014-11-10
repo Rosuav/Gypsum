@@ -268,7 +268,7 @@ class window
 	{
 		if (!win->accelgroup) win->accelgroup=GTK2.AccelGroup();
 		return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))
-			->add_accelerator("clicked",win->accelgroup,0xFF1B,0,0);
+			->add_accelerator("clicked",win->accelgroup,0xFF1B,0,0); //Esc as a shortcut for Close
 	}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
