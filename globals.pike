@@ -182,6 +182,7 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 }
 
 //Like GTK2Table above, but specific to a two-column layout. Takes a 1D array and fractures it. Also sets labels to right-aligned.
+//This is the most normal way to lay out labelled objects - labels on the left, objects on the right.
 GTK2.Table two_column(array(string|GTK2.Widget) contents) {return GTK2Table(contents/2,(["xalign":1.0]));}
 
 //Plugin that implements a command derived from its name
