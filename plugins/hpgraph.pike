@@ -37,10 +37,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 GTK2.Widget makestatus()
 {
+	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(statustxt->vbox=GTK2.EventBox()->add(GTK2.Vbox(1,0)
-		->add(GTK2.Hbox(0,0)->pack_start(statustxt->hp=GTK2.EventBox(),0,0,0))
-		->add(GTK2.Hbox(0,0)->pack_start(statustxt->sp=GTK2.EventBox(),0,0,0))
-		->add(GTK2.Hbox(0,0)->pack_start(statustxt->ep=GTK2.EventBox(),0,0,0))
+		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[0],0,0,0))
+		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[1],0,0,0))
+		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[2],0,0,0))
 	)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255)));
 }
 
@@ -51,9 +52,9 @@ void tick()
 	mapping subw=G->G->window->current_subw();
 	array hpg=subw->hpgraph || ({0,0,0,0});
 	int lvl=limit(0,fadespeed*(time()-hpg[0]),255);
-	statustxt->hp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,lvl,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[1]),barwidth),-1);
-	statustxt->sp->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[2]),barwidth),-1);
-	statustxt->ep->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,255))->set_size_request(limit(0,(int)(barwidth*hpg[3]),barwidth),-1);
+	statustxt->bars[0]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,lvl,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[1]),barwidth),-1);
+	statustxt->bars[1]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[2]),barwidth),-1);
+	statustxt->bars[2]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,255))->set_size_request(limit(0,(int)(barwidth*hpg[3]),barwidth),-1);
 }
 
 void create(string name)
@@ -65,5 +66,7 @@ void create(string name)
 	//rename it, but it'll still need to have its width set here - or anywhere else that the
 	//barwidth can be changed.
 	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1);
+	//Compat for d6bfa9 and earlier
+	if (statustxt->hp) statustxt->bars=({statustxt->hp,statustxt->sp,statustxt->ep});
 	tick();
 }
