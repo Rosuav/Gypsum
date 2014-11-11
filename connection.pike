@@ -309,7 +309,7 @@ void send(mapping conn,string text)
 {
 	if (!conn) return;
 	if (conn->lines && !(conn=conn->connection)) return; //Allow sending to a subw (quietly ignoring if it's not connected)
-	if (conn->passive) return; //Ignore sent text on passive masters
+	if (conn->passive) return; //Ignore sent text on passive masters - or should the text be sent to _all_ connected clients? Could be convenient.
 	if (text) conn->writeme+=string_to_utf8(text);
 	sockwrite(conn);
 }
