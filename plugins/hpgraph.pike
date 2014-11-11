@@ -13,6 +13,12 @@ inherit statustext;
 int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
+//Currently the colors must be either 255 or 0 (the latter becomes the fade level). These can become configurable, but not to non-full colors.
+array barcolors=persist["hpgraph/barcolors"] || ({
+	({255,0,0}),
+	({0,255,0}),
+	({0,255,255}),
+});
 
 //TODO: Incorporate the timer.pike code for tick-downs - if they can overlay the bands, that would be great.
 
@@ -52,9 +58,8 @@ void tick()
 	mapping subw=G->G->window->current_subw();
 	array hpg=subw->hpgraph || ({0,0,0,0});
 	int lvl=limit(0,fadespeed*(time()-hpg[0]),255);
-	statustxt->bars[0]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,lvl,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[1]),barwidth),-1);
-	statustxt->bars[1]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,lvl))->set_size_request(limit(0,(int)(barwidth*hpg[2]),barwidth),-1);
-	statustxt->bars[2]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(lvl,255,255))->set_size_request(limit(0,(int)(barwidth*hpg[3]),barwidth),-1);
+	foreach (barcolors;int i;array col)
+		statustxt->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(limit(0,(int)(barwidth*hpg[i]),barwidth),-1);
 }
 
 void create(string name)
