@@ -59,7 +59,7 @@ void tick()
 	array hpg=subw->hpgraph || ({0,0,0,0});
 	int lvl=limit(0,fadespeed*(time()-hpg[0]),255);
 	foreach (barcolors;int i;array col)
-		statustxt->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(limit(0,(int)(barwidth*hpg[i]),barwidth),-1);
+		statustxt->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(limit(0,(int)(barwidth*hpg[i+1]),barwidth),-1);
 }
 
 void create(string name)
