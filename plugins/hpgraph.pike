@@ -9,7 +9,6 @@ Tracks status separately for each subwindow.
 inherit hook;
 inherit statustext;
 
-//TODO: Make a configdlg.
 int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
@@ -62,16 +61,55 @@ void tick()
 		statustxt->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(limit(0,(int)(barwidth*hpg[i+1]),barwidth),-1);
 }
 
+class config
+{
+	inherit window;
+	void create() {::create();}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Graphical HP display"]))->add(GTK2.Vbox(0,0)
+			->add(two_column(({
+				"Bar width",win->barwidth=GTK2.Entry()->set_text((string)barwidth),
+				"Fade delay (secs)",win->fadedelay=GTK2.Entry()->set_text((string)fadedelay),
+				"Fade speed (256=instant)",win->fadespeed=GTK2.Entry()->set_text((string)fadespeed),
+				//TODO: Bar colors in some nice way
+			})))
+			->add(GTK2.HbuttonBox()
+				->add(win->pb_ok=GTK2.Button("OK"))
+				->add(stock_close())
+			)
+		);
+		::makewindow();
+	}
+
+	void sig_pb_ok_clicked()
+	{
+		int newwidth = (int)win->barwidth->get_text() || 100;
+		if (newwidth!=barwidth) statustxt->vbox->set_size_request(persist["hpgraph/barwidth"]=barwidth=newwidth,-1);
+		fadedelay = persist["hpgraph/fadedelay"] = (int)win->fadedelay->get_text() || 60;
+		fadespeed = persist["hpgraph/fadespeed"] = (int)win->fadespeed->get_text() || 8;
+		tick(); //Don't wait another second
+		closewindow();
+	}
+}
+
+void mousedown(object self,object ev)
+{
+	if (ev->type=="2button_press") config();
+}
+
 void create(string name)
 {
 	::create(name);
 	//The condition is compat code for 1fc03f and earlier
 	//The name "vbox" is now outdated (20141102) as it's actually another EventBox, and it now
 	//covers the background. At some point it's probably worth making a breaking change to
-	//rename it, but it'll still need to have its width set here - or anywhere else that the
-	//barwidth can be changed.
+	//rename it, but it'll still need to have its width set on startup, in case the persist
+	//value got changed out from under us.
 	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1);
 	//Compat for d6bfa9 and earlier
 	if (statustxt->hp) statustxt->bars=({statustxt->hp,statustxt->sp,statustxt->ep});
+	statustxt->signals=({gtksignal(statustxt->vbox,"button_press_event",mousedown)});
 	tick();
 }
