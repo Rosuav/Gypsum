@@ -101,6 +101,7 @@ void mousedown(object self,object ev)
 
 void create(string name)
 {
+	statustxt->tooltip="Graphical HP display - double-click to configure";
 	::create(name);
 	//The condition is compat code for 1fc03f and earlier
 	//The name "vbox" is now outdated (20141102) as it's actually another EventBox, and it now
