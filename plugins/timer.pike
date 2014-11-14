@@ -85,6 +85,7 @@ class config
 
 	void save_content(mapping(string:mixed) info)
 	{
+		//TODO: What should a multi-line trigger mean? Options? Multiple consecutive lines?
 		info->trigger=String.trim_all_whites(info->trigger);
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
 		makelabels();
