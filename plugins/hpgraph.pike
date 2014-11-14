@@ -12,7 +12,9 @@ inherit statustext;
 int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
-//Currently the colors must be either 255 or 0 (the latter becomes the fade level). These can become configurable, but not to non-full colors.
+//Currently the colors must be either 255 or 0 (the latter becomes the fade level).
+//Putting any other value in (not possible with the config) will cause odd
+//interactions with the fade-to-white, so just don't do it. :)
 array barcolors=persist["hpgraph/barcolors"] || ({
 	({255,0,0}),
 	({0,255,0}),
@@ -66,6 +68,19 @@ class config
 	inherit window;
 	void create() {::create();}
 
+	array(GTK2.Widget) color(array(string) names)
+	{
+		array(GTK2.Widget) ret=({ });
+		foreach (names;int i;string n) ret+=({
+			win["colorbar"+i]=GTK2.EventBox()->add(GTK2.Label(n+" bar color"))->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@barcolors[i])),
+			GTK2.Hbox(0,10)
+				->add(win["color0"+i]=GTK2.CheckButton("Red")->set_active(barcolors[i][0]==255))
+				->add(win["color1"+i]=GTK2.CheckButton("Green")->set_active(barcolors[i][1]==255))
+				->add(win["color2"+i]=GTK2.CheckButton("Blue")->set_active(barcolors[i][2]==255))
+		});
+		return ret;
+	}
+
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Graphical HP display"]))->add(GTK2.Vbox(0,0)
@@ -73,8 +88,7 @@ class config
 				"Bar width",win->barwidth=GTK2.Entry()->set_text((string)barwidth),
 				"Fade delay (secs)",win->fadedelay=GTK2.Entry()->set_text((string)fadedelay),
 				"Fade speed (256=instant)",win->fadespeed=GTK2.Entry()->set_text((string)fadespeed),
-				//TODO: Bar colors in some nice way
-			})))
+			})+color(({"HP","SP","EP"}))))
 			->add(GTK2.HbuttonBox()
 				->add(win->pb_ok=GTK2.Button("OK"))
 				->add(stock_close())
@@ -83,12 +97,31 @@ class config
 		::makewindow();
 	}
 
+	void update_color(object self,int bar)
+	{
+		win["colorbar"+bar]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(
+			win["color0"+bar]->get_active() && 255,
+			win["color1"+bar]->get_active() && 255,
+			win["color2"+bar]->get_active() && 255,
+		));
+	}
+
+	void dosignals()
+	{
+		::dosignals();
+		foreach (barcolors;int i;array(int) col) foreach (col;int j;)
+			win->signals+=({gtksignal(win["color"+j+i],"clicked",update_color,i)});
+	}
+
 	void sig_pb_ok_clicked()
 	{
 		int newwidth = (int)win->barwidth->get_text() || 100;
 		if (newwidth!=barwidth) statustxt->vbox->set_size_request(persist["hpgraph/barwidth"]=barwidth=newwidth,-1);
 		fadedelay = persist["hpgraph/fadedelay"] = (int)win->fadedelay->get_text() || 60;
 		fadespeed = persist["hpgraph/fadespeed"] = (int)win->fadespeed->get_text() || 8;
+		foreach (barcolors;int i;array(int) col) foreach (col;int j;)
+			col[j]=win["color"+j+i]->get_active() && 255;
+		persist["hpgraph/barcolors"]=barcolors;
 		tick(); //Don't wait another second
 		closewindow();
 	}
