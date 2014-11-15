@@ -2,7 +2,9 @@
 
 Currently it's attuned specifically to zoneinfo, and may not even be all that
 useful there. Probably not something worth using at all, but it's here as a
-proof of concept.
+proof of concept. A more useful zoneinfo stand-alone would probably have to be
+ported to Python anyway, as "get a Pike interpreter" isn't an easy prereq for
+most people.
 
 TODO: Neuter persist[] so it won't save to disk, for safety.
 */
