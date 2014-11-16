@@ -194,7 +194,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 			default: werror("Unparseable ANSI sequence: %O\n",ansi[..i]); return;
 		}
 		conn->ansibuffer=ansi;
-	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;}
+	}) {/*werror("ERROR in ansiread: %s\n",describe_backtrace(ex));*/ return;} //This will catch IndexError-ish from the deliberate over-indexing, if we don't have enough data yet.
 	textread(conn,conn->ansibuffer,end_of_block); conn->ansibuffer="";
 }
 
