@@ -120,6 +120,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 		}
 		return 1;
 	}
+	//That ain't a'gonna work! Slash commands don't come through to here. But what's this part even for?
 	if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) outputhook(line,(["display":subw])); //NOTE: Don't use subw->conn for the last arg; if there's no connection, it should still be safe to use /tiny.
 	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*?)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long.
 	array parts=longurl->split(line);
