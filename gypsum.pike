@@ -31,7 +31,7 @@ class mymaster /* Oh, my master! */
 /**
  * Compile one file into memory and permit it to register itself
  *
- * Errors are sent to stderr, unlike the similar global function.
+ * Errors are sent to stderr, unlike the similar function (build) in window.pike.
  */
 void bootstrap(string c)
 {
