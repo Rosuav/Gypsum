@@ -1319,7 +1319,10 @@ class configure_plugins
 		//TODO: Don't tie this to a plugin-provided command. However, unload() can't go into
 		//globals.pike for the same reason build() couldn't: it uses say(). So maybe there
 		//needs to be another file called plugins.pike which handles all this? Or else just
-		//have it all here in window.pike.
+		//have it all here in window.pike. There's no reason to make it a separate file, bar
+		//the size of this one; but then, there's no reason to make connection.pike separate
+		//either, now, but it's more logical to keep that separate (even though it does make
+		//an annoying deploop).
 		G->G->commands->unload("confirm "+sel,current_subw());
 	}
 }
