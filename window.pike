@@ -1209,6 +1209,9 @@ void colorcheck(object self,mapping subw)
 //Unlike bootstrap(), sends errors to a local subw.
 //This is conceptually part of globals.pike, and it's not actually used here in
 //window.pike at all, but since it references say(), it can't go into globals.
+//Hmm. This is an argument in favour of a new file plugins.pike, I think... but
+//against that is the tab-completion argument, which is stronger than one might
+//think. It's not worth breaking that unless it's going to benefit us a lot.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
