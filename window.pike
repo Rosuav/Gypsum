@@ -1221,6 +1221,10 @@ object build(string param)
 	mapping buildlog=G->G->buildlog; //Controlled with the /buildlog command from plugins/buildlog.pike
 	if (buildlog && !buildlog[param]) buildlog[param]=set_weak_flag(([]),Pike.WEAK_VALUES);
 	say(0,"%% Compiling "+param+"...");
+	//TODO: Remove all current global usage, but be prepared to reinstate it if
+	//compilation fails. Will need some kind of two-stage update, I think. This
+	//will have only small benefit, though - it means that a plugin that stops
+	//using something will stop being updated when that something is updated.
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
