@@ -45,7 +45,7 @@ void showcounts()
 	{
 		mapping cm=components[kwd];
 		win->counts[i]->set_text((string)cm->curcount);
-		//TODO maybe: Highlight full/empty (and "empty" might be defined as "less than N")
+		//TODO maybe: Highlight full and/or low (where "low" is defined as "less than N", which may vary for different components)
 	}
 }
 
