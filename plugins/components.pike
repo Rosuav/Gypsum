@@ -35,7 +35,8 @@ int outputhook(string line,mapping(string:mixed) conn)
 	}
 	if (sscanf(line,"You complete the spell of conjuration and add some %s to your spell component pouch. You now have %d.",string name,int cnt))
 		setcount(name,cnt);
-	else if (has_prefix(line,"You complete the spell of conjuration")) conn["components/partial"]=line;
+	else if (has_prefix(line,"You complete the spell of conjuration") && sizeof(line)<200) conn["components/partial"]=line;
+	//Note that after a few lines (200 characters total), it'll just give up and try again next time.
 }
 
 void showcounts()
