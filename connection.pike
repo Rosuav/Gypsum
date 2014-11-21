@@ -381,15 +381,11 @@ void connfailed(mapping conn)
 	sockclosed(conn);
 }
 
-/**
- * Repeater for telnet keep-alive packets.
- *
- * @param conn Current connection
- */
+//Periodic call_out for keep-alive - invoked separately for each connection
 void ka(mapping conn)
 {
 	if (!conn->sock) return;
-	send_telnet(conn,(string(0..255))({GA}));
+	send_telnet(conn,(string(0..255))({GA})); //(note, cannot use 'bytes' here due to a Pike parser limitation)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
