@@ -1,9 +1,13 @@
-/**
- * Load up the globals and apply those which need changing
+/*
+ * Globals are available globally (duh). Everything in this file, bar create(),
+ * can be referenced by its name in any file other than gypsum.pike and persist.pike
+ * (those two are loaded prior to this, and are special). Anything beginning with
+ * an underscore, however, is deemed private. It can still be referenced externally,
+ * but will not be added as a constant.
  */
 void create(string n)
 {
-	foreach (indices(this),string f) if (f!="create") add_gypsum_constant(f,this[f]);
+	foreach (indices(this),string f) if (f!="create" && f[0]!='_') add_gypsum_constant(f,this[f]);
 	//TODO: Have some way to 'declare' these down below, rather than
 	//coding them here.
 	if (!G->G->commands) G->G->commands=([]);
@@ -154,8 +158,8 @@ class SelectBox(array(string) strings)
 //As of Pike 8.0.2, this could safely be done with wid->set_data(), but it's not
 //safe to call get_data() with a keyword that hasn't been set (it'll segfault older Pikes).
 //So this works with a multiset instead.
-multiset(GTK2.Widget) noexpand=(<>);
-GTK2.Widget noex(GTK2.Widget wid) {noexpand[wid]=1; return wid;}
+multiset(GTK2.Widget) _noexpand=(<>);
+GTK2.Widget noex(GTK2.Widget wid) {_noexpand[wid]=1; return wid;}
 
 /** Create a GTK2.Table based on a 2D array of widgets
  * The contents will be laid out on the grid. Put a 0 in a cell to span
@@ -173,7 +177,7 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 	{
 		int opt;
 		if (stringp(obj)) {obj=GTK2.Label(label_opts+(["label":obj])); opt=GTK2.Fill;}
-		else if (noexpand[obj]) noexpand[obj]=0; //Remove it from the set so we don't hang onto references to stuff we don't need
+		else if (_noexpand[obj]) _noexpand[obj]=0; //Remove it from the set so we don't hang onto references to stuff we don't need
 		else opt=GTK2.Fill|GTK2.Expand;
 		int xend=x+1; while (xend<sizeof(row) && !row[xend]) ++xend; //Span cols by putting 0 after the element
 		tb->attach(obj,x,xend,y,y+1,opt,opt,1,1);
