@@ -1212,6 +1212,7 @@ void colorcheck(object self,mapping subw)
 //Hmm. This is an argument in favour of a new file plugins.pike, I think... but
 //against that is the tab-completion argument, which is stronger than one might
 //think. It's not worth breaking that unless it's going to benefit us a lot.
+//Maybe call it extras.pike? That doesn't break tab-completion.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
