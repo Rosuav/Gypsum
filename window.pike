@@ -512,7 +512,9 @@ void redraw(mapping subw)
 //Whatever it returns is to be acceptable in say(); it's just a cookie.
 //Supporting 256 color mode would require changes here, plus changes to the
 //parsing code in connection.pike, but probably nothing else. Could be worth
-//doing, if someone wants to support it.
+//doing, if someone wants to support it. (It might cause some confusion if
+//anyone's changed the color definitions, though. A 256-color server would
+//expect that 16-color codes will have certain meanings.)
 int mkcolor(int fg,int bg)
 {
 	return fg | (bg<<16);
