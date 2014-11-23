@@ -1192,9 +1192,7 @@ void monochrome_mode()
 	call_out(redraw,0.1,current_subw()); //Forcing another complete redraw seems to help with repaint issues on Windows.
 }
 
-/**
- *
- */
+//Update the entry field's color based on channel color definitions
 void colorcheck(object self,mapping subw)
 {
 	array(int) col=({255,255,255});
