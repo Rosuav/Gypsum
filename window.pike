@@ -613,7 +613,7 @@ int paint(object self,object ev,mapping subw)
 void settext(mapping subw,string text)
 {
 	subw->ef->set_text(text);
-	subw->ef->set_position(sizeof(text));
+	if (!persist["window/cursoratstart"]) subw->ef->set_position(sizeof(text));
 }
 
 int keypress(object self,array|object ev,mapping subw)
@@ -838,6 +838,7 @@ class zadvoptions
 		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, enable this to use Ctrl-P instead."COMPAT("pausekey")]),
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int","desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
+		"Cursor at start/end":(["path":"window/cursoratstart","type":"int","desc":"When seeking through command history, should the cursor be placed at the start or end of the command?","options":([0:"End of command (default)",1:"Start of command"])]),
 		"Down arrow":(["path":"window/downarr","type":"int","desc":"When you press Down when you haven't been searching back through command history, what should be done?","options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"])]),
 		"Error bell":(["path":"window/errorbell","type":"int","desc":"Should pressing Backspace when the input field is empty result in a beep?","options":([0:"No - silently do nothing",1:"Yes - beep"]),"savefunc":set_error_bell]),
 		"Hide input":(["path":"window/hideinput","type":"int","desc":"Local echo is active by default, but set this to disable it and hide all your commands.","options":([0:"Disabled (show commands)",1:"Enabled (hide commands)"])]),
