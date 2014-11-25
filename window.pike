@@ -724,7 +724,7 @@ int keypress(object self,array|object ev,mapping subw)
 		if (persist["window/numpadempty"] && subw->ef->get_text()!="") return 0;
 		string cmd=numpad->cmd;
 		//Should *all* slash commands be permitted? That might be clean.
-		if (cmd=="/lastnav") {G->G->commands->lastnav("",subw); return 1;}
+		if (cmd=="/lastnav") {if (function f=G->G->commands->lastnav) f("",subw); return 1;}
 		if (!numpadspecial[cmd] && !has_prefix(cmd,"go ")) cmd="go "+cmd;
 		if (!subw->lastnav) subw->lastnav=({ });
 		if (has_prefix(cmd,"go ")) subw->lastnav+=({cmd[3..]});
