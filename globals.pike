@@ -617,9 +617,7 @@ ascii pike_version()
 	);
 }
 
-/**
- * Attempt to invoke a web browser. Returns 1 if it believes it did, 0 if not.
- */
+//Attempt to invoke a web browser. Returns 1 if it believes it did, 0 if not.
 int invoke_browser(string url)
 {
 	foreach (({
