@@ -869,6 +869,9 @@ class Time
 //as it avoids creating log entries under that file name, and also permits the
 //plugin to avoid loading itself completely. If there's any sort of exception,
 //UNDEFINED will be returned; compilation errors are silenced.
+//Note that compile_error() and compile_warning() are technically internal, but
+//they're called by the compiler. I could create a dedicated class, but it's
+//cheaper to use 'this' and have these functions defined here.
 void compile_error(string fn,int l,string msg) { }
 void compile_warning(string fn,int l,string msg) { }
 program probe_plugin(string filename)
