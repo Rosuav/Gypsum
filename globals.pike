@@ -797,6 +797,8 @@ string format_time(int delay,int|void base,int|void resolution)
 	}
 }
 
+//Return the file from which some function or object was created
+//Will take the deepest subclass available.
 string origin(function|object func)
 {
 	//Always go via the program, in case the function actually comes from an inherited parent.
