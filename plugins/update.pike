@@ -143,6 +143,19 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 			}
 		}
 	}
+	foreach (G->G->tabstatuses;string name;object self) if (origin(self)==param)
+	{
+		if (reallydelete(self,"Per-tab status"))
+		{
+			m_delete(G->G->tabstatuses,name);
+			string key="tabstatus/"+name;
+			foreach (G->G->window->win->tabs,mapping subw) if (subw[key])
+			{
+				m_delete(subw,key)->destroy();
+				break;
+			}
+		}
+	}
 	if (!keepme) foreach (G->globalusage;string globl;array(string) usages) if (has_value(usages,param))
 	{
 		//Doesn't use reallydelete() as it can't distinguish current from old (hence this whole block

@@ -14,6 +14,7 @@ void create(string n)
 	if (!G->G->hooks) G->G->hooks=([]);
 	if (!G->G->windows) G->G->windows=([]);
 	if (!G->G->statustexts) G->G->statustexts=([]);
+	if (!G->G->tabstatuses) G->G->tabstatuses=([]);
 	#if constant(COMPAT_SIGNAL)
 	if (!G->G->enterpress) G->G->enterpress=([]);
 	#endif
@@ -593,6 +594,37 @@ class statustext_maxwidth
 		statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
 	}
 }
+
+//ADVISORY and under testing: Per-tab status.
+//The maketabstatus() function will be called for every subwindow
+//(modulo transitional forms - any tab created in a719d or earlier
+//won't have the necessary Vbox, and will therefore be ignored)
+//and every time a subwindow is created. Currently, info for the
+//per-subwindow stats is stored in subw[], using the plugin name as
+//part of the key. This means there's actually no unified infomap as
+//there is for most other inheritables. There is, however, a global
+//registry of tab-status objects, keyed by the name.
+//BEST PRACTICE: Use subw->world as the key for any status info, eg
+//persist["your_plugin_name/"+subw->world] - this will allow for
+//per-world configuration in a way the user will expect.
+class tabstatus
+{
+	constant provides="per-tab status";
+	void create(string name)
+	{
+		sscanf(explode_path(name)[-1],"%s.pike",name);
+		if (!name) return; //Must have a name.
+		G->G->tabstatuses[name]=this;
+		string key="tabstatus/"+name;
+		foreach (G->G->window->win->tabs,mapping subw) if (!subw[key])
+		{
+			if (!subw->tabstatus) continue; //Compat for a719d and older: old tabs don't have tabstatus Vboxes
+			subw->tabstatus->pack_start(subw[key]=maketabstatus(subw)->show(),0,0,0);
+		}
+	}
+	GTK2.Widget maketabstatus(mapping(string:mixed) subw) {return GTK2.Label("Per-tab status");}
+}
+
 
 ascii gypsum_version()
 {

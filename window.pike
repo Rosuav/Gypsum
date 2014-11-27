@@ -73,9 +73,12 @@ mapping(string:mixed) subwindow(string txt)
 	win->tabs+=({subw});
 	//Build the subwindow
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
-		->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
-			->add(subw->display=GTK2.DrawingArea())
-			->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
+		->add(GTK2.Hbox(0,0)
+			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
+				->add(subw->display=GTK2.DrawingArea())
+				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
+			)
+			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 		)
 		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
@@ -88,6 +91,7 @@ mapping(string:mixed) subwindow(string txt)
 	#endif
 	subwsignals(subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
+	//TODO: Signal all of G->G->tabstatuses to load themselves into the new subw
 	colorcheck(subw->ef,subw);
 	call_out(redraw,0,subw);
 	return subw;
