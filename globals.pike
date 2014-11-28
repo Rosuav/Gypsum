@@ -619,7 +619,7 @@ class tabstatus
 		foreach (G->G->window->win->tabs,mapping subw) if (!subw[key])
 		{
 			if (!subw->tabstatus) continue; //Compat for a719d and older: old tabs don't have tabstatus Vboxes
-			subw->tabstatus->pack_start(subw[key]=maketabstatus(subw)->show(),0,0,0);
+			subw->tabstatus->pack_start(subw[key]=maketabstatus(subw)->show_all(),0,0,0);
 		}
 	}
 	GTK2.Widget maketabstatus(mapping(string:mixed) subw) {return GTK2.Label("Per-tab status");}
