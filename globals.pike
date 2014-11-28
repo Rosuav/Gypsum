@@ -607,10 +607,10 @@ class statustext_maxwidth
 //BEST PRACTICE: Use subw->world as the key for any status info, eg
 //persist["your_plugin_name/"+subw->world] - this will allow for
 //per-world configuration in a way the user will expect.
-class tabstatus
+class tabstatus(string name)
 {
 	constant provides="per-tab status";
-	void create(string name)
+	void create()
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (!name) return; //Must have a name.
@@ -619,10 +619,11 @@ class tabstatus
 		foreach (G->G->window->win->tabs,mapping subw) if (!subw[key])
 		{
 			if (!subw->tabstatus) continue; //Compat for a719d and older: old tabs don't have tabstatus Vboxes
-			subw->tabstatus->pack_start(subw[key]=maketabstatus(subw)->show_all(),0,0,0);
+			install(subw);
 		}
 	}
 	GTK2.Widget maketabstatus(mapping(string:mixed) subw) {return GTK2.Label("Per-tab status");}
+	void install(mapping(string:mixed) subw) {subw->tabstatus->pack_start(subw["tabstatus/"+name]=maketabstatus(subw)->show_all(),0,0,0);}
 }
 
 

@@ -91,7 +91,7 @@ mapping(string:mixed) subwindow(string txt)
 	#endif
 	subwsignals(subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
-	//TODO: Signal all of G->G->tabstatuses to load themselves into the new subw
+	values(G->G->tabstatuses)->install(subw);
 	colorcheck(subw->ef,subw);
 	call_out(redraw,0,subw);
 	return subw;
