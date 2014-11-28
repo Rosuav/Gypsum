@@ -150,10 +150,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 			m_delete(G->G->tabstatuses,name);
 			string key="tabstatus/"+name;
 			foreach (G->G->window->win->tabs,mapping subw) if (subw[key])
-			{
 				m_delete(subw,key)->destroy();
-				break;
-			}
 		}
 	}
 	if (!keepme) foreach (G->globalusage;string globl;array(string) usages) if (has_value(usages,param))
