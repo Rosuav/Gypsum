@@ -51,9 +51,9 @@ GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
 	GTK2.Widget frm=GTK2.Frame()
 		->add(statustxt->evbox=GTK2.EventBox()->add(GTK2.Hbox(1,0)
-			->add(GTK2.Vbox(0,0)->pack_start(statustxt->bars[0],0,0,0))
-			->add(GTK2.Vbox(0,0)->pack_start(statustxt->bars[1],0,0,0))
-			->add(GTK2.Vbox(0,0)->pack_start(statustxt->bars[2],0,0,0))
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[0],0,0,0))
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[1],0,0,0))
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[2],0,0,0))
 		)->set_size_request(barthickness*3,barlength)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255)))
 		->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
 	//if (!G->G->tooltips) G->G->tooltips=GTK2.Tooltips(); //TODO
