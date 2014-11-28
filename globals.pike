@@ -623,7 +623,15 @@ class tabstatus(string name)
 		}
 	}
 	GTK2.Widget maketabstatus(mapping(string:mixed) subw) {return GTK2.Label("Per-tab status");}
-	void install(mapping(string:mixed) subw) {subw->tabstatus->pack_start(subw["tabstatus/"+name]=maketabstatus(subw)->show_all(),0,0,0);}
+	void install(mapping(string:mixed) subw)
+	{
+		GTK2.Widget frm=GTK2.Frame()
+			->add(maketabstatus(subw))
+			->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
+		if (!G->G->tooltips) G->G->tooltips=GTK2.Tooltips();
+		//G->G->tooltips->set_tip(frm,statustxt->tooltip || name); //TODO: How should the tooltip be passed along?
+		subw->tabstatus->pack_start(subw["tabstatus/"+name]=frm->show_all(),0,0,0);
+	}
 }
 
 
