@@ -7,9 +7,10 @@ Tracks status separately for each subwindow.
 ";
 
 inherit hook;
-inherit statustext;
+inherit tabstatus;
 
-int barwidth=persist["hpgraph/barwidth"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
+int barlength=persist["hpgraph/barlength"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
+int barthickness=persist["hpgraph/barthickness"] || 8; //Number of pixels. Larger takes up more space (way more) but is more visible. Per bar.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
 //Currently the colors must be either 255 or 0 (the latter becomes the fade level).
@@ -32,36 +33,40 @@ array barcolors=persist["hpgraph/barcolors"] || ({
 int outputhook(string line,mapping(string:mixed) conn)
 {
 	int chp,mhp,csp,msp,cep,mep;
-	array hpg=conn->display->hpgraph;
+	array hpg=conn->display->hpgraph->barpos;
 	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==7)
 	{
-		conn->display->hpgraph=({time()+fadedelay,chp/(float)mhp,csp/(float)msp,cep/(float)mep});
+		conn->display->hpgraph->fadetime=time()+fadedelay;
+		conn->display->hpgraph->barpos=({chp/(float)mhp,csp/(float)msp,cep/(float)mep});
 		if (conn->display==G->G->window->current_subw()) tick(); //If we changed current status, redraw immediately.
 	}
-	else if (hpg && line=="You are completely healed.") hpg[1]=1.0;
-	else if (hpg && line=="You sizzle with mystical energy.") hpg[2]=1.0;
-	else if (hpg && line=="Your body has recuperated.") hpg[3]=1.0;
+	else if (hpg && line=="You are completely healed.") hpg[0]=1.0;
+	else if (hpg && line=="You sizzle with mystical energy.") hpg[1]=1.0;
+	else if (hpg && line=="Your body has recuperated.") hpg[2]=1.0;
 }
 
-GTK2.Widget makestatus()
+GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 {
+	mapping statustxt=subw->hpgraph=(["barpos":({0.0,0.0,0.0})]);
 	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
-	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label("HP:"))->add(statustxt->vbox=GTK2.EventBox()->add(GTK2.Vbox(1,0)
+	return statustxt->evbox=GTK2.EventBox()->add(GTK2.Hbox(1,0)
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[0],0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[1],0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[2],0,0,0))
-	)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255)));
+	)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255));
 }
 
 void tick()
 {
-	if (statustxt->ticker) remove_call_out(statustxt->ticker);
-	statustxt->ticker=call_out(this_function,1);
-	mapping subw=G->G->window->current_subw();
-	array hpg=subw->hpgraph || ({0,0,0,0});
-	int lvl=limit(0,fadespeed*(time()-hpg[0]),255);
-	foreach (barcolors;int i;array col)
-		statustxt->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(limit(0,(int)(barwidth*hpg[i+1]),barwidth),-1);
+	if (G->G->hpgraphticker) remove_call_out(G->G->hpgraphticker);
+	G->G->hpgraphticker=call_out(this_function,1);
+	foreach (G->G->window->win->tabs,mapping subw) if (mapping info=subw->hpgraph)
+	{
+		array hpg=info->barpos || ({0,0,0});
+		int lvl=limit(0,fadespeed*(time()-info->fadetime),255);
+		foreach (barcolors;int i;array col)
+			info->bars[i]->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(@(col[*]|lvl)))->set_size_request(barthickness,limit(0,(int)(barlength*hpg[i]),barlength));
+	}
 }
 
 class config
@@ -86,7 +91,8 @@ class config
 	{
 		win->mainwindow=GTK2.Window((["title":"Graphical HP display"]))->add(GTK2.Vbox(0,0)
 			->add(two_column(({
-				"Bar width",win->barwidth=GTK2.Entry()->set_text((string)barwidth),
+				"Bar length",win->barlength=GTK2.Entry()->set_text((string)barlength),
+				"Bar thickness",win->barthickness=GTK2.Entry()->set_text((string)barthickness),
 				"Fade delay (secs)",win->fadedelay=GTK2.Entry()->set_text((string)fadedelay),
 				"Fade speed (256=instant)",win->fadespeed=GTK2.Entry()->set_text((string)fadespeed),
 			})+color(({"HP","SP","EP"}))))
@@ -116,8 +122,15 @@ class config
 
 	void sig_pb_ok_clicked()
 	{
-		int newwidth = (int)win->barwidth->get_text() || 100;
-		if (newwidth!=barwidth) statustxt->vbox->set_size_request(persist["hpgraph/barwidth"]=barwidth=newwidth,-1);
+		int newlength = (int)win->barlength->get_text() || 100;
+		int newthickness = (int)win->barthickness->get_text() || 8;
+		if (newlength!=barlength || newthickness!=barthickness)
+		{
+			persist["hpgraph/barlength"]=barlength=newlength;
+			persist["hpgraph/barthickness"]=barthickness=newthickness;
+			foreach (G->G->window->win->tabs,mapping subw) if (mapping info=subw->hpgraph)
+				info->evbox->set_size_request(barthickness*3,barlength);
+		}
 		fadedelay = persist["hpgraph/fadedelay"] = (int)win->fadedelay->get_text() || 60;
 		fadespeed = persist["hpgraph/fadespeed"] = (int)win->fadespeed->get_text() || 8;
 		foreach (barcolors;int i;array(int) col) foreach (col;int j;)
@@ -135,16 +148,12 @@ void mousedown(object self,object ev)
 
 void create(string name)
 {
-	statustxt->tooltip="Graphical HP display - double-click to configure";
 	::create(name);
-	//The condition is compat code for 1fc03f and earlier
-	//The name "vbox" is now outdated (20141102) as it's actually another EventBox, and it now
-	//covers the background. At some point it's probably worth making a breaking change to
-	//rename it, but it'll still need to have its width set on startup, in case the persist
-	//value got changed out from under us.
-	if (statustxt->vbox) statustxt->vbox->set_size_request(barwidth,-1);
-	//Compat for d6bfa9 and earlier
-	if (statustxt->hp) statustxt->bars=({statustxt->hp,statustxt->sp,statustxt->ep});
-	statustxt->signals=({gtksignal(statustxt->vbox,"button_press_event",mousedown)});
+	//statustxt->tooltip="Graphical HP display - double-click to configure";
+	foreach (G->G->window->win->tabs,mapping subw) if (mapping info=subw->hpgraph)
+	{
+		info->evbox->set_size_request(barthickness*3,barlength);
+		info->signals=({gtksignal(info->evbox,"button_press_event",mousedown)});
+	}
 	tick();
 }
