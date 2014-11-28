@@ -1,5 +1,5 @@
 constant docstring=#"
-Show a graphical representation of your hitpoints, on the status bar.
+Show a graphical representation of your hitpoints, to the right of the main display.
 
 Displays vibrantly when you see your hitpoints; fades away after a while.
 
