@@ -47,7 +47,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 
 GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 {
-	mapping statustxt=subw->hpgraph=(["barpos":({0.0,0.0,0.0})]);
+	mapping statustxt=subw->hpgraph=(["barpos":({0,0,0})]);
 	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
 	return statustxt->evbox=GTK2.EventBox()->add(GTK2.Hbox(1,0)
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[0],0,0,0))
