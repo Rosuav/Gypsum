@@ -10,7 +10,7 @@ inherit hook;
 inherit tabstatus;
 
 int barlength=persist["hpgraph/barlength"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
-int barthickness=persist["hpgraph/barthickness"] || 8; //Number of pixels. Larger takes up more space (way more) but is more visible. Per bar.
+int barthickness=persist["hpgraph/barthickness"] || 7; //Number of pixels. Larger takes up more space (way more) but is more visible. Per bar.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
 //Currently the colors must be either 255 or 0 (the latter becomes the fade level).
@@ -123,7 +123,7 @@ class config
 	void sig_pb_ok_clicked()
 	{
 		int newlength = (int)win->barlength->get_text() || 100;
-		int newthickness = (int)win->barthickness->get_text() || 8;
+		int newthickness = (int)win->barthickness->get_text() || 7;
 		if (newlength!=barlength || newthickness!=barthickness)
 		{
 			persist["hpgraph/barlength"]=barlength=newlength;
