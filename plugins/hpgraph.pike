@@ -53,7 +53,7 @@ GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[0],0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[1],0,0,0))
 		->add(GTK2.Hbox(0,0)->pack_start(statustxt->bars[2],0,0,0))
-	)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255));
+	)->set_size_request(barthickness*3,barlength)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255));
 }
 
 void tick()
