@@ -1,7 +1,7 @@
 constant docstring=#"
 Show a graphical representation of your hitpoints, to the right of the main display.
 
-Displays vibrantly when you see your hitpoints; fades away after a while.
+Displays in vibrant color when you see your hitpoints; fades away slowly after a while.
 
 Tracks status separately for each subwindow.
 ";
