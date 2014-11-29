@@ -608,7 +608,9 @@ class statustext_maxwidth
 //persist["your_plugin_name/"+subw->world] - this will allow for
 //per-world configuration in a way the user will expect.
 //TODO: Have a subclass-overridable alert saying "current tab just
-//switched" - might be useful.
+//switched" - might be useful. Also perhaps a cleanup hook (tab has
+//been closed). There's effectively an alert for "new tab created",
+//maketabstatus(), so that would complete the set.
 class tabstatus(string name)
 {
 	constant provides="per-tab status";
