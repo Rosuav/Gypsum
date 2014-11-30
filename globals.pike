@@ -610,7 +610,9 @@ class statustext_maxwidth
 //TODO: Have a subclass-overridable alert saying "current tab just
 //switched" - might be useful. Also perhaps a cleanup hook (tab has
 //been closed). There's effectively an alert for "new tab created",
-//maketabstatus(), so that would complete the set.
+//maketabstatus(), so that would complete the set. Alternatively,
+//just expect all tabstatus plugins to do everything for all subw,
+//which may be better accomplished by providing a function to do so.
 class tabstatus(string name)
 {
 	constant provides="per-tab status";
