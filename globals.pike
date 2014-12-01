@@ -621,8 +621,7 @@ class tabstatus(string name)
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (!name) return; //Must have a name.
 		G->G->tabstatuses[name]=this;
-		string key="tabstatus/"+name;
-		foreach (G->G->window->win->tabs,mapping subw) if (!subw[key])
+		foreach (G->G->window->win->tabs,mapping subw) if (!subw["tabstatus/"+name])
 		{
 			if (!subw->tabstatus) continue; //Compat for a719d and older: old tabs don't have tabstatus Vboxes
 			install(subw);
