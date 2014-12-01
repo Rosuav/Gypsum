@@ -15,8 +15,7 @@ int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after upda
 int fadespeed=persist["hpgraph/fadespeed"] || 8; //Speed of fade - each second (after fadedelay), this gets added to the color, capped at 255 (faded to white).
 //Currently the colors must be either 255 or 0 (the latter becomes the fade level).
 //Putting any other value in (not possible with the config) will cause odd
-//interactions with the fade-to-white, so just don't do it. :) TODO: Should this
-//use setdefault() to ensure that there's always at least something in persist?
+//interactions with the fade-to-white, so just don't do it. :)
 array barcolors=persist["hpgraph/barcolors"] || ({
 	({255,0,0}),
 	({0,255,0}),
