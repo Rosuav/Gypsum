@@ -22,7 +22,7 @@ array barcolors=persist["hpgraph/barcolors"] || ({
 	({0,255,255}),
 });
 
-//TODO: Incorporate the timer.pike code for tick-downs - if they can overlay the bands, that would be great.
+//TODO: Incorporate the timer.pike code for tick-downs - if they can overlay the bands, that would be great, otherwise below will do.
 
 //Stashes some info in subw->hpgraph as a mapping:
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
