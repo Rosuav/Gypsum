@@ -24,10 +24,9 @@ array barcolors=persist["hpgraph/barcolors"] || ({
 
 //TODO: Incorporate the timer.pike code for tick-downs - if they can overlay the bands, that would be great.
 
-//Stashes some info in subw->hpgraph as an array:
-//({fadetime, hp, sp, ep})
+//Stashes some info in subw->hpgraph as a mapping:
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
-//hp, sp, ep: 0.0 <= x <= 1.0 for the proportion of the bar that should be colored.
+//barpos: array ({hp, sp, ep}) of 0.0 <= x <= 1.0 for the proportion of the bar that should be colored.
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
