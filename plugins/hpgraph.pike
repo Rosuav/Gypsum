@@ -48,11 +48,14 @@ GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 {
 	mapping statustxt=subw->hpgraph=(["barpos":({0,0,0})]);
 	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
-	return statustxt->evbox=GTK2.EventBox()->add(GTK2.Hbox(1,0)
-		->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[0],0,0,0))
-		->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[1],0,0,0))
-		->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[2],0,0,0))
-	)->set_size_request(barthickness*3,barlength)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255));
+	return GTK2.Vbox(0,2)
+		->add(GTK2.Label("HP:"))
+		->add(statustxt->evbox=GTK2.EventBox()->add(GTK2.Hbox(1,0)
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[0],0,0,0))
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[1],0,0,0))
+			->add(GTK2.Vbox(0,0)->pack_end(statustxt->bars[2],0,0,0))
+		)->set_size_request(barthickness*3,barlength)->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(255,255,255)))
+	;
 }
 
 void tick()
