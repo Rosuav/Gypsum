@@ -61,10 +61,11 @@ int outputhook(string line,mapping(string:mixed) conn)
 		halfsync=2;
 		return 0;
 	}
-	if (halfsync_rl && halfsync_rl==time()) //For efficiency, don't call time() if halfsync_rl is zero (the normal case).
+	if (halfsync_rl)
 	{
-		//If we're half way through syncing, require that time() not change before we finish - if it does, reject the sync (latency is bad, mm'kay?).
-		if (halfsync==1 && sscanf(line,"%*[ ]%s %d, %d",th_monname,th_day,th_year)==4)
+		if (halfsync_rl!=time())
+			; //If we're half way through syncing, require that time() not change before we finish - if it does, reject the sync (latency is bad, mm'kay?).
+		else if (halfsync==1 && sscanf(line,"%*[ ]%s %d, %d",th_monname,th_day,th_year)==4)
 		{
 			th_hour=halfsync_hour; th_min=halfsync_min;
 			sync=1;
@@ -76,8 +77,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 			th_monname=halfsync_monname;
 			sync=2;
 		}
+		else return 0;
+		halfsync_rl=0;
 	}
-	halfsync_rl=0;
 	if (sync)
 	{
 		if ((th_mon=search(threshmonth,th_monname))==-1) return 0; //Not found - must be a botched month.
