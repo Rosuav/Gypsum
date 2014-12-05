@@ -218,6 +218,8 @@ class menu_clicked
 			persist["threshtime/zones"]=convzone;
 			persist["threshtime/statuszone"]=sbzone;
 			closewindow();
+			//It's not easy to update the display window on the fly, so close it as well.
+			menu_clicked::closewindow();
 		}
 	}
 
