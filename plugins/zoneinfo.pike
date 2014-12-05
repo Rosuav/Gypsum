@@ -40,7 +40,7 @@ constant terramonth=({"January", "February", "March", "April", "May", "June", "J
 //One Thresh hour == five RL minutes.
 //So th 60 == rl 300 or a ratio of 1:5 (which is the combination of the 12:1 time ratio and a 1:60 ratio of the units, due to Thresh time being stored in minutes).
 
-int halfsync; //1 = Timepiece of Phzult, 2 = default 'time'. Both take two lines to display their info.
+int halfsync; //1 = Timepiece of Phzult (or other portable chronometer), 2 = default 'time'. Both take two lines to display their info.
 int halfsync_hour,halfsync_min;
 int halfsync_day,halfsync_year;
 int halfsync_rl=0;
@@ -48,8 +48,6 @@ string halfsync_monname;
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
-	//Look for Timepiece of Phzult or Chronos's clock
-	//Look also for a default 'time' but that's only to the hour so it's only approximate.
 	string th_monname;
 	int th_year,th_mon,th_day,th_hour,th_min;
 	int sync=0;
