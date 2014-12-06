@@ -12,6 +12,10 @@ NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
 ";
 
 //TODO: Replace sounds.ini with persist[] and a configdlg.
+//This whole thing needs a major rewrite, tbh. It's code from Gypsum's earliest days, and it shows its age.
+//Quite a lot of this is not in keeping with current best-practice, quite a lot of it could benefit from
+//knowledge gained elsewhere in the project. Trouble is, I don't actually use this feature, so it's not
+//going to get the natural and automatic testing of personal dev usage; it desperately needs a champion.
 
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
