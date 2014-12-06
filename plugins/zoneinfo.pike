@@ -219,6 +219,7 @@ class menu_clicked
 			persist["threshtime/statuszone"]=sbzone;
 			closewindow();
 			//It's not easy to update the display window on the fly, so close it as well.
+			//(TODO: Is it better to close the display only if something actually changed, or to be consistent and always close it?)
 			menu_clicked::closewindow();
 		}
 	}
