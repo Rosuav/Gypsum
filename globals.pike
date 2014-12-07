@@ -634,7 +634,7 @@ class tabstatus(string name)
 			->add(maketabstatus(subw))
 			->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
 		if (!G->G->tooltips) G->G->tooltips=GTK2.Tooltips();
-		//G->G->tooltips->set_tip(frm,statustxt->tooltip || name); //TODO: How should the tooltip be passed along?
+		//G->G->tooltips->set_tip(frm,statustxt->tooltip || name); //TODO: How should the tooltip be passed along? Should it be global or per-tab?
 		subw->tabstatus->pack_start(subw["tabstatus/"+name]=frm->show_all(),0,0,0);
 	}
 }
