@@ -27,6 +27,8 @@ typedef string(0..255) bytes;
 //Something that's ASCII-only can be trivially treated as either bytes or text (assuming
 //a UTF-8 transmission stream, which most of this does).
 typedef string(0..127) ascii;
+//Note that in modern Pikes, these could be spelled string(8bit) and string(7bit), but
+//for compatibility, they're spelled in full.
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
 //Note that this is relatively slow (a run-time lookup every time), and should normally
