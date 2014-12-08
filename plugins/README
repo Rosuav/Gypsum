@@ -375,6 +375,11 @@ either bytes or text (with an implicit ASCII or UTF-8 encode/decode); this is
 also the case for any seven-bit string literals. For this purpose, the typedef
 "ascii" can be used.
 
+BEST PRACTICE: Plugin file names should restrict themselves to the ASCII set
+for maximum cross-platform compatibility. File system encodings are a mess that
+I'd really rather not have to dig into.
+
+
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
