@@ -394,7 +394,8 @@ subw->connection.
 
 subw->world - (usually) short identifier for the current or most-recent
 world. This may be numeric and may even have spaces in it, but it should be
-string-for-string identical every time the same world is connected to.
+string-for-string identical every time the same world is connected to. This is
+the recommended way to distinguish worlds in a way that a human will expect.
 
 conn->worldname - descriptive name for the current world (used as tab text,
 for instance). Should be used as a human-readable world description.
