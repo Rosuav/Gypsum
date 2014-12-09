@@ -102,6 +102,8 @@ void menu_clicked() {config();}
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
+	//NOTE: I've had bug reports that this doesn't always catch 'hp report'. Have not been
+	//able to replicate, and it *looks* like it ought always to work. Keep an eye on it.
 	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
 	{
 		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
