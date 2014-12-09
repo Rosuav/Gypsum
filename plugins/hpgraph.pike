@@ -32,6 +32,9 @@ int outputhook(string line,mapping(string:mixed) conn)
 {
 	int chp,mhp,csp,msp,cep,mep;
 	array hpg=conn->display->hpgraph->barpos;
+	//NOTE: I've had bug reports that this doesn't always catch 'hp report'. Have not been
+	//able to replicate, and it *looks* like it ought always to work. Keep an eye on it.
+	//(Or the error may have been with timer.pike. It was a bit vague.)
 	if (sscanf(line,"%*sHP [ %d/%d ]     SP [ %d/%d ]     EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==7)
 	{
 		conn->display->hpgraph->fadetime=time()+fadedelay;
