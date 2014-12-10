@@ -221,6 +221,7 @@ void sockread(mapping conn,bytes data)
 				switch (iac[1])
 				{
 					case ECHO: if (iac[0]==WILL) G->G->window->password(conn->display); else G->G->window->unpassword(conn->display); break; //Password mode on/off
+					//case SUPPRESSGA: if (iac[0]==WONT) send_telnet(conn,(string(0..255))({DO,SUPPRESSGA})); break; //Possibly acknowledge WONT SUPPRESSGA?
 					case NAWS: if (iac[0]==DO)
 					{
 						//TODO: Resend any time wrap width changes
