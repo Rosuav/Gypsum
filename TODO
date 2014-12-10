@@ -10,7 +10,6 @@
   hidden instead of visible?
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
   - Seen 20140820; not seen again for a while 20141204.
-* Figure out whether file names are bytes or text, and design appropriately. Or demand that they be ASCII?
 * Generalized way for plugins to be configured?? Only loaded plugins can be configured, so it may be awkward.
   - Would require some kind of registration with the system, so this will need the proper enhancement protocol.
 
