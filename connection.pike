@@ -230,7 +230,7 @@ void sockread(mapping conn,bytes data)
 					}
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
-					default: break;
+					default: break; //Should we automatically reject unrecognized DO/WILL requests?
 				}
 				iac=iac[2..];
 				break;
