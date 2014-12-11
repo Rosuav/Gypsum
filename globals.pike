@@ -78,6 +78,8 @@ string strftime(string format,int|mapping(string:int) tm)
 	]));
 }
 
+//TODO: Migrate some of these GTK utility functions/classes to something importable,
+//which can then be used elsewhere (eg in shed/translit.pike).
 class MessageBox
 {
 	inherit GTK2.MessageDialog;
