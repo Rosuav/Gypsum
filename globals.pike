@@ -147,7 +147,7 @@ class SelectBox(array(string) strings)
 		set_active(search(strings,txt));
 		return this;
 	}
-	string get_text() //Like get_active_text() but will return 0 (not "") if nothing's selected (may not be necessary???)
+	string get_text() //Like get_active_text() but will return 0 (not "") if nothing's selected (may not strictly be necessary, but it's consistent with entry fields and such)
 	{
 		int idx=get_active();
 		return (idx>=0 && idx<sizeof(strings)) && strings[idx];
