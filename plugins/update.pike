@@ -41,6 +41,9 @@ int process(string param,mapping(string:mixed) subw)
 	if (param=="git")
 	{
 		say(subw,"%% Attempting git-based update...");
+		#ifdef __NT__
+		say(subw,"%% WARNING: This may not work reliably on Windows.");
+		#endif
 		Stdio.File stdout=Stdio.File(),stderr=Stdio.File();
 		int start_time=time(1)-60;
 		Process.create_process(({"git","pull","--ff-only"}),(["stdout":stdout->pipe(Stdio.PROP_IPC),"stderr":stderr->pipe(Stdio.PROP_IPC),"callback":lambda()
