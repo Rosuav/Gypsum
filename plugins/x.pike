@@ -69,7 +69,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 	if (!subw->hilfe) (subw->hilfe=Tools.Hilfe.Evaluator())->write=lambda(string l) {say(subw,l);}; //Note that this is a refloop. :(
 	int wasfinished=subw->hilfe->state->finishedp();
 	//Reinstate certain expected variables every command
-	mapping vars=subw->hilfe->variables; vars->subw=subw; vars->mw=(vars->window=G->G->window)->mainwindow;
+	mapping vars=subw->hilfe->variables; vars->subw=subw; vars->window=G->G->window;
 	subw->hilfe->add_input_line(line);
 	int nowfinished=subw->hilfe->state->finishedp();
 	if (wasfinished==nowfinished) return 1;
@@ -84,7 +84,6 @@ int process(string param,mapping(string:mixed) subw)
 	sscanf(param,"[%s] %s",string cmdpfx,param);
 	program tmp; mixed err;
 	err=catch {tmp=compile_string(#"
-	GTK2.Window mw=G->G->window->mainwindow;
 	object window=G->G->window;
 	mixed x=Hex;
 	Time tm(string|int t,int ... parts) {if (stringp(t)) {parts=(array(int))(t/\":\"); t=0;} foreach (parts,int p) t=(t*60)+p; return Time(t);}
