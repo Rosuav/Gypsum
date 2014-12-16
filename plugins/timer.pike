@@ -102,6 +102,10 @@ void menu_clicked() {config();}
 
 int outputhook(string line,mapping(string:mixed) conn)
 {
+	//NOTE: A bug was reported wherein this was attempting to index an empty array with
+	//0. This MAY have something to do with loading up with no timers and then adding
+	//one; unloading and reloading the plugin appeared to fix it. Or it may have been a
+	//simple case of operator error. Unconfirmed.
 	if (sscanf(line,"%*sHP [ %d/%d ]%*[ ]SP [ %d/%d ]%*[ ]EP [ %d/%d ]",int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
 	{
 		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
