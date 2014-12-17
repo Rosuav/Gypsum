@@ -42,6 +42,10 @@ int process(string param,mapping(string:mixed) subw)
 	{
 		say(subw,"%% Attempting git-based update...");
 		#ifdef __NT__
+		//Note that most people on Windows won't be using git anyway - the recommended
+		//installation method involves a zip installation and therefore zip updates.
+		//This warning will be distinctly unusual, and anyone actually doing development
+		//on Windows will simply have to use a less convenient update pattern.
 		say(subw,"%% WARNING: This may not work reliably on Windows.");
 		#endif
 		Stdio.File stdout=Stdio.File(),stderr=Stdio.File();
