@@ -1,8 +1,9 @@
-/*
+constant docstring=#"
 Configure window-based logging. This is separate from world-based logging (done in
 the Connect dialog); this log will pick up local messages (including its own at the
 beginning of the log, identifying the file and the timestamp).
-
+";
+/*
 TODO: Make this fully configure logging. There are two ways to log, with a third
 proposed, and this should be able to manage them all:
 1) Window-based logging, by creating a subw->logfile. Allow this to be done for any
