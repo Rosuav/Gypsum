@@ -65,6 +65,8 @@ that connection logging is already done per-line, so you don't have to worry abo
 interleaved partial lines.) Easiest way to do that, I think, would be to have a
 'mapping(string:Stdio.File) logfiles' in global state somewhere, and continue to
 reference the files directly.
+
+20141219: But when, with the above plan, would files ever be closed? Hrm. Hrm.
 */
 inherit command;
 inherit plugin_menu;
