@@ -233,6 +233,7 @@ class plugin_menu
 	constant menu_label=0; //(string) The initial label for your menu item. If not provided, will use the plugin name.
 	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
 	constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
+	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
 	void menu_clicked() { }
 	//End provide.
 
@@ -257,7 +258,7 @@ class plugin_menu
 	{
 		mi->menuitem=GTK2.MenuItem(menu_label||name);
 		if (menu_accel_key) mi->menuitem->add_accelerator("activate",G->G->accel,menu_accel_key,menu_accel_mods,GTK2.ACCEL_VISIBLE);
-		G->G->window->menus->plugins->add(mi->menuitem->show());
+		G->G->window->menus[menu_parent]->add(mi->menuitem->show());
 		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 	}
 }
