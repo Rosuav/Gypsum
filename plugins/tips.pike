@@ -3,7 +3,7 @@ Provide random help tips on request, via the Help|Tips menu.
 ";
 
 constant tips=({
-	//Tips will be reformatted: tabs and non-doubled newlines converted to spaces, space-space to space, then wrapped.
+	//Tips will be reformatted: tabs and newlines converted to spaces, space-space to space, then wrapped.
 	#"Check the Plugins|Configure dialog for a list of all detected plugins.
 	You never know what you'll find!",
 
@@ -29,7 +29,7 @@ class menu_clicked
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Gypsum tips and tricks"]))->add(GTK2.Vbox(0,0)
-			->add(GTK2.Frame("Tip:")->add(GTK2.Label(replace(replace((random(tips)/"\n\n")[*],({"\n","\t"})," ")[*],"  "," ")*"\n\n")->set_line_wrap(1)))
+			->add(GTK2.Frame("Tip:")->add(GTK2.Label(replace(replace(random(tips),({"\n","\t"})," "),"  "," "))->set_line_wrap(1)))
 			->add(GTK2.HbuttonBox()->add(stock_close()))
 		);
 		::makewindow();
