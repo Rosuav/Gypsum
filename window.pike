@@ -22,7 +22,7 @@ array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
 constant load_size=1;
-mapping(string:mixed) mainwin; //Set equal to win[] and thus available to subclasses
+mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
