@@ -1347,14 +1347,14 @@ void makewindow()
 	mainwindow->set_title("Gypsum");
 	mainwindow->set_default_size(800,500);
 	GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
-	G->G->plugin_menu=([]);
+	G->G->plugin_menu=([]); //Note that, as of 20141219, this no longer needs to be initialized here in makewindow(). Is there a better place for it? It doesn't hurt here, but it's illogical.
 	mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 		->pack_start(GTK2.MenuBar()
 			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
 			//reason won't accept a GTK2.Menu, which is a subclass of Widget.
 			->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
 			->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
-			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)(G->G->plugin_menu[0]=GTK2.Menu())))
+			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)GTK2.Menu()))
 			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
 		,0,0,0)
 		->add(win->notebook=GTK2.Notebook())
@@ -1424,8 +1424,9 @@ void create(string name)
 		item->show()->signal_connect("activate",this[name]);
 		menu->add(item);
 	}
+	m_delete(G->G->plugin_menu,0); //Compat: Remove the now-unnecessary hack entry needed in 32a576 and earlier
 	//Recreate plugin menu items in name order
-	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=name && G->G->plugin_menu[name])
+	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=G->G->plugin_menu[name])
 		if (!mi->menuitem) mi->self->make_menuitem(name);
 
 	//Scan for plugins now that everything else is initialized.

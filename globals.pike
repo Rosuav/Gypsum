@@ -257,7 +257,7 @@ class plugin_menu
 	{
 		mi->menuitem=GTK2.MenuItem(menu_label||name);
 		if (menu_accel_key) mi->menuitem->add_accelerator("activate",G->G->accel,menu_accel_key,menu_accel_mods,GTK2.ACCEL_VISIBLE);
-		G->G->plugin_menu[0]->add(mi->menuitem->show());
+		G->G->window->menus->plugins->add(mi->menuitem->show());
 		mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 	}
 }

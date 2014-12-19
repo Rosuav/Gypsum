@@ -120,7 +120,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	{
 		if (reallydelete(obj,"Hook: "+name)) m_delete(G->G->hooks,name);
 	}
-	foreach (G->G->plugin_menu;string name;mapping data) if (name && origin(data->self)==param) //Special: G->G->plugin_menu[0] is not a mapping.
+	foreach (G->G->plugin_menu;string name;mapping data) if (origin(data->self)==param)
 	{
 		if (reallydelete(data->self,"Menu item: "+data->menuitem->get_child()->get_text()))
 			({m_delete(G->G->plugin_menu,name)->menuitem})->destroy();
