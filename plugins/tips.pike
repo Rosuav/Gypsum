@@ -10,6 +10,9 @@ constant tips=({
 	#"Quickly reconnect to the same world you were last connected to by
 	entering /c or /connect - coupled with auto-login, this can rescue
 	you from linkdeath or internet connection changes very efficiently.",
+
+	#"Got ideas for more tips? Submit them via github and get your name
+	permanently recorded as a contributor!",
 });
 
 constant plugin_active_by_default=1;
