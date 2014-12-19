@@ -3,5 +3,5 @@
 # dependency update works before anything gets pushed.
 diff -u - <(pike plugins/update.pike --simulate 2>&1) <<EOF
 Downloading latest Gypsum...
-Update complete [46].
+Update complete [47].
 EOF
