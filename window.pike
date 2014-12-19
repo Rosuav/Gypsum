@@ -23,6 +23,7 @@ constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used
 constant pos_key="window/winpos";
 constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
+mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
 
 //Default set of worlds. Not currently actually used here - just for the setdefault().
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
@@ -1412,7 +1413,6 @@ void create(string name)
 	foreach (submenus,GTK2.Menu submenu) foreach (submenu->get_children(),GTK2.MenuItem w) {w->destroy(); destruct(w);}
 	//Neat hack: Build up a mapping from a prefix like "options" (the part before the underscore
 	//in the constant name) to the submenu object it should be appended to.
-	mapping(string:GTK2.Menu) menus=([]);
 	[menus->file,menus->options,menus->plugins,menus->help] = submenus;
 	foreach (sort(indices(this_program)),string const) if (object menu=sscanf(const,"%s_%s",string pfx,string name) && name && menus[pfx])
 	{
