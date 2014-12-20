@@ -14,6 +14,9 @@ constant tips=({
 	#"If something doesn't behave the way you want it to, check out
 	Options|Advanced. It's entirely possible the option you want is there!",
 
+	#"To quickly look at the source code for a plugin, type '/edit pluginname'
+	and a pop-out editor will be opened up.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
