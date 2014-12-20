@@ -11,6 +11,9 @@ constant tips=({
 	entering /c or /connect - coupled with auto-login, this can rescue
 	you from linkdeath or internet connection changes very efficiently.",
 
+	#"If something doesn't behave the way you want it to, check out
+	Options|Advanced. It's entirely possible the option you want is there!",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
