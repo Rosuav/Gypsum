@@ -2,6 +2,11 @@ constant docstring=#"
 Configure window-based logging. This is separate from world-based logging (done in
 the Connect dialog); this log will pick up local messages (including its own at the
 beginning of the log, identifying the file and the timestamp).
+
+REQUEST: This plugin has a number of issues. If you care about logging facilities,
+please consider having a look in the source code, where there are lengthy comments
+detailing the known problems; answers, ideas, or general thoughts would be greatly
+welcomed. Thanks!
 ";
 /*
 TODO: Make this fully configure logging. There are two ways to log, with a third
