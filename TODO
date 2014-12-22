@@ -25,6 +25,7 @@ become less magical... but for now, their documentation here will give them at
 least some chance of being found.
 * Creating timers (plugins/timer.pike) with names " HP", " SP", and ".EP" will handle them with Threshold RPG semantics.
 * Creating a world (plugins/connect.pike) with an IP address of "0.0.0.0" or "::" will put it in passive mode (IPv4 or IPv6).
+Note that Help|Tips / plugins/tips.pike may be able to make things less obscure, but do not depend on this.
 
 Vague theories of maybe-this-would-be-nice:
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
