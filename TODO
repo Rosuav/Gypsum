@@ -1,4 +1,4 @@
-* Generally, anything that people expect RosMud to do.
+* Generally, anything that people expect RosMud to do (should be pretty much done as of 20141223).
 * Spell-checker?
 * OOCBox?
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
