@@ -181,7 +181,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 						case 2: conn->bold=0; break;
 						case 30..37: conn->fg=param-30; break;
 						case 40..47: conn->bg=param-40; break;
-						default: break; //Ignore unknowns (currently without error)
+						default: if (!conn["unknown_ansi_"+param+"m"]) {conn["unknown_ansi_"+param+"m"]=1; werror("%O produced unknown ANSI code \\e[%dm\n",conn->worldname,param);}
 					}
 					conn->curmsg[-1]=conn->curmsg[-1];
 					conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
