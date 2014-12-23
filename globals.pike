@@ -225,7 +225,7 @@ class hook
 	}
 }
 
-//Wants a new name... Puts this plugin into the Plugins menu.
+//Wants a new name... Puts this plugin into the Plugins menu by default, or optionally a different menu.
 class plugin_menu
 {
 	constant provides="Plugins menu entry";
