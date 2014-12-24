@@ -230,7 +230,7 @@ class plugin_menu
 {
 	constant provides="Plugins menu entry";
 	//Provide:
-	constant menu_label=0; //(string) The initial label for your menu item. If not provided, will use the plugin name.
+	constant menu_label=0; //(string) The initial label for your menu item. (If not provided, will use the plugin name for backward compat.)
 	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
 	constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
 	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
