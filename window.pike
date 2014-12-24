@@ -1012,7 +1012,7 @@ constant options_keyboard="_Keyboard";
 class keyboard
 {
 	inherit configdlg;
-	constant strings=({"cmd"});
+	constant strings=({"cmd","keyname"});
 	constant persist_key="window/numpadnav";
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
 	void create() {::create();}
@@ -1022,6 +1022,7 @@ class keyboard
 		return two_column(({
 			"Key (hex code)",win->kwd=GTK2.Entry(),
 			"Press key here ->",win->key=GTK2.Entry(), //TODO: Explain this field, somehow - another label on the window??
+			"Key name (optional)",win->keyname=GTK2.Entry(),
 			"Command",win->cmd=GTK2.Entry(),
 		}));
 	}
@@ -1055,10 +1056,14 @@ class keyboard
 		{
 			if (!numpadnav["ffb"+i])
 			{
-				numpadnav["ffb"+i]=(["cmd":cmd]);
+				numpadnav["ffb"+i]=(["cmd":cmd,"keyname":"Keypad "+i]);
 				store->set_value(store->append(),0,"ffb"+i);
 			}
-			else numpadnav["ffb"+i]->cmd=cmd;
+			else
+			{
+				numpadnav["ffb"+i]->cmd=cmd;
+				numpadnav["ffb"+i]->keyname="Keypad "+i;
+			}
 		}
 		persist->save();
 		sig_sel_changed();
