@@ -1022,7 +1022,7 @@ class keyboard
 		return two_column(({
 			"Key (hex code)",win->kwd=GTK2.Entry(),
 			"Press key here ->",win->key=GTK2.Entry(),
-			"The hex code for any key pressed\nhere will be stored in Key above.",0,
+			GTK2.Label("The hex code for any key pressed\nhere will be stored in Key above."),0, //Explicitly construct a label so it isn't right-justified
 			"Key name (optional)",win->keyname=GTK2.Entry(),
 			"Command",win->cmd=GTK2.Entry(),
 		}));
