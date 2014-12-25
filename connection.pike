@@ -158,9 +158,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 	conn->ansibuffer+=data;
 	while (sscanf(conn->ansibuffer,"%s\x1b%s",string data,string ansi)) if (mixed ex=catch
 	{
-		//werror("HAVE ANSI CODE\nPreceding data: %O\nANSI code and subsequent: %O\n",data,ansi);
 		textread(conn,data,0); conn->ansibuffer="\x1b"+ansi;
-		//werror("ANSI code: %O\n",(ansi/"m")[0]);
 		if (ansi[0]!='[') {textread(conn,"\\e",0); conn->ansibuffer=ansi; continue;} //Report an escape character as the literal string "\e" if it doesn't start an ANSI code
 		array(int|string) params=({ }); int|string curparam=UNDEFINED;
 		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, leave the unprocessed text and wait for more data from the socket.
