@@ -96,7 +96,7 @@ class menu_clicked
 		win->filedlg=GTK2.FileChooserDialog("Locate RosMud directory to import from",win->mainwindow,
 			GTK2.FILE_CHOOSER_ACTION_SELECT_FOLDER,({(["text":"Import","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})
 		)->show_all();
-		win->filedlg->set_filename("."); //This doesn't chain. What's the integer it returns? Meh.
+		win->filedlg->set_current_folder("."); //This doesn't chain. What's the integer it returns? Meh.
 		dosignals();
 	}
 

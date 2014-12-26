@@ -1470,7 +1470,7 @@ void save_html()
 		GTK2.FILE_CHOOSER_ACTION_SAVE,({(["text":"Save","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})
 	)->show_all();
 	dlg->signal_connect("response",save_html_response);
-	dlg->set_filename(".");
+	dlg->set_current_folder(".");
 }
 
 void save_html_response(object self,int btn)
