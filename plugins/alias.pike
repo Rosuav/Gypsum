@@ -75,8 +75,8 @@ class aliasdlg(string persist_key)
 {
 	inherit configdlg;
 	constant strings=({"expansion"});
-	mapping(string:mixed) windowprops=(["title":"Configure Aliases","modal":1]);
-	void create() {::create("Alias");}
+	mapping(string:mixed) windowprops=(["modal":1]);
+	void create(string title) {windowprops->title=title; ::create("Alias");}
 
 	GTK2.Widget make_content() 
 	{
@@ -88,14 +88,14 @@ class aliasdlg(string persist_key)
 }
 
 constant menu_label="Aliases - global";
-void menu_clicked() {aliasdlg("aliases/simple");}
+void menu_clicked() {aliasdlg("aliases/simple","Configure global aliases");}
 
 //Hack: A second plugin menu item.
 object hack=class {inherit plugin_menu; constant menu_label="Aliases - this world"; void menu_clicked()
 {
 	mapping subw=G->G->window->current_subw(); if (!subw || !subw->world) return;
 	persist->setdefault("aliases/simple/"+subw->world,([]));
-	aliasdlg("aliases/simple/"+subw->world);
+	aliasdlg("aliases/simple/"+subw->world,"Configure aliases for "+subw->world);
 }}("alias_more");
 
 void create(string name) {::create(name);}
