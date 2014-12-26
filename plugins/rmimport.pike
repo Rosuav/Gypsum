@@ -43,7 +43,7 @@ class menu_clicked
 			->add(win->notebook=GTK2.Notebook()->append_page(GTK2.Vbox(0,0)
 				->pack_start(GTK2.Label("First step: Choose a directory to import settings from."),0,0,0)
 				->pack_start(GTK2.Frame("Import directory")->add(GTK2.Hbox(0,0)
-					->pack_start(win->pb_find=GTK2.Button("Open"),0,0,0)
+					->pack_start(win->pb_find=GTK2.Button("Open"),0,0,0) //TODO: Replace this with a FileChooserButton?
 					->add(win->import_dir=GTK2.Label(""))
 				),0,0,0)
 				->add(win->status=GTK2.Label("")) //Expansion can happen here.
