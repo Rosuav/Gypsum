@@ -17,6 +17,9 @@ constant tips=({
 	#"To quickly look at the source code for a plugin, type '/edit pluginname'
 	and a pop-out editor will be opened up.",
 
+	#"Two characters on the same server? Create separate worlds for them, and
+	distinguish between their auto-logins, aliases, and other configuration.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
