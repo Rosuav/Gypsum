@@ -66,9 +66,9 @@ int process(string param,mapping(string:mixed) subw)
 int inputhook(string line,mapping(string:mixed) subw)
 {
 	sscanf(line,"%s %s",line,string args);
-	if (mapping(string:mixed) alias=aliases[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
 	if (mapping worldalias=subw->world && persist["aliases/simple/"+subw->world])
 		if (mapping(string:mixed) alias=worldalias[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
+	if (mapping(string:mixed) alias=aliases[line]) return nexthook(subw,replace(alias["expansion"],"%*",args||""));
 }
 
 class aliasdlg(string persist_key)
