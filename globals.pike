@@ -396,6 +396,8 @@ versions). Still, if this could be done, it would be handy. Maybe it can be
 pulled off by having a two-column ListStore, where the first is the keyword
 and the second is the display text?? Might have synchronization problems,
 though. Would need to dig into it and see how well it actually works. */
+//Note that the strongest call for the above idea (the numpad nav dlg) is now
+//coping in a different way, albeit unideally, so this isn't urgent.
 class configdlg
 {
 	inherit window;
