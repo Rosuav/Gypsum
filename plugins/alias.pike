@@ -16,6 +16,9 @@ Allows two forms of alias: global and per-world. Per-world aliases are
 configured by first connecting to that world, and then calling up the
 menu item 'Aliases - this world'; global aliases can be configured in a
 similar way, or via the /alias command - type '/alias help' for instructions.
+Note that per-world aliases take precedence over global aliases, so you can
+have a default that is used for any worlds for which no specific expansion
+has been assigned.
 
 Aliases cannot expand to slash commands, and cannot expand to other aliases.
 ";
