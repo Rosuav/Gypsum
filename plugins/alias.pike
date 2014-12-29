@@ -23,10 +23,6 @@ has been assigned.
 Aliases cannot expand to slash commands, and cannot expand to other aliases.
 ";
 
-// Current Mapping:
-// Mapping     Mapping
-// |==========||=============================|
-// <alias key>  [expansion] <expansion value>
 mapping(string:mapping(string:mixed)) aliases=persist->setdefault("aliases/simple",([]));
 
 int process(string param,mapping(string:mixed) subw)
