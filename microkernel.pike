@@ -1,4 +1,4 @@
-/* Attempt to make a miniature plugin-runner kernel.
+/* Failed attempt to make a miniature plugin-runner kernel.
 
 Currently it's attuned specifically to zoneinfo, and may not even be all that
 useful there. Probably not something worth using at all, but it's here as a
