@@ -1014,6 +1014,7 @@ class keyboard
 	inherit configdlg;
 	constant strings=({"cmd","keyname"});
 	constant persist_key="window/numpadnav";
+	constant descr_key="keyname";
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
 	void create() {::create();}
 

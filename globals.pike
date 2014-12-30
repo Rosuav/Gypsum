@@ -421,6 +421,7 @@ class configdlg
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
+	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
@@ -447,12 +448,13 @@ class configdlg
 		foreach (bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
 		if (persist_key) persist->save();
+		[object iter,object store]=win->sel->get_selected();
 		if (newkwd!=oldkwd)
 		{
-			[object iter,object store]=win->sel->get_selected();
 			if (!oldkwd) win->sel->select_iter(iter=store->insert_before(win->new_iter));
 			store->set_value(iter,0,newkwd);
 		}
+		if (descr_key && info[descr_key]) store->set_value(iter,1,info[descr_key]);
 	}
 
 	void pb_delete()
@@ -481,16 +483,21 @@ class configdlg
 
 	void makewindow()
 	{
-		object ls=GTK2.ListStore(({"string"}));
+		object ls=GTK2.ListStore(({"string","string"}));
 		if (persist_key && !items) items=persist[persist_key];
-		foreach (sort(indices(items)),string kwd) ls->set_value(ls->append(),0,kwd); //Is there no simpler way to pre-fill the liststore?
+		foreach (sort(indices(items)),string kwd)
+		{
+			object iter=ls->append();
+			ls->set_value(iter,0,kwd);
+			if (string descr=descr_key && items[kwd][descr_key]) ls->set_value(iter,1,descr);
+		}
 		if (allow_new) ls->set_value(win->new_iter=ls->append(),0,"-- New --");
 		win->mainwindow=GTK2.Window(windowprops)
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
 					->add(win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.
 						->append_column(GTK2.TreeViewColumn("Item",GTK2.CellRendererText(),"text",0))
-						//IDEA: Have (optionally?) a second column for descriptions.
+						->append_column(GTK2.TreeViewColumn("",GTK2.CellRendererText(),"text",1))
 					)
 					->add(GTK2.Vbox(0,0)
 						->add(make_content())

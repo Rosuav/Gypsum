@@ -182,6 +182,7 @@ constant strings=({"key","key","key"}); //Simple bindings, see below
 constant ints=({"key","key","key"});
 constant bools=({"key","key","key"});
 constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
+constant descr_key="title"; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
 examples using it (eg plugins/timer.pike) and replicate. Most of the elements
@@ -194,6 +195,13 @@ simply list the keys in strings/ints and the saving and loading will be done
 for you (prior to save_content/load_content being called). In the case of
 bools, it's assumed that the objects are GTK2.CheckButton()s, and will have
 their active state set; the others will have their text set.
+
+When the info keys are human readable, no other description is needed. But if
+they are not so, it may be helpful to provide a second column which adds some
+human-readable descriptive text to the main list box. This feature is currently
+classed ADVISORY, and the details may change drastically. See its one and only
+current use (as of 20141230) in window.pike, 'class keyboard', for usage. This
+feature may be horribly buggy or may even break stuff; it's virtually untested.
 
 Status text - 'inherit statustext'
 ----------------------------------
