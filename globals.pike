@@ -490,6 +490,7 @@ class configdlg
 				->add(GTK2.Hbox(0,5)
 					->add(win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.
 						->append_column(GTK2.TreeViewColumn("Item",GTK2.CellRendererText(),"text",0))
+						//IDEA: Have (optionally?) a second column for descriptions.
 					)
 					->add(GTK2.Vbox(0,0)
 						->add(make_content())
