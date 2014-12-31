@@ -140,9 +140,10 @@ void showtimes()
 	foreach (sort(indices(timers));int i;string kwd)
 	{
 		mapping tm=timers[kwd]; if (!tm->next) continue;
-		string time=format_time(tm->next-time(1),tm->time,resolution);
+		int t=tm->next-time(1); if (!tm->time) t=-t;
+		string time=format_time(t,tm->time,resolution);
 		win->timers[i]->set_text(time);
-		if (time=="") {tm->next=0; if (m_delete(tm,"presnext") || tm->present) G->G->window->mainwindow->present();}
+		if (time=="" && tm->time) {tm->next=0; if (m_delete(tm,"presnext") || tm->present) G->G->window->mainwindow->present();}
 	}
 }
 
