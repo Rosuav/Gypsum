@@ -421,7 +421,7 @@ class configdlg
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
-	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
+	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY. Details may change, though the feature is almost certainly going to stick around.
 	//... end provide me.
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
