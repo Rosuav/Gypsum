@@ -222,6 +222,15 @@ int process(string param,mapping(string:mixed) subw)
 		timers[kwd]->presnext=1;
 		say(subw,"%% Will present.");
 	}
+	if (sscanf(param,"halt %s",string kw))
+	{
+		foreach (sort(indices(timers));int i;string kwd) if (kwd==kw)
+		{
+			timers[kwd]->next=0;
+			win->timers[i]->set_text("");
+			say(subw,"%% Timer halted.");
+		}
+	}
 	return 1;
 }
 
