@@ -49,6 +49,9 @@ separate countdown times based on current_subw()->world. Hmm. Also may need
 separate delays for separate worlds, which will be UI-messy. And they'll have
 to respect "present when done" (incl presnext) regardless of current subw. */
 
+/* TODO: Advanced mode. More complicated triggers (eg sscanf or regex patterns)
+and the ability to start *or stop* a timer on any line. */
+
 int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
