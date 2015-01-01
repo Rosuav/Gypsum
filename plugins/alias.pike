@@ -20,7 +20,7 @@ Note that per-world aliases take precedence over global aliases, so you can
 have a default that is used for any worlds for which no specific expansion
 has been assigned.
 
-Aliases cannot expand to slash commands, and cannot expand to other aliases.
+Aliases cannot expand to other aliases, nor (currently) to slash commands.
 ";
 
 mapping(string:mapping(string:mixed)) aliases=persist->setdefault("aliases/simple",([]));
