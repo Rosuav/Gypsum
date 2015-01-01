@@ -529,6 +529,7 @@ int mkcolor(int fg,int bg)
 void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 {
 	if (txt=="") return;
+	//TODO maybe: Highlight any current search term as per the keywords
 	if (!monochrome) foreach (highlightkeywords;string word;mapping info) if (word!="" && has_value(txt,word))
 	{
 		if (txt==word) {bg=colors[info->bgcol||13]; break;} //Special case: If the highlight is the whole string, change background color and fall through (otherwise we have infinite recursion).
