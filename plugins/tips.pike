@@ -20,6 +20,9 @@ constant tips=({
 	#"Two characters on the same server? Create separate worlds for them, and
 	distinguish between their auto-logins, aliases, and other configuration.",
 
+	#"Type '/edit someplugin' to have a look at its source code. Some have
+	obscure features that you might not have realized exist!",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
