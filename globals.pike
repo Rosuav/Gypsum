@@ -32,7 +32,7 @@ typedef string(0..127) ascii;
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
 //Note that this is relatively slow (a run-time lookup every time), and should normally
-//be avoided in favour of a reload-time replacement. (Not currently in use anywhere.)
+//be avoided in favour of a reload-time replacement. (Not in use anywhere as of 20150103.)
 class bouncer(string ... keys)
 {
 	mixed `()(mixed ... args)
@@ -284,7 +284,7 @@ class window
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
 	//non-signals in the array; for future compatibility, ensure that everything is either
-	//a gtksignal object or the integer 0, though currently nothing depends on this.
+	//a gtksignal object or the integer 0, though as of 20150103 nothing depends on this.
 	void dosignals()
 	{
 		win->signals=({
