@@ -33,6 +33,63 @@ void data_available(object q,mapping(string:mixed) subw)
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
 void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
 
+//Unzip the specified data (should be exactly what could be read from/written to a .zip file)
+//and call the callback for each file, with the file name, contents, and the provided arg.
+//Note that content errors will be thrown, but previously-parsed content has already been
+//passed to the callback. This may be considered a feature.
+//Note that this can't cope with prefixed zip data (eg a self-extracting executable).
+void unzip(string data,function callback,mixed|void callback_arg)
+{
+	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
+	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
+	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%+-4c%-4c%-4c%-2c%-2c%s",
+		int minver,int flags,int method,int modtime,int moddate,int crc32,
+		int compsize,int uncompsize,int fnlen,int extralen,data))
+	{
+		string fn=data[..fnlen-1]; data=data[fnlen..]; //I can't use %-2H for these, because the two lengths come first and then the two strings. :(
+		string extra=data[..extralen-1]; data=data[extralen..];
+		string zip=data[..compsize-1]; data=data[compsize..];
+		if (flags&8) {zip=data; data=0;} //compsize will be 0 in this case.
+		string result,eos;
+		switch (method)
+		{
+			case 0: result=zip; eos=""; break; //Stored (incompatible with flags&8 mode)
+			case 8:
+				#if constant(Gz)
+				object infl=Gz.inflate(-15);
+				result=infl->inflate(zip);
+				eos=infl->end_of_stream();
+				#else
+				error("Gz module unavailable, cannot decompress");
+				#endif
+				break;
+			default: error("Unknown compression method %d (%s)",method,fn); 
+		}
+		if (flags&8)
+		{
+			//The next block should be the CRC and size marker, optionally prefixed with "PK\7\b". Not sure
+			//what happens if the crc32 happens to be exactly those four bytes and the header's omitted...
+			if (eos[..3]=="PK\7\b") eos=eos[4..]; //Trim off the marker
+			sscanf(eos,"%-4c%-4c%-4c%s",crc32,compsize,uncompsize,data);
+		}
+		#if __REAL__VERSION__<8.0
+		//There seems to be a weird bug with Pike 7.8.866 on Windows which means that a correctly-formed ZIP
+		//file will have end_of_stream() return 0 instead of "". No idea why. This is resulting in spurious
+		//errors, For the moment, I'm just suppressing this error in that case.
+		else if (!eos) ;
+		#endif
+		else if (eos!="") error("Malformed ZIP file (bad end-of-stream on %s)",fn);
+		if (sizeof(result)!=uncompsize) error("Malformed ZIP file (bad file size on %s)",fn);
+		#if constant(Gz)
+		if (Gz.crc32(result)!=crc32) error("Malformed ZIP file (bad CRC on %s)",fn);
+		#endif
+		callback(fn,result,callback_arg);
+	}
+	if (data[..3]!="PK\1\2") error("Malformed ZIP file (bad signature)");
+	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
+	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
+}
+
 #if constant(G)
 int process(string param,mapping(string:mixed) subw)
 {
