@@ -398,6 +398,9 @@ and the second is the display text?? Might have synchronization problems,
 though. Would need to dig into it and see how well it actually works. */
 //Note that the strongest call for the above idea (the numpad nav dlg) is now
 //coping in a different way, albeit unideally, so this isn't urgent.
+//It may be worth breaking out some of this code into a dedicated ListBox class
+//for future reuse. Currently I don't actually need that for Gypsum, but it'd
+//make a nice utility class for other programs.
 class configdlg
 {
 	inherit window;
