@@ -23,6 +23,9 @@ constant tips=({
 	#"Type '/edit someplugin' to have a look at its source code. Some have
 	obscure features that you might not have realized exist!",
 
+	#"Keep Gypsum up-to-date using Plugins|Update Gypsum; there are changes
+	literally every day.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
