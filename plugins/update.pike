@@ -252,14 +252,13 @@ void create(string name)
 //Stand-alone usage: '/update zip' but with minimal dependencies
 //Ideally, this will work even if startup is failing.
 mapping G=([]);
-function say=write,unzip;
+function say=write;
 void process(string all,mapping subw) {exit(0,"Update complete [%d].\n",simulate);}
 int main(int argc,array(string) argv)
 {
 	cd(combine_path(@explode_path(argv[0])[..<2]));
 	simulate=argc>1 && argv[1]=="--simulate";
 	add_constant("G",this); add_constant("persist",this); add_constant("add_gypsum_constant",add_constant);
-	unzip=((object)"../globals")->unzip;
 	Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
 		Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,([])));
 	write("Downloading latest Gypsum...\n");
