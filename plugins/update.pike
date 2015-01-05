@@ -131,7 +131,7 @@ int process(string param,mapping(string:mixed) subw)
 	//NOTE: Does NOT update persist.pike, deliberately.
 	if (param=="all") param="gypsum.pike";
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
-	object self=(param[0]!='.') && build(param); //"build ." to just rebuild what's already in queue
+	object self=(param!=".") && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master object, we just need to process it (by recompiling things).
 	//Note that I don't want to simply use foreach here, because the array may change.
