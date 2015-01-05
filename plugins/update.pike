@@ -142,6 +142,7 @@ int process(string param,mapping(string:mixed) subw)
 		//TODO: If the file no longer exists, do an unload confirm... but make sure that's safe.
 		//This should then cope with renames. Kinda.
 		if (!been_there_done_that[cur]) {been_there_done_that[cur]=1; build(cur);}
+		else say(subw,"%% Skipping already-rebuilt file "+cur+" - possible refloop?");
 	}
 	if (cleanup && self) call_out(unload,.01,param,subw,self); //An update-force should do a cleanup, but let any waiting call_outs happen first.
 	return 1;
