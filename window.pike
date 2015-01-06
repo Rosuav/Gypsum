@@ -255,7 +255,7 @@ int point_to_line(mapping subw,int y)
 array(int) point_to_char(mapping subw,int x,int y)
 {
 	int line=point_to_line(subw,y);
-	string txt=line_text((line==sizeof(subw->lines))?subw->prompt:subw->lines[line]);
+	string txt=line_text((line>=sizeof(subw->lines))?subw->prompt:subw->lines[line]);
 	object layout=subw->display->create_pango_layout(txt);
 	mapping pos=layout->xy_to_index((x-3)*1024,0);
 	destruct(layout);
@@ -276,7 +276,7 @@ string word_at_pos(mapping subw,int line,int col)
 	//what was clicked on. TODO: Optionally permit the user to click on something with a
 	//modifier key (eg Ctrl-Click) to execute something as a command - would play well with
 	//help files highlighted in color, for instance.
-	foreach ((line==sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
+	foreach ((line>=sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
 	{
 		col-=sizeof(x); if (col>0) continue;
 		col+=sizeof(x); //Go back to the beginning of this color block - we've found something.
@@ -352,7 +352,7 @@ void mouseup(object self,object ev,mapping subw)
 	{
 		//Single-line selection: special-cased for simplicity.
 		if (subw->selstartcol>col) [col,subw->selstartcol]=({subw->selstartcol,col});
-		content=line_text((line==sizeof(subw->lines))?subw->prompt:subw->lines[line])+"\n";
+		content=line_text((line>=sizeof(subw->lines))?subw->prompt:subw->lines[line])+"\n";
 		content=content[subw->selstartcol..col-1];
 	}
 	else
@@ -362,7 +362,7 @@ void mouseup(object self,object ev,mapping subw)
 		content="";
 		for (int l=subw->selstartline;l<=line;++l)
 		{
-			string curline=line_text((l==sizeof(subw->lines))?subw->prompt:subw->lines[l]);
+			string curline=line_text((l>=sizeof(subw->lines))?subw->prompt:subw->lines[l]);
 			if (subw->boxsel) content+=curline[subw->selstartcol..col-1]+"\n";
 			else if (l==line) content+=curline[..col-1];
 			else if (l==subw->selstartline) content+=curline[subw->selstartcol..]+"\n";
@@ -378,7 +378,7 @@ string hovertext(mapping subw,int line)
 	string txt=sprintf("Line %d of %d",line,sizeof(subw->lines));
 	catch
 	{
-		mapping meta = (line==sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
+		mapping meta = (line>=sizeof(subw->lines) ? subw->prompt : subw->lines[line])[0];
 		if (!mappingp(meta)) break;
 		//Note: If the line has no timestamp (such as the prompt after a local command),
 		//this will show the epoch in either UTC or local time. This looks a bit weird,
@@ -601,7 +601,7 @@ int paint(object self,object ev,mapping subw)
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
 	{
-		array(mapping|int|string) line=(l==sizeof(subw->lines)?subw->prompt:subw->lines[l]);
+		array(mapping|int|string) line=(l>=sizeof(subw->lines)?subw->prompt:subw->lines[l]);
 		int hlstart=-1,hlend=-1;
 		if (l>=ssl && l<=sel)
 		{
