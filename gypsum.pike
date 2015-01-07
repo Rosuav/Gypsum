@@ -77,7 +77,7 @@ mapping(string:int) compat=([
 void create(string|void name)
 {
 	if (name!="gypsum.pike") return; //Normal startup - do nothing. Do these checks only if we're '/update'd.
-	object G=all_constants()["G"];
+	object G=all_constants()["G"]; //Retrieve the original global object. Note that we can't actually replace it, but we can inject replacement objects.
 	//Update everything else (except persist). Note that the rules about what gets
 	//updated are here in this file, and not in update.pike itself; this means that
 	//it's the new version, not the old version, that defines it. Downloading (via
