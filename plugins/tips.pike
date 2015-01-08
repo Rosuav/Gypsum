@@ -4,6 +4,7 @@ Provide random help tips on request, via the Help|Tips menu.
 
 constant tips=({
 	//Tips will be reformatted: tabs and newlines converted to spaces, space-space to space, then wrapped.
+	//Similar tips allow a minor form of emphasis - more probability of talking about that feature.
 	#"Check the Plugins|Configure dialog for a list of all detected plugins.
 	You never know what you'll find!",
 
