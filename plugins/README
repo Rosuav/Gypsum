@@ -200,8 +200,7 @@ When the info keys are human readable, no other description is needed. But if
 they are not so, it may be helpful to provide a second column which adds some
 human-readable descriptive text to the main list box. This feature is currently
 classed ADVISORY, and the details may change drastically. See its one and only
-current use (as of 20141230) in window.pike, 'class keyboard', for usage. This
-feature may be horribly buggy or may even break stuff; it's virtually untested.
+current use (as of 20141230) in window.pike, 'class keyboard', for usage.
 
 Status text - 'inherit statustext'
 ----------------------------------
