@@ -43,7 +43,8 @@ void create(string name)
 }
 
 //On first load, there won't be a global say, so any usage will bomb until
-//window.pike gets loaded (trying to call the integer 0).
+//window.pike gets loaded (trying to call the integer 0). It'll then be
+//overwritten by the newly-loaded window.pike.
 function say=G->globals->say;
 
 /**
