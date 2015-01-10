@@ -1110,7 +1110,7 @@ Free software - see README for license terms
 
 By Chris Angelico, rosuav@gmail.com
 
-Version "+ver+#", as far as can be ascertained :)
+Version "+ver+#", running on Pike "+pike_version()+#".
 
 This invocation of Gypsum has been running since:
 "+strftime("%a %b %d %Y %H:%M:%S",localtime(started))+" - "+uptime))
