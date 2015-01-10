@@ -389,13 +389,7 @@ void ka(mapping conn)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
-/**
- * Establish a connection with with the provided world and link it to a display
- *
- * @param display 	The display (subwindow) to which the connection should be linked
- * @param info	  	The information about the world to which the connection should be established
- * @return mapping	Returns a mapping detailing the connection
- */
+//Establish a connection - the sole constructor for conn mappings.
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=makeconn(display,info);
