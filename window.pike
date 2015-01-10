@@ -1399,7 +1399,7 @@ void create(string name)
 			//Default color definitions: the standard ANSI colors.
 			array bits = map(enumerate(8),lambda(int x) {return ({x&1,!!(x&2),!!(x&4)});});
 			win->color_defs = (bits[*][*]*127) + (bits[*][*]*255);
-			//The strict bitwise definition would have bold black looking black. It should be a bit darker than nonbold white, so we change it.
+			//The strict bitwise definition would have bold black looking black. It should be a bit darker than nonbold white, so we change them around a bit.
 			win->color_defs[8] = win->color_defs[7]; win->color_defs[7] = ({192,192,192});
 		}
 	}
