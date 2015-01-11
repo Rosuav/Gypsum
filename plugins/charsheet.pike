@@ -549,7 +549,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 				}))),0,0,0)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(lambda() { //This could be done with map() but I want the index (tier) as well as the value (rowcount).
 					array ret=({ });
-					foreach (({10,10,15,15,15,15,15,15,15,8});int tier;int rowcount)
+					foreach (({10,10,15,15,15,15,15,15,15,8});int tier;int rowcount) //Number of slots per tier is a bit arbitrary.
 					{
 						ret+=({({GTK2.Frame("Level/tier "+tier)->add(GTK2Table(
 							({({"Spell","Description",noex(GTK2.Label("Prep")),noex(GTK2.Label("Cast"))})})
