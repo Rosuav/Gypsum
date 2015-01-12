@@ -639,11 +639,8 @@ class tabstatus(string name)
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (!name) return; //Must have a name.
 		G->G->tabstatuses[name]=this;
-		foreach (G->G->window->win->tabs,mapping subw) if (!subw["tabstatus/"+name])
-		{
-			if (!subw->tabstatus) continue; //Compat for a719d and older: old tabs don't have tabstatus Vboxes
-			install(subw);
-		}
+		foreach (G->G->window->win->tabs,mapping subw)
+			if (!subw["tabstatus/"+name]) install(subw);
 	}
 	GTK2.Widget maketabstatus(mapping(string:mixed) subw) {return GTK2.Label("Per-tab status");}
 	void install(mapping(string:mixed) subw)
