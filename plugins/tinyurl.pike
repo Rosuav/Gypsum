@@ -2,6 +2,10 @@
 Monitor OOC channels for a long URL, and pass it direct to TinyUrl.com
 
 Thanks Thierran for helping me test the original RosMud version, of which this is a port.
+
+NOTE: I've been seeing some issues with tinyurl.com lately (20150113), with new
+URLs not working for half a minute or so. It might be worth changing to another
+shortener service, in which case this should be renamed to something generic.
 */
 
 inherit hook;
