@@ -229,11 +229,11 @@ class menu_clicked
 	{
 		win->mainwindow=GTK2.Window((["title":"Configure URL shortener"]))
 			->add(GTK2.Vbox(0,10)
-				->add(GTK2.Frame("Proxy server")->set_sensitive(0)->add(GTK2.Hbox(0,10) //TODO: Proxy
+				/*->add(GTK2.Frame("Proxy server")->set_sensitive(0)->add(GTK2.Hbox(0,10) //TODO: Proxy
 					->add(win->proxy_use=GTK2.CheckButton("Use"))
 					->add(GTK2.Label("Address:"))->add(win->proxy_addr=GTK2.Entry()->set_text(persist["tinyurl/proxy_host"]||""))
 					->add(GTK2.Label("Port:"))->add(win->proxy_port=GTK2.Entry((["width-chars":5]))->set_text(persist["tinyurl/proxy_port"]||""))
-				))
+				))*/
 				->add(win->announce=GTK2.CheckButton("Announce incoming URLs with an explanatory note")->set_active(persist["tinyurl/announce"]))
 				->add(GTK2.Frame("Default action")->add(GTK2.Hbox(0,10)
 					->add(win->default_browse=GTK2.RadioButton("Browse")->set_active(persist["tinyurl/defaultaction"]!="c"))
