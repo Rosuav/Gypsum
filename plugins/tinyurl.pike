@@ -218,7 +218,7 @@ void tinify(object self,int response,array args)
 	if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 }
 
-constant menu_label="TinyURL";
+constant menu_label="URL shortener";
 class menu_clicked
 {
 	inherit window;
