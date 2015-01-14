@@ -251,4 +251,8 @@ class menu_clicked
 	}
 }
 
-void create(string name) {::create(name);}
+void create(string name)
+{
+	//TODO: Migrate the persist info to a new generic name
+	::create(name);
+}
