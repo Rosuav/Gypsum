@@ -31,7 +31,7 @@ G->G->lasturl=0 - last-received URL, index into G->G->tinyurl_recvurl
 
 array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 
-Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object. I'm not 100% happy with this, but am toying with using a regex rather than manually coding it. NOTE: Clear this any time maxlen changes.
+Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object - clear this any time maxlen changes.
 int maxlen=persist->setdefault("tinyurl/maxlen",63);
 
 int outputhook(string line,mapping(string:mixed) conn)
