@@ -18,7 +18,7 @@ Currently uses TinyURL.com for the shortening.
 
 NOTE: I've been seeing some issues with tinyurl.com lately (20150113), with new
 URLs not working for half a minute or so. It might be worth changing to another
-shortener service, in which case this should be renamed to something generic.
+shortener service, which would not fundamentally alter this plugin's purpose.
 ";
 
 constant plugin_active_by_default = 1;
