@@ -12,11 +12,13 @@ inherit hook;
 inherit plugin_menu;
 
 constant docstring=#"
-Monitors all input for long URLs, and offers to pass them to TinyURL.com
-for shortening. Also saves all URLs received, and allows you to browse them
+Monitors all input for long URLs, and offers to shorten them so they'll fit
+on channels. Also saves all URLs received, and allows you to browse them
 or copy them to the clipboard with the 'url' command. While Gypsum's core
 makes URLs clickable, the keyboard may be more convenient, and thus both are
 offered.
+
+Currently uses TinyURL.com for the shortening, but this may change.
 ";
 
 constant plugin_active_by_default = 1;
