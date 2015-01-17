@@ -21,7 +21,7 @@ inherit plugin_menu;
 
 void find_string(string findme,mapping(string:mixed) subw)
 {
-	if (findme=="") return; //Searching for nothing is... not particularly useful. And it can be confusing. :)
+	if (findme=="") {m_delete(subw,"search_last"); return;} //Blank search to reset the search pointer. (Any other search string will reset it, too.)
 	int pos=(subw->search_last==findme && subw->search_pos) || sizeof(subw->lines);
 	while (--pos>0)
 	{
