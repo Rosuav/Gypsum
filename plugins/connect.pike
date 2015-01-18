@@ -5,8 +5,7 @@ constant docstring=#"
 Implements the /connect, /dc, /worlds, and /c commands.
 
 If you don't have this plugin active, you can still connect via the File menu,
-but will not be able to use the shortcut reconnect-to-last-world feature, nor
-explicitly disconnect from a world (even if the connection is stalled out).
+but will not be able to use the shortcut reconnect-to-last-world feature.
 There is generally no reason to unload this plugin.
 ";
 
