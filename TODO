@@ -1,5 +1,4 @@
 * Generally, anything that people expect RosMud to do (should be pretty much done as of 20141223).
-* Spell-checker? Probably not worth it; unless Pike ships one, it would be a subprocess and per-platform.
 * OOCBox?
 * Bug: Sometimes an attempted connection fails with no visible reason, and just hangs.
   - Seen 20140407; not seen again for a while 20140514. DNS issue maybe?? See also 77f192, may have solved it??
@@ -38,3 +37,4 @@ Vague theories of maybe-this-would-be-nice:
 * 256 color support
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting.
+* Spell-checker? Probably not worth it; unless Pike ships one, it would be a subprocess and per-platform.
