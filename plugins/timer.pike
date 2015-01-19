@@ -234,6 +234,12 @@ int process(string param,mapping(string:mixed) subw)
 			say(subw,"%% Timer halted.");
 		}
 	}
+	if (sscanf(param,"set %d %s",int line,string kwd)) catch
+	{
+		int starttime=subw->lines[line][0]->timestamp;
+		timers[kwd]->next=starttime+timers[kwd]->time;
+		say(subw,"%% Timer started.");
+	};
 	return 1;
 }
 
