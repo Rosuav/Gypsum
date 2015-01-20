@@ -191,7 +191,6 @@ void dosignals()
 
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="dlg") {config(); return 1;}
 	//TODO: Way to explicitly trigger a timer, especially one starting in the past
 	//For instance, it should be possible to create a new timer and ask that it be
 	//started as at the most recent string that matches it (that one's easy enough
