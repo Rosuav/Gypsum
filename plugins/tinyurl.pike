@@ -1,9 +1,3 @@
-/*
-Monitor OOC channels for a long URL, and pass it direct to TinyUrl.com
-
-Thanks Thierran for helping me test the original RosMud version, of which this is a port.
-*/
-
 inherit hook;
 inherit plugin_menu;
 
@@ -13,6 +7,9 @@ on channels. Also saves all URLs received, and allows you to browse them
 or copy them to the clipboard with the 'url' command. While Gypsum's core
 makes URLs clickable, the keyboard may be more convenient, and thus both are
 offered.
+
+Thanks Thierran for helping me test the original RosMud version, of which
+this is a port.
 
 Currently uses TinyURL.com for the shortening.
 
