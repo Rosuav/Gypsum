@@ -208,7 +208,7 @@ int process(string param,mapping(string:mixed) subw)
 			sscanf(line_text(subw->lines[i]),"%*s\"%s",string content);
 			if (content) {param="load \""+content; break;}
 		}
-		//"fall through" effectively
+		//"fall through" effectively; note that if nothing was found, it'll fall all the way through and do nothing.
 	}
 	if (sscanf(param,"load %s",string data))
 	{
