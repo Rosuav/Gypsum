@@ -23,7 +23,7 @@ constant plugin_active_by_default = 1;
 
 /* persist["tinyurl/*"] contains the following:
 maxlen=64 - maximum length of a URL that gets passed through unchanged
-announce=0 - if 1, will announce incoming URLs with an explanatory line (was "quietmode=1")
+announce=0 - if 1, will announce incoming URLs with an explanatory line
 defaultaction="b" - default to (b)rowse or (c)opy
 
 G->G->lasturl=0 - last-received URL, index into G->G->tinyurl_recvurl
