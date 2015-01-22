@@ -82,7 +82,7 @@ class aliasdlg(string persist_key)
 		return two_column(({
 			"Alias",win->kwd=GTK2.Entry(),
 			"Expansion",win->expansion=GTK2.Entry(),
-			"A %* in the expansion will be replaced with\nany arguments to the alias.",0,
+			"Use %* to expand to everything typed\nafter the alias name.",0,
 		}));
 	}
 }
