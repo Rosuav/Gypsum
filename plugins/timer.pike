@@ -191,12 +191,6 @@ void dosignals()
 
 int process(string param,mapping(string:mixed) subw)
 {
-	//TODO: Way to explicitly trigger a timer, especially one starting in the past
-	//For instance, it should be possible to create a new timer and ask that it be
-	//started as at the most recent string that matches it (that one's easy enough
-	//to do); but also, it'd be great to have a one-off timer that has custom time
-	//and description, starting in the past. Particularly so if it can retrieve an
-	//estimated time from the text and use that as the timer.
 	if (param=="save") say(subw,"%% "+save());
 	if (sscanf(param,"save %s",string pfx)) send(subw->connection,pfx+" "+save()+"\r\n");
 	if (param=="load")
