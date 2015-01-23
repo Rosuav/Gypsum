@@ -70,11 +70,11 @@ int process(string param,mapping(string:mixed) subw)
 		if (tuned[param]) 
 		{
 			m_delete(tuned,param);
-			say(subw,"%% Tuning back in.");
+			say(subw,"%% Tuning "+param+" back in.");
 		}
 		else 
 		{
-			say(subw,"%% Tuning out.");
+			say(subw,"%% Tuning "+param+" out.");
 			tuned[param] = ([]);
 		}
 		persist["tune/thresholdrpg"]=tuned;
