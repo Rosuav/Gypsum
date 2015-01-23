@@ -1,6 +1,5 @@
 constant docstring=#"
 Tune people out on Threshold. Ported from C++; some code modelled off Hurkle's oocbox.
-Way WAY simpler than the C++ version, though it doesn't (bother to) keep stats.
 ";
 
 inherit command;
@@ -64,7 +63,6 @@ int process(string param,mapping(string:mixed) subw)
 		if (sizeof(tuned)) say(subw,"%% The following persons are tuned: "+sort(indices(tuned))*", ");
 		say(subw,"%% To tune someone out: /tune name");
 		say(subw,"%% Repeat to tune them back in.");
-		//say(subw,"%% Stats are kept since the last tuning out."); //TODO: Implement. (Maybe.)
 	}
 	else
 	{
