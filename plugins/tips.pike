@@ -12,6 +12,10 @@ constant tips=({
 	entering /c or /connect - coupled with auto-login, this can rescue
 	you from linkdeath or internet connection changes very efficiently.",
 
+	#"Need to take notes about another character? Hold Ctrl while double
+	clicking on his/her name to quickly bring up the Highlight Words config
+	for that particular name.",
+
 	#"If something doesn't behave the way you want it to, check out
 	Options|Advanced. It's entirely possible the option you want is there!",
 
