@@ -39,6 +39,7 @@ int outputhook(string line,mapping(string:mixed) conn)
     */
 	sscanf(line,"%*[ ]%n%s",int spaces,line);
 	//Continuation line: Citizen has twelve spaces, the others have five.
+	//(If !tune_lastline, then this can't possibly be a continuation line.)
 	if ((spaces==12 && conn->tune_lastline=="-{Citizen}-") || (spaces==5 && conn->tune_lastline)) return 1;
 	[string word1,string word2]=(line/" "+({0}))[..1]; //Could be channel and name, or name and channel
 	if (word1=="-{Citizen}-" && word2[-1]==':') word2=word2[..<1]; //Citizen is special. The name might be terminated by a colon.
