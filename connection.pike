@@ -385,7 +385,7 @@ void connfailed(mapping conn)
 void ka(mapping conn)
 {
 	if (!conn->sock) return;
-	send_telnet(conn,(string(0..255))({GA})); //(note, cannot use 'bytes' here due to a Pike parser limitation)
+	send_telnet(conn,(string(0..255))({GA})); //(note, cannot use the typedef 'bytes' here due to a Pike parser limitation)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
