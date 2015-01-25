@@ -1135,7 +1135,7 @@ class promptsdlg
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Configure prompts"]))->add(GTK2.Vbox(0,20)
-			->add(GTK2.Label("Prompts from the server are easy for a human to\nrecognize, but not always for the computer."))
+			->add(GTK2.Label("Prompts from the server are easy for a human to\nrecognize, but not always for the computer.\nYou can probably ignore all this unless something's broken."))
 			->add(GTK2.Frame("TELNET codes")
 				->add(GTK2.Label("The ideal is for prompts to be marked with\nIAC GA. This works perfectly and is guaranteed."))
 			)
