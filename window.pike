@@ -1120,7 +1120,7 @@ This invocation of Gypsum has been running since:
 	}
 }
 
-constant options_promptsdlg="_Prompts";
+constant options_promptsdlg="_Prompts"; //Should this be buried away behind Advanced Options or something?
 class promptsdlg
 {
 	inherit window;
