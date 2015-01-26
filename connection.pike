@@ -417,7 +417,7 @@ mapping connect(object display,mapping info)
 	//which is not in trunk 8.0) - can improve latency, not critical
 	if (conn->sock->nodelay) conn->sock->nodelay();
 	conn->sock->set_nonblocking(0,connected,connfailed);
-	if (mixed ex=catch {conn->sock->connect(info->host,(int)info->port);})
+	if (mixed ex=catch {conn->sock->connect(info->host,(int)info->port);}) //TODO: Have a timeout on this
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
