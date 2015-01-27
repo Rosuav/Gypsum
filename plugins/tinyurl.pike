@@ -14,7 +14,7 @@ this is a port.
 Currently uses TinyURL.com for the shortening.
 
 NOTE: I've been seeing some issues with tinyurl.com lately (20150113), with new
-URLs not working for half a minute or so. It might be worth changing to another
+URLs not working for half a minute or so. This plugin will be changing to another
 shortener service, which would not fundamentally alter this plugin's purpose.
 Currently accepting recommendations.
 ";
