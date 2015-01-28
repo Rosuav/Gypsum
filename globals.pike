@@ -411,7 +411,7 @@ class configdlg
 	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
 	//it may be a GTK2.Label, or it may be omitted altogether).
 	GTK2.Widget make_content() { }
-	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
+	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping, or something out of persist[] (and see persist_key)
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
