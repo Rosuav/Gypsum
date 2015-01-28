@@ -439,7 +439,7 @@ class configdlg
 	{
 		string oldkwd=selecteditem();
 		string newkwd=allow_rename?win->kwd->get_text():oldkwd;
-		if (newkwd=="") return; //TODO: Be a tad more courteous.
+		if (newkwd=="") return; //Blank keywords currently disallowed
 		if (newkwd=="-- New --") return; //Since selecteditem() currently depends on "-- New --" being the 'New' entry, don't let it be used anywhere else.
 		mapping info;
 		if (allow_rename) info=m_delete(items,oldkwd); else info=items[oldkwd];
