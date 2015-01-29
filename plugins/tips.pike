@@ -16,6 +16,9 @@ constant tips=({
 	clicking on his/her name to quickly bring up the Highlight Words config
 	for that particular name.",
 
+	#"Match Options|Channel Colors to the server's colors for each channel
+	to instantly highlight what channel your text will be sent to.",
+
 	#"If something doesn't behave the way you want it to, check out
 	Options|Advanced. It's entirely possible the option you want is there!",
 
