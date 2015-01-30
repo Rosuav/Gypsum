@@ -252,6 +252,7 @@ mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
 int main() {write("%s\n",save());}
 #endif
 
+//Used by both normal and outside-execution modes; renders current timers to text.
 string save()
 {
 	string data="";
