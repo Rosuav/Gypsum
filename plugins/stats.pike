@@ -73,6 +73,7 @@ class statusbar_double_click
 
 	void sig_reset_stats_clicked()
 	{
+		//Note that hitting the regular Save button after resetting stats will actually destroy the 'min' value (by saving a 0). Not sure what to do about that.
 		({win->total,win->count,win->min,win->max})->set_text("");
 		mapping info=items[selecteditem()] || ([]);
 		m_delete(info,ints[*]);
