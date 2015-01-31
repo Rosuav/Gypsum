@@ -64,10 +64,19 @@ class statusbar_double_click
 				"Count",win->count=GTK2.Entry(),
 				"Min",win->min=GTK2.Entry(),
 				"Max",win->max=GTK2.Entry(),
+				win->reset_stats=GTK2.Button("Reset stats"),0,
 			})),0,0,0)
 			->pack_start(GTK2.Frame("Pattern (capture with %d)")->add(
 				win->sscanf=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 			),1,1,0);
+	}
+
+	void sig_reset_stats_clicked()
+	{
+		({win->total,win->count,win->min,win->max})->set_text("");
+		mapping info=items[selecteditem()] || ([]);
+		m_delete(info,ints[*]);
+		persist->save();
 	}
 }
 
