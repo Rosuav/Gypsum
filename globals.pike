@@ -460,9 +460,9 @@ class configdlg
 		if (descr_key && info[descr_key]) store->set_value(iter,1,info[descr_key]);
 	}
 
-	void pb_delete()
+	void sig_pb_delete_clicked()
 	{
-		if (!allow_delete) return; //Shouldn't happen - allow_delete should be a constant, so the signal won't even be connected to. But check just in case.
+		if (!allow_delete) return; //The button will be insensitive anyway, but check just to be sure.
 		[object iter,object store]=win->sel->get_selected();
 		string kwd=iter && store->get_value(iter,0);
 		if (!kwd) return;
@@ -537,10 +537,7 @@ class configdlg
 	void dosignals()
 	{
 		::dosignals();
-		win->signals+=({
-			actionbtn && gtksignal(win->pb_action,"clicked",action_callback),
-			allow_delete && gtksignal(win->pb_delete,"clicked",pb_delete),
-		});
+		if (actionbtn) win->signals+=({gtksignal(win->pb_action,"clicked",action_callback)});
 	}
 }
 
