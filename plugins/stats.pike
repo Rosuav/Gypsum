@@ -13,9 +13,7 @@ multi-line search patterns. Otherwise, it should have one %d (maybe %s could be 
 and that gets saved. Note that, in current code, a 0 result is assumed to mean continuation,
 so a string like \"foo bar %d asdf qwer\" matching \"foo bar 0 asdf qwer\" will be misparsed.
 
-The statistical figures (total, count, min, max) can all be freely edited in the configdlg.
-Normally, I expect this to be treated as read-only, or maybe someone will clear the stats,
-but technically, any edit can be done.
+The statistical figures (total, count, min, max) can be viewed and reset in the configdlg.
 ";
 
 mapping(string:mapping(string:mixed)) monitors=persist->setdefault("stats/monitors",([
@@ -60,10 +58,10 @@ class statusbar_double_click
 		return GTK2.Vbox(0,10)
 			->pack_start(two_column(({
 				"Keyword",win->kwd=GTK2.Entry(),
-				"Total",win->total=GTK2.Entry(),
-				"Count",win->count=GTK2.Entry(),
-				"Min",win->min=GTK2.Entry(),
-				"Max",win->max=GTK2.Entry(),
+				"Total",win->total=GTK2.Label(),
+				"Count",win->count=GTK2.Label(),
+				"Min",win->min=GTK2.Label(),
+				"Max",win->max=GTK2.Label(),
 				win->reset_stats=GTK2.Button("Reset stats"),0,
 			})),0,0,0)
 			->pack_start(GTK2.Frame("Pattern (capture with %d)")->add(
@@ -73,7 +71,6 @@ class statusbar_double_click
 
 	void sig_reset_stats_clicked()
 	{
-		//Note that hitting the regular Save button after resetting stats will actually destroy the 'min' value (by saving a 0). Not sure what to do about that.
 		({win->total,win->count,win->min,win->max})->set_text("");
 		mapping info=items[selecteditem()] || ([]);
 		m_delete(info,ints[*]);
