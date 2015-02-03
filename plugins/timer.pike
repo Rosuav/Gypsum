@@ -27,12 +27,6 @@ rates, and leave the text blank. Then let the magic happen. :) */
 down. You can have piles and piles of them and they sit there quietly until
 one of them actually gets hit. */
 
-/* TODO: Temporary timers based on preceding lines. This might want to be done
-in some completely different way, or it could be a small pool of hide-when-done
-timers. Pick a line, it'll parse it as best it can, and give you a result; the
-timer will be shortened by how long ago the line came in. So if something says
-"1h2m30s" and it happened 14s ago, the timer countdown will be 1:02:16. */
-
 /* TODO: "Highlight when zero" timers. They'll need to go into EventBoxes, and
 they go to normal color whenever the time is nonzero, and to a highlight color
 when they're blank. Good for the ones that are normally nonzero. (This may mean
