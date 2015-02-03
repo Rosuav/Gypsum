@@ -76,6 +76,12 @@ class statusbar_double_click
 		m_delete(info,ints[*]);
 		persist->save();
 	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		//Ensure that we don't accidentally save a freshly-reset minimum
+		if (win->min->get_text()=="") m_delete(info,"min");
+	}
 }
 
 
