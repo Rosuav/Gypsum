@@ -33,11 +33,6 @@ when they're blank. Good for the ones that are normally nonzero. (This may mean
 it's simpler to put *all* timers into EventBoxes, but that'd be less efficient,
 so better to not.) */
 
-/* TODO maybe: Instead of constantly sorting the mapping, retain the array of
-sort(indices(timers)) somewhere. This would add complication but improve the
-efficiency of certain regular paths. CHECK if this would actually be at all
-advantageous before implementing; until checked, just keep this note. */
-
 /* TODO: Per-world timers. They'll exist for all worlds, but retain
 separate countdown times based on current_subw()->world. Hmm. Also may need
 separate delays for separate worlds, which will be UI-messy. And they'll have
