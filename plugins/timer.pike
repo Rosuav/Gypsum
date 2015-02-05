@@ -44,7 +44,7 @@ and the ability to start *or stop* a timer on any line. Or maybe this should
 simply expose an API??? There's absolutely no precedent for one plugin offering
 an API to other plugins, but it could be pretty handy. */
 
-int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but can be convenient. For Threshold RPG hp/sp/ep markers.
+int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but it minorly (not perfectly) improves tick-down stability. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
 mapping(string:mapping(string:mixed)) timers=persist->setdefault("timer/timers",([]));
