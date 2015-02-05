@@ -36,7 +36,8 @@ so better to not.) */
 /* TODO: Per-world timers. They'll exist for all worlds, but retain
 separate countdown times based on current_subw()->world. Hmm. Also may need
 separate delays for separate worlds, which will be UI-messy. And they'll have
-to respect "present when done" (incl presnext) regardless of current subw. */
+to respect "present when done" (incl presnext) regardless of current subw.
+The display could make use of 'inherit tabstatus'; but what about config? */
 
 /* TODO: Advanced mode. More complicated triggers (eg sscanf or regex patterns)
 and the ability to start *or stop* a timer on any line. */
