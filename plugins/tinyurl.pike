@@ -16,7 +16,8 @@ Currently uses TinyURL.com for the shortening.
 NOTE: I've been seeing some issues with tinyurl.com lately (20150113), with new
 URLs not working for half a minute or so. This plugin will be changing to another
 shortener service, which would not fundamentally alter this plugin's purpose.
-Currently accepting recommendations (goo.gl? bit.ly?).
+Currently accepting recommendations (goo.gl? bit.ly?). The plugin name will remain
+as it is, albeit marginally orphanned; it's still plausibly descriptive.
 ";
 
 constant plugin_active_by_default = 1;
@@ -245,8 +246,4 @@ class menu_clicked
 	}
 }
 
-void create(string name)
-{
-	//TODO: Migrate the persist info to a new generic name
-	::create(name);
-}
+void create(string name) {::create(name);}
