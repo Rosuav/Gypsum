@@ -147,8 +147,8 @@ class menu_clicked
 		if (!persist["timer/timers"]) persist["timer/timers"]=([]);
 		sscanf(data,"%*d %*d %d %d %d%*s\n%s",int hpregen,int spregen,int epregen,data);
 		GTK2.Vbox box=GTK2.Vbox(0,0)->pack_start(GTK2.Label("Import timers:"),0,0,0);
-		function format_time=timer->format_time,makelabels=timer->makelabels;
-		function maketimer=lambda(string kw,int interval,string trigger)
+		function makelabels=timer->makelabels;
+		void maketimer(string kw,int interval,string trigger)
 		{
 			box->pack_start(cb(
 				kw+" - "+format_time(interval,interval),
