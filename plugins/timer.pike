@@ -175,11 +175,10 @@ void sig_mainwindow_button_press_event(object self,object ev)
 void dosignals()
 {
 	::dosignals();
-	win->signals+=({
-		gtksignal(win->mainwindow,"delete_event",hidewindow),
-	});
 	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }
+
+int closewindow() {return hidewindow();}
 
 int process(string param,mapping(string:mixed) subw)
 {
