@@ -131,6 +131,11 @@ manager control; Gypsum simply sets the appropriate hints). Disable this by
 marking that your window is not a subwindow:
 constant is_subwindow=0;
 
+Any time a user requests that your window be closed, closewindow() will be
+called. Override this to alter what happens, eg to add a confirmation, or to
+turn closing into hiding:
+int closewindow() {return hidewindow();}
+
 Certain stock objects with obvious events can be created with simple
 function calls. Use of these functions guarantees a consistent look, and
 also automatically connects the appropriate signal handler. The following
