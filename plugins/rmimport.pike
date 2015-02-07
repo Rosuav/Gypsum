@@ -119,8 +119,7 @@ class menu_clicked
 				this[func](data);
 			}
 		}
-		m_delete(win,"filedlg")->destroy();
-		dosignals();
+		m_delete(win,"filedlg"); dosignals(); self->destroy(); //Remove the signal, *then* destroy self
 	}
 
 	GTK2.CheckButton cb(string label,array(string) path,mixed value,function|void callme)
