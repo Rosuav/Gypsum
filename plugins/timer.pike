@@ -161,7 +161,8 @@ void makelabels()
 void makewindow()
 {
 	win->mainwindow=GTK2.Window((["title":"Timers","no-show-all":!sizeof(timers)]))
-		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":8])));
+		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":8])))
+		->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 	makelabels();
 	::makewindow();
 }
@@ -170,12 +171,6 @@ void sig_mainwindow_button_press_event(object self,object ev)
 {
 	if (ev->type=="2button_press") config(); //aka double-click (not right-click, not chord)
 	else self->begin_move_drag(ev->button,ev->x_root,ev->y_root,ev->time);
-}
-
-void dosignals()
-{
-	::dosignals();
-	win->mainwindow->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 }
 
 int closewindow() {return hidewindow();}
