@@ -67,7 +67,6 @@ class menu_clicked
 		win->signals+=({
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
 			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
-			win->filedlg && gtksignal(win->filedlg,"response",filedlg_response),
 		});
 	}
 
@@ -105,7 +104,7 @@ class menu_clicked
 		indices(win->checkboxes)->set_active(state);
 	}
 
-	void filedlg_response(object self,int response)
+	void sig_filedlg_response(object self,int response)
 	{
 		if (response==GTK2.RESPONSE_OK)
 		{
