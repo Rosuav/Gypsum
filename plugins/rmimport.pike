@@ -66,7 +66,7 @@ class menu_clicked
 		::dosignals();
 		win->signals+=({
 			gtksignal(win->pb_selectall,"clicked",pb_select_click,1), //Same handler for these, just an arg
-			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0),
+			gtksignal(win->pb_selectnone,"clicked",pb_select_click,0), //Technically, since the default is 0, I could call this sig_pb_selectnone_clicked, but this way is clearer.
 		});
 	}
 
