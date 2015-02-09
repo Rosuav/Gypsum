@@ -31,6 +31,9 @@ constant tips=({
 	#"Type '/edit someplugin' to have a look at its source code. Some have
 	obscure features that you might not have realized exist!",
 
+	#"Use the /x command as a simple, but powerful, calculator - mathematical
+	expressions will be evaluated and displayed.",
+
 	#"Keep Gypsum up-to-date using Plugins|Update Gypsum; there are changes
 	literally every day.",
 
