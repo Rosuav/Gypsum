@@ -38,6 +38,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
 		//Note that the parameter values are all strings, despite several of them looking like integers. Explicitly intify if needed.
+		//TODO: "framing" parameters - start command, end command - which will then be kept out of the actual popup
 		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
 		params=(mapping)(parm||([]));
 		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
