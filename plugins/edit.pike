@@ -11,8 +11,8 @@ Pop-out editor for server-side content
 With help from the server, it can be possible to use a GUI editor for something
 stored on the server. Without the server's help, it's still possible to bring
 up an editor and manipulate text, prior to sending it. This can be used for
-character descriptions, notes, board posts, or anything else that consists of a
-paragraph of text.
+character descriptions, notes, board posts, or anything else that consists of
+paragraphs of text.
 ";
 
 constant plugin_active_by_default = 1;
