@@ -39,8 +39,8 @@ class editor(mapping(string:mixed) subw,string initial)
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
 		//Note that the parameter values are all strings, despite several of them looking like integers. Explicitly intify if needed.
 		//TODO: "framing" parameters - start command, end command - which will then be kept out of the actual popup
-		//Hmm. Downside: It'd be harder to hack a "save as" feature. Is that a problem?
-		//(Obviously the framing would be used by the server to say "save to this file name".)
+		//Hmm. Downside: Since this framing would be used by the server to say "save to this file name", it'd be harder
+		//to hack a "save as" feature by editing the target file name. Is that a problem?
 		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
 		params=(mapping)(parm||([]));
 		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
