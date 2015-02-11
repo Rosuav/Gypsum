@@ -38,6 +38,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
 		//Note that the parameter values are all strings, despite several of them looking like integers. Explicitly intify if needed.
+		//Absence of a parameter is the only way to have an integer 0 in the mapping.
 		//TODO: "framing" parameters - start command, end command - which will then be kept out of the actual popup
 		//Hmm. Downside: Since this framing would be used by the server to say "save to this file name", it'd be harder
 		//to hack a "save as" feature by editing the target file name. Is that a problem?
