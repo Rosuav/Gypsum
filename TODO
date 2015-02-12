@@ -12,6 +12,7 @@
   - Seen 20140820; not seen again for a while 20141204.
 * Generalized way for plugins to be configured?? Only loaded plugins can be configured, so it may be awkward.
   - Would require some kind of registration with the system, so this will need the proper enhancement protocol.
+  - See notes in edit.pike too.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
