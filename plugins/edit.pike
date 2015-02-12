@@ -3,7 +3,9 @@ inherit hook;
 inherit plugin_menu;
 inherit command;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
-//TODO: Config dialog.
+//TODO: Config dialog. Though it wouldn't really be much of one - just
+//the wrap size - so maybe there ought to be a general plugin config
+//system like Advanced Options.
 
 constant docstring=#"
 Pop-out editor for server-side content
