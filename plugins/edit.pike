@@ -5,7 +5,9 @@ inherit command;
 //To enable auto-wrapping: /x persist["editor/wrap"]=80
 //TODO: Config dialog. Though it wouldn't really be much of one - just
 //the wrap size - so maybe there ought to be a general plugin config
-//system like Advanced Options.
+//system like Advanced Options. Ideally, plugins could register both a
+//persist key and a function "call me if this changes"... or else the
+//plugin just gets reloaded when that config entry is saved.
 
 constant docstring=#"
 Pop-out editor for server-side content
