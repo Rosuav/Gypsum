@@ -37,6 +37,10 @@ constant tips=({
 	#"Keep Gypsum up-to-date using Plugins|Update Gypsum; there are changes
 	literally every day.",
 
+	#"Non-English text is fully supported in Gypsum. As long as the server
+	accepts and transmits UTF-8 text, all the world's languages can be
+	properly displayed and entered.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
