@@ -15,6 +15,7 @@
   - Ideally, this should be part of Plugins|Configure... somehow. Maybe it can steal a little room from the
     docstring section? A couple of constants (label and persist key) could cover it.
   - See notes in edit.pike too.
+* Mark-and-copy of RTL text has some issues. May be v difficult to fully solve though.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
