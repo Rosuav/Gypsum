@@ -12,6 +12,8 @@
   - Seen 20140820; not seen again for a while 20141204.
 * Generalized way for plugins to be configured?? Only loaded plugins can be configured, so it may be awkward.
   - Would require some kind of registration with the system, so this will need the proper enhancement protocol.
+  - Ideally, this should be part of Plugins|Configure... somehow. Maybe it can steal a little room from the
+    docstring section? A couple of constants (label and persist key) could cover it.
   - See notes in edit.pike too.
 
 Eventually, drop support for Pike 7.8. This means:
