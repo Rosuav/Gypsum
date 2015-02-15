@@ -21,6 +21,7 @@ have a default that is used for any worlds for which no specific expansion
 has been assigned.
 
 Aliases cannot expand to other aliases, nor (currently) to slash commands.
+They will always expand to exactly one resulting command.
 ";
 
 mapping(string:mapping(string:mixed)) aliases=persist->setdefault("aliases/simple",([]));
