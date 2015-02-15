@@ -53,7 +53,7 @@ class editor(mapping(string:mixed) subw,string initial)
 
 	void makewindow()
 	{
-		//When we don't have a subw, 'initial' is actually a file name. Normally it's a block of text.
+		//When we don't have a subw, 'initial' is actually a file name. (Normally it's a block of text.)
 		string txt=subw && initial;
 		if (mixed ex=!txt && catch {txt=String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";})
 			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded files.\n\n"+describe_error(ex);
