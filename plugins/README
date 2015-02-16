@@ -71,11 +71,11 @@ distinctions:
   "line" is the entire line.
 
 An input hook can feed a replacement command into the system with:
-nexthook(line, subw);
+nexthook(subw, line);
 This can be either before or after returning 1 from the hook function.
 If nexthook is successful, it will return 1, so modifying the command
 can be done by simply:
-return nexthook(modified_line, subw);
+return nexthook(subw, modified_line);
 Returning from the hook function and subsequently calling nexthook
 will work so long as the subw still exists. (Note that nexthook will
 not call the current hook function, and thus cannot create an infinite
