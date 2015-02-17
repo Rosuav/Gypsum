@@ -263,7 +263,10 @@ class plugin_menu
 	}
 }
 
-//Generic window handler. If a plugin inherits this, it will normally show the window on startup and keep it there, though other patterns are available.
+//Generic window handler. If a plugin inherits this, it will normally show the window on startup and
+//keep it there, though other patterns are possible. For instance, the window might be hidden when
+//there's nothing useful to show; although this can cause unnecessary flicker, and so should be kept
+//to a minimum (don't show/hide/show/hide in rapid succession).
 class window
 {
 	constant provides="window";
