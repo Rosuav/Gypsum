@@ -1579,9 +1579,7 @@ int sig_defbutton_clicked(object self)
 	return 1;
 }
 
-/**
- * COMPAT_SIGNAL window position saver hack
- */
+//COMPAT_SIGNAL window position saver hack
 constant options_savewinpos="Save all window positions";
 void savewinpos() {values(G->G->windows)->save_position_hook();}
 #endif
