@@ -30,6 +30,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	if (String.trim_all_whites(line)=="Carried Spell Components") conn["components/watch"]=1;
 	else if (conn["components/watch"])
 	{
+		//TODO: Detect the end in a way that's compatible with mobile mode
 		if (sscanf(line,"%*[ ]You can conjure a maximum of %d at a time.",int max) && max) conn["components/watch"]=0;
 		else if (sscanf(line,"%{%*[ ]%s: %d%}",array info)) foreach (info,[string name,int cnt])
 			setcount(lower_case(name),cnt);
