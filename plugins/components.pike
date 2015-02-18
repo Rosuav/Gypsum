@@ -12,6 +12,7 @@ a volunteer to check the texts.
 //It might be worth having two or three of these, and any which have content will be displayed in
 //columns. So if (sizeof(components/mage)), the mage components run down the line (there are 16, I
 //think); and if (sizeof(components/alchemist)), correspondingly (maybe in two cols as there are 30).
+//TODO: Have a way to delete mistakenly-captured entries - cf Hobdart.
 mapping(string:mapping(string:mixed)) components=persist->setdefault("components/mage",([]));
 
 void setcount(string name,int cnt)
