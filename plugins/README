@@ -41,7 +41,7 @@ mandatorially) this should be where messages are sent, etc.
 If a command triggers some command being sent to the connection, it is
 courteous to clear the prompt prior to returning:
 
-subw->prompt=({([])});
+subw->prompt = ({([])});
 
 This maintains the behaviour of normal command entry. Otherwise, the
 prompt (if any) will be retained, which is normal behaviour for local
