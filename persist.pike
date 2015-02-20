@@ -62,6 +62,8 @@ object persist=class(string savefn)
 	}
 
 	//Like the Python dict method of the same name, will save a default back in if it wasn't defined.
+	//Best used with simple defaults such as an empty mapping/array, or a string. Ensures that the
+	//persist key will exist and be usefully addressable.
 	mixed setdefault(string idx,mixed def)
 	{
 		mixed ret=data[idx];
