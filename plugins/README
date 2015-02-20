@@ -45,7 +45,9 @@ subw->prompt = ({([])});
 
 This maintains the behaviour of normal command entry. Otherwise, the
 prompt (if any) will be retained, which is normal behaviour for local
-operations.
+operations. Note though that this should be unusual; commands should
+normally work locally, and input hooks (see below) should manipulate
+text sent to the server.
 
 Hook - 'inherit hook'
 ---------------------
@@ -57,9 +59,11 @@ signatures are:
 int inputhook(string line,mapping(string:mixed) subw)
 int outputhook(string line,mapping(string:mixed) conn)
 
-An input hook is very similar to a command processor, with the following
-distinctions:
+An input hook is very similar in structure to a command processor, with
+the following distinctions:
 
+* The intention is for a hook to manipulate text that would be sent to the
+  server, but for a command to work locally.
 * Only one command processor is ever called for a given command - the
   one whose name matches the command entered. Every hook is called for
   every command.
