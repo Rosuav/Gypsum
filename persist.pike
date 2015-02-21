@@ -78,7 +78,7 @@ object persist=class(string savefn)
 		if (mixed ex=catch
 		{
 			Stdio.write_file(savefn+".1",encode_value(data));
-			mv(savefn+".1",savefn);
+			mv(savefn+".1",savefn); //Depends on atomic mv, otherwise this might run into issues.
 			saving=0;
 		})
 		{
