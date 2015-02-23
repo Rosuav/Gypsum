@@ -41,6 +41,9 @@ constant tips=({
 	accepts and transmits UTF-8 text, all the world's languages can be
 	properly displayed and entered.",
 
+	#"Keep an eye on a clock in your own or someone else's timezone with the
+	zoneinfo plugin - you can select any timezone to show on the status bar.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
