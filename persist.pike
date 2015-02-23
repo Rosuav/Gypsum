@@ -82,6 +82,7 @@ object persist=class(string savefn)
 			saving=0;
 		})
 		{
+			//TODO: Show the "danger state" somewhere on the GUI too.
 			werror("Unable to save %s: %s\nWill retry in 60 seconds.\n",savefn,describe_error(ex));
 			call_out(dosave,60);
 		}
