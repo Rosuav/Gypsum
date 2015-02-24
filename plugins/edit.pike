@@ -2,12 +2,8 @@
 inherit hook;
 inherit plugin_menu;
 inherit command;
-//To enable auto-wrapping: /x persist["editor/wrap"]=80
-//TODO: Config dialog. Though it wouldn't really be much of one - just
-//the wrap size - so maybe there ought to be a general plugin config
-//system like Advanced Options. Ideally, plugins could register both a
-//persist key and a function "call me if this changes"... or else the
-//plugin just gets reloaded when that config entry is saved.
+constant config_persist_key="editor/wrap";
+constant config_description="Wrap width (eg 80)";
 
 constant docstring=#"
 Pop-out editor for server-side content
@@ -129,7 +125,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			win->buf->set_modified(0);
 			return;
 		}
-		if (int wrap=persist["editor/wrap"]) txt=wrap_text(txt,wrap);
+		if (int wrap=(int)persist["editor/wrap"]) txt=wrap_text(txt,wrap);
 		send(subw,replace(txt,"\n","\r\n")+"\r\n");
 		if (params->once_use) ::closewindow(); else win->buf->set_modified(0);
 	}
@@ -153,7 +149,7 @@ class editor(mapping(string:mixed) subw,string initial)
 
 	void sig_pb_wrap_clicked()
 	{
-		int wrap=persist["editor/wrap"] || 80; //Default to 80 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
+		int wrap=(int)persist["editor/wrap"] || 80; //Default to 80 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
 		string newtxt=wrap_text(txt,wrap);
 		if (newtxt!=txt) win->buf->set_text(newtxt+"\n");

@@ -1291,7 +1291,7 @@ class configure_plugins
 	constant persist_key="plugins/status";
 	constant bools=({"active"});
 
-	void create() {discover_plugins("plugins"); ::create();}
+	void create() {discover_plugins("plugins"); ::create(); win->cfg->hide();}
 
 	GTK2.Widget make_content()
 	{
@@ -1302,6 +1302,7 @@ class configure_plugins
 				"",win->activate=GTK2.Button("Activate/Reload"),
 				"",win->deactivate=GTK2.Button("Deactivate"),
 			})),0,0,0)
+			->pack_start(win->cfg=GTK2.Frame("<config>")->add(win->cfg_ef=GTK2.Entry()),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
 				->add(win->docs=MultiLineEntryField()->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD))
@@ -1314,6 +1315,7 @@ class configure_plugins
 		//TODO: Cache this somewhere, at least per-run; wipe out the cache any time
 		//the plugin is reloaded.
 		string docstring="";
+		win->cfg->hide(); m_delete(win,"c_p_k");
 		if (string fn=selecteditem())
 		{
 			docstring="(unable to compile, see source)";
@@ -1325,11 +1327,23 @@ class configure_plugins
 				if (provides!="") docstring+="\n\nProvides: "+provides;
 				//Can also list any other "obvious" info, eg menu_label. Not sure how best to
 				//collect that, though, and it won't cope with plugins that create two of them.
+
+				//Optionally provide a single configuration field.
+				if (p->config_persist_key && p->config_description)
+				{
+					win->cfg->show()->set_label(p->config_description);
+					win->cfg_ef->set_text(persist[win->c_p_k=p->config_persist_key] || "");
+				}
 			}
 		}
 		//The MLE wraps, so we remove all newlines that aren't doubled.
 		docstring=replace((docstring/"\n\n")[*],"\n"," ")*"\n\n";
 		win->docs->set_text(String.trim_all_whites(docstring));
+	}
+
+	void save_content(mapping(string:mixed) info)
+	{
+		if (win->c_p_k) persist[win->c_p_k]=win->cfg_ef->get_text();
 	}
 
 	void sig_activate_clicked() {if (string sel=selecteditem()) build(sel);}
