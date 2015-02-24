@@ -2,8 +2,6 @@
 inherit hook;
 inherit plugin_menu;
 inherit command;
-constant config_persist_key="editor/wrap";
-constant config_description="Wrap width (eg 80)";
 
 constant docstring=#"
 Pop-out editor for server-side content
@@ -16,6 +14,8 @@ paragraphs of text.
 ";
 
 constant plugin_active_by_default = 1;
+constant config_persist_key="editor/wrap";
+constant config_description="Wrap width (eg 80)";
 
 class editor(mapping(string:mixed) subw,string initial)
 {
