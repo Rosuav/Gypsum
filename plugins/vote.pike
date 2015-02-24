@@ -10,9 +10,7 @@ That'll make a yellow highlight. (Other numbers for other colors, per the
 usual definitions.)
 
 By default, you get a non-personalized link. To personalize it to your
-character, type this:
-
-/x persist[\"plugins/vote/character\"]=\"yourname\"
+character, fill in your character name above.
 
 TODO: Add a configdlg for the above.
 ";
@@ -26,6 +24,8 @@ inherit plugin_menu;
 inherit statusevent;
 
 constant plugin_active_by_default = 1;
+constant config_persist_key="plugins/vote/character";
+constant config_description="Char name for vote registration";
 
 void showtime()
 {
