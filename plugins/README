@@ -214,6 +214,9 @@ human-readable descriptive text to the main list box. This feature is currently
 classed ADVISORY, and the details may change drastically. See its one and only
 current use (as of 20141230) in window.pike, 'class keyboard', for usage.
 
+Note that a configdlg will normally want to be a nested class, invoked when
+needed, rather than being a top-level inherit.
+
 Status text - 'inherit statustext'
 ----------------------------------
 
