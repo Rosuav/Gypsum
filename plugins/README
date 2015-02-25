@@ -160,6 +160,9 @@ is stored. Optionally also provide:
 
 constant load_size=1; //To resize on startup to the last saved size
 
+Without this (or with load_size set to 0), only the position will be saved and
+restored - good for windows where the size is set by the contained widgets.
+
 Otherwise is identical to window above.
 
 Configuration dialog - 'inherit configdlg'
