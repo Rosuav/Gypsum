@@ -24,6 +24,9 @@ inherit plugin_menu;
 inherit statusevent;
 
 constant plugin_active_by_default = 1;
+//This is the simplest part to work with; all you need is a character name.
+//Selecting a color probably requires a nice little drop-down, so that's a
+//feature to implement later.
 constant config_persist_key="plugins/vote/character";
 constant config_description="Char name for vote registration";
 
