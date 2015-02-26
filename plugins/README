@@ -23,7 +23,12 @@ bootstrapping is complete, only the file name matters. Initialization
 order can thus be modified by moving scripts into subdirectories.
 
 A plugin may inherit any combination of the following, to gain access
-to Gypsum facilities and to implement the hook's functionality:
+to Gypsum facilities and to implement the hook's functionality. Also, a
+plugin may define additional classes, inheriting from these, in order to
+create temporary and discardable extensions; while it would be surprising
+to craft a temporary slash command, it may well make very good sense to
+have a temporary hook, and certainly a window can be either created on
+demand or permanently active.
 
 Command - 'inherit command'
 ---------------------------
