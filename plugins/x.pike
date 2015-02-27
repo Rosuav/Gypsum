@@ -52,6 +52,12 @@ int inputhook(string line,mapping(string:mixed) subw)
 {
 	if (!subw->hilfe_saved_prompt)
 	{
+		if (line=="pike")
+		{
+			say(subw,"%% Due to parser limitations, you can't simply 'enter Pike mode'.");
+			say(subw,"%% Put the beginning of your command on the same line as 'pike'.");
+			return 1;
+		}
 		if (!has_prefix(line,"pike ")) //Normal input
 		{
 			//Check for the special "calculator notation". Note that inline calculation should avoid
