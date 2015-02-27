@@ -1312,8 +1312,6 @@ class configure_plugins
 
 	void load_content(mapping(string:mixed) info)
 	{
-		//TODO: Cache this somewhere, at least per-run; wipe out the cache any time
-		//the plugin is reloaded.
 		string docstring="";
 		win->cfg->hide(); m_delete(win,"c_p_k");
 		if (string fn=selecteditem())
