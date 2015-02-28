@@ -50,3 +50,6 @@ Vague theories of maybe-this-would-be-nice:
   - Though a subprocess wouldn't be worse than the original RosMud one, which used a web site.
   - Suggestion: Have a way to call up spell-check without wiping the current command.
   - Can we do "spell-check word under cursor"??
+  - ({"aspell","--encoding=utf-8","pipe"}),(["stdin":"words to check"])
+  - Skip the first line and any that are just asterisks, output any others.
+  - Use http://aspell.net/win32/ on Windows
