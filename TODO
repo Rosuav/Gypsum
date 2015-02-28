@@ -47,3 +47,6 @@ Vague theories of maybe-this-would-be-nice:
   (Also, (get someone to) test on OSX Yosemite some time.)
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting.
 * Spell-checker? Probably not worth it; unless Pike ships one, it would be a subprocess and per-platform.
+  - Though a subprocess wouldn't be worse than the original RosMud one, which used a web site.
+  - Suggestion: Have a way to call up spell-check without wiping the current command.
+  - Can we do "spell-check word under cursor"??
