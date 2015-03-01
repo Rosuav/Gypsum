@@ -1226,7 +1226,12 @@ void colorcheck(object self,mapping subw)
 //Hmm. This is an argument in favour of a new file plugins.pike, I think... but
 //against that is the tab-completion argument, which is stronger than one might
 //think. It's not worth breaking that unless it's going to benefit us a lot.
-//Maybe call it extras.pike? That doesn't break tab-completion.
+//Maybe call it extras.pike? That doesn't break tab-completion. To justify that
+//name, could put everything into there that doesn't specifically need to be
+//loaded early; effectively, it'd be a "more globals" file, like Pike's modules
+//and post_modules directories. But then, just like with Pike's module dirs,
+//there'd be the usual question of "this doesn't _need_ to be early, but it
+//doesn't _need_ to be late, so where does it go?". Hrm.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
