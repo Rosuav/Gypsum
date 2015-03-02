@@ -302,6 +302,10 @@ class window
 			//them, so we scan along and find the shortest such name that exists in win[].
 			//If there's none, ignore it. This can create ambiguities, but only in really
 			//contrived situations, so I'm deciding not to care. :)
+			//I'm not *absolutely* sure, but I think that all signal names with hyphens can
+			//equally be spelled with underscores, which allows this to work. If there are
+			//any signal names that contain characters not legal in Pike identifiers, they
+			//can't be connected using this simple short-hand - use dosignals() explicitly.
 			array parts=(key/"_")[1..];
 			for (int i=0;i<sizeof(parts)-1;++i) if (mixed obj=win[parts[..i]*"_"])
 			{
