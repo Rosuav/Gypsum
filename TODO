@@ -47,10 +47,3 @@ Vague theories of maybe-this-would-be-nice:
 * Mac support: build a .pkg file that does all the work?? Or at least "get Xquartz and get this pkg".
   (Also, (get someone to) test on OSX Yosemite some time.)
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting.
-* Spell-checker? Probably not worth it; unless Pike ships one, it would be a subprocess and per-platform.
-  - Though a subprocess wouldn't be worse than the original RosMud one, which used a web site.
-  - Suggestion: Have a way to call up spell-check without wiping the current command.
-  - Can we do "spell-check word under cursor" as a single keystroke, and maybe "spell-check current command" too?
-  - ({"aspell","--encoding=utf-8","pipe"}),(["stdin":string_to_utf8("words to check")])
-  - Skip the first line and any that are just asterisks, output any others.
-  - Use http://aspell.net/win32/ on Windows
