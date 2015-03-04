@@ -34,14 +34,15 @@ object hack=class {
 //better to use "ch=='\'' || Unicode.is_wordchar(ch)"... who knows.
 int wordchar(int ch)
 {
-	switch (ch)
+	return ch=='\'' || Unicode.is_wordchar(ch); //Experimenting with this instead of the below ASCII-only table.
+	/*switch (ch)
 	{
 		case '\'':
 		case 'A'..'Z':
 		case 'a'..'z':
 			return 1;
 		default: return 0;
-	}
+	}*/
 }
 
 void spellcheck(int all)
