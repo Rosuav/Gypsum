@@ -44,6 +44,9 @@ constant tips=({
 	#"Keep an eye on a clock in your own or someone else's timezone with the
 	zoneinfo plugin - you can select any timezone to show on the status bar.",
 
+	#"Install GNU Aspell to enable a quick spell-checker for your input,
+	the spellchk.pike plugin - hit (Shift-)F9 to quickly check spelling.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
