@@ -46,20 +46,10 @@ object persist=class(string savefn)
 		};
 	}
 
-	/**
-	 * Retrievals and mutations work as normal; mutations trigger a save().
-	 */
+	//Retrievals and mutations work as normal; mutations trigger a save().
 	mixed `[](string idx) {return data[idx];}
-	mixed `[]=(string idx,mixed val)
-	{
-		save();
-		return data[idx]=val;
-	}
-	mixed _m_delete(string idx)
-	{
-		save();
-		return m_delete(data,idx);
-	}
+	mixed `[]=(string idx,mixed val) {save(); return data[idx]=val;}
+	mixed _m_delete(string idx) {save(); return m_delete(data,idx);}
 
 	//Like the Python dict method of the same name, will save a default back in if it wasn't defined.
 	//Best used with simple defaults such as an empty mapping/array, or a string. Ensures that the
