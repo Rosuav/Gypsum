@@ -14,10 +14,12 @@ mapping(string:object) fontdesc=([]); //Cache of PangoFontDescription objects, f
 GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used externally
 int paused; //Not saved across reloads
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
+
 inherit statustext_maxwidth;
 inherit movablewindow;
 constant is_subwindow=0;
-int monochrome; //Not saved - updating window.pike will reset to normal mode
+
+int monochrome; //Not saved globally - updating window.pike will reset to normal mode
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
