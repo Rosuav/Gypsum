@@ -26,7 +26,7 @@ constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
 
-//Default set of worlds. Not currently actually used here - just for the setdefault().
+//Default set of worlds. Not currently actually used here - just for the setdefault(). This is used by connect.pike primarily, but wants to exist sooner (I think).
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
