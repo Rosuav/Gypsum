@@ -87,7 +87,6 @@ int inputhook(string line,mapping(string:mixed) subw)
 //Direct compilation mode - the original. Convenient for single expressions.
 int process(string param,mapping(string:mixed) subw)
 {
-	sscanf(param,"[%s] %s",string cmdpfx,param);
 	program tmp; mixed err;
 	err=catch {tmp=compile_string(#"
 	object window=G->G->window;
@@ -105,8 +104,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
 	err=catch {G->G->last_x_result=tmp()->foo(subw,G->G->last_x_result);};
 	if (err) {say(subw,"Error in execution: %O\n",err); return 1;}
-	if (cmdpfx) send(subw,replace(sprintf("\n%O",G->G->last_x_result),"\n","\r\n"+cmdpfx+" ")[2..]+"\r\n");
-	else say(subw,"%O\n",G->G->last_x_result);
+	say(subw,"%O\n",G->G->last_x_result);
 	return 1;
 }
 
