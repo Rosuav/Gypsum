@@ -93,7 +93,7 @@ int process(string param,mapping(string:mixed) subw)
 	object window=G->G->window;
 	mixed x=Hex;
 	Time tm(string|int t,int ... parts) {if (stringp(t)) {parts=(array(int))(t/\":\"); t=0;} foreach (parts,int p) t=(t*60)+p; return Time(t);}
-	int say(mixed ... args) {if (sizeof(args)==1) window->say(0,args[0]); else window->say(@args);} //Allow say(str) without extra boilerplate (declared int rather than void so it quietly returns zero)
+	int say(mixed ... args) {if (sizeof(args)==1 || stringp(args[0])) window->say(0,@args); else window->say(@args);} //Allow say(str) without extra boilerplate (declared int rather than void so it quietly returns zero)
 	//Add any other 'convenience names' here
 
 	mixed foo(mapping(string:mixed) subw,mixed _)
