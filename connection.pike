@@ -55,6 +55,14 @@ function say=G->globals->say;
  * some mojibake and even invalid characters (continuation bytes 81, 8D, 8F,
  * 90, and 9D are not defined in CP-1252, and will be replaced by U+FFFD).
  *
+ * Naive byte-based servers, receiving UTF-8 from some clients and CP-1252 from
+ * others, and emitting the exact byte-streams they receive, will "mostly work"
+ * with this scheme. However, any time byte-streams from different clients get
+ * combined into individual socket-read operations, there is a risk that both
+ * encodings will be received simultaneously. It may be worth doing this decode
+ * dance separately for each line, depending on U+000A being represented by,
+ * and uniquely by, 0x0A; in other words, depend on ASCII-compatible encoding.
+ *
  * @param bytes Incoming 8-bit data
  * @return string Resulting Unicode text
  */
