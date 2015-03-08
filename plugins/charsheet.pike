@@ -415,8 +415,8 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 					INT Forgery
 					CHA Gather Info	Knowledge Local
 					CHA Handle Animal
-					WIS Heal	AC
-					DEX Hide
+					WIS Heal
+					DEX Hide	AC
 					CHA Intimidate	Bluff
 					STR Jump	AC, Tumble
 					INT Knowledge Arcana
