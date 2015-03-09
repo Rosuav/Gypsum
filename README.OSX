@@ -1,3 +1,14 @@
+The best way to install Gypsum on OS X is to use Homebrew. Start by typing:
+$ brew install pike
+You may need to additionally install XQuartz, but the above command should
+explain what needs to come next. Once Pike is installed, you should be able
+to download Gypsum from this link, or clone the repository using git:
+https://github.com/Rosuav/Gypsum/archive/master.zip
+Using git is preferred, but either will work.
+
+If the above method fails, try the older method, retained below. But try
+using Homebrew first if you can!
+
 Installing Gypsum on Mac OS X should work, in theory, on any reasonably-new
 version. However, I've only tested it on 10.9 Mavericks, so that's all I can
 cite. You'll need to download two files:
