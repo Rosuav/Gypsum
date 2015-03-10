@@ -19,6 +19,7 @@
   - Mostly done, test and document me.
 * Mark-and-copy of RTL text has some issues. May be v difficult (even impossible) to fully solve, but try to make
   it behave at least reasonably well most of the time.
+* Mac support: can I put together a Homebrew recipe for Gypsum, which will pull in Pike?
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
@@ -44,5 +45,4 @@ Vague theories of maybe-this-would-be-nice:
   - seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
   - This would have to be done as a non-default plugin, for safety.
 * 256 color support
-* Mac support: can I put together a Homebrew recipe for Gypsum, which will pull in Pike?
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting.
