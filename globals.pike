@@ -635,6 +635,9 @@ class statustext_maxwidth
 //maketabstatus(), so that would complete the set. Alternatively,
 //just expect all tabstatus plugins to do everything for all subw,
 //which may be better accomplished by providing a function to do so.
+//TODO: Provide a notification function for whenever a subw is
+//connected or disconnected to/from a socket, which will make this
+//good for both per-tab and per-world status.
 class tabstatus(string name)
 {
 	constant provides="per-tab status";
