@@ -74,7 +74,7 @@ object cp1252=Locale.Charset.decoder("1252"); //Pike 7.8 has Charset hidden behi
 protected string bytes_to_string(bytes data)
 {
 	catch {return utf8_to_string(data);}; //Normal case: Decode as UTF-8
-	return cp1252->feed(data)->drain(); //Failure case: Decode as CP-1252.
+	return cp1252->feed(data)->drain(); //Failure case: Decode as CP-1252. (Doesn't need partial feed/drain; one byte will always become exactly one character, even if it's \uFFFD.)
 }
 
 //Mark the current text as a prompt
