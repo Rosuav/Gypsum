@@ -659,6 +659,12 @@ class tabstatus(string name)
 		//G->G->tooltips->set_tip(frm,statustxt->tooltip || name); //TODO: How should the tooltip be passed along? Should it be global or per-tab?
 		subw->tabstatus->pack_start(subw["tabstatus/"+name]=frm->show_all(),0,0,0);
 	}
+
+	//ADVISORY: Override this to be notified when a world is (dis)connected
+	//On disconnect, world==0; on connect, it is a string identifier which
+	//is about to be stored in subw->world. During this callback, the last
+	//world that was connected (if any) can be seen in subw->world.
+	void connected(mapping(string:mixed) subw,string world) { }
 }
 
 
