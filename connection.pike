@@ -291,6 +291,7 @@ int dohooks(mapping conn,string line)
 //Closes the socket connection for the provided connection.
 int sockclosed(mapping conn)
 {
+	values(G->G->tabstatuses)->connected(conn->display,0);
 	say(conn->display,"%%% Disconnected from server.");
 	G->G->window->unpassword(conn->display);
 	conn->display->prompt=({([])});

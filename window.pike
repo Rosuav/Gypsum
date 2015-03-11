@@ -493,7 +493,6 @@ void connect(mapping info,string world,mapping|void subw)
 	if (!info)
 	{
 		//Disconnect
-		values(G->G->tabstatuses)->connected(subw,0);
 		if (!subw->connection || !subw->connection->sock) return; //Silent if nothing to dc
 		subw->connection->sock->close(); G->G->connection->sockclosed(subw->connection);
 		return;
