@@ -291,7 +291,7 @@ int dohooks(mapping conn,string line)
 //Closes the socket connection for the provided connection.
 int sockclosed(mapping conn)
 {
-	values(G->G->tabstatuses)->connected(conn->display,0);
+	values(G->G->tabstatuses)->connected(conn->display,0); //Note that subw->world is not currently cleared, but if it ever is, it must be AFTER this call.
 	say(conn->display,"%%% Disconnected from server.");
 	G->G->window->unpassword(conn->display);
 	conn->display->prompt=({([])});
