@@ -663,7 +663,11 @@ class tabstatus(string name)
 	//ADVISORY: Override this to be notified when a world is (dis)connected
 	//On disconnect, world==0; on connect, it is a string identifier which
 	//is about to be stored in subw->world. During this callback, the last
-	//world that was connected (if any) can be seen in subw->world.
+	//world that was connected (if any) can be seen in subw->world. (Note
+	//that subw->world is not currently cleared on disconnection. But you
+	//won't normally get a new connection while you're already connected,
+	//so any nonzero world should be assumed to be "wasn't connected, now
+	//will be".)
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 
