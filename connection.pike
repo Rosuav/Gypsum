@@ -332,6 +332,8 @@ void send_telnet(mapping conn,bytes data)
 	sockwrite(conn);
 }
 
+//If a connection were an object (rather than a mapping), this would be create().
+//But you don't ever call this directly; it's used internally.
 mapping(string:mixed) makeconn(object display,mapping info)
 {
 	mixed col=G->G->window->mkcolor(7,0);
