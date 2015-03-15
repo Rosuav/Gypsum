@@ -1,6 +1,8 @@
 #!/bin/bash
 # Install with `ln -s ../../sancheck .git/hooks/pre-push` to ensure that the minimal
 # dependency update works before anything gets pushed.
+# TODO: Make this somehow notice when I create a new file and update itself.
+# Hrm. Not sure how that should be done.
 diff -u - <(pike plugins/update.pike --simulate 2>&1) <<EOF
 Downloading latest Gypsum...
 Update complete [49].
