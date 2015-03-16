@@ -352,6 +352,7 @@ mapping(string:mixed) makeconn(object display,mapping info)
 //change the callback on a Stdio.Port(). Changing sock->_accept_callback
 //does work, but since it's undocumented (and since passive mode accept
 //is neither time-critical nor common), I'm sticking with the bouncer.
+//(Is there a reason this isn't using the 'bouncer' from globals.pike?)
 void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
 
 //Socket accept callback - creates a new subw with the connected socket.
