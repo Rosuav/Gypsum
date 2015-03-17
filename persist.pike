@@ -34,9 +34,6 @@ object persist=class(string savefn)
 	mapping(string:mixed) data=([]);
 	int saving;
 
-	/**
-	 * Load and decode the savefile
-	 */
 	void create()
 	{
 		catch //Ignore any errors, just have no saved data.
