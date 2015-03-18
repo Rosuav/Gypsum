@@ -33,14 +33,6 @@ Future policy: Ensure that everything retained is in subw[] not connection[].
 Then it might be worth actually disposing of the connection mapping on close.
 */
 
-void create(string name)
-{
-	G->G->connection=this;
-	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
-	else G->G->sockets=(<>);
-	add_gypsum_constant("send",send);
-}
-
 //On first load, there won't be a global say, so any usage will bomb until
 //window.pike gets loaded (trying to call the integer 0). It'll then be
 //overwritten by the newly-loaded window.pike.
@@ -436,4 +428,12 @@ mapping connect(object display,mapping info)
 		else say(conn->display,"%%%% Logging to %O",fn);
 	}
 	return conn;
+}
+
+void create(string name)
+{
+	G->G->connection=this;
+	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
+	else G->G->sockets=(<>);
+	add_gypsum_constant("send",send);
 }
