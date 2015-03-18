@@ -348,13 +348,6 @@ mapping(string:mixed) makeconn(object display,mapping info)
 	]);
 }
 
-//Socket accept callback bouncer, because there's no documented way to
-//change the callback on a Stdio.Port(). Changing sock->_accept_callback
-//does work, but since it's undocumented (and since passive mode accept
-//is neither time-critical nor common), I'm sticking with the bouncer.
-//(Is there a reason this isn't using the 'bouncer' from globals.pike?)
-void sockacceptb(mapping conn) {G->G->connection->sockaccept(conn);}
-
 //Socket accept callback - creates a new subw with the connected socket.
 //Note that this has some hacks. Changes to other parts of Gypsum (eg in
 //window.pike) may break it. Be careful. (Last checked 20141004.)
@@ -411,7 +404,11 @@ mapping connect(object display,mapping info)
 		conn->passive=1;
 		if (mixed ex=catch
 		{
-			conn->sock=Stdio.Port((int)info->port,sockacceptb,info->host);
+			//The socket accept callback is a bouncer - there's no documented way to
+			//change the callback on a Stdio.Port(). Changing sock->_accept_callback
+			//does work, but since it's undocumented (and since passive mode accept
+			//is neither time-critical nor common), I'm sticking with the bouncer.
+			conn->sock=Stdio.Port((int)info->port,bouncer("connection","sockaccept"),info->host);
 			conn->sock->set_id(conn);
 			if (!conn->sock->errno()) {say(conn->display,"%%% Bound to "+info->host+" : "+info->port); return conn;}
 			say(conn->display,"%%% Error binding to "+info->host+" : "+info->port+" - "+strerror(conn->sock->errno()));
