@@ -37,12 +37,12 @@ Note that Help|Tips / plugins/tips.pike may be able to make things less obscure,
 
 Vague theories of maybe-this-would-be-nice:
 * Boss key (would require support from Pike - Lin/Win/Mac = three separate techniques, all hard)
-  - though this might be possible as a separately-runnable executable, which communicates with
-  - the main process via a pipe whose name is stored in persist[], and signals it; this could be
-  - then given two keystrokes in an OS-dependent way (one for hide, one for unhide).
+  - Though this might be possible as a separately-runnable executable, which communicates with
+    the main process via a pipe whose name is stored in persist[], and signals it; this could be
+    then given two keystrokes in an OS-dependent way (one for hide, one for unhide).
   - Note that pipe creation is itself OS-dependent, so this may end up working with completely
-  - different code on each OS. :( Alternatively, this could be done with a TCP socket, but that
-  - seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
+    different code on each OS. :( Alternatively, this could be done with a TCP socket, but that
+    seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
   - This would have to be done as a non-default plugin, for safety.
   - How does VLC do global hotkeys? Can I tie in with the same facilities? Is it cross-platform?
     - At very least, VLC can do it on Windows and Linux. Probably Mac OS as well.
