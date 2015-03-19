@@ -45,5 +45,6 @@ Vague theories of maybe-this-would-be-nice:
   - seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
   - This would have to be done as a non-default plugin, for safety.
   - How does VLC do global hotkeys? Can I tie in with the same facilities? Is it cross-platform?
+    (At very least, VLC can do it on Windows and Linux. Presumably Mac OS as well.)
 * 256 color support
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting.
