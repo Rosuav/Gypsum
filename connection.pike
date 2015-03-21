@@ -223,7 +223,7 @@ void sockread(mapping conn,bytes data)
 					//case SUPPRESSGA: if (iac[0]==WONT) send_telnet(conn,(string(0..255))({DO,SUPPRESSGA})); break; //Possibly acknowledge WONT SUPPRESSGA?
 					case NAWS: if (iac[0]==DO)
 					{
-						//TODO: Resend any time wrap width changes
+						//TODO: Record that we're doing NAWS, and resend any time wrap width changes
 						int width=persist["window/wrap"] || 80; //If we're not wrapping, pretend screen width is 80, although that's a bit arbitrary
 						send_telnet(conn,(string(0..255))({SB,NAWS,width>>8,width&255,0,0}));
 					}
