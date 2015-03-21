@@ -127,7 +127,8 @@ void textread(mapping conn,string data,int end_of_block)
 	{
 		//Let's pretend this is a prompt. Unfortunately that's not guaranteed, but
 		//since it ends with the designated prompt suffix AND it's the end of a
-		//socket read, let's hope.
+		//socket read, let's hope. This does produce some false positives, but it
+		//also catches a lot of good prompts, on servers which don't mark them.
 		setprompt(conn);
 	}
 	else if (conn->curline!="") switch (mixed pseudo=persist["prompt/pseudo"] || ":>")
