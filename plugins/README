@@ -336,6 +336,13 @@ source code. Two newlines form a paragraph; there's currently no way to make
 preformatted text. There's no need to repeat the obvious; some information will
 be added based on inherits and such.
 
+If your plugin needs a lot of configuration, the best way is to craft your own
+window and save into persist[]. But if all you need is one simple string, you
+can tie in with the main plugin config dialog by creating two constants:
+constant config_persist_key="pluginname/what_to_configure";
+constant config_description="Human-readable descriptive text";
+Explore other plugins for usage examples.
+
 ADVISORY: Commands can be synthesized directly to a subw or conn:
 send(conn,line+"\r\n");
 Note that a subwindow may not necessarily have a connection, though
