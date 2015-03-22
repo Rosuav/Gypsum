@@ -484,8 +484,8 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	redraw(subw);
 }
 
-/**
- * Connect to a world
+/*
+ * Connect to a world. TODO: Make this do the work of picking up a world by name, and then make the plugin that much less important.
  */
 void connect(mapping info,string world,mapping|void subw)
 {

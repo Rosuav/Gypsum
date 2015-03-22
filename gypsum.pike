@@ -123,6 +123,7 @@ int main(int argc,array(string) argv)
 			if (globals->persist["reopentabs"]&2) worlds=globals->persist["savedtablist"];
 			if (!worlds || !sizeof(worlds)) worlds=({""}); //And ensure that it's not completely empty
 		}
+		//TODO: Decouple this from the plugin by putting the work into (G->)G->window->connect()
 		G->commands->connect(worlds[0],G->window->win->tabs[0]); //Connect to the first world, or give world list, in the initial tab.
 		if (sizeof(worlds)>1) foreach (worlds[1..],string world) G->commands->connect(world,0); //Connect to the others with a null subw, which will create another tab.
 	}
