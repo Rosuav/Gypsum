@@ -486,7 +486,7 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 
 /*
  * Connect to a world. TODO: Make this do the work of picking up a world by name, and then make the plugin that much less important.
- * Is this in any way depended on? I don't think so, but if we need to go through a deprecation period before changing this, we can.
+ * If anyone else is using the current version, the code will break. I don't think this is all that useful as an API anyway.
  */
 void connect(mapping info,string world,mapping|void subw)
 {
