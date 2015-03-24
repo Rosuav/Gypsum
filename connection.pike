@@ -279,7 +279,7 @@ int dohooks(mapping conn,string line)
 	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) say(conn->display,"Error in hook: "+describe_backtrace(ex));
 }
 
-//Closes the socket connection for the provided connection.
+//Clean up the socket connection; it's assumed to have already been closed.
 int sockclosed(mapping conn)
 {
 	values(G->G->tabstatuses)->connected(conn->display,0); //Note that subw->world is not currently cleared, but if it ever is, it must be AFTER this call.
