@@ -236,6 +236,7 @@ class plugin_menu
 	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
 	void menu_clicked() { }
 	//End provide.
+	//TODO: Consider having an "additional menu item" option. It seems to be the only case where any plugin wants to double-inherit.
 
 	mapping(string:mixed) mi=([]);
 	void create(string|void name)
