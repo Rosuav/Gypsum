@@ -26,23 +26,13 @@ object hack=class {
 
 //Determine if the given character is part of a word.
 //This is a tricky thing, because it's based on user expectations, not
-//strict logic. I could use Unicode.is_wordchar() here, but that cuts
-//out apostrophe, so "doesn't" would count as two separate words. I
-//could alternatively say "return ch!=' ';" and call *everything* a
-//word, but that would have annoying edge cases around punctuation.
-//So currently I'm using a simple ASCII-only lookup table. It might be
-//better to use "ch=='\'' || Unicode.is_wordchar(ch)"... who knows.
+//strict logic. Most of it is handled by Unicode.is_wordchar(), but
+//that cuts out apostrophe, so "doesn't" would count as two separate
+//words. For the moment, I'm just hard-coding the ASCII apostophe as a
+//special case; it may be necessary to use some other detection method.
 int wordchar(int ch)
 {
-	return ch=='\'' || Unicode.is_wordchar(ch); //Experimenting with this instead of the below ASCII-only table.
-	/*switch (ch)
-	{
-		case '\'':
-		case 'A'..'Z':
-		case 'a'..'z':
-			return 1;
-		default: return 0;
-	}*/
+	return ch=='\'' || Unicode.is_wordchar(ch);
 }
 
 void spellcheck(int all)
