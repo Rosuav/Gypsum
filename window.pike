@@ -484,19 +484,21 @@ void say(mapping|void subw,string|array msg,mixed ... args)
 	redraw(subw);
 }
 
-/*
- * Connect to a world. TODO: Make this do the work of picking up a world by name, and then make the plugin that much less important.
- * If anyone else is using the current version, the code will break. I don't think this is all that useful as an API anyway.
- */
-void connect(mapping info,string world,mapping|void subw)
+void connect(string world,mapping|void subw)
 {
 	if (!subw) subw=current_subw();
-	if (!info)
+	if (!world)
 	{
 		//Disconnect
 		if (!subw->connection || !subw->connection->sock) return; //Silent if nothing to dc
 		subw->connection->sock->close(); G->G->connection->sockclosed(subw->connection);
 		return;
+	}
+	mapping info=persist["worlds"][world];
+	if (!info)
+	{
+		if (sscanf(world,"%s%*[ :]%d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
+		else {say(subw,"%% Connect to what?"); return;}
 	}
 	values(G->G->tabstatuses)->connected(subw,world);
 	subw->world=world;
@@ -808,7 +810,7 @@ void addtab() {subwindow("New tab");}
 void real_closetab(int removeme)
 {
 	if (sizeof(win->tabs)<2) addtab();
-	win->tabs[removeme]->signals=0; connect(0,0,win->tabs[removeme]);
+	win->tabs[removeme]->signals=0; connect(0,win->tabs[removeme]);
 	win->tabs=win->tabs[..removeme-1]+win->tabs[removeme+1..];
 	win->notebook->remove_page(removeme);
 	if (!sizeof(win->tabs)) addtab();
@@ -1557,8 +1559,7 @@ class connect_menu
 		sig_pb_save_clicked();
 		string kwd=selecteditem();
 		if (!kwd) return;
-		mapping info=items[kwd];
-		connect(info,kwd,0);
+		connect(kwd,0);
 		win->mainwindow->destroy();
 	}
 
@@ -1587,7 +1588,7 @@ class connect_menu
 }
 
 constant file_disconnect_menu="_Disconnect";
-void disconnect_menu(object self) {connect(0,0,0);}
+void disconnect_menu(object self) {connect(0,0);}
 
 #if constant(COMPAT_SIGNAL)
 //In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than keypress.

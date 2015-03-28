@@ -12,13 +12,7 @@ There is generally no reason to unload this plugin.
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" && !(param=subw->world)) return listworlds("",subw);
-	mapping info=persist["worlds"][param];
-	if (!info)
-	{
-		if (sscanf(param,"%s%*[ :]%d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
-		else {say(subw,"%% Connect to what?"); return 1;}
-	}
-	G->G->window->connect(info,param,subw || G->G->window->subwindow("New tab"));
+	G->G->window->connect(param,subw || G->G->window->subwindow("New tab"));
 	return 1;
 }
 
