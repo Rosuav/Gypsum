@@ -12,7 +12,7 @@ There is generally no reason to unload this plugin.
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" && !(param=subw->world)) return listworlds("",subw);
-	G->G->window->connect(param,subw || G->G->window->subwindow("New tab"));
+	G->G->window->connect(param,subw);
 	return 1;
 }
 
