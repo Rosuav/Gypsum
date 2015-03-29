@@ -237,6 +237,7 @@ class plugin_menu
 	void menu_clicked() { }
 	//End provide.
 	//TODO: Consider having an "additional menu item" option. It seems to be the only case where any plugin wants to double-inherit.
+	//Or possibly don't, because of the UI downside of having two menu items. It might be better to consciously discourage it with rough syntax.
 
 	mapping(string:mixed) mi=([]);
 	void create(string|void name)
