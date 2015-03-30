@@ -2,3 +2,6 @@ This directory can be used for local plugins, which are not part of the main
 Gypsum repository. They will be loaded after all plugins in the main plugins
 directory (due to this being called "zz_local" and thus sorting last), and
 will never be overwritten by any update to Gypsum itself.
+
+Note that truly insane people are welcome to use this as a nested repository;
+this file is the only one that Gypsum will manipulate or track in any way.
