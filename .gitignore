@@ -1,2 +1,3 @@
 .gypsumrc
 *.ini
+plugins/zz_local/*.pike
