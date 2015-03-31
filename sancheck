@@ -5,5 +5,5 @@
 # Hrm. Not sure how that should be done.
 diff -u - <(pike plugins/update.pike --simulate 2>&1) <<EOF
 Downloading latest Gypsum...
-Update complete [49].
+Update complete [48].
 EOF
