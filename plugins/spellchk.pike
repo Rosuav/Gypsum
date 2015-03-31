@@ -53,6 +53,7 @@ void spellcheck(int all)
 	//TODO: Don't assume that. Either kill it after a while, or make sure
 	//we keep running concurrently. In a new Pike, I'd just use "stdout":function
 	//and pass the info along, but that's not an option in 7.8 (or even 8.0).
+	//Should I snag code from Process.run() and make it async? Or do a full buffering solution?
 	mapping rc=Process.run(({"aspell","--encoding=utf-8","pipe"}),(["stdin":string_to_utf8(txt)]));
 	//Skip the first line and any that are just asterisks, output any others.
 	foreach ((rc->stdout/"\n")[1..],string line)
