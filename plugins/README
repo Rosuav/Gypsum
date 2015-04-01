@@ -416,7 +416,9 @@ also the case for any seven-bit string literals. For this purpose, the typedef
 
 BEST PRACTICE: Plugin file names should restrict themselves to the ASCII set
 for maximum cross-platform compatibility. File system encodings are a mess that
-I'd really rather not have to dig into.
+I'd really rather not have to dig into. Also, avoid using a leading dot;
+currently, Gypsum does not acknowledge these specially, but in future, these
+may become "undiscoverable" or in some way hidden.
 
 
 Certain elements in subw and conn are guaranteed, and designed to be read by
