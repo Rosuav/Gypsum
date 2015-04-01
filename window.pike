@@ -1280,6 +1280,7 @@ void discover_plugins(string dir)
 	mapping(string:mapping(string:mixed)) plugins=persist["plugins/status"];
 	foreach (get_dir(dir),string fn)
 	{
+		//Possibly skip hiddens - those which start with a dot?
 		fn=combine_path(dir,fn);
 		if (file_stat(fn)->isdir) discover_plugins(fn);
 		else if (has_suffix(fn,".pike") && !plugins[fn])
