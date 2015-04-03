@@ -1340,6 +1340,9 @@ class configure_plugins
 				if (provides!="") docstring+="\n\nProvides: "+provides;
 				//Can also list any other "obvious" info, eg menu_label. Not sure how best to
 				//collect that, though, and it won't cope with plugins that create two of them.
+				//Not that the double-inherit is a problem; there are no standard plugins doing
+				//any double-inheriting other than for the menu, and that may or may not be
+				//deemed important enough to formally support.
 
 				//Optionally provide a single configuration field.
 				if (p->config_persist_key && p->config_description)
