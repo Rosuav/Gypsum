@@ -47,6 +47,9 @@ constant tips=({
 	#"Install GNU Aspell to enable a quick spell-checker for your input,
 	the spellchk.pike plugin - hit (Shift-)F9 to quickly check spelling.",
 
+	#"Some plugins are a bit underused, but if you like them, contact the
+	author; ideas for improvements will be much welcomed.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
