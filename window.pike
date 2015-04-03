@@ -1310,7 +1310,9 @@ class configure_plugins
 	{
 		return GTK2.Vbox(0,10)
 			->pack_start(two_column(({
-				"Filename",win->kwd=GTK2.Entry(), //This would be a great use for the "different internal and display" theory; there's no need to show the full path in the list box.
+				//This would be a great use for the "different internal and display" theory; there's no need to show
+				//the full path in the list box. But this won't work with the descr_key, as we want to show _less_ info.
+				"Filename",win->kwd=GTK2.Entry(),
 				"",win->active=GTK2.CheckButton("Activate on startup"),
 				"",win->activate=GTK2.Button("Activate/Reload"),
 				"",win->deactivate=GTK2.Button("Deactivate"),
