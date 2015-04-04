@@ -10,6 +10,15 @@
   hidden instead of visible? Probably too messy to UI this nicely, but it could be hidden magic.
 * There's some sort of resource leakage that results in slow-downs. Possibly to do with updating window.
   - Seen 20140820; not seen again for a while 20141204.
+  - Seen again 20150504 after Gypsum had been running for 55 days. Not sure what the cause is.
+    - The delay seems to happen at "GTK2.GdkGC gc=GTK2.GdkGC(display);" in window.pike. Normally it takes
+      microseconds at worst, but when the slowdown happens, it takes a number of milliseconds (17ms seen)
+      and adds up to visible latency.
+    - Repeatedly updating window.pike doesn't seem to trigger it.
+    - Repeatedly opening and closing zoneinfo doesn't seem to either. Nor charsheet, though there MIGHT be
+      a bug in the latter involving a difference between clicking the cross and calling destroy().
+    - It doesn't seem to be connected to the number of lines in scrollback, except in that they tend to
+      accumulate over time, as does the slowdown.
 * Mark-and-copy of RTL text has some issues. May be v difficult (even impossible) to fully solve, but try to make
   it behave at least reasonably well most of the time.
 * Mac support: can I put together a Homebrew recipe for Gypsum, which will pull in Pike?
