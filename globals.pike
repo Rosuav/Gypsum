@@ -31,8 +31,9 @@ typedef string(0..127) ascii;
 //for compatibility, they're spelled in full.
 
 //Usage: Instead of G->G->asdf->qwer(), use bouncer("asdf","qwer") and it'll late-bind.
-//Note that this is relatively slow (a run-time lookup every time), and should normally
-//be avoided in favour of a reload-time replacement.
+//Note that this is relatively slow (a run-time lookup every call), and should normally
+//be avoided in favour of a reload-time replacement. But otherwise, this is a late-bind
+//callable that can be passed around pretty much like a function.
 class bouncer(string ... keys)
 {
 	mixed `()(mixed ... args)
