@@ -599,6 +599,20 @@ int paint(object self,object ev,mapping subw)
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
 	display->set_background(colors[monochrome && 15]); //In monochrome mode, background is all white.
+	/*
+	There's some kind of slowdown that can be seen sometimes when Gypsum is running for months on end.
+	Possibly to do with updating window, or repeated repaints, or something.
+	The delay seems to happen at "GTK2.GdkGC gc=GTK2.GdkGC(display);" in window.pike. Normally it takes
+	microseconds at worst, but when the slowdown happens, it takes a number of milliseconds (17ms seen)
+	and adds up to visible latency.
+	- Repeatedly updating window.pike doesn't seem to trigger it.
+	- Repeatedly opening and closing zoneinfo doesn't seem to either. Nor charsheet, though there MIGHT be
+	a bug in the latter involving a difference between clicking the cross and calling destroy().
+	- It doesn't seem to be connected to the number of lines in scrollback, except in that they tend to
+	accumulate over time, as does the slowdown. Once there's slowness, it applies to all tabs.
+	
+	Some debugging code has been retained here, commented out.
+	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	//painttime+=tm->peek(); ++paintcount;
