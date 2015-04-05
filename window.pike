@@ -593,12 +593,15 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	}
 }
 
+//float painttime=0.0; int paintcount=0;
 int paint(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
 	display->set_background(colors[monochrome && 15]); //In monochrome mode, background is all white.
+	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
+	//painttime+=tm->peek(); ++paintcount;
 	int y=(int)subw->scr->get_property("page size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
 	if (undefinedp(ssl)) ssl=sel=-1;
@@ -621,6 +624,10 @@ int paint(object self,object ev,mapping subw)
 		}
 		paintline(display,gc,line,y+l*subw->lineheight,hlstart,hlend);
 	}
+	//werror("Paint: %f/%d = %f avg\n",painttime,paintcount,painttime/paintcount);
+	//redraw(subw);
+	//call_out(G->G->hooks->zoneinfo->menu_clicked()->closewindow,0.01);
+	//call_out(G->G->hooks->charsheet->charsheet(subw->connection,"nobody",([]))->sig_mainwindow_destroy,0.01);
 }
 
 void settext(mapping subw,string text)
