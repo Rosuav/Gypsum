@@ -602,7 +602,7 @@ int paint(object self,object ev,mapping subw)
 	/*
 	There's some kind of slowdown that can be seen sometimes when Gypsum is running for months on end.
 	Possibly to do with updating window, or repeated repaints, or something.
-	The delay seems to happen at "GTK2.GdkGC gc=GTK2.GdkGC(display);" in window.pike. Normally it takes
+	The delay seems to all happen at the GTK2.GdkGC constructor call below. Normally it takes
 	microseconds at worst, but when the slowdown happens, it takes a number of milliseconds (17ms seen)
 	and adds up to visible latency.
 	- Repeatedly updating window.pike doesn't seem to trigger it.
@@ -610,7 +610,7 @@ int paint(object self,object ev,mapping subw)
 	a bug in the latter involving a difference between clicking the cross and calling destroy().
 	- It doesn't seem to be connected to the number of lines in scrollback, except in that they tend to
 	accumulate over time, as does the slowdown. Once there's slowness, it applies to all tabs.
-	
+
 	Some debugging code has been retained here, commented out.
 	*/
 	//System.Timer tm=System.Timer();
