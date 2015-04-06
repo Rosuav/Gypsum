@@ -611,7 +611,12 @@ int paint(object self,object ev,mapping subw)
 	- It doesn't seem to be connected to the number of lines in scrollback, except in that they tend to
 	accumulate over time, as does the slowdown. Once there's slowness, it applies to all tabs.
 
-	Some debugging code has been retained here, commented out.
+	Some debugging code has been retained here, commented out. Note that all the rest of the code - even
+	iterating over large slabs of subw->lines in high level code - takes virtually no time, compared to
+	the one constructor call. Note also that stress-testing MAY not be entirely valid, as there seems to
+	be some sort of short-term cache applying here; uncommenting the redraw(subw) call at the end doesn't
+	trigger the slow-down. TODO: Find out whether uncommenting this _after_ the slowdown has set in makes
+	for an infinitely-slow system.
 	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
