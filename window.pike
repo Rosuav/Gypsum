@@ -1266,6 +1266,11 @@ void colorcheck(object self,mapping subw)
 //and post_modules directories. But then, just like with Pike's module dirs,
 //there'd be the usual question of "this doesn't _need_ to be early, but it
 //doesn't _need_ to be late, so where does it go?". Hrm.
+//At the moment, the only functions that would go into "more globals" (extras)
+//would be these and discover_plugins() below, so it's hardly worth it. They're
+//connected with configure_plugins, so unless I move the whole menu subsystem
+//out into another file (which would be possible, albeit not all that useful),
+//there's no point moving these functions. They can stay.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)
