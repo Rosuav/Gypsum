@@ -1066,9 +1066,10 @@ class keyboard
 	void makewindow()
 	{
 		::makewindow();
-		//Add a button to the bottom row. Note that this is coming up at the far right,
-		//which I'm not happy with; I'd rather put it in the middle somewhere. But packing
-		//buttons from the start/end doesn't seem to make any difference to an HbuttonBox.
+		//Add a button to the bottom row. Note that this is coming up at the far right;
+		//previously, this was a bit ugly, but now that's not a big deal, as 'Save' and
+		//'Delete' are elsewhere. So instead of a centered 'Close' button, we get 'Close'
+		//on the left and 'Standard' on the right, which looks fine.
 		win->buttonbox->add(win->pb_std=GTK2.Button((["label":"Standard","use-underline":1])));
 	}
 
