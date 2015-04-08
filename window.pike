@@ -1294,7 +1294,7 @@ a shutdown, there's no difference here between window.pike and plugins/timer.pik
 The choice of whether to make something core or plugin should now be made on the basis
 of two factors. Firstly, anything that should be removable MUST be a plugin; core code
 is always active. That means that anything that creates a window, statusbar entry, or
-other invasive or space-limited GUI content, should be a plugin. And secondly, the
+other invasive or space-limited GUI content, should usually be a plugin. And secondly, the
 convenience of the code. If it makes good sense to have something create a command of
 its own name, for instance, it's easier to make it a plugin; but if something needs
 to be called on elsewhere, it's better to make it part of core (maybe globals). The
