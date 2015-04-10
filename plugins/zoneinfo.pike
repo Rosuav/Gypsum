@@ -244,7 +244,7 @@ class menu_clicked
 
 	void convert_rl(object self,string source)
 	{
-		catch //If error, just don't convert.
+		if (mixed ex=catch
 		{
 			Calendar.Gregorian.Day day=Calendar.Gregorian.Day(
 				(int)win[source+"_year"]->get_text(),
@@ -268,7 +268,7 @@ class menu_clicked
 			set_rl_time(ts,(zones-({"Thresh",source}))[*]); //Update the other RL time boxes
 			set_rl_time(ts,source,1); //Update day of week without touching anything else
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
-		};
+		}) werror("Error converting timezones: %s\n",describe_error(ex)); //Shouldn't happen
 	}
 }
 
