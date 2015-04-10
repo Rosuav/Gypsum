@@ -31,6 +31,9 @@ constant plugin_active_by_default = 1;
 constant threshmonth=({"Dawn", "Cuspis", "Thawing", "Renasci", "Tempest", "Serenus", "Solaria", "Torrid", "Sojourn", "Hoerfest", "Twilight", "Deepchill"});
 constant terramonth=({"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
 
+//Set to 1 to debug time conversions
+constant show_errors = 0;
+
 //Threshold times are stored as integer minutes:
 //1 hour    ==  60 mins
 //1 day    == 1440 mins
@@ -268,7 +271,7 @@ class menu_clicked
 			set_rl_time(ts,(zones-({"Thresh",source}))[*]); //Update the other RL time boxes
 			set_rl_time(ts,source,1); //Update day of week without touching anything else
 			set_th_time(persist["threshtime/sync_th"]+(ts-persist["threshtime/sync_rl"])/5);
-		}) werror("Error converting timezones: %s\n",describe_error(ex)); //Shouldn't happen
+		}) if (show_errors) werror("Error converting timezones: %s\n",describe_error(ex));
 	}
 }
 
