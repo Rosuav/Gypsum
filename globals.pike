@@ -196,6 +196,8 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 //This is the most normal way to lay out labelled objects - labels on the left, objects on the right.
 GTK2.Table two_column(array(string|GTK2.Widget) contents) {return GTK2Table(contents/2,(["xalign":1.0]));}
 
+//End of generic GTK utility classes/functions
+
 //Plugin that implements a command derived from its name
 class command
 {
