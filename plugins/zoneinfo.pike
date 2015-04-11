@@ -43,7 +43,7 @@ constant show_errors = 0;
 //One Thresh hour == five RL minutes.
 //So th 60 == rl 300 or a ratio of 1:5 (which is the combination of the 12:1 time ratio and a 1:60 ratio of the units, due to Thresh time being stored in minutes).
 
-int halfsync; //1 = Timepiece of Phzult (or other portable chronometer), 2 = default 'time'. Both take two lines to display their info.
+int halfsync; //1 = Timepiece of Phzult (or equivalent portable chronometer), 2 = default 'time'. Both take two lines to display their info; the first is accurate, the second not.
 int halfsync_hour,halfsync_min;
 int halfsync_day,halfsync_year;
 int halfsync_rl=0;
