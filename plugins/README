@@ -445,6 +445,7 @@ for instance). Should be used as a human-readable world description.
 
 conn->sock - socket object, if connected. It's currently possible for there to
 be a subw->connection but for its sock to be 0/absent; this may change in the
-future, with the entire connection mapping being disposed of.
+future, with the entire connection mapping being disposed of. You should never
+see a closed socket object here, although it's briefly possible.
 
 Poke around in the source code for useful comments about each of these members.
