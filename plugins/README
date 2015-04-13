@@ -283,9 +283,8 @@ that ignores all args will always be safe.
 
 Uses for this include opening/showing a window or configdlg, giving
 statistical information to the user, giving usage information about a
-command... just about anything. It's potentially more discoverable than
-a command (definitely more discoverable than a hook feature), and less
-intrusive than a permanent window.
+command... just about anything. It's more discoverable than a hook
+feature, and less intrusive than a permanent window.
 
 To change the menu item text at run time (or based on dynamic state), call
 set_menu_text("new text"). This can be done at any time; check inside create()
