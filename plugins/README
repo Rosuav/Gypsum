@@ -365,11 +365,12 @@ ADVISORY: The subw/conn mappings may be saved for use in callbacks.
 However, if the subwindow or connection has been closed, their
 mappings will no longer be valid.
 
-BEST PRACTICE: If your plugin inherits only one mode (command, hook,
-window), a create() function is optional, but for plugins using
-multiple, it is necessary. Your create() function is called whenever
-the plugin is initially loaded or updated; it must call ::create to
-ensure that its parents are called. A minimal create function is:
+BEST PRACTICE: Provide a constructor, which chains through to all parents'.
+If your plugin inherits only one mode (command, hook, window), a create()
+function is optional, but for plugins using multiple, it is necessary.
+Your create() function is called whenever the plugin is initially loaded
+or updated; it must call ::create to ensure that its parents are called.
+A minimal create function is:
 void create(string name) {::create(name);}
 Having this for a single-mode plugin is not a problem, so simply placing it in
 every plugin you create is safe.
