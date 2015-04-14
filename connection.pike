@@ -134,7 +134,7 @@ void textread(mapping conn,string data,int end_of_block)
 	else if (conn->curline!="") switch (mixed pseudo=persist["prompt/pseudo"] || ":>")
 	{
 		case "": break; //No pseudo-prompt handling.
-		default: //Only if the prompt ends with one of the specified characters (and maybe spaces).
+		default: //Only if the prompt ends with one of the specified characters (and maybe whitespace).
 			string prompt=String.trim_all_whites(conn->curline);
 			if (prompt=="" || !has_value(pseudo,prompt[-1])) break; //Not one of those characters. Not a pseudo-prompt.
 			//But if it is, then fall through.
