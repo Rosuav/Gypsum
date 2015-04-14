@@ -85,7 +85,7 @@ void setprompt(mapping conn)
  *
  * @param conn Current connection
  * @param data Text from socket, with newlines separating lines
- * @param end_of_block 1 if we're at the very end of a block of reading
+ * @param end_of_block 1 if we're at the end of a socket-read block and might have a prompt
  */
 void textread(mapping conn,string data,int end_of_block)
 {
