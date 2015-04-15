@@ -198,6 +198,8 @@ GTK2.Table two_column(array(string|GTK2.Widget) contents) {return GTK2Table(cont
 
 //End of generic GTK utility classes/functions
 
+//Begin plugin inheritables
+
 //Plugin that implements a command derived from its name
 class command
 {
@@ -681,6 +683,7 @@ class tabstatus(string name)
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 
+//End plugin inheritables
 
 ascii gypsum_version()
 {
