@@ -50,7 +50,7 @@ void spellcheck(int all)
 		txt=txt[start+1..end-1];
 	}
 	//Assume that the process won't take too long. If it does, assume it's going
-	//haywire (or waiting for user input), and kill it.
+	//haywire (or waiting for user input), and kill it. TODO: Test this.
 	mapping rc=Process.run(({"aspell","--encoding=utf-8","pipe"}),([
 		"stdin":string_to_utf8(txt),
 		"timeout":1,"timeout_callback":lambda(object p) {p->kill();}, //After one second, kill the process. It should be virtually instant anyway.
