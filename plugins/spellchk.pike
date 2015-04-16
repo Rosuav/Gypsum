@@ -49,12 +49,12 @@ void spellcheck(int all)
 		while (end<sizeof(txt) && wordchar(txt[end])) ++end;
 		txt=txt[start+1..end-1];
 	}
-	//Assume that the process won't take too long.
-	//TODO: Don't assume that. Either kill it after a while, or make sure
-	//we keep running concurrently. In a new Pike, I'd just use "stdout":function
-	//and pass the info along, but that's not an option in 7.8 (or even 8.0).
-	//Should I snag code from Process.run() and make it async? Or do a full buffering solution?
-	mapping rc=Process.run(({"aspell","--encoding=utf-8","pipe"}),(["stdin":string_to_utf8(txt)]));
+	//Assume that the process won't take too long. If it does, assume it's going
+	//haywire (or waiting for user input), and kill it.
+	mapping rc=Process.run(({"aspell","--encoding=utf-8","pipe"}),([
+		"stdin":string_to_utf8(txt),
+		"timeout":1,"timeout_callback":lambda(object p) {p->kill();}, //After one second, kill the process. It should be virtually instant anyway.
+	]));
 	//Skip the first line and any that are just asterisks, output any others.
 	foreach ((rc->stdout/"\n")[1..],string line)
 	{
