@@ -18,6 +18,13 @@ class mymaster /* Oh, my master! */
 	}
 	mixed resolv(string what,string where)
 	{
+		//Whenever we resolv() a name to something that was registered with add_gypsum_constant(),
+		//record the usage - as long as it's a "real file", ie not one starting with a dot. Note
+		//that theoretically, it would be possible to load up a plugin from the current directory
+		//that has a file name starting with a dot, which is why such plugin names are discouraged
+		//(although they'll normally be in plugins/ anyway, so it's unlikely to be an issue). The
+		//normal reason for this trap is to allow special forms like ".exec" and ".probe" to be
+		//ignored; we don't need to have those recorded anywhere.
 		if (globals[what])
 		{
 			//werror("resolv(%O,%O)  --> globals\n",what,where);
