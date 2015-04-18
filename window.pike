@@ -617,6 +617,8 @@ int paint(object self,object ev,mapping subw)
 	be some sort of short-term cache applying here; uncommenting the redraw(subw) call at the end doesn't
 	trigger the slow-down. TODO: Find out whether uncommenting this _after_ the slowdown has set in makes
 	for an infinitely-slow system.
+
+	TODO: Use microkernel.pike to stress-test some of this, eg with the zoneinfo and/or charsheet plugins.
 	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
