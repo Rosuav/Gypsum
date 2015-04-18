@@ -18,7 +18,7 @@ constant plugin_active_by_default = 1;
 
 mapping(string:multiset(object)) charsheets;
 
-class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) data)
+class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
 	constant is_subwindow=0;
@@ -50,7 +50,7 @@ class charsheet(mapping(string:mixed) conn,string owner,mapping(string:mixed) da
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
-		send(conn,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val));
+		send(subw,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val));
 		if (depends[kwd]) depends[kwd](data,beenthere); //Call all the functions, in order
 	}
 
@@ -613,7 +613,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (line=="<=== Charsheet ===>")
 		{
 			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(conn,"charsheet_eax")));};
-			if (mappingp(data)) charsheet(conn,m_delete(conn,"charsheet_acct"),data);
+			if (mappingp(data)) charsheet(conn->display,m_delete(conn,"charsheet_acct"),data);
 			return 0;
 		}
 		conn->charsheet_eax+=line+"\n";
