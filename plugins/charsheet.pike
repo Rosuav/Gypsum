@@ -50,6 +50,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
+		if (!G->G->window->validate_subw(subw) || !subw->connection || !subw->connection->sock)
+		{
+			win->mainwindow->set_title("CHARACTER SHEET UNSAVED");
+			return; //Can't do much :( But at least warn the user.
+		}
 		send(subw,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val));
 		if (depends[kwd]) depends[kwd](data,beenthere); //Call all the functions, in order
 	}
