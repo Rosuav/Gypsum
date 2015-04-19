@@ -104,6 +104,9 @@ mapping(string:mixed) subwindow(string txt)
  */
 mapping(string:mixed) current_subw() {return win->tabs[win->notebook->get_current_page()];}
 
+//Check whether a subw still exists
+int validate_subw(mapping subw) {return has_value(win->tabs, subw);}
+
 /**
  * Get a suitable Pango font for a particular category. Will cache based on font name.
  *
