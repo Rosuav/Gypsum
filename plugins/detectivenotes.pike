@@ -68,7 +68,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 		|| sscanf(line,"%s declares that %s has no card to show.",shower,string pron)==2
 		|| line=="You declare that you have no card to show.")
 	{
-		//TODO (maybe): highlight the sscanf'd strings (with the exception of 'pron', which doesn't matter)
+		//Might be nice to highlight the sscanf'd strings (with the exception of 'pron', which doesn't matter)
 		foreach (lastchals;GTK2.Widget lbl;)
 			lbl->set_text(lbl->get_text()+"\n"+line);
 	}
