@@ -837,6 +837,8 @@ void addtab() {subwindow("New tab");}
 
 /**
  * Actually close a tab - that is, assume the user has confirmed the closing or doesn't need to
+ * May be worth providing a plugin hook at this point for notifications - clean up refloops or
+ * other now-unnecessary retained data.
  */
 void real_closetab(int removeme)
 {
