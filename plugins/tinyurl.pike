@@ -111,7 +111,7 @@ int inputhook(string line,mapping(string:mixed) subw)
 					else say(subw,"%%%% Rendered URL %s: actual location is %s",url,q->headers->location);
 				},lambda()
 				{
-					say(subw,"%% Unable to render URL - HTTP query failed"); //TODO: Give more info
+					say(subw,"%% Unable to render URL - HTTP query failed"); //Maybe give more info here, but I literally never remember seeing this happen
 				}));
 				break;
 			}
