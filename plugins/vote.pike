@@ -11,8 +11,6 @@ usual definitions.)
 
 By default, you get a non-personalized link. To personalize it to your
 character, fill in your character name above.
-
-TODO: Add a configdlg for the above.
 ";
 //TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
 //across Gypsums, but more importantly, means it needs to somehow detect its
