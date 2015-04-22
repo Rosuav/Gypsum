@@ -112,7 +112,7 @@ void textread(mapping conn,string data,int end_of_block)
 	{
 		conn->curmsg[-1]+=line;
 		line=conn->curline+line;
-		if (!dohooks(conn,line))
+		if (!G->G->window->runhooks("output",0,conn->display,line))
 		{
 			say(conn->display,conn->curmsg);
 			if (conn->logfile) conn->logfile->write("%s\n",string_to_utf8(line));
@@ -269,12 +269,6 @@ void sockread(mapping conn,bytes data)
 		conn->readbuffer=iac;
 	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
 	ansiread(conn,bytes_to_string(conn->readbuffer),1); conn->readbuffer="";
-}
-
-//Execute all registered plugin outputhooks - now handled elsewhere
-int dohooks(mapping conn,string line)
-{
-	return G->G->window->runhooks("output",0,conn->display,line);
 }
 
 //Clean up the socket connection; it's assumed to have already been closed.
