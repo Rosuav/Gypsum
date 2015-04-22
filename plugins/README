@@ -110,6 +110,13 @@ include useful information such as hitpoint status. Note that currently (as of
 20150422) there is no significance to consuming a prompt, bar that other hooks
 will not be shown it.
 
+int closetab(mapping(string:mixed) subw,int index)
+
+A tab (subwindow) is about to be closed. This is a good opportunity to dispose
+of any per-tab memory, break refloops, or do any other final cleanup. Return 1
+to prevent the tab from closing (use with caution). Note that this will not
+currently be called on application shutdown.
+
 DEPRECATED: Prior to 20150422, hook functions for input and output followed
 different signatures. The old signatures are still valid; define either the new
 function or the old, but not both.

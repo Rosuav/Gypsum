@@ -229,6 +229,7 @@ class hook
 	int input(mapping(string:mixed) subw,string line) {return inputhook(line,subw);}
 	int output(mapping(string:mixed) subw,string line) {return outputhook(line,subw->connection);}
 	int prompt(mapping(string:mixed) subw,string prompt) { }
+	int closetab(mapping(string:mixed) subw,int index) { }
 
 	string hookname;
 	void create(string name)

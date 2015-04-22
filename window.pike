@@ -850,9 +850,14 @@ void addtab() {subwindow("New tab");}
  * Actually close a tab - that is, assume the user has confirmed the closing or doesn't need to
  * May be worth providing a plugin hook at this point for notifications - clean up refloops or
  * other now-unnecessary retained data.
+ *
+ * Note that closetab hooks are still allowed to prevent the closure. It would be possible to
+ * turn the close confirmation into a hook that returns 1 (though there'd need to be a nexthook
+ * equivalent here).
  */
 void real_closetab(int removeme)
 {
+	if (runhooks("closetab",0,win->tabs[removeme],removeme)) return;
 	if (sizeof(win->tabs)<2) addtab();
 	win->tabs[removeme]->signals=0; connect(0,win->tabs[removeme]);
 	win->tabs=win->tabs[..removeme-1]+win->tabs[removeme+1..];
