@@ -24,8 +24,9 @@ void setcount(string name,int cnt)
 	makelabels();
 }
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
+	mapping conn=subw->connection;
 	if (string partial=m_delete(conn,"components/partial")) line=partial+" "+String.trim_all_whites(line);
 	if (String.trim_all_whites(line)=="Carried Spell Components") conn["components/watch"]=1;
 	else if (conn["components/watch"])
