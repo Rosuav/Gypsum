@@ -601,11 +601,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	}
 }
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	if (sscanf(line,"===> Charsheet @%s <===",string acct))
 	{
-		conn->charsheet_eax=""; conn->charsheet_acct=acct;
+		subw->charsheet_eax=""; subw->charsheet_acct=acct;
 		return 0;
 	}
 	if (sscanf(line,"===> Charsheet @%s qset %s %O",string acct,string what,string|int towhat))
@@ -613,15 +613,15 @@ int outputhook(string line,mapping(string:mixed) conn)
 		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat||"");
 		return 1; //Suppress the spam
 	}
-	if (conn->charsheet_eax)
+	if (subw->charsheet_eax)
 	{
 		if (line=="<=== Charsheet ===>")
 		{
-			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(conn,"charsheet_eax")));};
-			if (mappingp(data)) charsheet(conn->display,m_delete(conn,"charsheet_acct"),data);
+			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(subw,"charsheet_eax")));};
+			if (mappingp(data)) charsheet(subw,m_delete(subw,"charsheet_acct"),data);
 			return 0;
 		}
-		conn->charsheet_eax+=line+"\n";
+		subw->charsheet_eax+=line+"\n";
 		return 1;
 	}
 }
