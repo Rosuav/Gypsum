@@ -272,11 +272,10 @@ void sockread(mapping conn,bytes data)
 	ansiread(conn,bytes_to_string(conn->readbuffer),1); conn->readbuffer="";
 }
 
-//Execute all registered plugin outputhooks
+//Execute all registered plugin outputhooks - now handled elsewhere
 int dohooks(mapping conn,string line)
 {
-	array hooks=values(G->G->hooks); sort(indices(G->G->hooks),hooks); //Sort by name for consistency. May be worth keeping them sorted somewhere, but I'm not seeing performance problems.
-	foreach (hooks,object h) if (mixed ex=catch {if (h->outputhook(line,conn)) return 1;}) say(conn->display,"Error in hook: "+describe_backtrace(ex));
+	return G->G->window->runhooks("output",0,conn->display,line);
 }
 
 //Clean up the socket connection; it's assumed to have already been closed.
