@@ -1696,6 +1696,7 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
 		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 		call_out(redraw,0,subw);
+		runhooks("switchtabs",0,subw);
 	#if constant(COMPAT_BOOM2)
 	},0,page,subw);
 	#endif

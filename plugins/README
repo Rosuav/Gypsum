@@ -117,6 +117,11 @@ of any per-tab memory, break refloops, or do any other final cleanup. Return 1
 to prevent the tab from closing (use with caution). Note that this will not
 currently be called on application shutdown.
 
+int switchtabs(mapping(string:mixed) subw)
+
+The user has just selected a new tab. The subw mapping represents the _new_ tab
+(currently there is no notification of which tab was previously selected).
+
 DEPRECATED: Prior to 20150422, hook functions for input and output followed
 different signatures. The old signatures are still valid; define either the new
 function or the old, but not both.
