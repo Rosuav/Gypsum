@@ -40,6 +40,8 @@ string calculate(mapping(string:mixed) subw,string expr)
 		mixed prev=subw->last_calc_result;
 		if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
 		else prev="";
+		//Note that 'val' is declared as accepting a string just for the sake of the
+		//explain check below. You can't actually use this for strings.
 		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
 		subw->last_calc_result=val;
 		if (explain) val=expr[1..]+" = "+val;
