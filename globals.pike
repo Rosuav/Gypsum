@@ -659,12 +659,6 @@ class statustext_maxwidth
 //BEST PRACTICE: Use subw->world as the key for any status info, eg
 //persist["your_plugin_name/"+subw->world] - this will allow for
 //per-world configuration in a way the user will expect.
-//TODO: Have a subclass-overridable alert saying "current tab just
-//switched" - might be useful. Also perhaps a cleanup hook (tab has
-//been closed). There's effectively an alert for "new tab created",
-//maketabstatus(), so that would complete the set. Alternatively,
-//just expect all tabstatus plugins to do everything for all subw,
-//which may be better accomplished by providing a function to do so.
 //TODO: Provide a notification function for whenever a subw is
 //connected or disconnected to/from a socket, which will make this
 //good for both per-tab and per-world status.
