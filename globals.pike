@@ -225,6 +225,10 @@ class hook
 		sscanf(explode_path(name)[-1],"%s.pike",hookname);
 		if (hookname) G->G->hooks[hookname]=this;
 	}
+
+	//Special case for the input hook: call every hook past this one. It's the only
+	//common case where this functionality is needed, although there's no particular
+	//reason to preclude other hooks from doing it.
 	int nexthook(mapping(string:mixed) subw,string line)
 	{
 		if (hookname) {G->G->window->execcommand(subw,line,hookname); return 1;}
