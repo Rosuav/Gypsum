@@ -57,12 +57,15 @@ text sent to the server.
 Hook - 'inherit hook'
 ---------------------
 
-Hooks provide one or both of an input hook (monitors typed commands)
-and an output hook (monitors text from the server). Their function
-signatures are:
+Hooks are notified of particular events in the Gypsum world. Any given hook
+plugin can be notified of any or all of the following by defining functions
+which will be called at the appropriate times. All these functions are given a
+subw reference as their first parameter; additional parameters depend on the
+specific hook. If a hook function returns 1, the event is deemed "consumed"; no
+other hooks will be called, and (generally) the default behaviour will not be
+performed.
 
-int inputhook(string line,mapping(string:mixed) subw)
-int outputhook(string line,mapping(string:mixed) conn)
+int input(mapping(string:mixed) subw,string line)
 
 An input hook is very similar in structure to a command processor, with
 the following distinctions:
@@ -94,11 +97,29 @@ executed, but this is not the normal form of processing and is not
 formally supported. Similarly if nexthook is called to synthesize an
 input command that wasn't in response to an inputhook call.
 
-An output hook is similar to an input hook, but works on a different
-type of line: a line of text from the server. It therefore does not
-receive a "subw", but instead a "conn" (connection info), which will
-have a subwindow reference as conn->display - this can be used just
-like subw.
+int output(mapping(string:mixed) subw,string line)
+
+An output hook is similar to an input hook, but works on a different type of
+line: a line of text from the server. Consuming the line means it will not be
+shown to the user.
+
+int prompt(mapping(string:mixed) subw,string prompt)
+
+A line of text is about to be treated as a prompt. With some servers, this may
+include useful information such as hitpoint status. Note that currently (as of
+20150422) there is no significance to consuming a prompt, bar that other hooks
+will not be shown it.
+
+DEPRECATED: Prior to 20150422, hook functions for input and output followed
+different signatures. The old signatures are still valid; define either the new
+function or the old, but not both.
+
+int inputhook(string line,mapping(string:mixed) subw)
+int outputhook(string line,mapping(string:mixed) conn)
+
+Note that the outputhook receives a connection, *not* a subwindow; if you use
+this form of hook, use conn->display to access the corresponding subw. But for
+preference, switch to using output() as described above.
 
 Window - 'inherit window'
 -------------------------
