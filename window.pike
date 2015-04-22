@@ -809,6 +809,22 @@ void enterpressed(mapping subw,string|void cmd)
 	execcommand(subw,cmd,0);
 }
 
+//Run all registered hooks, in order; or run all hooks after a given hook.
+//If any hook returns nonzero, hook execution will be terminated and nonzero returned.
+//(NOTE: A future change may have the aborting hook name returned, so don't depend on
+//the exact return value in this situation, beyond that it will be a true value.) If
+//any hook throws an exception, that will be printed out to the subw and the next hook
+//called upon (as if the hook returned zero). Zero will be returned once all hooks
+//have been processed.
+int runhooks(string hookname,string|void skiphook,mapping(string:mixed) subw,mixed ... otherargs)
+{
+	//Sort by name for consistency. May be worth keeping them sorted somewhere, but I'm not seeing performance problems.
+	array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks);
+	foreach (hooks;int i;object hook) if (!skiphook || skiphook<names[i])
+		if (mixed ex=catch {if (hook[hookname](subw,@otherargs)) return 1;})
+			say(subw,"Error in hook %s->%s: %s",names[i],hookname,describe_backtrace(ex));
+}
+
 /**
  * Execute a command, passing it via hooks
  * If skiphook is nonzero, will skip all hooks up to and including that name.
@@ -816,12 +832,7 @@ void enterpressed(mapping subw,string|void cmd)
  */
 void execcommand(mapping subw,string cmd,string|void skiphook)
 {
-	if (!subw->passwordmode)
-	{
-		array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks); //Sort by name for consistency
-		foreach (hooks;int i;object hook) if (!skiphook || skiphook<names[i])
-			if (mixed ex=catch {if (hook->inputhook(cmd,subw)) {redraw(subw); return;}}) say(subw,"Error in input hook: "+describe_backtrace(ex));
-	}
+	if (!subw->passwordmode && runhooks("input",skiphook,subw,cmd)) {redraw(subw); return;}
 	subw->prompt=({([])}); redraw(subw);
 	send(subw->connection,cmd+"\r\n");
 }
@@ -1277,7 +1288,8 @@ void colorcheck(object self,mapping subw)
 //would be these and discover_plugins() below, so it's hardly worth it. They're
 //connected with configure_plugins, so unless I move the whole menu subsystem
 //out into another file (which would be possible, albeit not all that useful),
-//there's no point moving these functions. They can stay.
+//there's no point moving these functions. They can stay. 20150422: Also now
+//runhooks (above). This is growing, but very very slowly.
 void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
 void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
 object build(string param)

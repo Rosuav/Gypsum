@@ -216,8 +216,20 @@ class command
 class hook
 {
 	constant provides="input/output hook";
+
+	//Legacy signature - deprecated 20150422 but still supported. If you provide either of
+	//these functions, don't override the corresponding modern function (input or output).
 	int inputhook(string line,mapping(string:mixed) subw) {}
 	int outputhook(string line,mapping(string:mixed) conn) {}
+
+	//Override any or all of these functions to get notified on certain events.
+	//These two have default implementations to handle the legacy form, but can
+	//be overridden happily. Eventually they will be replaced with empty functions
+	//and the above versions dropped.
+	int input(mapping(string:mixed) subw,string line) {return inputhook(line,subw);}
+	int output(mapping(string:mixed) subw,string line) {return outputhook(line,subw->connection);}
+	int prompt(mapping(string:mixed) subw,string prompt) { }
+
 	string hookname;
 	void create(string name)
 	{
