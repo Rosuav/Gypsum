@@ -170,17 +170,17 @@ class editor(mapping(string:mixed) subw,string initial)
 	}
 }
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	if (line=="===> Editor <===")
 	{
-		conn->editor_eax="";
+		subw->editor_eax="";
 		return 0;
 	}
-	if (conn->editor_eax)
+	if (subw->editor_eax)
 	{
-		if (line=="<=== Editor ===>") {editor(conn->display,m_delete(conn,"editor_eax")); return 0;}
-		conn->editor_eax+=line+"\n";
+		if (line=="<=== Editor ===>") {editor(subw,m_delete(subw,"editor_eax")); return 0;}
+		subw->editor_eax+=line+"\n";
 		return 0;
 	}
 }

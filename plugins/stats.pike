@@ -21,13 +21,13 @@ mapping(string:mapping(string:mixed)) monitors=persist->setdefault("stats/monito
 	"raki":(["sscanf":"You complete the process of disintegrating your flagon of raki and are%*[ ]rewarded with %d handfuls of metal particles ready to be molded by"]),
 ]));
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
-	if (string last=m_delete(conn,"stats_laststr")) line=last+line; //Note, no separator. I might need to have that configurable.
+	if (string last=m_delete(subw,"stats_laststr")) line=last+line; //Note, no separator. I might need to have that configurable.
 	foreach (monitors;string kwd;mapping info) if (sscanf(line,info->sscanf,int value))
 	{
-		if (!value) {conn->stats_laststr=line; return 0;}
-		if (!intp(value)) {say(conn->display,"%% Parse error: need an integer"); return 0;}
+		if (!value) {subw->stats_laststr=line; return 0;}
+		if (!intp(value)) {say(subw,"%% Parse error: need an integer"); return 0;}
 		info->total+=value; ++info->count;
 		if (value>info->max) info->max=value;
 		if (!has_index(info,"min") || value<info->min) info->min=value;

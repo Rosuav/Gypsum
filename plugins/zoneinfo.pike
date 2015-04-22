@@ -17,7 +17,7 @@ not for predicting in-game events such as bank hours.
 
 //TODO: Make this externally runnable, somehow. It could make a useful
 //stand-alone time zone converter. The Thresh pseudo-zone would be less useful
-//than simply converting between Olsen/tzdata times, so the outputhook isn't
+//than simply converting between Olsen/tzdata times, so the output hook isn't
 //necessary there.
 inherit hook;
 inherit plugin_menu;
@@ -49,7 +49,7 @@ int halfsync_day,halfsync_year;
 int halfsync_rl=0;
 string halfsync_monname;
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	string th_monname;
 	int th_year,th_mon,th_day,th_hour,th_min;

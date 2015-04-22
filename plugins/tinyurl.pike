@@ -35,7 +35,7 @@ array(string) recvurl=G->G->tinyurl_recvurl || ({ });
 Regexp.PCRE.StudiedWidestring longurl; //Cached regexp object - clear this any time maxlen changes.
 int maxlen=persist->setdefault("tinyurl/maxlen",63);
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	string url; int https;
 	if (sscanf(line,"%*shttp://%[^ ]",url)<2 && (https=sscanf(line,"%*shttps://%[^ ]",url))<2) return 0;
@@ -43,7 +43,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	int i=search(recvurl,url);
 	if (i==-1) i=sizeof(G->G->tinyurl_recvurl=recvurl+=({url}))-1;
 	G->G->lasturl=i+1; //Which means that if a duplicate URL is received, it'll still become the one accessed by "url" on its own.
-	if (persist["tinyurl/announce"]) say(conn->display,"%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1);
+	if (persist["tinyurl/announce"]) say(subw,"%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1);
 }
 
 int input(mapping(string:mixed) subw,string line)
@@ -124,7 +124,7 @@ int input(mapping(string:mixed) subw,string line)
 		return 1;
 	}
 	//That ain't a'gonna work! Slash commands don't come through to here. But what's this part even for? If I figure out a use, it can be redeployed elsewhere.
-	//if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) outputhook(line,(["display":subw])); //NOTE: Don't use subw->conn for the last arg; if there's no connection, it should still be safe to use /tiny.
+	//if (has_prefix(line,"/tiny ") && sizeof(line)<maxlen+5) output(subw,line);
 	if (!longurl) longurl=Regexp.PCRE.StudiedWidestring("^(.*?)http(s?)://([^ ]{"+(maxlen-7)+",})(.*)$"); //Find a URL, space-terminated, that's more than maxlen characters long.
 	array parts=longurl->split(line);
 	if (!parts) return 0; //No match? Nothing needing tinification.

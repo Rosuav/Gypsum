@@ -11,7 +11,7 @@ constant plugin_active_by_default = 1;
 mapping(string:mapping(string:mixed)) tuned = persist->setdefault("tune/thresholdrpg", ([])); //Persist key permits other systems to be added.
 constant channels=(<"-{Citizen}-","[court]","[trivia]","[sports]">); //TODO: Make configurable, now that it's easy
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
     /* Hurkle's Pascal code:
   if (strpos(line, '[court]') <> nil) then
@@ -40,7 +40,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	sscanf(line,"%*[ ]%n%s",int spaces,line);
 	//Continuation line: Citizen has twelve spaces, the others have five.
 	//(If !tune_lastline, then this can't possibly be a continuation line.)
-	if ((spaces==12 && conn->tune_lastline=="-{Citizen}-") || (spaces==5 && conn->tune_lastline)) return 1;
+	if ((spaces==12 && subw->tune_lastline=="-{Citizen}-") || (spaces==5 && subw->tune_lastline)) return 1;
 	[string word1,string word2]=(line/" "+({0}))[..1]; //Could be channel and name, or name and channel
 	if (word1=="-{Citizen}-" && word2[-1]==':') word2=word2[..<1]; //Citizen is special. The name might be terminated by a colon.
 	if ((channels[word1] && tuned[lower_case(word2)]) || (channels[word2] && tuned[lower_case(word1)]))
@@ -51,10 +51,10 @@ int outputhook(string line,mapping(string:mixed) conn)
 		//its continuation text - and which will always have citizen in
 		//word1, never in word2. So unless the char name is "-{Citizen}-",
 		//this will never be wrong.
-		conn->tune_lastline=word1;
+		subw->tune_lastline=word1;
 		return 1;
 	}
-	else m_delete(conn,"tune_lastline");
+	else m_delete(subw,"tune_lastline");
 }
 
 int process(string param,mapping(string:mixed) subw)

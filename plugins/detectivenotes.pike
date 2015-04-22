@@ -50,7 +50,7 @@ left and right arrows will move the cursor within the current field).
 
 multiset(GTK2.Widget) lastchals=G->G->cluedolastchals;
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	if (!sizeof(lastchals)) return 0; //No notes up, don't bother checking anything
 	if (sscanf(line,"%[^ ] challenges: %s with the %s in the %s",string player,string person,string weapon,string room)==4)

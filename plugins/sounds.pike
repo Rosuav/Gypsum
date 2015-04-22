@@ -26,7 +26,7 @@ NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
 //noretrigger: If nonzero, this file will not be retriggered if it's already playing.
 mapping(string:mapping) triggers=([]);
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	foreach (triggers;string text;mapping info) if (has_value(line,text)) catch
 	{

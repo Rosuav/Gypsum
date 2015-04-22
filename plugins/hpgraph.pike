@@ -28,15 +28,15 @@ array barcolors=persist["hpgraph/barcolors"] || ({
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
 //barpos: array ({hp, sp, ep}) of 0.0 <= x <= 1.0 for the proportion of the bar that should be colored.
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	int chp,mhp,csp,msp,cep,mep;
-	array hpg=conn->display->hpgraph->barpos;
+	array hpg=subw->hpgraph->barpos;
 	if (sscanf(line,"%*sHP [ %d/%d ]%*[ ]SP [ %d/%d ]%*[ ]EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==9)
 	{
-		conn->display->hpgraph->fadetime=time()+fadedelay;
-		conn->display->hpgraph->barpos=({chp/(float)mhp,csp/(float)msp,cep/(float)mep});
-		if (conn->display==G->G->window->current_subw()) tick(); //If we changed current status, redraw immediately.
+		subw->hpgraph->fadetime=time()+fadedelay;
+		subw->hpgraph->barpos=({chp/(float)mhp,csp/(float)msp,cep/(float)mep});
+		if (subw==G->G->window->current_subw()) tick(); //If we changed current status, redraw immediately.
 	}
 	else if (hpg && line=="You are completely healed.") hpg[0]=1.0;
 	else if (hpg && line=="You sizzle with mystical energy.") hpg[1]=1.0;

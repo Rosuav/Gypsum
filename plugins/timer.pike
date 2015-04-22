@@ -95,7 +95,7 @@ class config
 constant menu_label="Timer";
 void menu_clicked() {config();}
 
-int outputhook(string line,mapping(string:mixed) conn)
+int output(mapping(string:mixed) subw,string line)
 {
 	//NOTE: A bug was reported wherein this was attempting to index an empty array with
 	//0. This MAY have something to do with loading up with no timers and then adding
