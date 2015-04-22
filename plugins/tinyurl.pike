@@ -46,7 +46,7 @@ int outputhook(string line,mapping(string:mixed) conn)
 	if (persist["tinyurl/announce"]) say(conn->display,"%%%% URL saved - type 'url %d' to browse ('url help' for help)",i+1);
 }
 
-int inputhook(string line,mapping(string:mixed) subw)
+int input(mapping(string:mixed) subw,string line)
 {
 	if (line=="url" || sscanf(line,"url %s",string param))
 	{

@@ -50,7 +50,7 @@ string calculate(mapping(string:mixed) subw,string expr)
 	return expr;
 }
 
-int inputhook(string line,mapping(string:mixed) subw)
+int input(mapping(string:mixed) subw,string line)
 {
 	if (!subw->hilfe_saved_prompt)
 	{

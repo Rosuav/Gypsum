@@ -63,7 +63,7 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-int inputhook(string line,mapping(string:mixed) subw)
+int input(mapping(string:mixed) subw,string line)
 {
 	sscanf(line,"%s %s",line,string args);
 	if (mapping worldalias=subw->world && persist["aliases/simple/"+subw->world])
