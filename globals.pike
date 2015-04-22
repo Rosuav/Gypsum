@@ -212,7 +212,7 @@ class command
 	}
 }
 
-//Plugin that hooks input and/or output
+//Plugin that hooks various events eg input and output
 class hook
 {
 	constant provides="input/output hook";
