@@ -18,21 +18,6 @@ Plugin developers, this will be your primary tool for loading in new code.
 constant plugin_active_by_default = 1;
 int simulate; //For command-line usage, allow a "don't actually save anything" test usage
 
-//Callbacks for 'update zip'
-void data_available(object q,mapping(string:mixed) subw)
-{
-	if (mixed err=catch {unzip(q->data(),lambda(string fn,string data)
-	{
-		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
-		if (fn=="") return; //Ignore the first-level directory entry
-		if (simulate) {++simulate; return;} //Count up the files and directories to allow simple verification
-		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
-	});}) {say(subw,"%% "+describe_error(err)); return;}
-	process("all",subw);
-}
-void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
-void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
-
 //Unzip the specified data (should be exactly what could be read from/written to a .zip file)
 //and call the callback for each file, with the file name, contents, and the provided arg.
 //Note that content errors will be thrown, but previously-parsed content has already been
@@ -89,6 +74,21 @@ void unzip(string data,function callback,mixed|void callback_arg)
 	//At this point, 'data' contains the central directory and the end-of-central-directory marker.
 	//The EOCD contains the file comment, which may be of interest, but beyond that, we don't much care.
 }
+
+//Callbacks for 'update zip'
+void data_available(object q,mapping(string:mixed) subw)
+{
+	if (mixed err=catch {unzip(q->data(),lambda(string fn,string data)
+	{
+		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
+		if (fn=="") return; //Ignore the first-level directory entry
+		if (simulate) {++simulate; return;} //Count up the files and directories to allow simple verification
+		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
+	});}) {say(subw,"%% "+describe_error(err)); return;}
+	process("all",subw);
+}
+void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
+void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
 
 #if constant(G)
 int process(string param,mapping(string:mixed) subw)
