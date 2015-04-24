@@ -16,6 +16,7 @@
   "hack: second menu item" class, and it may well be that plugin_menu is the only mode which will ever be
   used in this way. Rule of Three says that if one more plugin needs an additional menu item, I should
   implement some proper means of doing it.
+* Demo/doco plugin that inherits everything and shows off what's happening?
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
