@@ -279,7 +279,9 @@ string word_at_pos(mapping subw,int line,int col)
 	//Go through the line clicked on. Find one single word in one single color, and that's
 	//what was clicked on. TODO: Optionally permit the user to click on something with a
 	//modifier key (eg Ctrl-Click) to execute something as a command - would play well with
-	//help files highlighted in color, for instance.
+	//help files highlighted in color, for instance. (I've already used Ctrl-DblClk for the
+	//keyword highlight shorthand, so this can't use Ctrl-Click, but I don't know what else
+	//would make sense. Alt-Click? Something with a double-click in it?)
 	foreach ((line>=sizeof(subw->lines))?subw->prompt:subw->lines[line],mixed x) if (stringp(x))
 	{
 		col-=sizeof(x); if (col>0) continue;
