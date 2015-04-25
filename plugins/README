@@ -92,10 +92,11 @@ Returning from the hook function and subsequently calling nexthook
 will work so long as the subw still exists. (Note that nexthook will
 not call the current hook function, and thus cannot create an infinite
 loop.)
-ADVISORY: If this is called _and_ 0 is returned, both commands will be
-executed, but this is not the normal form of processing and is not
-formally supported. Similarly if nexthook is called to synthesize an
-input command that wasn't in response to an inputhook call.
+ADVISORY: If this is called _and_ 0 is returned, both commands will be sent,
+but this is not the normal form of processing and is not formally supported nor
+recommended. Similarly if nexthook is called to synthesize an input command
+that wasn't in response to an inputhook call. The purpose of this is to modify,
+not create, input.
 
 int output(mapping(string:mixed) subw,string line)
 
