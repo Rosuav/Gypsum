@@ -143,59 +143,65 @@ Window - 'inherit window'
 -------------------------
 
 Rather than manually creating a window, inherit window to ensure that
-your subwindow is well-behaved. Provide the following functions:
+your subwindow is well-behaved. Provide the following function::
 
-void makewindow()
-Called when your plugin is first loaded, and not called when it is
-reloaded. Should store all GTK object references etc inside win[].
-The plugin's main window should be stored in win->mainwindow; set
-(or consider setting) the following properties on it::
+    void makewindow()
+
+It will be called when your plugin is first loaded, and not called when it is
+reloaded. Store all GTK object references etc inside win[]. The plugin's main
+window should be stored in win->mainwindow; set (or consider setting) the
+following properties on it::
 
 	"title":"some useful string, even if you suppress its display"
 	"modal":1 /* may be useful for config dialogs */
 
-After creating the window, call ::makewindow() in case further setup
+After creating the window, call ``::makewindow()`` in case further setup
 needs to be done.
 
-void dosignals()
-Connect signals to callback functions. Will be called on reload.
-Should look up GTK objects from win[] and use gtksignal() thus::
-
-	::dosignals();
-	win->signals+=({
-		gtksignal(win->someobj,"some_event",callback),
-		//... as many as needed
-	});
-
-As a shortcut for this, you can define signal handlers thus::
+GTK signals can be connected in two ways. Where possible, use this shorthand::
 
 	void sig_someobj_some_event() {...}
 
-This will be equivalent to naming it 'callback' and using the above code. In
-many cases, this will mean that dosignals() need not be overridden at all.
-(This is useful only in the simple and common case where no other parameters
+This is useful only in the simple and common case where no other parameters are
 needed - no parameter to the function, connect after rather than before, etc.
-For the less common cases, just override dosignals and be explicit.)
+Every time your plugin is (re)loaded, this function will be connected to the
+"some_event" signal of win->someobj. (Note that the documentation may refer to
+a signal as "some-event". This is equivalent - hyphens and underscores can be
+used interchangeably.) For the less common cases, override this function::
+
+	void dosignals()
+	{
+		::dosignals();
+		win->signals+=({
+			gtksignal(win->someobj,"some_event",callback),
+			//... as many as needed
+		});
+	}
+
+This can be used in conjunction with the shorthand, so only those signals which
+need customization need be mentioned in dosignals().
 
 Generic storage space is in mapping(string:mixed) win, which is
 retained across reloads.
 
 Normally, the window will be hidden from pagers and task bars (under window
 manager control; Gypsum simply sets the appropriate hints). Disable this by
-marking that your window is not a subwindow:
-constant is_subwindow=0;
+marking that your window is not a subwindow::
+
+	constant is_subwindow=0;
 
 Any time a user requests that your window be closed, closewindow() will be
 called. Override this to alter what happens, eg to add a confirmation, or to
-turn closing into hiding:
-int closewindow() {return hidewindow();}
+turn closing into hiding::
+
+	int closewindow() {return hidewindow();}
 
 Certain stock objects with obvious events can be created with simple
 function calls. Use of these functions guarantees a consistent look, and
 also automatically connects the appropriate signal handler. The following
 stock objects are available:
 
-stock_close() - a Close button, which will call closewindow().
+* stock_close() - a Close button, which will call closewindow().
 
 Movable window - 'inherit movablewindow'
 ----------------------------------------
