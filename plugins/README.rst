@@ -207,14 +207,14 @@ Movable window - 'inherit movablewindow'
 ----------------------------------------
 
 The same as 'inherit window' in usage, but gives automatic saving
-and loading of the window position. Provide one additional constant:
+and loading of the window position. Provide one additional constant::
 
-constant pos_key="plugins/plugin_name/winpos";
+	constant pos_key="plugins/plugin_name/winpos";
 
 This will be used as the persist[] key in which the window position
-is stored. Optionally also provide:
+is stored. Optionally also provide::
 
-constant load_size=1; //To resize on startup to the last saved size
+	constant load_size=1; //To resize on startup to the last saved size
 
 Without this (or with load_size set to 0), only the position will be saved and
 restored - good for windows where the size is set by the contained widgets.
@@ -229,28 +229,28 @@ the work of a config dialog - as long as your configuration fits in
 the provided framework. (If it doesn't, just use window/movablewindow
 and do everything directly.)
 
-Provide any or all of:
+Provide any or all of::
 
-mapping(string:mixed) windowprops=(["title":"Configure"]);
-//Create and return a widget (most likely a layout widget) representing all the custom content.
-//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
-//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
-//it may be a GTK2.Label, or it may be omitted altogether).
-GTK2.Widget make_content() { }
-mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
-void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
-void load_content(mapping(string:mixed) info) { } //Store information from info into the window
-void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
-string actionbtn; //(DEPRECATED) If set, a special "action button" will be included, otherwise not. This is its caption.
-void action_callback() { } //(DEPRECATED) Callback when the action button is clicked (provide if actionbtn is set)
-constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
-constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
-constant allow_rename=1; //Set to 0 to ignore changes to keywords
-constant strings=({"key","key","key"}); //Simple bindings, see below
-constant ints=({"key","key","key"});
-constant bools=({"key","key","key"});
-constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
-constant descr_key="title"; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
+	mapping(string:mixed) windowprops=(["title":"Configure"]);
+	//Create and return a widget (most likely a layout widget) representing all the custom content.
+	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
+	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
+	//it may be a GTK2.Label, or it may be omitted altogether).
+	GTK2.Widget make_content() { }
+	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
+	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
+	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
+	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
+	string actionbtn; //(DEPRECATED) If set, a special "action button" will be included, otherwise not. This is its caption.
+	void action_callback() { } //(DEPRECATED) Callback when the action button is clicked (provide if actionbtn is set)
+	constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
+	constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
+	constant allow_rename=1; //Set to 0 to ignore changes to keywords
+	constant strings=({"key","key","key"}); //Simple bindings, see below
+	constant ints=({"key","key","key"});
+	constant bools=({"key","key","key"});
+	constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
+	constant descr_key="title"; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
 
 It looks dauntingly complicated, but it's fairly straight-forward. Look at
 examples using it (eg plugins/timer.pike) and replicate. Most of the elements
@@ -283,9 +283,9 @@ text. Order of elements on the status bar is by order loaded.
 
 Instead of a single label, some other widget can be placed on the bar.
 Be careful with this, though - avoid expanding the statusbar's height.
-Override this:
+Override this::
 
-GTK2.Widget makestatus() {return statustxt->lbl=....;}
+	GTK2.Widget makestatus() {return statustxt->lbl=....;}
 
 It must both set statustxt->lbl to something, and return something.
 They need not necessarily be the same object (eg the returned label
@@ -293,8 +293,10 @@ might be wrapped inside something else for structure), but if not, the
 return object must be a parent (direct or indirect) of statustxt->lbl.
 
 The status text will have a tooltip, which by default is your plugin's
-name. To change this to something more useful, put this in create():
-statustxt->tooltip = "whatever text you want";
+name. To change this to something more useful, put this in create()::
+
+	statustxt->tooltip = "whatever text you want";
+
 This must be done prior to calling ::create(), as there is currently no
 way to alter the tooltip post-creation. (This may change in future.)
 
@@ -316,13 +318,13 @@ but this can be an easy way to highlight an alert state.
 Plugin menu item - 'inherit plugin_menu'
 ----------------------------------------
 
-Creates an entry on the 'Plugins' pull-down menu. Provide:
+Creates an entry on the 'Plugins' pull-down menu. Provide::
 
-constant menu_label=0; //(string) The initial label for your menu.
-constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
-constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
-constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
-void menu_clicked() { }
+	constant menu_label=0; //(string) The initial label for your menu.
+	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
+	constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
+	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
+	void menu_clicked() { }
 
 ADVISORY: Note that menu_clicked can be any callable, eg a class, not
 just a function. Be careful with this, though, as it may receive some
@@ -363,8 +365,10 @@ normal case, and suppresses the "Unknown command" message; for hooks,
 this indicates that the line should be hidden, as though it never
 happened.
 
-Local output can be produced on any subw:
-say(subw,"message");
+Local output can be produced on any subw::
+
+	say(subw,"message");
+
 A subw of 0 means "whichever is current" and is appropriate when no
 subw reference is available. If additional arguments (after the message)
 are present, the message will be passed through sprintf(). Multiple
@@ -377,10 +381,12 @@ specific (signals certainly are), but they will break the plugin unloading
 system, which is admittedly fragile already. Use this sort of thing ONLY if
 you are absolutely sure you know what you're doing.
 
-Documentation (for Plugins|Configure) can be provided by a string constant:
-constant docstring=#"
-blah blah blah
-";
+Documentation (for Plugins|Configure) can be provided by a string constant::
+
+	constant docstring=#"
+	blah blah blah
+	";
+
 It will be rewrapped for display, so wrap it to whatever's convenient for the
 source code. Two newlines form a paragraph; there's currently no way to make
 preformatted text. There's no need to repeat the obvious; some information will
@@ -393,8 +399,10 @@ constant config_persist_key="pluginname/what_to_configure";
 constant config_description="Human-readable descriptive text";
 Explore other plugins for usage examples.
 
-ADVISORY: Commands can be synthesized directly to a subw or conn:
-send(conn,line+"\r\n");
+ADVISORY: Commands can be synthesized directly to a subw or conn::
+
+	send(conn,line+"\r\n");
+
 Note that a subwindow may not necessarily have a connection, though
 a connection will always have a display. (If you know that it's a
 subw, you can gain a little efficiency by explicitly sending to
@@ -420,8 +428,10 @@ If your plugin inherits only one mode (command, hook, window), a create()
 function is optional, but for plugins using multiple, it is necessary.
 Your create() function is called whenever the plugin is initially loaded
 or updated; it must call ::create to ensure that its parents are called.
-A minimal create function is:
-void create(string name) {::create(name);}
+A minimal create function is::
+
+	void create(string name) {::create(name);}
+
 Having this for a single-mode plugin is not a problem, so simply placing it in
 every plugin you create is safe.
 
@@ -432,15 +442,19 @@ No such file should exist in the repository (to avoid overwriting
 a user's config), but a ".ini.example" file should be provided if
 appropriate. BEST PRACTICE: Use a configdlg and save to persist[].
 
-A plugin will be loaded by default if it has this declaration at top-level:
-constant plugin_active_by_default = 1;
+A plugin will be loaded by default if it has this declaration at top-level::
+
+	constant plugin_active_by_default = 1;
+
 The plugin is probed for this by compiling it and examining its constants,
 so it's possible for the value of the constant to be programmatically
 chosen, eg based on the presence or absence of some lower-level module. If
-the loading of the plugin could be problematic, guard the entire code thus:
-#if !constant(COMPILE_ONLY)
-... plugin code here ...
-#endif
+the loading of the plugin could be problematic, guard the entire code thus::
+
+	#if !constant(COMPILE_ONLY)
+	... plugin code here ...
+	#endif
+
 Anything inside this check will not be processed during the probe phase.
 (The normal create() call also doesn't happen during probing, so most
 plugins need not go to this level of hassle.)
@@ -471,32 +485,31 @@ I'd really rather not have to dig into. Also, avoid using a leading dot;
 currently, Gypsum does not acknowledge these specially, but in future, these
 may become "undiscoverable" or in some way hidden.
 
-
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
 But you can safely _read_ the following:
 
-subw->connection - identical to conn, if there is one (there might not be).
+* subw->connection - identical to conn, if there is one (there might not be).
 
-conn->display - identical to subw (there will always be this). Note that if you
-retain a connection mapping for future use, you can check if it's still current
-by seeing if conn->display->connection==conn - a reconnection will overwrite
-subw->connection.
+* conn->display - identical to subw (there will always be this). Note that if you
+  retain a connection mapping for future use, you can check if it's still current
+  by seeing if conn->display->connection==conn - a reconnection will overwrite
+  subw->connection.
 
-subw->world - (usually) short identifier for the current or most-recent
-world. This may be numeric and may even have spaces in it, but it should be
-string-for-string identical every time the same world is connected to. This is
-the recommended way to distinguish worlds in a way that a human will expect.
-(It is the "Keyword" from the connection dialog.)
+* subw->world - (usually) short identifier for the current or most-recent
+  world. This may be numeric and may even have spaces in it, but it should be
+  string-for-string identical every time the same world is connected to. This is
+  the recommended way to distinguish worlds in a way that a human will expect.
+  (It is the "Keyword" from the connection dialog.)
 
-conn->worldname - descriptive name for the current world (used as tab text,
-for instance). Should be used as a human-readable world description.
-(It is the "Name" from the connection dialog.)
+* conn->worldname - descriptive name for the current world (used as tab text,
+  for instance). Should be used as a human-readable world description.
+  (It is the "Name" from the connection dialog.)
 
-conn->sock - socket object, if connected. It's currently possible for there to
-be a subw->connection but for its sock to be 0/absent; this may change in the
-future, with the entire connection mapping being disposed of. You should never
-see a closed socket object here, although it's briefly possible.
+* conn->sock - socket object, if connected. It's currently possible for there to
+  be a subw->connection but for its sock to be 0/absent; this may change in the
+  future, with the entire connection mapping being disposed of. You should never
+  see a closed socket object here, although it's briefly possible.
 
 Poke around in the source code for useful comments about each of these members.
