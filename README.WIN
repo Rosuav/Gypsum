@@ -5,7 +5,9 @@ is primarily defined by Pike's support, which may change as versions change;
 with Pike 7.8.866, anything back as far as Windows XP should work (possibly
 Win2K but I haven't tested Gypsum there). Gypsum has been tested on Windows 8,
 and while I have not tested it on Vista or 7, I have no reason to believe
-that it won't work.
+that it won't work. Note that I cannot guarantee to test Gypsum constantly on
+Windows, so bugs may lurk until uncovered by a courageous volunteer. Want to
+help? Just use Gypsum and tell me about bugs :)
 
 Start with this installer for the Pike interpreter:
 http://pike.lysator.liu.se/pub/pike/all/7.8.866/Pike-v7.8.866-win32.msi
