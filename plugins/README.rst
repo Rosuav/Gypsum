@@ -34,9 +34,9 @@ Command - 'inherit command'
 ---------------------------
 
 Commands are invoked explicitly by the user typing "/foo", where foo is
-the plugin's name. The plugin should define a function thus:
+the plugin's name. The plugin should define a function thus::
 
-int process(string param,mapping(string:mixed) subw)
+    int process(string param,mapping(string:mixed) subw)
 
 The 'param' parameter is the parameters to the command. (Yo dawg?) It
 may be "", but it will never be 0. The subw mapping identifies the
@@ -44,9 +44,9 @@ subwindow (aka tab) into which the command was typed; ideally (but not
 mandatorially) this should be where messages are sent, etc.
 
 If a command triggers some command being sent to the connection, it is
-courteous to clear the prompt prior to returning:
+courteous to clear the prompt prior to returning::
 
-subw->prompt = ({([])});
+    subw->prompt = ({([])});
 
 This maintains the behaviour of normal command entry. Otherwise, the
 prompt (if any) will be retained, which is normal behaviour for local
@@ -65,74 +65,79 @@ specific hook. If a hook function returns 1, the event is deemed "consumed"; no
 other hooks will be called, and (generally) the default behaviour will not be
 performed.
 
-int input(mapping(string:mixed) subw,string line)
+- int input(mapping(string:mixed) subw,string line)
 
-An input hook is very similar in structure to a command processor, with
-the following distinctions:
+  An input hook is very similar in structure to a command processor, with
+  the following distinctions:
 
-* The intention is for a hook to manipulate text that would be sent to the
-  server, but for a command to work locally.
-* Only one command processor is ever called for a given command - the
-  one whose name matches the command entered. Every hook is called for
-  every command.
-* Command processors handle slash commands (eg "/alias"). Hooks handle
-  what would otherwise go to the MUD (those without slashes).
-* In "password mode" (where inputted text is hidden), hooks are not
-  called. Commands still will be, though.
-* A command's "param" is what comes after the command name. A hook's
-  "line" is the entire line.
+  * The intention is for a hook to manipulate text that would be sent to the
+    server, but for a command to work locally.
+  * Only one command processor is ever called for a given command - the
+    one whose name matches the command entered. Every hook is called for
+    every command.
+  * Command processors handle slash commands (eg "/alias"). Hooks handle
+    what would otherwise go to the MUD (those without slashes).
+  * In "password mode" (where inputted text is hidden), hooks are not
+    called. Commands still will be, though.
+  * A command's "param" is what comes after the command name. A hook's
+    "line" is the entire line.
 
-An input hook can feed a replacement command into the system with:
-nexthook(subw, line);
-This can be either before or after returning 1 from the hook function.
-If nexthook is successful, it will return 1, so modifying the command
-can be done by simply:
-return nexthook(subw, modified_line);
-Returning from the hook function and subsequently calling nexthook
-will work so long as the subw still exists. (Note that nexthook will
-not call the current hook function, and thus cannot create an infinite
-loop.)
-ADVISORY: If this is called _and_ 0 is returned, both commands will be sent,
-but this is not the normal form of processing and is not formally supported nor
-recommended. Similarly if nexthook is called to synthesize an input command
-that wasn't in response to an inputhook call. The purpose of this is to modify,
-not create, input.
+  An input hook can feed a replacement command into the system with::
 
-int output(mapping(string:mixed) subw,string line)
+	nexthook(subw, line);
 
-An output hook is similar to an input hook, but works on a different type of
-line: a line of text from the server. Consuming the line means it will not be
-shown to the user.
+  This can be either before or after returning 1 from the hook function.
+  If nexthook is successful, it will return 1, so modifying the command
+  can be done by simply::
 
-int prompt(mapping(string:mixed) subw,string prompt)
+	return nexthook(subw, modified_line);
 
-A line of text is about to be treated as a prompt. With some servers, this may
-include useful information such as hitpoint status. Note that currently (as of
-20150422) there is no significance to consuming a prompt, bar that other hooks
-will not be shown it.
+  Returning from the hook function and subsequently calling nexthook
+  will work so long as the subw still exists. (Note that nexthook will
+  not call the current hook function, and thus cannot create an infinite
+  loop.)
 
-int closetab(mapping(string:mixed) subw,int index)
+  ADVISORY: If this is called _and_ 0 is returned, both commands will be sent,
+  but this is not the normal form of processing and is not formally supported nor
+  recommended. Similarly if nexthook is called to synthesize an input command
+  that wasn't in response to an inputhook call. The purpose of this is to modify,
+  not create, input.
 
-A tab (subwindow) is about to be closed. This is a good opportunity to dispose
-of any per-tab memory, break refloops, or do any other final cleanup. Return 1
-to prevent the tab from closing (use with caution). Note that this will not
-currently be called on application shutdown.
+- int output(mapping(string:mixed) subw,string line)
 
-int switchtabs(mapping(string:mixed) subw)
+  An output hook is similar to an input hook, but works on a different type of
+  line: a line of text from the server. Consuming the line means it will not be
+  shown to the user.
 
-The user has just selected a new tab. The subw mapping represents the _new_ tab
-(currently there is no notification of which tab was previously selected).
+- int prompt(mapping(string:mixed) subw,string prompt)
 
-DEPRECATED: Prior to 20150422, hook functions for input and output followed
-different signatures. The old signatures are still valid; define either the new
-function or the old, but not both.
+  A line of text is about to be treated as a prompt. With some servers, this may
+  include useful information such as hitpoint status. Note that currently (as of
+  20150422) there is no significance to consuming a prompt, bar that other hooks
+  will not be shown it.
 
-int inputhook(string line,mapping(string:mixed) subw)
-int outputhook(string line,mapping(string:mixed) conn)
+- int closetab(mapping(string:mixed) subw,int index)
 
-Note that the outputhook receives a connection, *not* a subwindow; if you use
-this form of hook, use conn->display to access the corresponding subw. But for
-preference, switch to using output() as described above.
+  A tab (subwindow) is about to be closed. This is a good opportunity to dispose
+  of any per-tab memory, break refloops, or do any other final cleanup. Return 1
+  to prevent the tab from closing (use with caution). Note that this will not
+  currently be called on application shutdown.
+
+- int switchtabs(mapping(string:mixed) subw)
+
+  The user has just selected a new tab. The subw mapping represents the _new_ tab
+  (currently there is no notification of which tab was previously selected).
+
+- DEPRECATED: Prior to 20150422, hook functions for input and output followed
+  different signatures. The old signatures are still valid; define either the new
+  function or the old, but not both::
+
+	int inputhook(string line,mapping(string:mixed) subw)
+	int outputhook(string line,mapping(string:mixed) conn)
+
+  Note that the outputhook receives a connection, *not* a subwindow; if you use
+  this form of hook, use conn->display to access the corresponding subw. But for
+  preference, switch to using output() as described above.
 
 Window - 'inherit window'
 -------------------------
@@ -144,22 +149,28 @@ void makewindow()
 Called when your plugin is first loaded, and not called when it is
 reloaded. Should store all GTK object references etc inside win[].
 The plugin's main window should be stored in win->mainwindow; set
-(or consider setting) the following properties on it:
+(or consider setting) the following properties on it::
+
 	"title":"some useful string, even if you suppress its display"
 	"modal":1 /* may be useful for config dialogs */
+
 After creating the window, call ::makewindow() in case further setup
 needs to be done.
 
 void dosignals()
 Connect signals to callback functions. Will be called on reload.
-Should look up GTK objects from win[] and use gtksignal() thus:
+Should look up GTK objects from win[] and use gtksignal() thus::
+
 	::dosignals();
 	win->signals+=({
 		gtksignal(win->someobj,"some_event",callback),
 		//... as many as needed
 	});
-As a shortcut for this, you can define signal handlers thus:
+
+As a shortcut for this, you can define signal handlers thus::
+
 	void sig_someobj_some_event() {...}
+
 This will be equivalent to naming it 'callback' and using the above code. In
 many cases, this will mean that dosignals() need not be overridden at all.
 (This is useful only in the simple and common case where no other parameters
