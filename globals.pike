@@ -659,9 +659,6 @@ class statustext_maxwidth
 //BEST PRACTICE: Use subw->world as the key for any status info, eg
 //persist["your_plugin_name/"+subw->world] - this will allow for
 //per-world configuration in a way the user will expect.
-//TODO: Provide a notification function for whenever a subw is
-//connected or disconnected to/from a socket, which will make this
-//good for both per-tab and per-world status.
 class tabstatus(string name)
 {
 	constant provides="per-tab status";
