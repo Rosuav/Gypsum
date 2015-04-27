@@ -433,7 +433,11 @@ A minimal create function is::
 	void create(string name) {::create(name);}
 
 Having this for a single-mode plugin is not a problem, so simply placing it in
-every plugin you create is safe.
+every plugin you create is safe. Note that additional initialization code in
+create() is _not_ called when the plugin is probed, but _is_ called when it is
+loaded/updated. Having code called during probing is NOT recommended, but can
+be done by abusing static initializers if it's absolutely necessary (why it
+would be, I have no idea, but other people are smarter than I).
 
 DEPRECATED: If a plugin wants a configuration file (other than what can be
 done with persist[]), it should have the same base name as the plugin,
