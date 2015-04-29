@@ -49,7 +49,10 @@ This maintains the behaviour of normal command entry. Otherwise, the
 prompt (if any) will be retained, which is normal behaviour for local
 operations. Note though that this should be unusual; commands should
 normally work locally, and input hooks (see below) should manipulate
-text sent to the server.
+text sent to the server. It's also (therefore) not fully supported, so
+you're on your own here. Perhaps in the future there will be a formal
+function for sending commands, which will deal with all this, but not
+in current versions.
 
 Hook - 'inherit hook'
 ---------------------
