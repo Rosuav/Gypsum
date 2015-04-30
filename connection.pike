@@ -54,8 +54,8 @@ function say=G->globals->say;
  * encodings will be received simultaneously. Currently the failure case is to
  * split the line on "\n" and re-attempt decoding of each line, falling back on
  * CP-1252; this allows adjacent lines to be encoded differently, as long as
- * each line has one single encoding. This also means that a bit of CP-1252 can
- * potentially have a marked impact on performance.
+ * each line has one single encoding. This also means that occasional CP-1252
+ * can potentially have a marked impact on performance.
  *
  * @param bytes Incoming 8-bit data
  * @return string Resulting Unicode text
