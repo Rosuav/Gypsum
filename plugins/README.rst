@@ -186,7 +186,8 @@ retained across reloads.
 
 Normally, the window will be hidden from pagers and task bars (under window
 manager control; Gypsum simply sets the appropriate hints). Disable this by
-marking that your window is not a subwindow::
+marking that your window is not a subwindow, preferably only for ephemeral
+windows rather than windows which will stay around permanently::
 
 	constant is_subwindow=0;
 
