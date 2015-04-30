@@ -51,9 +51,11 @@ function say=G->globals->say;
  * others, and emitting the exact byte-streams they receive, will "mostly work"
  * with this scheme. However, any time byte-streams from different clients get
  * combined into individual socket-read operations, there is a risk that both
- * encodings will be received simultaneously. It may be worth doing this decode
- * dance separately for each line, depending on U+000A being represented by,
- * and uniquely by, 0x0A; in other words, depend on ASCII-compatible encoding.
+ * encodings will be received simultaneously. Currently the failure case is to
+ * split the line on "\n" and re-attempt decoding of each line, falling back on
+ * CP-1252; this allows adjacent lines to be encoded differently, as long as
+ * each line has one single encoding. This also means that a bit of CP-1252 can
+ * potentially have a marked impact on performance.
  *
  * @param bytes Incoming 8-bit data
  * @return string Resulting Unicode text
@@ -65,8 +67,12 @@ object cp1252=Locale.Charset.decoder("1252"); //Pike 7.8 has Charset hidden behi
 #endif
 protected string bytes_to_string(bytes data)
 {
-	catch {return utf8_to_string(data);}; //Normal case: Decode as UTF-8
-	return cp1252->feed(data)->drain(); //Failure case: Decode as CP-1252. (Doesn't need partial feed/drain; one byte will always become exactly one character, even if it's \uFFFD.)
+	catch {return utf8_to_string(data);}; //Normal case: Decode the whole string as UTF-8
+	array(string) lines=data/"\n";
+	foreach (lines;int i;string line)
+		if (catch {lines[i]=utf8_to_string(line);})
+			lines[i]=cp1252->feed(line)->drain(); //Failure case: Decode as CP-1252, line by line.
+	return lines*"\n";
 }
 
 //Mark the current text as a prompt
