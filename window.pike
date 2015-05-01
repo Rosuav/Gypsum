@@ -26,7 +26,8 @@ constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
 
-//Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault. This may be worth changing (????)
+//Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
+//It may be worth having some means of marking new worlds to be added. Or maybe have a way to recreate a lost world from the template??
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
 	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
