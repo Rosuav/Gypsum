@@ -112,9 +112,9 @@ performed.
 - int prompt(mapping(string:mixed) subw,string prompt)
 
   A line of text is about to be treated as a prompt. With some servers, this may
-  include useful information such as hitpoint status. Note that currently (as of
-  20150422) there is no significance to consuming a prompt, bar that other hooks
-  will not be shown it.
+  include useful information such as hitpoint status. Note that "consuming" a
+  prompt pretends that the server did not send it; any previous prompt will be
+  retained.
 
 - int closetab(mapping(string:mixed) subw,int index)
 

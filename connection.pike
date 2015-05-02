@@ -78,7 +78,7 @@ protected string bytes_to_string(bytes data)
 //Mark the current text as a prompt
 void setprompt(mapping conn)
 {
-	G->G->window->runhooks("prompt",0,conn->display,conn->curline); //Run hooks, but still (currently) process the prompt, regardless
+	if (G->G->window->runhooks("prompt",0,conn->display,conn->curline)) return;
 	conn->curmsg[0]->timestamp=time(1);
 	conn->display->prompt=conn->curmsg; G->G->window->redraw(conn->display);
 	conn->curmsg=({([]),conn->curcolor,conn->curline=""});
