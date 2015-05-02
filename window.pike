@@ -18,7 +18,7 @@ GTK2.Window mainwindow; //Convenience alias for win->mainwindow - also used exte
 int paused; //Not saved across reloads
 mapping(GTK2.MenuItem:string) menu=([]); //Retain menu items and the names of their callback functions
 
-int monochrome; //Not saved globally - updating window.pike will reset to normal mode
+int monochrome; //Not saved into G, but retrieved on reload
 array(GTK2.PangoTabArray) tabstops;
 constant pausedmsg="<PAUSED>"; //Text used on status bar when paused; "" is used when not paused.
 constant pos_key="window/winpos";
@@ -1473,6 +1473,7 @@ void create(string name)
 	add_gypsum_constant("build",build);
 	G->G->connection->say=say;
 	if (!win->tabs) win->tabs=({ });
+	if (G->G->window) monochrome=G->G->window->monochrome;
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
 	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in - prevents collisions, other code can reliably find this.
