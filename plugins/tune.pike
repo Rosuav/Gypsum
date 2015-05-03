@@ -42,7 +42,7 @@ int output(mapping(string:mixed) subw,string line)
 	//(If !tune_lastline, then this can't possibly be a continuation line.)
 	if ((spaces==12 && subw->tune_lastline=="-{Citizen}-") || (spaces==5 && subw->tune_lastline)) return 1;
 	[string word1,string word2]=(line/" "+({0}))[..1]; //Could be channel and name, or name and channel
-	if (word1=="-{Citizen}-" && word2[-1]==':') word2=word2[..<1]; //Citizen is special. The name might be terminated by a colon.
+	if (word1=="-{Citizen}-") word2-=":"; //Citizen is special. The name might be terminated by a colon.
 	if ((channels[word1] && tuned[lower_case(word2)]) || (channels[word2] && tuned[lower_case(word1)]))
 	{
 		//NOTE: As long as tune_lastline is nonzero, everything will work.
