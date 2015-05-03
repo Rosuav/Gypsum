@@ -76,7 +76,7 @@ int process(string param,mapping(string:mixed) subw)
 		else 
 		{
 			say(subw,"%% Tuning "+param+" out.");
-			tuned[param] = ([]);
+			tuned[param] = (["muted":ctime(time())[..<1]]);
 		}
 		persist["tune/thresholdrpg"]=tuned;
 	}
