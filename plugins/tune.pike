@@ -61,7 +61,11 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="" || has_value(param," "))
 	{
-		if (sizeof(tuned)) say(subw,"%% The following persons are tuned: "+sort(indices(tuned))*", ");
+		if (sizeof(tuned))
+		{
+			say(subw,"%% The following persons are tuned:");
+			foreach (sort(indices(tuned)),string name) say(subw,"%%   %s (tuned out %s)",name,tuned[name]->muted || "a long time ago");
+		}
 		say(subw,"%% To tune someone out: /tune name");
 		say(subw,"%% Repeat to tune them back in.");
 	}
