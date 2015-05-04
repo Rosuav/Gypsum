@@ -74,8 +74,8 @@ int process(string param,mapping(string:mixed) subw)
 		param=lower_case(param);
 		if (tuned[param]) 
 		{
-			m_delete(tuned,param);
 			say(subw,"%% Tuning "+param+" back in.");
+			m_delete(tuned,param);
 		}
 		else 
 		{
