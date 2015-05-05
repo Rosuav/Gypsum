@@ -81,6 +81,8 @@ int input(mapping(string:mixed) subw,string line)
 	subw->hilfe->add_input_line(line);
 	int nowfinished=subw->hilfe->state->finishedp();
 	if (wasfinished==nowfinished) return 1;
+	//NOTE: This is a bit hacky, and reaches into internals a bit. This should not be taken as
+	//an example of best-practice. I may at some point create a documented way to do this.
 	if (nowfinished) subw->prompt=m_delete(subw,"hilfe_saved_prompt");
 	else {subw->hilfe_saved_prompt=subw->prompt; subw->prompt=({([]),G->G->window->mkcolor(7,0),"hilfe> "});}
 	return 1;
