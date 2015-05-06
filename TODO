@@ -15,7 +15,12 @@
 * Properly-supported way to inherit one plugin mode twice. Currently there are two plugins which have a
   "hack: second menu item" class, and it may well be that plugin_menu is the only mode which will ever be
   used in this way. Rule of Three says that if one more plugin needs an additional menu item, I should
-  implement some proper means of doing it.
+  implement some proper means of doing it. (Although most other modes don't make sense to reinherit. You can't
+  gain much by double-hooking; creating a second command might be useful, but UI-wise, it's probably better to
+  have one command with args; multiple windows is probably a bad UI idea, unless they're transient, in which
+  case nested classes work well; multiple status bar slots would be highly unusual. So possibly denying it is
+  the best option, as it'd force people to either think about how to logically separate two plugins, or to
+  unify them into one.)
 * Demo/doco plugin that inherits everything and shows off what's happening? Maybe not a say() every output(), but
   showing every other hook is probably safe.
 
