@@ -50,6 +50,10 @@ constant tips=({
 	#"Some plugins are a bit underused, but if you like them, contact the
 	author; ideas for improvements will be much welcomed.",
 
+	#"While the core code of Gypsum is server-agnostic to the greatest extent
+	possible, some plugins are specific to particular servers. They will be
+	useless (though harmless) when other servers are used.",
+
 	#"Got ideas for more tips? Submit them via github and get your name
 	permanently recorded as a contributor!",
 });
