@@ -1523,9 +1523,8 @@ void create(string name)
 		menu->add(item);
 	}
 	//Recreate plugin menu items in name order
-	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=name && G->G->plugin_menu[name]) //Compat: Check for the name being present, for 32a576 and earlier.
+	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=G->G->plugin_menu[name])
 		if (!mi->menuitem) mi->self->make_menuitem(name);
-	m_delete(G->G->plugin_menu,0); //Compat: Remove the now-unnecessary hack entry needed in 32a576 and earlier (note that this can't be done prior to the make_menuitem() calls as the plugins themselves won't have been recompiled yet)
 
 	//Scan for plugins now that everything else is initialized.
 	mapping(string:mapping(string:mixed)) plugins=persist->setdefault("plugins/status",([]));
