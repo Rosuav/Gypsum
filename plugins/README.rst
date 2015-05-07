@@ -440,13 +440,6 @@ loaded/updated. Having code called during probing is NOT recommended, but can
 be done by abusing static initializers if it's absolutely necessary (why it
 would be, I have no idea, but other people are smarter than I).
 
-DEPRECATED: If a plugin wants a configuration file (other than what can be
-done with persist[]), it should have the same base name as the plugin,
-the extension ".ini", and be placed in the main Gypsum directory.
-No such file should exist in the repository (to avoid overwriting
-a user's config), but a ".ini.example" file should be provided if
-appropriate. BEST PRACTICE: Use a configdlg and save to persist[].
-
 A plugin will be loaded by default if it has this declaration at top-level::
 
 	constant plugin_active_by_default = 1;
