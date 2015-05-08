@@ -76,6 +76,7 @@ protected string bytes_to_string(bytes data)
 }
 
 //Mark the current text as a prompt
+//TODO: Should this become plugin-callable? Currently the only plugin that would use it is x.pike when it goes into "pike> " mode.
 void setprompt(mapping conn)
 {
 	if (G->G->window->runhooks("prompt",0,conn->display,conn->curline)) return;
