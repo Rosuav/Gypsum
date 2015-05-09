@@ -7,7 +7,8 @@
   - Better than trying to pin this down might be to just ensure that there's a timeout on connection attempts.
 * Some kind of system for suppressing statusbar entries without each plugin having to do it.
   Maybe a multiset of plugin IDs (basenames) which should have their primary statusbar frames
-  hidden instead of visible? Probably too messy to UI this nicely, but it could be hidden magic.
+  hidden instead of visible? Probably too messy to UI this nicely, but it could be hidden magic. Not
+  going to be common, but it might be a nice alternative to unloading a plugin that offers other services.
 * There's some sort of resource leakage that results in slow-downs. See comments in window.pike in paint().
 * Mark-and-copy of RTL text has some issues. May be v difficult (even impossible) to fully solve, but try to make
   it behave at least reasonably well most of the time.
