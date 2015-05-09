@@ -48,9 +48,8 @@ Vague theories of maybe-this-would-be-nice:
     different code on each OS. :( Alternatively, this could be done with a TCP socket, but that
     seems a smidge like overkill, especially as it'll trip software firewall alarms. :(
   - This would have to be done as a non-default plugin, for safety.
-  - How does VLC do global hotkeys? Can I tie in with the same facilities? Is it cross-platform?
-    - At very least, VLC can do it on Windows and Linux. Probably Mac OS as well.
-    - Oh. Turns out it's not cross-platform. VLC has a dedicated thread on win32 doing the exact
+  - VLC can do hotkeys on multiple different platforms, and may be a plausible imitation target.
+    - After investigation, turns out, no help. VLC has a dedicated thread on win32 doing the exact
       same thing as I was doing in RosMud (RegisterHotKey and so on), and using xcb_grab_key for
       X11 platforms. So, unless I do it up as a C module for Pike, this is not going to work. :(
 * 256 color support
