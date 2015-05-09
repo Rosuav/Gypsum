@@ -386,6 +386,8 @@ class movablewindow
 		::makewindow();
 	}
 
+	//Can't simply be named sig_mainwindow_configure_event as it has to be attached prior
+	//to normal handling.
 	void windowmoved()
 	{
 		if (!has_index(win,"x")) call_out(savepos,0.1);
