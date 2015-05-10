@@ -143,11 +143,7 @@ void setfonts(mapping(string:mixed) subw)
 	settabs(subw->charwidth);
 }
 
-/**
- * (Re)establish event handlers
- *
- * @param subw Current subwindow
- */
+//(Re)establish event handlers for a subwindow
 void subwsignals(mapping(string:mixed) subw)
 {
 	subw->signals=({
@@ -166,6 +162,13 @@ void subwsignals(mapping(string:mixed) subw)
 		gtksignal(subw->ef,"focus_in_event",focus,subw),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
+}
+
+//Reestablish event handlers for all subwindows automatically
+void dosignals()
+{
+	::dosignals();
+	subwsignals(win->tabs[*]);
 }
 
 //Snapshot the selection bounds so the switch_page handler can reset them
@@ -1711,9 +1714,3 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 //going for something that fires on various focus movements within the main
 //window; it'll never fire when we don't have window focus, so it's safe.
 void sig_mainwindow_focus_in_event() {mainwindow->set_urgency_hint(0);}
-
-void dosignals()
-{
-	::dosignals();
-	subwsignals(win->tabs[*]);
-}
