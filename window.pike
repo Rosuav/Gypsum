@@ -272,6 +272,9 @@ array(int) point_to_char(mapping subw,int x,int y)
 	//a *character* position, as txt is Unicode. Pango counts bytes using
 	//UTF-8 under the covers; so let's do a rather ham-fisted byte->char
 	//calculation by converting to bytes, then truncating, then back to text.
+	//I've never seen the position point to the middle of a character anywhere;
+	//that would majorly mess me up, if it ever happened (an exception thrown
+	//here could trigger any time you highlight past something).
 	int bytepos=pos->index;
 	int charpos=sizeof(utf8_to_string(string_to_utf8(txt[..bytepos-1])[..bytepos-1]));
 	//Yeah, ouch.
