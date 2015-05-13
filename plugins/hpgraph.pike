@@ -1,5 +1,6 @@
 constant docstring=#"
 Show a graphical representation of your hitpoints, to the right of the main display.
+Detection currently works for Threshold RPG, but could easily be expanded to other servers.
 
 Displays in vibrant color when you see your hitpoints; fades away slowly after a while.
 
@@ -32,6 +33,10 @@ int output(mapping(string:mixed) subw,string line)
 {
 	int chp,mhp,csp,msp,cep,mep;
 	array hpg=subw->hpgraph->barpos;
+	//TODO: Make this configurable, or at least able to cope with more servers.
+	//This may also require adding a prompt hook; although on servers that give
+	//hitpoints in the prompt, there's probably not much value showing it in
+	//the bars.
 	if (sscanf(line,"%*sHP [ %d/%d ]%*[ ]SP [ %d/%d ]%*[ ]EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==9)
 	{
 		subw->hpgraph->fadetime=time()+fadedelay;
