@@ -36,7 +36,8 @@ int output(mapping(string:mixed) subw,string line)
 	//TODO: Make this configurable, or at least able to cope with more servers.
 	//This may also require adding a prompt hook; although on servers that give
 	//hitpoints in the prompt, there's probably not much value showing it in
-	//the bars.
+	//tabstatus as well - though I'm open to requests on that score. It'd be
+	//easy enough to implement, just have another function that can set barpos.
 	if (sscanf(line,"%*sHP [ %d/%d ]%*[ ]SP [ %d/%d ]%*[ ]EP [ %d/%d ]",chp,mhp,csp,msp,cep,mep)==9)
 	{
 		subw->hpgraph->fadetime=time()+fadedelay;
