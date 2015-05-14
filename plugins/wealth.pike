@@ -9,8 +9,6 @@ Type '/wealth reset' when your statistical period changes (eg at the start of
 a new day), and you'll see and reset stats.
 ";
 
-constant plugin_active_by_default = 1;
-
 //TODO: Per-world stats (based on subw->world)
 
 //A set of available monitors
