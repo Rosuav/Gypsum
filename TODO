@@ -22,8 +22,8 @@
   case nested classes work well; multiple status bar slots would be highly unusual. So possibly denying it is
   the best option, as it'd force people to either think about how to logically separate two plugins, or to
   unify them into one.)
-* Demo/doco plugin that inherits everything and shows off what's happening? Maybe not a say() every output(), but
-  showing every other hook is probably safe.
+* Demo/doco plugin that inherits everything and shows off what's happening? A simple say() in every hook function
+  and a "hello world" of every other type would be a reasonable way to demo everything.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
