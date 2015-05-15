@@ -508,6 +508,9 @@ But you can safely _read_ the following:
 * conn->sock - socket object, if connected. It's currently possible for there to
   be a subw->connection but for its sock to be 0/absent; this may change in the
   future, with the entire connection mapping being disposed of. You should never
-  see a closed socket object here, although it's briefly possible.
+  see a closed socket object here, although it's briefly possible. DO NOT send
+  or receive data directly on the socket (Gypsum uses multiple levels of
+  buffering), but it can be queried for IP addresses and other useful info. On
+  Pikes which support it, socket attributes can be set/queried.
 
 Poke around in the source code for useful comments about each of these members.
