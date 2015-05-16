@@ -268,6 +268,7 @@ This will have a number of consequences, including:
 * Flicker as prompts come and go, and the input box thus shifts left and right
 * Other concerns?
 
+Current conclusion (20150517): Not worth doing - too many nasty edge cases. Might be something to play with but that's all.
 */
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
