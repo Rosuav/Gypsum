@@ -257,6 +257,17 @@ int point_to_line(mapping subw,int y)
 	return limit(0,(y-(int)subw->scr->get_property("page size"))/subw->lineheight,sizeof(subw->lines)+1);
 }
 
+/* To consider:
+
+Some people may want to show the prompt actually to the left of the input box, instead of a line above it.
+This will have a number of consequences, including:
+* Possible visual space utilization problems, if the prompt gets too long
+* Mark-and-copy concerns - can you sweep across from text to prompt?
+* Flicker as prompts come and go, and the input box thus shifts left and right
+* Other concerns?
+
+*/
+
 //Convert (x,y) into (line,col) - yes, that switches their order.
 //Note that line and col may exceed the array index limits by 1 - equalling sizeof(subw->lines) or the size of the string at that line.
 //A return value equal to the array/string size represents the prompt or the (implicit) newline at the end of the string.
