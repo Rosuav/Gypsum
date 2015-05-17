@@ -21,7 +21,10 @@ mapping(string:multiset(object)) charsheets;
 //TODO: Figure out a way to have multiple completely different character sheet designs.
 //This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
 //be easy. The server shouldn't mind (it cares about very few identifiers), so this
-//can basically be client-selectable.
+//can basically be client-selectable. Ideally, it should be possible to have multiple
+//different charsheets active simultaneously; this may require something that saves to
+//a special type flag or something on the server. How do you choose when doing up a
+//brand new charsheet though?? Hmm.
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
