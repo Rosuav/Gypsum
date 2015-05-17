@@ -18,6 +18,10 @@ constant plugin_active_by_default = 1;
 
 mapping(string:multiset(object)) charsheets;
 
+//TODO: Figure out a way to have multiple completely different character sheet designs.
+//This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
+//be easy. The server shouldn't mind (it cares about very few identifiers), so this
+//can basically be client-selectable.
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
