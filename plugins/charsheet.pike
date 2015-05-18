@@ -25,6 +25,8 @@ mapping(string:multiset(object)) charsheets;
 //different charsheets active simultaneously; this may require something that saves to
 //a special type flag or something on the server. How do you choose when doing up a
 //brand new charsheet though?? Hmm.
+//Maybe the mode-switch should be done client-side. When you change it, it closes and
+//reopens, and you see a completely new layout... UI nightmare or elegant hack?
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
