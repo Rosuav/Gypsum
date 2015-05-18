@@ -27,6 +27,8 @@ mapping(string:multiset(object)) charsheets;
 //brand new charsheet though?? Hmm.
 //Maybe the mode-switch should be done client-side. When you change it, it closes and
 //reopens, and you see a completely new layout... UI nightmare or elegant hack?
+//Also, to what extent should distinct charsheets share content? As much as possible,
+//or only where it truly has the exact same semantics?
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
