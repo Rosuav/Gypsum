@@ -33,6 +33,30 @@ mapping(string:multiset(object)) charsheets;
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
 //could use different dice rolls for different systems, without hacks.
+/* Current server-side roll alias creation looks like this; ra is roll aliases, cs is
+charsheet, and both are aliases for existing mappings.
+				ra->init=sprintf("d20%+d",(int)cs->init);
+				foreach ("STR DEX INT WIS CON CHA"/" ",string kwd)
+					ra[kwd]=sprintf("d20%+d",(int)cs[kwd+"_mod"]);
+				ra->grapple=replace("d20+"+cs->grapple,"+-","-");
+				ra["Fort save"]=sprintf("d20%+d",(int)cs->fort_save);
+				ra["Refl save"]=ra["Reflex save"]=sprintf("d20%+d",(int)cs->refl_save);
+				ra["Will save"]=sprintf("d20%+d",(int)cs->will_save);
+				multiset(string) done_kwd=(<>);
+				foreach (sort(indices(cs)),string kwd)
+				{
+					if (sscanf(kwd,"attack_%s",string kw) && !has_value(kw,"_"))
+					{
+						if (done_kwd[kw]) continue; done_kwd[kw]=1; //First one found wins.
+						string rollkw=cs[kwd]||""; if (rollkw!="") rollkw+=" ";
+						foreach (({"hit","dmg","crit"}),string mode)
+							if (string val=cs[kwd+"_"+mode]) ra[rollkw+mode]=val;
+						if (string val=cs[kwd+"_hit"]) ra[rollkw+"to-hit"]=ra[rollkw+"to-crit"]=val;
+					}
+					else if (sscanf(kwd,"skill_%s",string kw))
+						ra[kw]=sprintf("d20%+d",(int)cs[kwd]);
+				}
+*/
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
