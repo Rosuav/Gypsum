@@ -57,6 +57,15 @@ charsheet, and both are aliases for existing mappings.
 						ra[kw]=sprintf("d20%+d",(int)cs[kwd]);
 				}
 */
+//Alias definitions could be done like this. Each braced token becomes a dependency; if it
+//changes, the alias is rewritten. Any instance of "+-" gets replaced with "-" for readability.
+mapping(string:string) aliases=([
+	"init":"d20+{init}",
+	"STR":"d20+{STR_mod}", //etc
+	"grapple":"d20+{grapple}",
+	"Fort save":"d20+{fort_save}", //etc
+	//plus skills and attacks
+]);
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
