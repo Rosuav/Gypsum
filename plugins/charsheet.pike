@@ -78,6 +78,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		if (!charsheets[owner]) charsheets[owner]=(<>);
 		charsheets[owner][this]=1;
 		::create(); //No name. Each one should be independent.
+		foreach (aliases;string alias;string expansion)
+		{
+			if (sscanf(expansion,"%{%*s{%s}%}",array deps)) foreach (deps,[string dep])
+			{
+				//TODO: Add a dependency - update 'alias' whenever 'dep' changes
+			}
+		}
 	}
 
 	//Allow XP (and only XP) to be entered as a sum, eg 4000+1000 will be replaced with 5000
