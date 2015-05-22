@@ -83,6 +83,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (sscanf(expansion,"%{%*s{%s}%}",array deps)) foreach (deps,[string dep])
 			{
 				//TODO: Add a dependency - update 'alias' whenever 'dep' changes
+				//Maybe aliases should be callable objects, rather than lambda functions - might be easier.
 			}
 		}
 	}
