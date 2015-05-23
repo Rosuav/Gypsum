@@ -76,7 +76,11 @@ protected string bytes_to_string(bytes data)
 }
 
 //Mark the current text as a prompt
-//TODO: Should this become plugin-callable? Currently the only plugin that would use it is x.pike when it goes into "pike> " mode.
+//TODO: Should this become plugin-callable? Currently the only plugin that would use it
+//is x.pike when it goes into "pike> " mode, and that needs to save the previous prompt,
+//which brings with it all sorts of hairiness. Alternatively, should plugins get a way
+//to say "shadow the prompt with this", which will override the *displayed* prompt until
+//it's removed, without affecting prompt hooks etc??
 void setprompt(mapping conn)
 {
 	if (G->G->window->runhooks("prompt",0,conn->display,conn->curline)) return;
