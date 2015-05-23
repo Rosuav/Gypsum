@@ -269,6 +269,11 @@ This will have a number of consequences, including:
 * Other concerns?
 
 Current conclusion (20150517): Not worth doing - too many nasty edge cases. Might be something to play with but that's all.
+More importantly, this is something that would require two drastically different code branches, and neither is clearly
+the winner. Maintaining both branches simultaneously would be a horrific mess. Switching to prompt-beside-input would allow
+a few cleanups (everything that says (line>=sizeof(subw->lines))?subw->prompt:subw->lines[line] could now ignore the prompt
+and just use subw->lines[line]), but it'd introduce a comparable level of mess elsewhere, and there is no way that I want
+both messes at once.
 */
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
