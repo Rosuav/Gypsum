@@ -24,7 +24,7 @@ void create(string n)
 //for clarity. In all cases, "string" means "string(0..1114111)" aka Unicode; anything
 //binary should be clearly marked. (Also, no surrogates, thanks! There's no way to say
 //that in the typedefs, but just avoid using codepoints in the surrogate range, either
-//singly or in pairs.)
+//singly or in pairs. Conversion to UTF-8 will (correctly) fail on surrogates.)
 typedef string(0..255) bytes;
 //Something that's ASCII-only can be trivially treated as either bytes or text (assuming
 //a UTF-8 transmission stream, which most of this does).
