@@ -296,7 +296,7 @@ class plugin_menu
 //keep it there, though other patterns are possible. For instance, the window might be hidden when
 //there's nothing useful to show; although this can cause unnecessary flicker, and so should be kept
 //to a minimum (don't show/hide/show/hide in rapid succession). Note that this (via a subclass)
-//implements the core window, not just plugins.
+//implements the core window, not just plugin windows, as there's no fundamental difference.
 class window
 {
 	constant provides="window";
