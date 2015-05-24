@@ -251,7 +251,8 @@ class hook
 	}
 }
 
-//Wants a new name... Puts this plugin into the Plugins menu by default, or optionally a different menu.
+//Plugin that has a menu item (in the Plugins menu by default, or optionally a different menu).
+//Kinda wants a better name, but it's a bit stuck now.
 class plugin_menu
 {
 	constant provides="Plugins menu entry";
