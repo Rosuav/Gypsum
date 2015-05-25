@@ -423,7 +423,7 @@ string hovertext(mapping subw,int line)
 		mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
 		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
-	}; //Ignore errors
+	}; //Ignore errors. The text should be progressively appended to, so any failure will simply result in truncated hover text.
 	return txt;
 }
 
