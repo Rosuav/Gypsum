@@ -417,7 +417,8 @@ class movablewindow
 	}
 }
 
-//Base class for a configuration dialog. Permits the setup of anything where you have a list of keyworded items, can create/retrieve/update/delete them by keyword.
+//Base class for a configuration dialog. Permits the setup of anything where you
+//have a list of keyworded items, can create/retrieve/update/delete them by keyword.
 /* Idea: Allow the displayed name to differ from the items[] key. This could be
 done with a translation mapping, for instance; and a standard rule of "0 means
 -- New --" could allow us to distinguish the 'real' New from one that happens
