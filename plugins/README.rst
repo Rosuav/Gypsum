@@ -513,4 +513,13 @@ But you can safely _read_ the following:
   buffering), but it can be queried for IP addresses and other useful info. On
   Pikes which support it, socket attributes can be set/queried.
 
+* conn->debug_textread, conn->debug_ansiread, conn->debug_sockread - debug mode
+  flags. Each one enables display of incoming text at a different level. Great
+  for figuring out exactly what's getting sent to you; otherwise, just a whole
+  lot of noise.
+
+* subw->conn_debug - debug mode enabler. If this is set when a connection is
+  first established, all three of the above debug flags will be set on the new
+  connection. This allows easy debugging of connection issues.
+
 Poke around in the source code for useful comments about each of these members.
