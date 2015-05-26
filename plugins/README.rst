@@ -516,10 +516,12 @@ But you can safely _read_ the following:
 * conn->debug_textread, conn->debug_ansiread, conn->debug_sockread - debug mode
   flags. Each one enables display of incoming text at a different level. Great
   for figuring out exactly what's getting sent to you; otherwise, just a whole
-  lot of noise.
+  lot of noise. Changing these is perfectly safe (Gypsum itself will never set
+  them, only read them).
 
 * subw->conn_debug - debug mode enabler. If this is set when a connection is
   first established, all three of the above debug flags will be set on the new
-  connection. This allows easy debugging of connection issues.
+  connection. This allows easy debugging of connection issues. As above, this
+  is for you to set and Gypsum to read.
 
 Poke around in the source code for useful comments about each of these members.
