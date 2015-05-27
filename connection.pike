@@ -131,7 +131,7 @@ void textread(mapping conn,string data,int end_of_block)
 		conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 	}
 	conn->curmsg[-1]+=data; conn->curline+=data;
-	if (!end_of_block) return; //Check for prompts only at the end of a block of data from the socket
+	if (!end_of_block) return; //Check for prompts only at the end of a block of data from the socket. Note that properly-marked prompts (IAC GA) are handled in sockread(), so this is just for the ones that it can't detect.
 	string prompt_suffix = persist["prompt/suffix"] || "==> "; //This may need to become conn->prompt_suffix and world-configurable. It's really a hack for Threshold RPG.
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
