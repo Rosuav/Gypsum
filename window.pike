@@ -1124,7 +1124,7 @@ class keyboard
 		win->buttonbox->add(win->pb_std=GTK2.Button((["label":"Standard","use-underline":1])));
 	}
 
-	int keypress(object self,array|object ev)
+	int sig_b4_key_key_press_event(object self,array|object ev)
 	{
 		if (arrayp(ev)) ev=ev[0];
 		switch (ev->keyval) //Let some keys through untouched
@@ -1160,18 +1160,6 @@ class keyboard
 	void sig_pb_std_clicked()
 	{
 		confirm(0,"Adding/updating standard nav keys will overwrite anything you currently have on those keys. Really do it?",win->mainwindow,stdkeys);
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			#if constant(COMPAT_SIGNAL)
-			gtksignal(win->key,"key_press_event",keypress),
-			#else
-			gtksignal(win->key,"key_press_event",keypress,0,UNDEFINED,1),
-			#endif
-		});
 	}
 }
 

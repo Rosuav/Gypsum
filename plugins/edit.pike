@@ -165,7 +165,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
 			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
-			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",windowmoved),
+			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",sig_b4_mainwindow_configure_event),
 		});
 	}
 }

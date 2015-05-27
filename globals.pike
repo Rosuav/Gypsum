@@ -397,9 +397,7 @@ class movablewindow
 		::makewindow();
 	}
 
-	//Can't simply be named sig_mainwindow_configure_event as it has to be attached prior
-	//to normal handling.
-	void windowmoved()
+	void sig_b4_mainwindow_configure_event()
 	{
 		if (!has_index(win,"x")) call_out(savepos,0.1);
 		mapping pos=win->mainwindow->get_position(); win->x=pos->x; win->y=pos->y;
@@ -414,13 +412,8 @@ class movablewindow
 	void dosignals()
 	{
 		::dosignals();
-		win->signals+=({
-			#if !constant(COMPAT_SIGNAL)
-			gtksignal(win->mainwindow,"configure_event",windowmoved,0,UNDEFINED,1),
-			#endif
-		});
 		#if constant(COMPAT_SIGNAL)
-		win->save_position_hook=windowmoved;
+		win->save_position_hook=sig_b4_mainwindow_configure_event;
 		#endif
 	}
 }
