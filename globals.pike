@@ -338,20 +338,20 @@ class window
 			//them, so we scan along and find the shortest such name that exists in win[].
 			//If there's none, ignore it. This can create ambiguities, but only in really
 			//contrived situations, so I'm deciding not to care. :)
-			int b4=sscanf(key,"b4_%s",key); //sig_b4_some_object_some_signal will connect _before_ the normal action
 			array parts=(key/"_")[1..];
+			int b4=(parts[0]=="b4"); if (b4) parts=parts[1..]; //sig_b4_some_object_some_signal will connect _before_ the normal action
 			for (int i=0;i<sizeof(parts)-1;++i) if (mixed obj=searchme[parts[..i]*"_"])
 			{
 				if (objectp(obj) && callablep(obj->signal_connect))
 				{
-					win->signals+=({gtksignal(obj,parts[i+1..]*"_",this[key])
+					win->signals+=({gtksignal(obj,parts[i+1..]*"_",this[key]
 						#if !constant(COMPAT_SIGNAL)
 						//Rather than fail badly on old Pikes, just connect the signal
 						//after normal handling. This will mean that some features fail
 						//utterly, but they just need their own COMPAT_SIGNAL handling.
-						,UNDEFINED,b4
+						,0,UNDEFINED,b4
 						#endif
-					});
+					)});
 					break;
 				}
 			}
