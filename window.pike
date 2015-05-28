@@ -146,6 +146,7 @@ void setfonts(mapping(string:mixed) subw)
 //(Re)establish event handlers for a subwindow
 void subwsignals(mapping(string:mixed) subw)
 {
+	collect_signals("subwsig_",subw);
 	subw->signals=({
 		gtksignal(subw->display,"expose_event",paint,subw),
 		gtksignal(subw->scr,"changed",scrchange,subw),
