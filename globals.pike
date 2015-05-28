@@ -328,7 +328,7 @@ class window
 		collect_signals("sig_", win);
 	}
 
-	void collect_signals(string prefix, mapping(string:mixed) searchme)
+	void collect_signals(string prefix, mapping(string:mixed) searchme,mixed|void arg)
 	{
 		foreach (indices(this),string key) if (has_prefix(key,prefix) && callablep(this[key]))
 		{
@@ -349,7 +349,7 @@ class window
 						//Rather than fail badly on old Pikes, just connect the signal
 						//after normal handling. This will mean that some features fail
 						//utterly, but they just need their own COMPAT_SIGNAL handling.
-						,0,UNDEFINED,b4
+						,arg,UNDEFINED,b4
 						#endif
 					)});
 					break;
