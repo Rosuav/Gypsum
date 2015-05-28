@@ -43,7 +43,7 @@ should be added as suggestions?
 4) Other?
 5) Local commands, if the user's already typed a slash. Should be easy enough.
 
-Should it be context sensitive? It could be reconfigured in colorcheck().
+Should it be context sensitive? It could be reconfigured in subw_ef_changed().
 */
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
@@ -95,7 +95,7 @@ mapping(string:mixed) subwindow(string txt)
 	subwsignals(subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	values(G->G->tabstatuses)->install(subw);
-	colorcheck(subw->ef,subw);
+	subw_ef_changed(subw->ef,subw);
 	call_out(redraw,0,subw);
 	return subw;
 }
@@ -148,14 +148,7 @@ void subwsignals(mapping(string:mixed) subw)
 {
 	collect_signals("subw_",subw,subw);
 	subw->signals=({
-		gtksignal(subw->display,"expose_event",paint,subw),
-		gtksignal(subw->scr,"changed",scrchange,subw),
-		gtksignal(subw->display,"button_press_event",mousedown,subw),
-		gtksignal(subw->display,"button_release_event",mouseup,subw),
-		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
-		gtksignal(subw->ef,"changed",colorcheck,subw),
 		subw->ef->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
-		gtksignal(subw->ef,"focus_in_event",focus,subw),
 	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
@@ -168,10 +161,10 @@ void dosignals()
 }
 
 //Snapshot the selection bounds so the switch_page handler can reset them
-int focus(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
+int subw_ef_focus_in_event(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
 
 //Snap the scroll bar to the bottom every time its range changes (ie when a line is added)
-void scrchange(object self,mapping subw)
+void subw_scr_changed(object self,mapping subw)
 {
 	if (paused) return;
 	float upper=self->get_property("upper");
@@ -338,7 +331,7 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 }
 
-void mousedown(object self,object ev,mapping subw)
+void subw_display_button_press_event(object self,object ev,mapping subw)
 {
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	if (ev->type=="2button_press")
@@ -357,7 +350,7 @@ void mousedown(object self,object ev,mapping subw)
 	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
 }
 
-void mouseup(object self,object ev,mapping subw)
+void subw_display_button_release_event(object self,object ev,mapping subw)
 {
 	int mouse_down=m_delete(subw,"mouse_down"); //Destructive query
 	if (!mouse_down) return; //Mouse wasn't registered as down, do nothing.
@@ -423,7 +416,7 @@ string hovertext(mapping subw,int line)
 	return txt;
 }
 
-void mousemove(object self,object ev,mapping subw)
+void subw_display_motion_notify_event(object self,object ev,mapping subw)
 {
 	if (!subw->mouse_down)
 	{
@@ -621,7 +614,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 }
 
 //float painttime=0.0; int paintcount=0;
-int paint(object self,object ev,mapping subw)
+int subw_display_expose_event(object self,object ev,mapping subw)
 {
 	int start=ev->y-subw->lineheight,end=ev->y+ev->height+subw->lineheight; //We'll paint complete lines, but only those lines that need painting.
 	GTK2.DrawingArea display=subw->display; //Cache, we'll use it a lot
@@ -1278,7 +1271,7 @@ void monochrome_mode()
 }
 
 //Update the entry field's color based on channel color definitions
-void colorcheck(object self,mapping subw)
+void subw_ef_changed(object self,mapping subw)
 {
 	array(int) col=({255,255,255});
 	if (mapping c=channels[(self->get_text()/" ")[0]]) col=({c->r,c->g,c->b});
