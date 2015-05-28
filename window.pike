@@ -150,11 +150,6 @@ void subwsignals(mapping(string:mixed) subw)
 	subw->signals=({
 		gtksignal(subw->display,"expose_event",paint,subw),
 		gtksignal(subw->scr,"changed",scrchange,subw),
-		#if constant(COMPAT_SIGNAL)
-		gtksignal(subw->ef,"key_press_event",keypress,subw),
-		#else
-		gtksignal(subw->ef,"key_press_event",keypress,subw,UNDEFINED,1),
-		#endif
 		gtksignal(subw->display,"button_press_event",mousedown,subw),
 		gtksignal(subw->display,"button_release_event",mouseup,subw),
 		gtksignal(subw->display,"motion_notify_event",mousemove,subw),
@@ -689,7 +684,7 @@ void settext(mapping subw,string text)
 	if (!persist["window/cursoratstart"]) subw->ef->set_position(sizeof(text));
 }
 
-int keypress(object self,array|object ev,mapping subw)
+int subw_b4_ef_key_press_event(object self,array|object ev,mapping subw)
 {
 	if (arrayp(ev)) ev=ev[0];
 	switch (ev->keyval)
@@ -1670,7 +1665,7 @@ constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0);}
 
 #if constant(COMPAT_SIGNAL)
-//In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than keypress.
+//In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than the key_press_event handler.
 int sig_defbutton_clicked(object self)
 {
 	object focus=mainwindow->get_focus();
