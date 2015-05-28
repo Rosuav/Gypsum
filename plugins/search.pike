@@ -71,8 +71,4 @@ void create(string name)
 	statustxt->tooltip="Ctrl-F to search";
 	::create(name);
 	statustxt->signals=({gtksignal(statustxt->ef,"key_press_event",keypress,0,UNDEFINED,1)});
-	#if constant(COMPAT_SIGNAL)
-	statustxt->ef->set_activates_default(1);
-	G->G->enterpress[statustxt->ef]=lambda() {find_string(lower_case(statustxt->ef->get_text()),G->G->window->current_subw()); return 1;};
-	#endif
 }

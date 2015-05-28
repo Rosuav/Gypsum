@@ -72,10 +72,6 @@ void add_gypsum_constant(string name,mixed val)
 
 //Global so it can be queried by Advanced Options in window.pike
 mapping(string:int) compat=([
-	//Note that Pike 7.8.866 has been available for quite a while now, so I could drop COMPAT_SIGNAL.
-	//But I may as well hang onto it and keep support for 7.8.700, until an 8.0 stable is made
-	//available, and all of these (except perhaps pausekey) can be dropped.
-	"signal":([7.8:734])[__REAL_VERSION__]>__REAL_BUILD__, //Inability to connect 'before' a signal
 	#ifdef __NT__
 	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the shortcut for Pause Scrolling.
 	#else

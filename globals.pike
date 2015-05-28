@@ -15,9 +15,6 @@ void create(string n)
 	if (!G->G->windows) G->G->windows=([]);
 	if (!G->G->statustexts) G->G->statustexts=([]);
 	if (!G->G->tabstatuses) G->G->tabstatuses=([]);
-	#if constant(COMPAT_SIGNAL)
-	if (!G->G->enterpress) G->G->enterpress=([]);
-	#endif
 }
 
 //In any place where binary data is used, use the type name "bytes" rather than "string"
@@ -344,14 +341,7 @@ class window
 			{
 				if (objectp(obj) && callablep(obj->signal_connect))
 				{
-					win->signals+=({gtksignal(obj,parts[i+1..]*"_",this[key]
-						#if !constant(COMPAT_SIGNAL)
-						//Rather than fail badly on old Pikes, just connect the signal
-						//after normal handling. This will mean that some features fail
-						//utterly, but they just need their own COMPAT_SIGNAL handling.
-						,arg,UNDEFINED,b4
-						#endif
-					)});
+					win->signals+=({gtksignal(obj,parts[i+1..]*"_",this[key],arg,UNDEFINED,b4)});
 					break;
 				}
 			}
@@ -418,9 +408,6 @@ class movablewindow
 	void dosignals()
 	{
 		::dosignals();
-		#if constant(COMPAT_SIGNAL)
-		win->save_position_hook=sig_b4_mainwindow_configure_event;
-		#endif
 	}
 }
 

@@ -225,11 +225,6 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 		say(subw,"%% Global usage: "+globl);
 		if (confirm) G->globalusage[globl]-=({param});
 	}
-	#if constant(COMPAT_SIGNAL)
-	foreach (G->G->enterpress;object focus;function callback) if (origin(callback)==param)
-		if (reallydelete(function_object(callback),sprintf("Enter-press: %O -> %s",focus,function_name(callback))))
-			m_delete(G->G->enterpress,focus);
-	#endif
 	if (confirm)
 	{
 		foreach (selfs;object self;) destruct(self);

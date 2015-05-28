@@ -89,9 +89,6 @@ mapping(string:mixed) subwindow(string txt)
 	//probably impractical though - GTK doesn't offer that directly, I'd
 	//have to do the work myself.
 	setfonts(subw);
-	#if constant(COMPAT_SIGNAL)
-	subw->ef->set_activates_default(1);
-	#endif
 	collect_signals("subw_",subw,subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	values(G->G->tabstatuses)->install(subw);
@@ -163,18 +160,6 @@ void subw_scr_changed(object self,mapping subw)
 
 void subw_b4_ef_paste_clipboard(object self,mapping subw)
 {
-	//At this point, the clipboard contents haven't been put into the EF.
-	//Preventing the normal behaviour depends on the widget having a
-	//signal_stop() method, which was implemented in Pike 8.0.2 and
-	//7.8.822. Consequently, attempting to paste multiple lines of text
-	//in older Pikes will result in newlines in the entry field, despite
-	//it being a single-line field; this is distinctly unideal, and will
-	//be surprising, but is unavoidable. NOTE: This has not actually been
-	//tested in an older Pike. Since 7.8.866 is available in most places,
-	//this (and COMPAT_SIGNAL and others) isn't really crucial any more.
-	//It may be time to drop support for pre-866 builds, but for now I'll
-	//just say that they're not tested.
-	if (!self->signal_stop) return;
 	string txt=self->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->wait_for_text();
 	if (!txt || !has_value(txt,'\n')) return; //No text? Nothing will happen. One line of text? Let it go with the default.
 	self->signal_stop("paste_clipboard"); //Prevent the full paste, we'll do it ourselves.
@@ -904,7 +889,6 @@ class zadvoptions
 		"Beep":(["path":"notif/beep","type":"int","desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
 		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive.")+"\n\nYou do NOT normally need to change this.","type":"int","path":"compat/"+x,"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compatibility mode",2:"Disable compatibility mode"])
-		"Compat: Events":(["desc":"Older versions of Pike cannot do 'before' events. The fix involves simulating them in various ways, with varying levels of success."COMPAT("signal")]),
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that can result in a segfault with message boxes."COMPAT("msgdlg")]),
 		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, enable this to use Ctrl-P instead."COMPAT("pausekey")]),
@@ -1451,13 +1435,7 @@ void makewindow()
 		,0,0,0)
 		->add(win->notebook=GTK2.Notebook())
 		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0) //May be worth making the size request optional. Some might want a shrinking statusbar, some might want to ensure they see everything.
-		#if constant(COMPAT_SIGNAL)
-		->pack_end(win->defbutton=GTK2.Button()->set_size_request(0,0)->set_flags(GTK2.CAN_DEFAULT),0,0,0)
-		#endif
 	);
-	#if constant(COMPAT_SIGNAL)
-	win->defbutton->grab_default();
-	#endif
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
 	::makewindow();
 }
@@ -1649,23 +1627,6 @@ class connect_menu
 
 constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0);}
-
-#if constant(COMPAT_SIGNAL)
-//In COMPAT_SIGNAL mode, enter presses are handled by the default button rather than the key_press_event handler.
-int sig_defbutton_clicked(object self)
-{
-	object focus=mainwindow->get_focus();
-	if (function f=G->G->enterpress[focus]) return f();
-	object parent=focus->get_parent();
-	while (parent->get_name()!="GtkNotebook") parent=(focus=parent)->get_parent();
-	enterpressed(win->tabs[parent->page_num(focus)]);
-	return 1;
-}
-
-//COMPAT_SIGNAL window position saver hack
-constant options_savewinpos="Save all window positions";
-void savewinpos() {values(G->G->windows)->save_position_hook();}
-#endif
 
 int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {

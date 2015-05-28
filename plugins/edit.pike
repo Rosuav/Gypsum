@@ -61,8 +61,6 @@ class editor(mapping(string:mixed) subw,string initial)
 				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":subw?"_Send":"_Save","use-underline":1,"focus-on-click":0])))
 				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
-				#elif constant(COMPAT_SIGNAL)
-				->add(win->pb_savepos=GTK2.Button("Save pos"))
 				#else
 				->add(GTK2.Label("(cursor pos)"))
 				#endif
@@ -165,7 +163,6 @@ class editor(mapping(string:mixed) subw,string initial)
 			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
 			//imaginative), so that's what the COMPAT marker is called.
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
-			win->pb_savepos && gtksignal(win->pb_savepos,"clicked",sig_b4_mainwindow_configure_event),
 		});
 	}
 }
