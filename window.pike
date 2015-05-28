@@ -147,9 +147,6 @@ void setfonts(mapping(string:mixed) subw)
 void subwsignals(mapping(string:mixed) subw)
 {
 	collect_signals("subw_",subw,subw);
-	subw->signals=({
-		subw->ef->signal_stop && gtksignal(subw->ef,"paste_clipboard",paste,subw,UNDEFINED,1),
-	});
 	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
@@ -171,17 +168,20 @@ void subw_scr_changed(object self,mapping subw)
 	self->set_value(upper-self->get_property("page size"));
 }
 
-void paste(object self,mapping subw)
+void subw_b4_ef_paste_clipboard(object self,mapping subw)
 {
 	//At this point, the clipboard contents haven't been put into the EF.
 	//Preventing the normal behaviour depends on the widget having a
 	//signal_stop() method, which was implemented in Pike 8.0.2 and
-	//7.8.822. If that method is not available, the signal will not be
-	//connected to (see above), so in this function, we assume that it
-	//exists and can be used. Attempting to paste multiple lines of text
+	//7.8.822. Consequently, attempting to paste multiple lines of text
 	//in older Pikes will result in newlines in the entry field, despite
 	//it being a single-line field; this is distinctly unideal, and will
-	//be surprising, but is unavoidable.
+	//be surprising, but is unavoidable. NOTE: This has not actually been
+	//tested in an older Pike. Since 7.8.866 is available in most places,
+	//this (and COMPAT_SIGNAL and others) isn't really crucial any more.
+	//It may be time to drop support for pre-866 builds, but for now I'll
+	//just say that they're not tested.
+	if (!self->signal_stop) return;
 	string txt=self->get_clipboard(GTK2.Gdk_Atom("CLIPBOARD"))->wait_for_text();
 	if (!txt || !has_value(txt,'\n')) return; //No text? Nothing will happen. One line of text? Let it go with the default.
 	self->signal_stop("paste_clipboard"); //Prevent the full paste, we'll do it ourselves.
