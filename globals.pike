@@ -325,7 +325,12 @@ class window
 			gtksignal(win->mainwindow,"delete_event",closewindow),
 			win->stock_close && gtksignal(win->stock_close,"clicked",closewindow),
 		});
-		foreach (indices(this),string key) if (has_prefix(key,"sig_") && callablep(this[key]))
+		collect_signals("sig_", win);
+	}
+
+	void collect_signals(string prefix, mapping(string:mixed) searchme)
+	{
+		foreach (indices(this),string key) if (has_prefix(key,prefix) && callablep(this[key]))
 		{
 			//Function names of format sig_x_y become a signal handler for win->x signal y.
 			//(Note that classes are callable, so they can be used as signal handlers too.)
@@ -335,7 +340,7 @@ class window
 			//contrived situations, so I'm deciding not to care. :)
 			int b4=sscanf(key,"b4_%s",key); //sig_b4_some_object_some_signal will connect _before_ the normal action
 			array parts=(key/"_")[1..];
-			for (int i=0;i<sizeof(parts)-1;++i) if (mixed obj=win[parts[..i]*"_"])
+			for (int i=0;i<sizeof(parts)-1;++i) if (mixed obj=searchme[parts[..i]*"_"])
 			{
 				if (objectp(obj) && callablep(obj->signal_connect))
 				{
