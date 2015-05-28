@@ -320,6 +320,7 @@ class window
 	//a gtksignal object or the integer 0, though as of 20150103 nothing depends on this.
 	void dosignals()
 	{
+		//NOTE: This does *not* use += here - it's the one place that overwrites the array.
 		win->signals=({
 			gtksignal(win->mainwindow,"delete_event",closewindow),
 			win->stock_close && gtksignal(win->stock_close,"clicked",closewindow),
