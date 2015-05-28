@@ -78,7 +78,7 @@ mapping(string:mixed) subwindow(string txt)
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
 			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
-				->add(subw->display=GTK2.DrawingArea())
+				->add(subw->display=GTK2.DrawingArea()->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK))
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 			)
 			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
@@ -147,7 +147,6 @@ void setfonts(mapping(string:mixed) subw)
 void subwsignals(mapping(string:mixed) subw)
 {
 	collect_signals("subw_",subw,subw);
-	subw->display->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK);
 }
 
 //Reestablish event handlers for all subwindows automatically
