@@ -92,7 +92,7 @@ mapping(string:mixed) subwindow(string txt)
 	#if constant(COMPAT_SIGNAL)
 	subw->ef->set_activates_default(1);
 	#endif
-	subwsignals(subw);
+	collect_signals("subw_",subw,subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	values(G->G->tabstatuses)->install(subw);
 	subw_ef_changed(subw->ef,subw);
@@ -143,17 +143,11 @@ void setfonts(mapping(string:mixed) subw)
 	settabs(subw->charwidth);
 }
 
-//(Re)establish event handlers for a subwindow
-void subwsignals(mapping(string:mixed) subw)
-{
-	collect_signals("subw_",subw,subw);
-}
-
-//Reestablish event handlers for all subwindows automatically
+//Reestablish event handlers for all subwindows as well as for the main window
 void dosignals()
 {
 	::dosignals();
-	subwsignals(win->tabs[*]);
+	foreach (win->tabs,mapping subw) collect_signals("subw_",subw,subw);
 }
 
 //Snapshot the selection bounds so the switch_page handler can reset them
