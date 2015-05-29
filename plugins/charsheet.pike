@@ -59,6 +59,11 @@ charsheet, and both are aliases for existing mappings.
 */
 //Alias definitions could be done like this. Each braced token becomes a dependency; if it
 //changes, the alias is rewritten. Any instance of "+-" gets replaced with "-" for readability.
+//Alternatively: Handle aliases by keeping a local record of what we think the server has. Any
+//time anything gets changed, zip through the alias definitions, see if any appears to be now
+//different from what it was, and if so, submit the change. Would require either querying the
+//server on charsheet opening, or assuming no aliases at first, and updating lots of them on
+//first edit.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
 	"STR":"d20+{STR_mod}", //etc
