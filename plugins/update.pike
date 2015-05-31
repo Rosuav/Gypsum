@@ -78,13 +78,16 @@ void unzip(string data,function callback,mixed|void callback_arg)
 //Callbacks for 'update zip'
 void data_available(object q,mapping(string:mixed) subw)
 {
+	array(string) oldfiles=get_dir("plugins")-({"zz_local"});
 	if (mixed err=catch {unzip(q->data(),lambda(string fn,string data)
 	{
 		fn=fn[14..]; //14 == sizeof("Gypsum-master/")
 		if (fn=="") return; //Ignore the first-level directory entry
 		if (simulate) {++simulate; return;} //Count up the files and directories to allow simple verification
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
+		if (sscanf(fn,"plugins/%s",string plugin)) oldfiles-=({plugin});
 	});}) {say(subw,"%% "+describe_error(err)); return;}
+	say(subw,"Residual plugins: %O",oldfiles);
 	process("all",subw);
 }
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
