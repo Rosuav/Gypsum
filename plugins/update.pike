@@ -87,7 +87,7 @@ void data_available(object q,mapping(string:mixed) subw)
 		if (fn[-1]=='/') mkdir(fn); else Stdio.write_file(fn,data);
 		if (sscanf(fn,"plugins/%s",string plugin)) oldfiles-=({plugin});
 	});}) {say(subw,"%% "+describe_error(err)); return;}
-	say(subw,"Residual plugins: %O",oldfiles);
+	rm(oldfiles[*]);
 	process("all",subw);
 }
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
