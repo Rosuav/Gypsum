@@ -100,6 +100,7 @@ void data_available(object q,mapping(string:mixed) subw)
 	});}) {say(subw,"%% "+describe_error(err)); return;}
 	rm(oldfiles[*]);
 	process("all",subw);
+	if (sizeof(oldfiles)) say(subw,"%% Wiped out old files: "+oldfiles*", ");
 }
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
 void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
