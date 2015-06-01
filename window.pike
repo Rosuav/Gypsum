@@ -428,7 +428,7 @@ void autoscroll(mapping subw)
  * If msg is an array, it is assumed to be alternating colors and text.
  * Otherwise, additional arguments will be processed with sprintf().
  */
-void say(mapping|void subw,string|array msg,mixed ... args)
+void say(mapping subw,string|array msg,mixed ... args)
 {
 	if (!subw) subw=current_subw();
 	if (stringp(msg))
