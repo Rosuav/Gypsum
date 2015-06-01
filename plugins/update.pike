@@ -263,7 +263,7 @@ void create(string name)
 //Stand-alone usage: '/update zip' but with minimal dependencies
 //Ideally, this will work even if startup is failing.
 mapping G=([]);
-function say=write;
+void say(mapping subw,mixed ... args) {write(@args);}
 void process(string all,mapping subw) {exit(0,"Update complete [%d].\n",simulate);}
 int main(int argc,array(string) argv)
 {
