@@ -59,11 +59,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":subw?"_Send":"_Save","use-underline":1,"focus-on-click":0])))
-				#if !constant(COMPAT_BOOM2)
 				->add(GTK2.Frame("Cursor")->add(win->curpos=GTK2.Label("")))
-				#else
-				->add(GTK2.Label("(cursor pos)"))
-				#endif
 				->add(win->pb_wrap=GTK2.Button("Wrap"))
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
@@ -138,12 +134,19 @@ class editor(mapping(string:mixed) subw,string initial)
 		return ::closewindow();
 	}
 
-	void cursorpos(object self,mixed iter1,object mark,mixed foo)
+	#if !constant(COMPAT_BOOM2)
+	//This can crash old Pikes, due to over-freeing of the top stack object (whatever
+	//it is). It's fixed in the latest, but not in 7.8.866, which I support - eg that
+	//is what there's a Windows installer for. For want of a better name, I'm calling
+	//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
+	//imaginative), so that's what the COMPAT marker is called.
+	void sig_buf_mark_set(object self,mixed iter1,object mark,mixed foo)
 	{
 		if (mark->get_name()!="insert") return;
 		GTK2.TextIter iter=win->buf->get_iter_at_mark(mark);
 		win->curpos->set_text(iter->get_line()+","+iter->get_line_offset());
 	}
+	#endif
 
 	void sig_pb_wrap_clicked()
 	{
@@ -151,21 +154,6 @@ class editor(mapping(string:mixed) subw,string initial)
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
 		string newtxt=wrap_text(txt,wrap);
 		if (newtxt!=txt) win->buf->set_text(newtxt+"\n");
-	}
-
-	void dosignals()
-	{
-		::dosignals();
-		win->signals+=({
-			//This can crash old Pikes, due to over-freeing of the top stack object (whatever
-			//it is). It's fixed in the latest, but not in 7.8.866, which I support - eg that
-			//is what there's a Windows installer for. For want of a better name, I'm calling
-			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
-			//imaginative), so that's what the COMPAT marker is called. Once support for such
-			//Pikes is dropped, cursorpos() can be renamed to sig_buf_mark_set() and this big
-			//block of code and comment can be completely disposed of :)
-			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
-		});
 	}
 }
 
