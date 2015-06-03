@@ -204,6 +204,9 @@ stock objects are available:
 
 * stock_close() - a Close button, which will call closewindow().
 
+Note that constructing more than one of a stock object on a given window is not
+guaranteed to work, and may result in signals not being connected correctly.
+
 Movable window - 'inherit movablewindow'
 ----------------------------------------
 
