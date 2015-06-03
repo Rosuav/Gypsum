@@ -161,7 +161,9 @@ class editor(mapping(string:mixed) subw,string initial)
 			//it is). It's fixed in the latest, but not in 7.8.866, which I support - eg that
 			//is what there's a Windows installer for. For want of a better name, I'm calling
 			//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
-			//imaginative), so that's what the COMPAT marker is called.
+			//imaginative), so that's what the COMPAT marker is called. Once support for such
+			//Pikes is dropped, cursorpos() can be renamed to sig_buf_mark_set() and this big
+			//block of code and comment can be completely disposed of :)
 			win->curpos && gtksignal(win->buf,"mark_set",cursorpos),
 		});
 	}
