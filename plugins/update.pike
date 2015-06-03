@@ -16,7 +16,7 @@ Plugin developers, this will be your primary tool for loading in new code.
 ";
 
 constant plugin_active_by_default = 1;
-int simulate; //For command-line usage, allow a "don't actually save anything" test usage. TODO: Should we have a "download without applying" mode for GUI updates?
+int simulate; //For command-line usage, allow a "don't actually save anything" test usage. Note that a "download without applying" would implicitly apply on next restart, and is probably a bad idea.
 
 //Unzip the specified data (should be exactly what could be read from/written to a .zip file)
 //and call the callback for each file, with the file name, contents, and the provided arg.
