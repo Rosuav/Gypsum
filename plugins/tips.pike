@@ -39,7 +39,8 @@ constant tips=({
 
 	#"Non-English text is fully supported in Gypsum. As long as the server
 	accepts and transmits UTF-8 text, all the world's languages can be
-	properly displayed and entered.",
+	properly displayed and entered. Check your system for a Unicode font
+	for best results.",
 
 	#"Keep an eye on a clock in your own or someone else's timezone with the
 	zoneinfo plugin - you can select any timezone to show on the status bar.",
