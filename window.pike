@@ -66,7 +66,6 @@ Should it be context sensitive? It could be reconfigured in subw_ef_changed().
 	mapping connection;
 	string tabtext;
 	int activity=0; //Set to 1 when there's activity, set to 0 when focus is on this tab
-	array(object) signals; //Collection of gtksignal objects - replaced after code reload
 	int selstartline,selstartcol,selendline,selendcol; //Highlight start/end positions. If no highlight, selstartline will not even exist.
 */
 //Note that this is called from other files, eg when a new passive-mode connection is established, hence the parameterization of txt.
