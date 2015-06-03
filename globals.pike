@@ -273,6 +273,9 @@ class plugin_menu
 		if (mi->menuitem)
 		{
 			set_menu_text(menu_label||name);
+			//NOTE: Don't deduplicate this with make_menuitem(); when window.pike gets updated,
+			//make_menuitem() will be called for all plugin menu entries, and then afterward
+			//they don't (necessarily) get reloaded, so create() won't get re-called.
 			mi->signals=({gtksignal(mi->menuitem,"activate",menu_clicked)});
 		}
 		else make_menuitem(name);
