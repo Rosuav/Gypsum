@@ -150,7 +150,7 @@ class editor(mapping(string:mixed) subw,string initial)
 
 	void sig_pb_wrap_clicked()
 	{
-		int wrap=(int)persist["editor/wrap"] || 80; //Default to 80 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
+		int wrap=(int)persist["editor/wrap"] || 79; //Default to 79 chars here; clicking Wrap should always wrap, even if autowrap isn't happening.
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
 		string newtxt=wrap_text(txt,wrap);
 		if (newtxt!=txt) win->buf->set_text(newtxt+"\n");
