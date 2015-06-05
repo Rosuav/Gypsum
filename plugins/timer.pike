@@ -58,7 +58,6 @@ class config
 	constant strings=({"trigger"});
 	constant bools=({"present"});
 	constant persist_key="timer/timers";
-	void create() {::create("plugins/timer");}
 
 	GTK2.Widget make_content()
 	{

@@ -96,7 +96,6 @@ class menu_clicked
 	mapping(string:mixed) windowprops=(["title":"Tune Threshold RPG characters","modal":1]);
 	constant persist_key="tune/thresholdrpg";
 	constant strings=({"muted"});
-	void create() {::create("Tune");}
 
 	GTK2.Widget make_content() 
 	{

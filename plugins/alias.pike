@@ -76,7 +76,7 @@ class aliasdlg(string persist_key)
 	inherit configdlg;
 	constant strings=({"expansion"});
 	mapping(string:mixed) windowprops=(["modal":1]);
-	void create(string title) {windowprops->title=title; ::create("Alias");}
+	void create(string title) {windowprops->title=title; ::create();}
 
 	GTK2.Widget make_content() 
 	{

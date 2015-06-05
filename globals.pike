@@ -460,6 +460,8 @@ class configdlg
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY. Details may change, though the feature is almost certainly going to stick around.
 	//... end provide me.
 
+	void create() {::create();} //Pass on no args to the window constructor - all configdlgs are independent
+
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
 	string selecteditem()
 	{

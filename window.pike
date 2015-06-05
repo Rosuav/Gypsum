@@ -183,7 +183,6 @@ class highlightwords(mixed|void selectme)
 	constant persist_key="window/highlight";
 	constant strings=({"descr"});
 	constant ints=({"bgcol"});
-	void create() {::create();}
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
@@ -914,7 +913,6 @@ class zadvoptions
 	constant allow_rename=0;
 	constant allow_delete=0;
 	mapping(string:mixed) windowprops=(["title":"Advanced Options"]);
-	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -960,7 +958,6 @@ class channelsdlg
 	constant ints=({"r","g","b"});
 	constant persist_key="color/channels";
 	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
-	void create() {::create();} //Pass on no args to the parent
 
 	GTK2.Widget make_content()
 	{
@@ -1027,7 +1024,6 @@ class fontdlg
 	inherit configdlg;
 	constant persist_key="window/font";
 	constant allow_new=0,allow_rename=0,allow_delete=0;
-	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -1066,7 +1062,6 @@ class keyboard
 	constant persist_key="window/numpadnav";
 	constant descr_key="keyname";
 	mapping(string:mixed) windowprops=(["title":"Numeric keypad navigation"]);
-	void create() {::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -1581,9 +1576,7 @@ class connect_menu
 	constant ints=({"port"});
 	constant bools=({"use_ka"});
 	constant persist_key="worlds";
-
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
-	void create() {::create();} //Pass on no args
 
 	void load_content(mapping(string:mixed) info)
 	{
