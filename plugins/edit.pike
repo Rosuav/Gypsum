@@ -140,6 +140,7 @@ class editor(mapping(string:mixed) subw,string initial)
 	//is what there's a Windows installer for. For want of a better name, I'm calling
 	//this the 'boom2' issue (after the crash test script I wrote... yeah, I'm really
 	//imaginative), so that's what the COMPAT marker is called.
+	//TODO: Update as text gets entered, too, not just when the cursor moves. (No idea how to do that ATM.)
 	void sig_buf_mark_set(object self,mixed iter1,object mark,mixed foo)
 	{
 		if (mark->get_name()!="insert") return;
