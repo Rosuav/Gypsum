@@ -1341,7 +1341,7 @@ class configure_plugins
 	constant persist_key="plugins/status";
 	constant bools=({"active"});
 
-	void create() {discover_plugins("plugins"); ::create(); win->cfg->hide();}
+	void create() {discover_plugins("plugins"); ::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -1354,7 +1354,7 @@ class configure_plugins
 				"",win->activate=GTK2.Button("Activate/Reload"),
 				"",win->deactivate=GTK2.Button("Deactivate"),
 			})),0,0,0)
-			->pack_start(win->cfg=GTK2.Frame("<config>")->add(win->cfg_ef=GTK2.Entry()),0,0,0)
+			->pack_start(win->cfg=GTK2.Frame("<config>")->add(win->cfg_ef=GTK2.Entry()->show())->set_no_show_all(1),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
 				->add(win->docs=MultiLineEntryField()->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD))
