@@ -275,7 +275,13 @@ classed ADVISORY, and the details may change drastically. See its one and only
 current use (as of 20141230) in window.pike, 'class keyboard', for usage.
 
 Note that a configdlg will normally want to be a nested class, invoked when
-needed, rather than being a top-level inherit.
+needed, rather than being a top-level inherit. A configdlg does not "slide
+forward" onto updated code as a window does, preferring instead to retain the
+old bindings. Normal usage is to open them and close them again, but be aware
+that old configdlgs CAN affect old code without updating new code. The normal
+behaviour, with the persist key and/or items mapping, will be safe, as there'll
+be only one mapping that every code file references; but if save_content needs
+to trigger some sort of update, be sure to trigger this for all active code.
 
 Status text - 'inherit statustext'
 ----------------------------------
