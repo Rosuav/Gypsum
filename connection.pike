@@ -318,8 +318,8 @@ void send(mapping conn,string text)
 }
 
 //Send a TELNET sequence to the socket.
-//The passed string should begin just after the IAC, so (string)({GA}) will send IAC GA.
-//Subnegotiations will be automatically terminated; (string)({SB,.....}) will have IAC SE appended.
+//The passed string should begin just after the IAC, so (string(0..255))({GA}) will send IAC GA.
+//Subnegotiations will be automatically terminated; (string(0..255))({SB,.....}) will have IAC SE appended.
 //IAC doubling is performed automatically. This is identical to the Hogan specification, fwiw.
 void send_telnet(mapping conn,bytes data)
 {
