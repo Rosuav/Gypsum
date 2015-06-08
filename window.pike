@@ -852,7 +852,9 @@ void real_closetab(int removeme)
 {
 	if (runhooks("closetab",0,win->tabs[removeme],removeme)) return;
 	if (sizeof(win->tabs)<2) addtab();
-	win->tabs[removeme]->signals=0; connect(0,win->tabs[removeme]);
+	//TODO: Remove all signals associated with this tab (somehow). I guess maybe it wasn't
+	//such a tidy change, putting 'em all into win->signals.
+	connect(0,win->tabs[removeme]);
 	win->tabs=win->tabs[..removeme-1]+win->tabs[removeme+1..];
 	win->notebook->remove_page(removeme);
 	if (!sizeof(win->tabs)) addtab();
