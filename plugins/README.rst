@@ -328,7 +328,7 @@ but this can be an easy way to highlight an alert state.
 Plugin menu item - 'inherit plugin_menu'
 ----------------------------------------
 
-Creates an entry on the 'Plugins' pull-down menu. Provide::
+Creates an entry on the 'Plugins' pull-down menu. Provide some or all of::
 
 	constant menu_label=0; //(string) The initial label for your menu.
 	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
