@@ -419,7 +419,7 @@ mapping connect(object display,mapping info)
 	//Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol
 	//which is not in trunk 8.0) - can improve latency, not critical
 	if (conn->sock->nodelay) conn->sock->nodelay();
-	//Select minimum latency, if possible (requires Pike branch rosuav/sockopt
+	//Request minimum latency, if possible (requires Pike branch rosuav/sockopt
 	//which is not in trunk 8.0 or 8.1) - might improve latency if the uplink
 	//is saturated
 	#if constant(Stdio.IPTOS_LOWDELAY)
