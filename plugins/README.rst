@@ -355,8 +355,8 @@ after calling ::create() to rescan after an update.
 BEST PRACTICE: Leave menu_parent unchanged, so the menu item is created under
 the "Plugins" menu. This makes the plugin properly discoverable, unsurprising,
 and conventional. The other menus are normally the core code's domain. In
-unusual situations, however, it may make more sense to place a menu item under
-some other menu, and thus this is made possible; but it should be rare.
+unusual situations, it may make more sense to place a menu item under some
+other menu, and thus this is made possible; but it should be rare.
 
 DEPRECATED: If a menu_label is not provided, the plugin name will be used.
 This is inadvisable, as it's not usually the most helpful piece of text that
