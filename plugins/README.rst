@@ -341,8 +341,7 @@ just a function. Be careful with this, though, as it may receive some
 arguments (it's currently used directly as a GTK signal handler). Works
 beautifully as long as this isn't a problem; a number of plugins do
 this by having an explicit create() that doesn't pass args on to its
-inherits. In the future, this may have specific args provided, but code
-that ignores all args will always be safe.
+inherits.
 
 Uses for this include opening/showing a window or configdlg, giving
 statistical information to the user, giving usage information about a
