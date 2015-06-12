@@ -1498,12 +1498,6 @@ void create(string name)
 
 	//Scan for plugins now that everything else is initialized.
 	mapping(string:mapping(string:mixed)) plugins=persist->setdefault("plugins/status",([]));
-	//Compat: Pull in the list from plugins/more.pike's config
-	if (mapping old=persist["plugins/more/list"])
-	{
-		foreach (old;string fn;mapping info) plugins[fn-"-more"]=info; //Cheat a bit, remove any instance of -more from the filename
-		m_delete(persist,"plugins/more/list"); //Delete at the end, just in case something goes wrong
-	}
 	//Prune the plugins list to only what actually exists
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	discover_plugins("plugins");
