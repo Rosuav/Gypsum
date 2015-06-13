@@ -123,7 +123,7 @@ int main(int argc,array(string) argv)
 	bootstrap("window.pike");
 	//TODO maybe: Chain on errors to update.pike to grab the latest.
 	if (!globals->say) {GTK2.MessageDialog(0,0,GTK2.BUTTONS_OK,"Startup error - see log for details.")->show()->signal_connect("response",lambda() {exit(0);}); return -1;}
-	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it
+	if (sizeof(needupdate) && G->commands->update) G->commands->update(".",0); //Rebuild anything that needs it (or would it be better to use bootstrap() here?)
 	if (G->commands->connect) //Note that without this plugin, startup args will be ignored.
 	{
 		array(string) worlds=argv[1..];
