@@ -1507,6 +1507,10 @@ void create(string name)
 	foreach (sort(indices(plugins)),string fn)
 	{
 		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
+		//Or should plugin_mtime be completely dropped? I'm not sure what we really gain here.
+		//In fact, we possibly lose a bit, in that some plugins trigger updates and others
+		//get bootstrapped, so the messages are split. Maybe they should just all be put into
+		//G->needupdate, which will work on startup too.
 		if (plugins[fn]->active)
 		{
 			int mtime=file_stat(fn)->mtime;
