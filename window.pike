@@ -1492,7 +1492,8 @@ void create(string name)
 		item->show()->signal_connect("activate",this[name]);
 		menu->add(item);
 	}
-	//Recreate plugin menu items in name order
+	//Recreate plugin menu items in name order. Note that the destruct(w) above should mean that the objects
+	//have all been wiped out, I *think*, but just in case, don't recreate any that do exist.
 	foreach (sort(indices(G->G->plugin_menu)),string name) if (mapping mi=G->G->plugin_menu[name])
 		if (!mi->menuitem) mi->self->make_menuitem(name);
 
