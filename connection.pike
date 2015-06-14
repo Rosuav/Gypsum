@@ -414,13 +414,13 @@ mapping connect(object display,mapping info)
 		return conn;
 	}
 	say(conn->display,"%%% Resolving "+info->host+"...");
-	complete_connection(conn, info);
+	complete_connection(info->host, conn, info);
 	return conn;
 }
 
-void complete_connection(mapping conn, mapping info)
+void complete_connection(string ip, mapping conn, mapping info)
 {
-	say(conn->display,"%%% Connecting to "+info->host+" : "+info->port+"...");
+	say(conn->display,"%%% Connecting to "+ip+" : "+info->port+"...");
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
 	//Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol
@@ -433,7 +433,7 @@ void complete_connection(mapping conn, mapping info)
 	conn->sock->setsockopt(Stdio.IPPROTO_IP,Stdio.IP_TOS,Stdio.IPTOS_LOWDELAY|Stdio.IPTOS_RELIABILITY);
 	#endif
 	conn->sock->set_nonblocking(0,connected,connfailed);
-	if (mixed ex=catch {conn->sock->connect(info->host,(int)info->port);}) //TODO: Have a timeout on this
+	if (mixed ex=catch {conn->sock->connect(ip,(int)info->port);}) //TODO: Have a timeout on this
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
