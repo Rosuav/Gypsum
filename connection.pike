@@ -414,6 +414,14 @@ mapping connect(object display,mapping info)
 		return conn;
 	}
 	say(conn->display,"%%% Resolving "+info->host+"...");
+	//If info->host is an IP address, connect directly.
+	if (sscanf(info->host,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(info->host))
+	{
+		complete_connection(info->host, conn, info);
+		return conn;
+	}
+	//Otherwise, resolve DNS asynchronously and then connect.
+	//TODO.
 	complete_connection(info->host, conn, info);
 	return conn;
 }
