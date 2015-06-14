@@ -413,6 +413,13 @@ mapping connect(object display,mapping info)
 		sockclosed(conn);
 		return conn;
 	}
+	say(conn->display,"%%% Resolving "+info->host+"...");
+	complete_connection(conn, info);
+	return conn;
+}
+
+void complete_connection(mapping conn, mapping info)
+{
 	say(conn->display,"%%% Connecting to "+info->host+" : "+info->port+"...");
 	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
 	conn->sock->open_socket();
@@ -430,7 +437,6 @@ mapping connect(object display,mapping info)
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
-		return conn;
 	}
 	if (info->logfile && info->logfile!="")
 	{
@@ -438,7 +444,6 @@ mapping connect(object display,mapping info)
 		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
 		else say(conn->display,"%%%% Logging to %O",fn);
 	}
-	return conn;
 }
 
 void create(string name)
