@@ -424,7 +424,8 @@ mapping connect(object display,mapping info)
 	//TODO.
 	//If IPv6 and IPv4 are both supported, fire off both DNS lookups at once,
 	//and connect to whichever responds first? May need an Adv Opt to control
-	//protocol usage.
+	//protocol usage - might be useful for other reasons too, eg if you have
+	//borked IPv6 pseudo-support. Definitely nowhere friendlier than Adv Opt.
 	complete_connection(info->host, conn, info);
 	return conn;
 }
