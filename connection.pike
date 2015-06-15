@@ -422,6 +422,9 @@ mapping connect(object display,mapping info)
 	}
 	//Otherwise, resolve DNS asynchronously and then connect.
 	//TODO.
+	//If IPv6 and IPv4 are both supported, fire off both DNS lookups at once,
+	//and connect to whichever responds first? May need an Adv Opt to control
+	//protocol usage.
 	complete_connection(info->host, conn, info);
 	return conn;
 }
