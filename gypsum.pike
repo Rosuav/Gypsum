@@ -93,7 +93,9 @@ void create(string|void name)
 	//git or http) a new set of files and then updating gypsum.pike from that set
 	//will be the standard way of grabbing new code from now on, I think.
 	G->needupdate+=({"globals.pike"});
-	//Add any new COMPAT options, based on their defaults
+	//Add any new COMPAT options, based on their defaults. Edge case: It's theoretically possible that
+	//persist["compat/X"] has been preset somehow (or maybe you're bisecting or something), which might
+	//make updating gypsum.pike different from the initial load. I doubt this is going to be significant.
 	foreach (indices(compat)-indices(G->compat),string kwd) if (compat[kwd]) add_constant("COMPAT_"+upper_case(kwd),1);
 	G->compat=compat;
 }
