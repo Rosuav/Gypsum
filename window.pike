@@ -183,6 +183,10 @@ class highlightwords(mixed|void selectme)
 	constant persist_key="window/highlight";
 	constant strings=({"descr"});
 	constant ints=({"bgcol"});
+
+	//Bury the argument, just in case. Not sure why this is important but it is.
+	void create() {::create();}
+
 	GTK2.Widget make_content()
 	{
 		return GTK2.Vbox(0,10)
