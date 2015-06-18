@@ -426,6 +426,10 @@ mapping connect(object display,mapping info)
 	//and connect to whichever responds first? May need an Adv Opt to control
 	//protocol usage - might be useful for other reasons too, eg if you have
 	//borked IPv6 pseudo-support. Definitely nowhere friendlier than Adv Opt.
+	//Note that we won't need to use bouncer() for any of this. The expected
+	//duration is sufficiently short that it won't be an issue, and if you do
+	//update code in the middle of establishing a connection, it'll just use
+	//the old code - no big deal.
 	complete_connection(info->host, conn, info);
 	return conn;
 }
