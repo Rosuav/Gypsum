@@ -429,6 +429,7 @@ mapping connect(object display,mapping info)
 	//duration is sufficiently short that it won't be an issue, and if you do
 	//update code in the middle of establishing a connection, it'll just use
 	//the old code - no big deal.
+	//What happens on /dc during DNS lookups?
 	say(conn->display,"%%% Resolving "+info->host+"...");
 	complete_connection(info->host, conn, info);
 	return conn;
