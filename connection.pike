@@ -446,6 +446,7 @@ mapping connect(object display,mapping info)
 	return conn;
 }
 
+//Follow on from connect(), either immediately or after a DNS lookup
 void complete_connection(string ip, mapping conn, mapping info)
 {
 	say(conn->display,"%%% Connecting to "+ip+" : "+info->port+"...");
