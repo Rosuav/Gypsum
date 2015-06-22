@@ -388,6 +388,19 @@ void ka(mapping conn)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
 }
 
+void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
+{
+	if (!conn->dnspending) return; //Already done.
+	if (mapping ans = sizeof(resp->an) && resp->an[0])
+		if (string ip = ans->aaaa || ans->a)
+		{
+			conn->dnspending=0;
+			complete_connection(ip, conn, info);
+			return;
+		}
+	if (!--conn->dnspending) say(conn->display,"%%% Unable to resolve host.");
+}
+
 //Establish a connection - the sole constructor for conn mappings.
 mapping connect(object display,mapping info)
 {
@@ -420,20 +433,16 @@ mapping connect(object display,mapping info)
 		return conn;
 	}
 	//Otherwise, resolve DNS asynchronously and then connect.
-	//TODO.
-	//If IPv6 and IPv4 are both supported, fire off both DNS lookups at once,
-	//and connect to whichever responds first? May need an Adv Opt to control
-	//protocol usage - might be useful for other reasons too, eg if you have
-	//borked IPv6 pseudo-support. Definitely nowhere friendlier than Adv Opt.
-	//Note that we won't need to use bouncer() for any of this. The expected
-	//duration is sufficiently short that it won't be an issue, and if you do
-	//update code in the middle of establishing a connection, it'll just use
-	//the old code - no big deal.
 	//Ideally, a /dc should wipe the conn mapping altogether, but since that
 	//isn't currently happening, the code (see window.pike) will have to be
 	//enhanced to explicitly check for and cancel any pending DNS lookups.
 	say(conn->display,"%%% Resolving "+info->host+"...");
-	complete_connection(info->host, conn, info);
+	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
+	object cli=Protocols.DNS.async_client();
+	conn->dnspending=0;
+	string prot=persist["connection/protocol"];
+	if (prot!="6") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse,conn,info);}
+	if (prot!="4") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse,conn,info);}
 	return conn;
 }
 
