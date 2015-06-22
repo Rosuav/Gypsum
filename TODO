@@ -24,6 +24,7 @@
   unify them into one.)
 * Demo/doco plugin that inherits everything and shows off what's happening? A simple say() in every hook function
   and a "hello world" of every other type would be a reasonable way to demo everything.
+* Support/acknowledge /etc/nsswitch.conf?? Or at least parse /etc/hosts, which is more cross-platform.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
