@@ -426,8 +426,9 @@ mapping connect(object display,mapping info)
 		sockclosed(conn);
 		return conn;
 	}
-	//If info->host is an IP address, connect directly.
-	if (sscanf(info->host,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(info->host))
+	string prot=persist["connection/protocol"];
+	//If info->host is an IP address, connect directly. And if the user requested direct connection attempts, same.
+	if (prot=="*" || sscanf(info->host,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(info->host))
 	{
 		complete_connection(info->host, conn, info);
 		return conn;
@@ -440,7 +441,6 @@ mapping connect(object display,mapping info)
 	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
 	object cli=Protocols.DNS.async_client();
 	conn->dnspending=0;
-	string prot=persist["connection/protocol"];
 	if (prot!="6") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse,conn,info);}
 	if (prot!="4") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse,conn,info);}
 	return conn;
