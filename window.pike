@@ -504,6 +504,7 @@ void connect(string world,mapping|void subw)
 	}
 	values(G->G->tabstatuses)->connected(subw,world);
 	subw->world=world;
+	if (subw->connection && subw->connection->dnspending) {say(subw,"%% Connection pending, disconnect to abort"); return;}
 	if (subw->connection && subw->connection->sock) {say(subw,"%% Already connected."); return;}
 	subw->connection=G->G->connection->connect(subw,info);
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
