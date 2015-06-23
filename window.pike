@@ -490,7 +490,6 @@ void connect(string world,mapping|void subw)
 	if (!world)
 	{
 		//Disconnect
-		//TODO: Also cancel any pending DNS queries (might be up to two). This would need to be unsilent.
 		if (!subw->connection) return;
 		if (subw->connection->dnspending) {subw->connection->dnspending=0; say(subw,"%%% Cancelled.");}
 		if (!subw->connection->sock) return; //Silent if nothing to dc
