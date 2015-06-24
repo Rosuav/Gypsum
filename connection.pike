@@ -428,6 +428,8 @@ mapping connect(object display,mapping info)
 	}
 	string prot=persist["connection/protocol"];
 	//If info->host is an IP address, connect directly. And if the user requested direct connection attempts, same.
+	//Note that direct connection attempts will normally result in synchronous DNS lookups. This will lag out the main
+	//thread, and thus cause distinctly unpleasant problems on timeouts. But if you want it, go for it.
 	if (prot=="*" || sscanf(info->host,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(info->host))
 	{
 		complete_connection(info->host, conn, info);
