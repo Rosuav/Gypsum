@@ -449,6 +449,7 @@ mapping connect(object display,mapping info)
 }
 
 //Follow on from connect(), either immediately or after a DNS lookup
+//Normally 'ip' will be, as the name suggests, an IP address; but if connection/protocol is "*", it can be a name.
 void complete_connection(string ip, mapping conn, mapping info)
 {
 	say(conn->display,"%%% Connecting to "+ip+" : "+info->port+"...");
