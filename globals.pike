@@ -911,7 +911,8 @@ class Time
 //UNDEFINED will be returned; compilation errors are silenced.
 //Note that compile_error() and compile_warning() are technically internal, but
 //they're called by the compiler. I could create a dedicated class, but it's
-//cheaper to use 'this' and have these functions defined here.
+//cheaper to use 'this' and have these functions defined here. They are thus
+//available as constants, useless though that be.
 void compile_error(string fn,int l,string msg) { }
 void compile_warning(string fn,int l,string msg) { }
 program probe_plugin(string filename)
