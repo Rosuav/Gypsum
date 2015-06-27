@@ -34,6 +34,9 @@ constant tips=({
 	#"Use the /x command as a simple, but powerful, calculator - mathematical
 	expressions will be evaluated and displayed.",
 
+	#"The /x calculator can call on the previous result with the shorthand _
+	(underscore) - for instance, _+1 will add one to the previous result.",
+
 	#"Keep Gypsum up-to-date using Plugins|Update Gypsum; there are changes
 	literally every day.",
 
