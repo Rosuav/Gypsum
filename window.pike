@@ -878,6 +878,8 @@ void closetab()
 	else confirm(0,"You have an active connection, really close this tab?",mainwindow,real_closetab,removeme);
 }
 
+//Triggered when the corresponding advanced option is toggled, because this (unlike most) actually needs
+//to be pushed into other places rather than just being changed in persist[].
 void set_error_bell(int state)
 {
 	win->tabs->ef->get_settings()->set_property("gtk-error-bell",state);
