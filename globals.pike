@@ -24,7 +24,8 @@ void create(string n)
 //singly or in pairs. Conversion to UTF-8 will (correctly) fail on surrogates.)
 typedef string(0..255) bytes;
 //Something that's ASCII-only can be trivially treated as either bytes or text (assuming
-//a UTF-8 transmission stream, which most of this does).
+//a UTF-8 transmission stream, which most of this does, and also compatible with the
+//common assumption by servers and clients that eight-bit Extended ASCII is in use).
 typedef string(0..127) ascii;
 //Note that in modern Pikes, these could be spelled string(8bit) and string(7bit), but
 //for compatibility, they're spelled in full.
