@@ -358,12 +358,11 @@ and conventional. The other menus are normally the core code's domain. In
 unusual situations, it may make more sense to place a menu item under some
 other menu, and thus this is made possible; but it should be rare.
 
-DEPRECATED: If a menu_label is not provided, the plugin name will be used.
-This is inadvisable, as it's not usually the most helpful piece of text that
-could be put on a menu item. In future, the default may be changed (eg blank),
-and also introspection is easier if some kind of meaningful label is provided,
-so even if set_menu_text() is to be unconditionally called, it's best to have
-at least a placeholder in the constant.
+BEST PRACTICE: Even if set_menu_text() will be called to set a dynamic label,
+still provide a menu_label. It is used for introspection, and ideally should be
+indicative of what the actual label is likely to be, perhaps with placeholders.
+Previous versions of Gypsum used the plugin name here in place of an absent
+label, and for compatibility, this is still supported, but not recommended.
 
 General notes
 -------------
