@@ -885,6 +885,16 @@ void set_error_bell(int state)
 	win->tabs->ef->get_settings()->set_property("gtk-error-bell",state);
 }
 
+//Wrap indent is normally going to want to be a number of spaces. For convenience, allow the user to
+//specify an integer, which will become that many spaces. (The likelihood that someone will want to
+//indent by the string "4" is so low as to be ignored. This is a string to allow things like "-> ",
+//but most people will probably use spaces.)
+void numbers_to_spaces(string value)
+{
+	int num=(int)value;
+	if (value==(string)num) persist["window/wrapindent"]=" "*num;
+}
+
 /* This is called "zadvoptions" rather than "advoptions" to force its menu item
 to be at the end of the Options menu. It's a little odd, but that's the only
 one that needs to be tweaked to let the menu simply be in funcname order. */
@@ -918,7 +928,7 @@ class zadvoptions
 		"Timestamp localtime":(["path":"window/timestamp_local","desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.","type":"int","options":([0:"Normal - use UTC",1:"Use your local time"])]),
 		"Up arrow":(["path":"window/uparr","type":"int","desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?","options":([0:"No",1:"Yes"])]),
 		"Wrap":(["path":"window/wrap","desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
-		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text - a number of spaces works well."]),
+		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text or number of spaces.","savefunc":numbers_to_spaces]),
 		"Wrap to chars":(["path":"window/wraptochar","type":"int","desc":"Normally it makes sense to wrap at word boundaries (spaces) where possible, but you can disable this if you wish.","options":([0:"Default - wrap to words",1:"Wrap to characters"])]),
 	]);
 	constant allow_new=0;
