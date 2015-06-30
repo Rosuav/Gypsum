@@ -888,7 +888,8 @@ void set_error_bell(int state)
 //Wrap indent is normally going to want to be a number of spaces. For convenience, allow the user to
 //specify an integer, which will become that many spaces. (The likelihood that someone will want to
 //indent by the string "4" is so low as to be ignored. This is a string to allow things like "-> ",
-//but most people will probably use spaces.)
+//but most people will probably use spaces.) Note that, on load, it will be shown as a block of
+//spaces. It MAY be worth changing this later, and making this more like "enter number of spaces".
 void numbers_to_spaces(string value)
 {
 	int num=(int)value;
