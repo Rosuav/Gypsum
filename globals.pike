@@ -225,7 +225,7 @@ class hook
 	int outputhook(string line,mapping(string:mixed) conn) {}
 
 	//Override any or all of these functions to get notified on certain events.
-	//These two have default implementations to handle the legacy form, but can
+	//The first two have default implementations to handle the legacy form, but can
 	//be overridden happily. Eventually they will be replaced with empty functions
 	//and the above versions dropped.
 	int input(mapping(string:mixed) subw,string line) {return inputhook(line,subw);}
