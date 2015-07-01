@@ -238,6 +238,8 @@ class hook
 	void create(string name)
 	{
 		//Slightly different from the others in that it needs to retain its hookname
+		//There's a lot of similarity in these base inheritables. Is it worth trying
+		//to unify them? It'd make plugin unloading look cleaner.
 		sscanf(explode_path(name)[-1],"%s.pike",hookname);
 		if (hookname) G->G->hooks[hookname]=this;
 	}
