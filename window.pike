@@ -904,7 +904,11 @@ class zadvoptions
 {
 	inherit configdlg;
 	mapping(string:mapping(string:mixed)) items=([
-		//Keep these in alphabetical order for convenience - they'll be shown in that order anyway
+		//Keep these in alphabetical order for convenience - they'll be shown in that order anyway.
+		//Would it be better to have these in a config file external to the code? Certainly this is a bit of a mess, but
+		//expanding each one across multiple lines would make this vertically huge, and still wouldn't necessarily make
+		//it any easier to explore. For the moment, the ability to call up code (eg savefunc) and external constants (eg
+		//default_ts_fmt) tips it in favour of keeping these in the code, but this is still an open question.
 		"Activity alert":(["path":"notif/activity","type":"int","desc":"The Gypsum window can be 'presented' to the user in a platform-specific way. When should this happen?","options":([0:"Never present the window",1:"Present on activity in current tab",2:"Present on any activity"])]),
 		"Beep":(["path":"notif/beep","type":"int","desc":"When the server requests a beep, what should be done?\n\n0: Try both the following, in order\n1: Call on an external 'beep' program\n2: Use the GTK2 beep() action\n99: Suppress the beep entirely"]),
 
