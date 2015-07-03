@@ -1,6 +1,22 @@
 //NOTE: COMPAT_* options are not set when this file is loaded, and therefore cannot be used.
 //(They will exist if the file is reloaded post-startup, but still should not be used.)
 
+/* Currently, persistent data is saved into a binary blob file in the current directory.
+
+Downside #1: Binary blob. Completely unusable if anything goes wrong, not usefully gittable,
+and tough for anyone else to import from.
+
+Downside #2: Current directory. On Windows, it's conventional to install programs into a
+directory that most apps don't have write access to (Program Files); on Unix, it's more
+likely that Gypsum will be installed into a user-writable directory, but it's still possible
+either way.
+
+The latter is not overly serious, as Gypsum needs write access to its own directory in order
+to update itself; so the advice is simply: Don't do that. The former may eventually be a
+problem, but this is performance-critical (saving persist[] needs to be able to be done with
+no visible UX impact), so I don't want to put too much into the encoding step.
+*/
+
 object persist=class(string savefn)
 {
 	//Persistent storage (when this dies, bring it back with a -1/-1 counter on it).
