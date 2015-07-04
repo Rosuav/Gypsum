@@ -5,6 +5,7 @@
   - Still haven't seen it again 20140718, quite probably is solved.
   - Hmm, might this be connected (huh huh) to Pike b1f196 / bug 7293?
   - Better than trying to pin this down might be to just ensure that there's a timeout on connection attempts.
+  - CJA 20150704: I suspect this has something to do with DNS issues, which would mean it's changed as of 1500b9. Test me.
 * Some kind of system for suppressing statusbar entries without each plugin having to do it.
   Maybe a multiset of plugin IDs (basenames) which should have their primary statusbar frames
   hidden instead of visible? Probably too messy to UI this nicely, but it could be hidden magic. Not
