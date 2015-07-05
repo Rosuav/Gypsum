@@ -134,9 +134,9 @@ void menu_clicked()
 }
 
 //Always provide this function if you inherit more than one mode.
-void create()
+void create(string name)
 {
 	statustxt->tooltip = "See demo.pike for more information";
-	::create();
+	::create(name);
 	setstatus("Dblclick me!");
 }
