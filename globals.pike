@@ -217,7 +217,7 @@ class command
 //Plugin that hooks various events eg input and output
 class hook
 {
-	constant provides="input/output hook";
+	constant provides="event hook";
 
 	//Legacy signature - deprecated 20150422 but still supported. If you provide either of
 	//these functions, don't override the corresponding modern function (input or output).
