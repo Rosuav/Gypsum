@@ -91,7 +91,6 @@ int process(string param,mapping(string:mixed) subw)
 constant menu_label="Tune people out";
 class menu_clicked
 {
-
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Tune Threshold RPG characters","modal":1]);
 	constant persist_key="tune/thresholdrpg";
