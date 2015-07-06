@@ -27,6 +27,9 @@ to craft a temporary slash command, it may well make very good sense to
 have a temporary hook, and certainly a window can be either created on
 demand or permanently active.
 
+The demo plugin (demo.pike) lists as many plugin modes as practical. View its
+source code (eg type '/edit demo') to see what can be done.
+
 Command - 'inherit command'
 ---------------------------
 
