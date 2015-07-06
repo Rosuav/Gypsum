@@ -76,9 +76,15 @@ class menu_clicked
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Gypsum tips and tricks"]))->add(GTK2.Vbox(0,0)
-			->add(GTK2.Frame("Tip:")->add(GTK2.Label(replace(replace(random(tips),({"\n","\t"})," "),"  "," "))->set_line_wrap(1)))
+			->add(GTK2.Frame("Tip:")->add(win->tip=GTK2.Label("Searching for tips...")->set_line_wrap(1)))
 			->add(GTK2.HbuttonBox()->add(stock_close()))
 		);
+		picktip();
 		::makewindow();
+	}
+
+	void picktip()
+	{
+		win->tip->set_text(replace(replace(random(tips),({"\n","\t"})," "),"  "," "));
 	}
 }
