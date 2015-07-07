@@ -89,5 +89,6 @@ class menu_clicked
 	void sig_newtip_clicked()
 	{
 		win->tip->set_text(replace(replace(random(tips),({"\n","\t"})," "),"  "," "));
+		win->mainwindow->resize(1,1);
 	}
 }
