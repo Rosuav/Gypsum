@@ -1628,6 +1628,11 @@ class connect_menu
 				"Name",win->name=GTK2.Entry(),
 				"Host name",win->host=GTK2.Entry(),
 				"Port",win->port=GTK2.Entry(),
+				//TODO: If there's no slash (either type) in the log file, prepend
+				//a path. On load, prepend "./" for compatibilty; on save, prepend
+				//"Logs/" to encourage logs to be stored there. Explain on screen
+				//how to override (ie with an explicit "./"), and that the default
+				//may change in the future.
 				"Auto-log",win->logfile=GTK2.Entry(),
 				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label, but don't span - keep it in the second column.
 			})),0,0,0)
