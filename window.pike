@@ -1628,12 +1628,6 @@ class connect_menu
 				"Name",win->name=GTK2.Entry(),
 				"Host name",win->host=GTK2.Entry(),
 				"Port",win->port=GTK2.Entry(),
-				//TODO: If there's no slash (either type) in the log file, prepend
-				//a path. On load, prepend "./" for compatibilty; on save, prepend
-				//"Logs/" to encourage logs to be stored there. Explain on screen
-				//how to override (ie with an explicit "./"), and that the default
-				//may change in the future.
-				"Auto-log",win->logfile=GTK2.Entry(),
 				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label, but don't span - keep it in the second column.
 			})),0,0,0)
 			->add(GTK2.Frame("Description")->add(
@@ -1641,6 +1635,15 @@ class connect_menu
 			))
 			->add(GTK2.Frame("Text to output upon connect")->add(
 				win->writeme=MultiLineEntryField()->set_size_request(250,70)
+			))
+			->add(GTK2.Frame("Auto-log")->add(GTK2.Vbox(0,10)
+				//TODO: If there's no slash (either type) in the log file, prepend
+				//a path. On load, prepend "./" for compatibilty; on save, prepend
+				//"Logs/" to encourage logs to be stored there. Explain on screen
+				//how to override (ie with an explicit "./"), and that the default
+				//may change in the future.
+				->add(win->logfile=GTK2.Entry())
+				->add(GTK2.Label("Recommend that the path begins Logs/ to store the log in the appropriate directory. If you want to store the log in the main Gypsum directory, begin with ./ explicitly.")->set_line_wrap(1))
 			))
 			->pack_start(GTK2.HbuttonBox()->add(
 				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
