@@ -1644,7 +1644,7 @@ class connect_menu
 			->add(GTK2.Frame("Text to output upon connect")->add(
 				win->writeme=MultiLineEntryField()->set_size_request(250,70)
 			))
-			->add(GTK2.Frame("Auto-log")->set_border_width(5)->add(GTK2.Vbox(0,5)
+			->add(GTK2.Frame("Auto-log")->add(GTK2.Vbox(0,5)->set_border_width(5)
 				->add(win->logfile=GTK2.Entry())
 				->add(GTK2.Label("Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.")->set_line_wrap(1))
 			))
