@@ -13,8 +13,6 @@ distribution; check your package manager for "pike" or see the above web site.
 Compiling Pike from source is best, if you're comfortable with that; Pike 8.1
 has a number of improvements over Pike 7.8.
 
-To be notified of changes to Gypsum, add this to your RSS reader:
-https://github.com/Rosuav/Gypsum/commits/master.atom
 Updating can be done without disconnecting or restarting the program, via the
 plugins menu.
 
