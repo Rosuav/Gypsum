@@ -20,7 +20,7 @@ Gypsum follows Semantic Versioning v2.0.0; other than explicitly tagged
 versions, the given version number will have the tag "-git". Versioning a
 complex and multi-component project like this is nearly impossible, so the
 number should be considered advisory at best. The version number for any
-state should be marked in the file VERSION, as it exists in git.
+tree should be marked in the file VERSION, as it exists in git.
 
 
 License: MIT
