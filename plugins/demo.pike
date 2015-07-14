@@ -104,7 +104,7 @@ class config
 			"Thing",win->kwd=GTK2.Entry(),
 			"Meaning",win->meaning=GTK2.Entry(),
 			"Value",win->value=GTK2.Entry(),
-			"",win->useful=GTK2.CheckButton("Is useful"),
+			0,win->useful=GTK2.CheckButton("Is useful"),
 		}));
 	}
 

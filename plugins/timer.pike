@@ -65,7 +65,7 @@ class config
 			->pack_start(two_column(({
 				"Keyword",win->kwd=GTK2.Entry(),
 				"Time",win->time=GTK2.Entry(),
-				"",win->present=GTK2.CheckButton("Present when done"),
+				0,win->present=GTK2.CheckButton("Present when done"),
 			})),0,0,0)
 			->pack_start(GTK2.Frame("Trigger text")->add(
 				win->trigger=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
