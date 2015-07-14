@@ -1636,7 +1636,7 @@ class connect_menu
 				"Name",win->name=GTK2.Entry(),
 				"Host name",win->host=GTK2.Entry(),
 				"Port",win->port=GTK2.Entry(),
-				"",win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label, but don't span - keep it in the second column.
+				0,win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label, but don't span - keep it in the second column.
 			})),0,0,0)
 			->add(GTK2.Frame("Description")->add(
 				win->descr=MultiLineEntryField()->set_size_request(250,70)
