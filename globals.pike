@@ -177,6 +177,8 @@ GTK2.Widget noex(GTK2.Widget wid) {_noexpand[wid]=1; return wid;}
  * this for a whole column). Shortcut: Labels can be included by simply
  * including a string - it will be turned into a label, expansion off, and
  * with options as set by the second parameter (if any).
+ * A leading 0 on a line will be quietly ignored, not resulting in any
+ * spanning. Recommended for unlabelled objects in a column of labels.
  */
 GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void label_opts)
 {
