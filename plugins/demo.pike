@@ -23,7 +23,8 @@ int process(string param,mapping(string:mixed) subw)
 {
 	say(subw, "%% This is invoked as '/demo'.");
 	say(subw, "%% Normally this should return 1. There are very few reasons");
-	say(subw, "%% for a slash command to return 0.");
+	say(subw, "%% for a slash command to return 0, but for consistency, the");
+	say(subw, "%% protocol is the same as for hooks etc.");
 	return 1;
 }
 
