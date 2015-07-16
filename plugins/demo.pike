@@ -61,6 +61,9 @@ int closetab(mapping(string:mixed) subw,int index)
 int switchtabs(mapping(string:mixed) subw)
 {
 	say(subw, "%% This tab has just been switched to.");
+	say(subw, "%% Note that there's no notification of which tab has just");
+	say(subw, "%% been switched away from, nor can you (currently) discover");
+	say(subw, "%% a subw's position across the list, short of poking around.");
 }
 
 // ----------------- inherit movablewindow ----------------- //
