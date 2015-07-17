@@ -350,7 +350,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
 							stat,num(stat),num(stat+"_eq"),rare(num(stat+"_tmp")),
-							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod") //TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former. Not currently possible as it's just an integer.
+							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod") //TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former. Not currently possible as DEX_max is just an integer.
 						});})
 					)))
 					->add(GTK2.Vbox(0,10)
