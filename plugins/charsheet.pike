@@ -288,7 +288,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					+"+((int)"+prefix+"_tohit_other?\"+\"+(int)"+prefix+"_tohit_other+\" \"+("+prefix+"_tohit_other_desc||\"\"):\"\")",
 				prefix+"_hit","string")}),
 				({"dmg:",
-				/* This is a lot more complicated than to-hit. Do it later.
+				/* This is a lot more complicated than to-hit. Do it later. Or should it just be a straight EF?
 				calc(
 					prefix+"_dmgdice",
 				prefix+"_dmg","string"))
