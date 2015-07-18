@@ -465,7 +465,7 @@ void complete_connection(string ip, mapping conn, mapping info)
 	conn->sock->setsockopt(Stdio.IPPROTO_IP,Stdio.IP_TOS,Stdio.IPTOS_LOWDELAY|Stdio.IPTOS_RELIABILITY);
 	#endif
 	conn->sock->set_nonblocking(0,connected,connfailed);
-	if (mixed ex=catch {conn->sock->connect(ip,(int)info->port);}) //TODO: Have a timeout on this
+	if (mixed ex=catch {conn->sock->connect(ip,(int)info->port);}) //Should now be fast - DNS lookups should happen elsewhere.
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
