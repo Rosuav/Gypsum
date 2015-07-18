@@ -371,7 +371,7 @@ void connected(mapping conn)
 	ka(conn);
 }
 
-//Callback for when the connection fails.
+//Callback for when the connection fails. Oddly, this appears not to be happening - it's coming through to connected() instead. Investigate.
 void connfailed(mapping conn)
 {
 	if (!conn->sock) return; //If the user disconnects and reattempts, don't wipe stuff out unnecessarily
