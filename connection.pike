@@ -374,7 +374,7 @@ void connected(mapping conn)
 //Callback for when the connection fails. Oddly, this appears not to be happening - it's coming through to connected() instead. Investigate.
 void connfailed(mapping conn)
 {
-	if (!conn->sock) return; //If the user disconnects and reattempts, don't wipe stuff out unnecessarily
+	if (!conn->sock) return; //If the user disconnects and reattempts, this callback will eventually happen, pointing to an old conn mapping. Ignore it.
 	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
 	conn->sock->close();
 	sockclosed(conn);
