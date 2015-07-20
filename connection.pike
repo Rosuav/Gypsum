@@ -391,7 +391,7 @@ void ka(mapping conn)
 
 void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
 {
-	if (!conn->dnspending) return; //Already done.
+	if (!conn->dnspending) return; //Already got a positive response. (If we fire A and AAAA requests, and the first one to respond has an answer, we ignore the second.)
 	if (mapping ans = sizeof(resp->an) && resp->an[0])
 		if (string ip = ans->aaaa || ans->a)
 		{
