@@ -364,7 +364,7 @@ void sockaccept(mapping conn)
 //Seems to be being called even when a connection fails. Pike bug? Investigate on multiple Pikes.
 void connected(mapping conn)
 {
-	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened.
+	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened. Shouldn't normally happen, I think, but let's be safe.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
