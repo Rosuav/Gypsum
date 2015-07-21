@@ -18,6 +18,11 @@ constant plugin_active_by_default = 1;
 
 mapping(string:multiset(object)) charsheets;
 
+//TODO: Figure out why this is sometimes disgustingly laggy on Sikorsky. Is it because
+//I update code so much? Are old versions of the code getting left around? Worse, is it
+//that the window isn't getting properly disposed of when it closes? I've never managed
+//to actually recreate the problem in a stress-test. :(
+
 //TODO: Figure out a way to have multiple completely different character sheet designs.
 //This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
 //be easy. The server shouldn't mind (it cares about very few identifiers), so this
