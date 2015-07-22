@@ -362,6 +362,7 @@ void sockaccept(mapping conn)
 
 //Callback for when a connection is successfully established. Not replaced in existing sockets when connection.pike is updated.
 //Seems to be being called even when a connection fails. Pike bug? Investigate on multiple Pikes.
+//And sock->errno() is still zero, too, so we don't get a clue that way.
 void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened. Shouldn't normally happen, I think, but let's be safe.
