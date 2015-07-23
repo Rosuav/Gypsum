@@ -428,6 +428,12 @@ mapping connect(object display,mapping info)
 		sockclosed(conn);
 		return conn;
 	}
+	if (info->logfile && info->logfile!="")
+	{
+		string fn=strftime(info->logfile,localtime(time(1)));
+		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
+		else say(conn->display,"%%%% Logging to %O",fn);
+	}
 	string prot=persist["connection/protocol"];
 	//If info->host is an IP address, connect directly. And if the user requested direct connection attempts, same.
 	//Note that direct connection attempts will normally result in synchronous DNS lookups. This will lag out the main
@@ -471,12 +477,6 @@ void complete_connection(string ip, mapping conn, mapping info)
 	{
 		say(conn->display,"%%% "+describe_error(ex));
 		sockclosed(conn);
-	}
-	if (info->logfile && info->logfile!="")
-	{
-		string fn=strftime(info->logfile,localtime(time(1)));
-		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
-		else say(conn->display,"%%%% Logging to %O",fn);
 	}
 }
 
