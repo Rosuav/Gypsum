@@ -71,15 +71,6 @@ mapping(string:string) aliases=([
 	//plus skills and attacks
 ]);
 
-/*
-Formulas can be entered. They reference the underlying data mapping, NOT the
-coordinates of the cell on some spreadsheet layout, so it's as simple as
-referencing the names used. Full Pike syntax is available, but please be
-aware: The code broadly assumes that the person devising the formula knows
-what s/he is doing. It is entirely possible to break things by mucking that
-up. So take a bit of care, and don't deploy without knowing that it's right. :)
-*/
-
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
@@ -241,6 +232,14 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//Perform magic and return something that has a calculated value.
 	//The formula is Pike syntax. Any unexpected variable references in it become lookups
 	//into data[] and will be cast to the specified type (default 'int').
+	/* Notes formerly in the docstring:
+	Formulas can be entered. They reference the underlying data mapping, NOT the
+	coordinates of the cell on some spreadsheet layout, so it's as simple as
+	referencing the names used. Full Pike syntax is available, but please be
+	aware: The code broadly assumes that the person devising the formula knows
+	what s/he is doing. It is entirely possible to break things by mucking that
+	up. So take a bit of care, and don't deploy without knowing that it's right. :)
+	*/
 	GTK2.Widget calc(string formula,string|void name,string|void type)
 	{
 		object lbl=GTK2.Label();
