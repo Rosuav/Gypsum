@@ -152,12 +152,8 @@ your subwindow is well-behaved. Provide the following function::
 
 It will be called when your plugin is first loaded, and not called when it is
 reloaded. Store all GTK object references etc inside win[]. The plugin's main
-window should be stored in win->mainwindow; set (or consider setting) the
-following properties on it::
-
-	"title":"some useful string, even if you suppress its display"
-	"modal":1 /* may be useful for config dialogs */
-
+window should be stored in win->mainwindow; be sure to set a title, even if you
+suppress its display (it'll be used as the window's human-readable identifier).
 After creating the window, call ``::makewindow()`` in case further setup
 needs to be done.
 
