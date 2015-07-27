@@ -1,4 +1,3 @@
-* Generally, anything that people expect RosMud to do (should be pretty much done as of 20141223).
 * OOCBox?
 * There's some sort of resource leakage that results in slow-downs. See comments in window.pike in paint().
 * Mark-and-copy of RTL text has some issues. May be v difficult (even impossible) to fully solve, but try to make
