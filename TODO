@@ -39,7 +39,9 @@ Vague theories of maybe-this-would-be-nice:
       importing C into arbitrary Pike installations ain't gonna happen. :(
 * 256 color support
 * Negotiation/detection of Unicode/UTF-8 support? Figure out how servers go about detecting. Need
-  to find at least one server that detects, before that can make sense.
+  to find at least one server that detects, before that can make sense. Currently Gypsum assumes
+  "UTF-8 or CP-1252" regardless of the server's expectations, and always transmits UTF-8. It may
+  be that some servers will assume ASCII in this situation, and restrict their transmissions.
 * Lumina reported a strange issue whereby the input field was either black-on-black, or just not drawing. May be
   a font renderer or video driver issue. Windows 7. If ever seen elsewhere, look into. (Lumina also had issues
   with the charsheet plugin, which were quite probably the same problem remanifesting.)
