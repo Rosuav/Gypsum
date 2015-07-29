@@ -80,7 +80,10 @@ protected string bytes_to_string(bytes data)
 //is x.pike when it goes into "pike> " mode, and that needs to save the previous prompt,
 //which brings with it all sorts of hairiness. Alternatively, should plugins get a way
 //to say "shadow the prompt with this", which will override the *displayed* prompt until
-//it's removed, without affecting prompt hooks etc??
+//it's removed, without affecting prompt hooks etc?? That would push the complexity into
+//core, which is a bad idea if only one plugin will ever use it. Leave this as a TODO
+//until such time as another plugin needs the same kind of facility. Third-party reports
+//welcomed on this point :)
 void setprompt(mapping conn)
 {
 	if (G->G->window->runhooks("prompt",0,conn->display,conn->curline)) return;
