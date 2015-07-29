@@ -216,7 +216,7 @@ class command
 	}
 }
 
-//Plugin that hooks various events eg input and output
+//Plugin that hooks various events, most commonly input (text entered by user) and output (text comes from server)
 class hook
 {
 	constant provides="event hook";
