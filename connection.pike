@@ -369,6 +369,7 @@ void sockaccept(mapping conn)
 void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened. Shouldn't normally happen, I think, but let's be safe.
+	if (!conn->sock->is_open() || !conn->sock->query_address()) {connfailed(conn); return;} //It actually failed to connect, despite coming through to this callback.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
