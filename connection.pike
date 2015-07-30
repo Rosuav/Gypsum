@@ -378,6 +378,7 @@ void connected(mapping conn)
 }
 
 //Callback for when the connection fails. Oddly, this appears not to be happening - it's coming through to connected() instead. Investigate.
+//Despite the trap inside connected(), we're still worse off to the value of errno - so we have no idea _why_ the connection failed.
 void connfailed(mapping conn)
 {
 	if (!conn->sock) return; //If the user disconnects and reattempts, this callback will eventually happen, pointing to an old conn mapping. Ignore it.
