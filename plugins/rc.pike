@@ -1,5 +1,7 @@
 inherit command;
 
+//I wonder... can this viably inherit connection.pike?????
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="-" && m_delete(persist,"plugins/rc/password"))
