@@ -25,4 +25,5 @@ int process(string param,mapping(string:mixed) subw)
 	string salt=MIME.encode_base64(random_string(9));
 	persist["plugins/rc/password"]=salt+" "+MIME.encode_base64(Crypto.SHA256.hash(salt+param));
 	say(subw,"%% Password set. You may override it by resubmitting this command.");
+	//To verify, split the persist value on the space, and compare against the same encrypted+encoded form.
 }
