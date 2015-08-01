@@ -1,6 +1,7 @@
 inherit command;
 
 //I wonder... can this viably inherit connection.pike?????
+//Hmm. Actually, it'd probably be better implemented with a gross hack in window.pike that replicates all say() output.
 
 int process(string param,mapping(string:mixed) subw)
 {
