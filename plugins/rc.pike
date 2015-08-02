@@ -17,7 +17,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% ideally be much longer.");
 		catch
 		{
-			//On Unix systems, there's often a dictionary handy.
+			//On Unix systems, there's often a dictionary handy. Offer an XKCD 936 password example.
 			//If there isn't (eg on Windows), just skip this bit.
 			array words=Regexp.SimpleRegexp("^[a-z]+$")->match(Stdio.read_file("/usr/share/dict/words")/"\n");
 			say(subw,"%%%% For example: /rc %s-%s-%s-%s",random(words),random(words),random(words),random(words));
