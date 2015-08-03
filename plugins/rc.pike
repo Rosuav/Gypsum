@@ -13,7 +13,8 @@ completely useless, and is retained only for the interest of editors.
 It does contain an industry best-practice password management system,
 which may be of some value somewhere.
 
-Don't bother enabling this, it doesn't do anything useful.";
+Don't bother enabling this, it doesn't do anything useful.
+";
 
 //I wonder... can this viably inherit connection.pike?????
 //Hmm. Actually, it'd probably be better implemented with a gross hack in window.pike that replicates all say() output.
