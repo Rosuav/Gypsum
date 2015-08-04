@@ -13,7 +13,7 @@ completely useless, and is retained only for the interest of editors.
 It does contain an industry best-practice password management system,
 which may be of some value somewhere.
 
-Don't bother enabling this, it doesn't do anything useful.
+This exists for its source code - it has no practical use as-is.
 ";
 
 //I wonder... can this viably inherit connection.pike?????
