@@ -21,6 +21,9 @@ on Unix-like systems only, and without the 'common words' rule.
 //I wonder... can this viably inherit connection.pike?????
 //Hmm. Actually, it'd probably be better implemented with a gross hack in window.pike that replicates all say() output.
 
+//TODO: Make a password generation system that uses input and output stats to
+//figure out what "common" words are. This would then work on all platforms.
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="-" && m_delete(persist,"plugins/rc/password"))
