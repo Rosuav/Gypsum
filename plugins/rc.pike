@@ -14,6 +14,8 @@ It does contain an industry best-practice password management system,
 which may be of some value somewhere.
 
 This exists for its source code - it has no practical use as-is.
+Though I suppose you could use it as an XKCD 936 password generator,
+on Unix-like systems only, and without the 'common words' rule.
 ";
 
 //I wonder... can this viably inherit connection.pike?????
