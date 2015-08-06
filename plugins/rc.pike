@@ -24,6 +24,18 @@ on Unix-like systems only, and without the 'common words' rule.
 //TODO: Make a password generation system that uses input and output stats to
 //figure out what "common" words are. This would then work on all platforms.
 
+string generate_password()
+{
+	catch
+	{
+		//On Unix systems, there's often a dictionary handy.
+		//If there isn't (eg on Windows), an error will be thrown and we'll return zero.
+		array words=Regexp.SimpleRegexp("^[a-z]+$")->match(Stdio.read_file("/usr/share/dict/words")/"\n");
+		return sprintf("%s-%s-%s-%s",random(words),random(words),random(words),random(words));
+	};
+	return 0; //Unable to generate a password.
+}
+
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="-" && m_delete(persist,"plugins/rc/password"))
@@ -36,13 +48,8 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% This sets the remote-control password for your Gypsum.");
 		say(subw,"%% Your password must be at least 8 characters long, and should");
 		say(subw,"%% ideally be much longer.");
-		catch
-		{
-			//On Unix systems, there's often a dictionary handy. Offer an XKCD 936 password example.
-			//If there isn't (eg on Windows), just skip this bit.
-			array words=Regexp.SimpleRegexp("^[a-z]+$")->match(Stdio.read_file("/usr/share/dict/words")/"\n");
-			say(subw,"%%%% For example: /rc %s-%s-%s-%s",random(words),random(words),random(words),random(words));
-		};
+		string pw=generate_password();
+		if (pw) say(subw,"%%%% For example: /rc %s",pw); //If we can't generate passwords, don't, it's no big deal.
 		if (persist["plugins/rc/password"]) say(subw,"%% A password has been set; using this command will replace it.");
 		return 1;
 	}
