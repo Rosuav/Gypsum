@@ -38,7 +38,7 @@ string generate_password()
 
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="-" && m_delete(persist,"plugins/rc/password"))
+	if (param=="-" && m_delete(persist,"plugins/rc/password")) //If there wasn't, just fall through to the help-text display.
 	{
 		say(subw,"%% Password unset. There is now no valid password for remote control.");
 		return 1;
