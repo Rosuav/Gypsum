@@ -248,7 +248,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (!type) type="int";
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols=(<>);
-			program p=compile("mixed _="+formula+";",this); //Note, p must be retained or the compile() call will be optimized out!
+			program p=compile("mixed _="+formula+";",this); //Note: Under current versions of Pike, p must be retained or the compile() call will be optimized out!
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
