@@ -98,7 +98,9 @@ int process(string param,mapping(string:mixed) subw)
 	{
 		//Hack: Type "/x" on its own to say() the last result.
 		//Very handy if it was a non-ASCII string and you want to see it as
-		//characters rather than codepoints.
+		//characters rather than codepoints (the default %O is designed so you
+		//can unambiguously identify codepoints, but it doesn't let you see
+		//what the characters themselves look like).
 		say(subw,G->G->last_x_result);
 		return 1;
 	}
