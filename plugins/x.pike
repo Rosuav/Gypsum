@@ -94,6 +94,14 @@ int closetab(mapping(string:mixed) subw,int index) {m_delete(subw,"hilfe");} //B
 //Direct compilation mode - the original. Convenient for single expressions.
 int process(string param,mapping(string:mixed) subw)
 {
+	if (param=="" && stringp(G->G->last_x_result) && sizeof(G->G->last_x_result)<1024)
+	{
+		//Hack: Type "/x" on its own to say() the last result.
+		//Very handy if it was a non-ASCII string and you want to see it as
+		//characters rather than codepoints.
+		say(subw,G->G->last_x_result);
+		return 1;
+	}
 	program tmp; mixed err;
 	err=catch {tmp=compile_string(#"
 	object window=G->G->window;
