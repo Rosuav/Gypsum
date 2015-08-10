@@ -23,6 +23,10 @@ on Unix-like systems only, and without the 'common words' rule.
 
 //TODO: Make a password generation system that uses input and output stats to
 //figure out what "common" words are. This would then work on all platforms.
+//It could then be asked for a dictionary-only password, a received-only or
+//sent-only password, or a filtered-common password, where the latter uses the
+//frequency table from sent/received words, but filters down to those words
+//which exist in the dictionary (thus eliminating misspellings).
 
 string generate_password()
 {
