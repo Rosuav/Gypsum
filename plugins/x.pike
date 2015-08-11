@@ -96,12 +96,12 @@ int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="")
 	{
-		//Hack: Type "/x" on its own to say() the last result - short(ish) strings only.
+		//Hack: Type "/x" on its own to say() the last result - strings only.
 		//Very handy if it was a non-ASCII string and you want to see it as
 		//characters rather than codepoints (the default %O is designed so you
 		//can unambiguously identify codepoints, but it doesn't let you see
 		//what the characters themselves look like).
-		if (stringp(G->G->last_x_result) && sizeof(G->G->last_x_result)<1024) say(subw,G->G->last_x_result);
+		if (stringp(G->G->last_x_result)) say(subw,G->G->last_x_result);
 		else say(subw,"%% Type '/x some_expression' to calculate something.");
 		return 1;
 	}
