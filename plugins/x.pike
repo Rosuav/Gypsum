@@ -32,9 +32,6 @@ revert to MUD mode. Leave this as an unresolved issue unless some superb
 solution can be found.
 ";
 
-void compile_error(string fn,int l,string msg) {say(0,"Compilation error on line "+l+": "+msg+"\n");}
-void compile_warning(string fn,int l,string msg) {say(0,"Compilation warning on line "+l+": "+msg+"\n");}
-
 string calculate(mapping(string:mixed) subw,string expr)
 {
 	catch
@@ -45,7 +42,7 @@ string calculate(mapping(string:mixed) subw,string expr)
 		else prev="";
 		//Note that 'val' is declared as accepting a string just for the sake of the
 		//explain check below. You can't actually use this for strings.
-		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,this)()->calc();
+		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,G->G->window)()->calc();
 		subw->last_calc_result=val;
 		if (explain) val=expr[1..]+" = "+val;
 		return val;
