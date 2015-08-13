@@ -270,11 +270,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return lbl;
 	}
 
-	//Add a weapon block - type is "melee" or "ranged"
+	//Add a weapon block - type "ranged" is special
 	GTK2.Widget weapon(string prefix,string type)
 	{
 		prefix="attack_"+prefix;
-		string stat=(["melee":"STR","ranged":"DEX"])[type];
+		string stat = type=="ranged" ? "DEX" : "STR";
 		return GTK2.Frame(String.capitalize(type))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Hbox(0,0)
 				->add(GTK2.Label("Keyword"))->add(ef(prefix,8))
@@ -407,8 +407,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			,GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
 				->add(GTK2.Vbox(0,10)
-					->add(weapon("1","melee"))
-					->add(weapon("2","melee"))
+					->add(weapon("1","primary"))
+					->add(weapon("2","secondary"))
 					->add(weapon("3","ranged"))
 				)
 				->pack_start(GTK2.Vbox(0,10)
