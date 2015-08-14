@@ -63,7 +63,9 @@ charsheet, and both are aliases for existing mappings.
 //different from what it was, and if so, submit the change. Would require either querying the
 //server on charsheet opening, or assuming no aliases at first, and updating lots of them on
 //first edit. Querying would be better; we need a machine-readable dump of aliases - or maybe
-//they should simply be auto-provided as part of the charsheet load blob.
+//they should simply be auto-provided as part of the charsheet load blob. Alternatively, _only_
+//update them when something changes, which means you won't get a bunch of pointless aliases
+//the moment you use the charsheet for anything.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
 	"STR":"d20+{STR_mod}", //etc
