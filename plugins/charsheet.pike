@@ -27,6 +27,7 @@ mapping(string:multiset(object)) charsheets;
 //reopens, and you see a completely new layout... UI nightmare or elegant hack?
 //Also, to what extent should distinct charsheets share content? As much as possible,
 //or only where it truly has the exact same semantics?
+
 //Should roll aliases be controlled by the server or the client? I could give full
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
