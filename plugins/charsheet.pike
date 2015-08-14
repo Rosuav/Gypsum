@@ -183,7 +183,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	an EventBox, inside an enigma. The Alignment supports padding (EventBoxes don't),
 	the EventBox supports color changing (the Alignment doesn't), so the sum total is
 	an Entry with a bit of color beside it (as many pixels as the Alignment's padding
-	requests). The color of that padding could say "has note" etc.
+	requests). The color of that padding could say "has note" etc. This would consume
+	a lot of space if used everywhere, but if it's used only when something has notes
+	attached to it, it would be reasonable. On the flip side, that would relayout the
+	window completely when a note is added, which is ugly. Hrm.
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
