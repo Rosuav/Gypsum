@@ -178,6 +178,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	notes can be created with F2, so what it really means is that a non-blank note is
 	represented in some way. Ideally, the note should record who put it there and, if
 	possible, when (and/or when it was last edited).
+
+	One possible implementation would be to put the Entry inside an Alignment, inside
+	an EventBox, inside an enigma. The Alignment supports padding (EventBoxes don't),
+	the EventBox supports color changing (the Alignment doesn't), so the sum total is
+	an Entry with a bit of color beside it (as many pixels as the Alignment's padding
+	requests). The color of that padding could say "has note" etc.
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
