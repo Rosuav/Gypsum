@@ -360,8 +360,6 @@ other menu, and thus this is made possible; but it should be rare.
 BEST PRACTICE: Even if set_menu_text() will be called to set a dynamic label,
 still provide a menu_label. It is used for introspection, and ideally should be
 indicative of what the actual label is likely to be, perhaps with placeholders.
-Previous versions of Gypsum used the plugin name here in place of an absent
-label, and for compatibility, this is still supported, but not recommended.
 
 General notes
 -------------
