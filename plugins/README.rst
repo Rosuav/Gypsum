@@ -481,7 +481,7 @@ either bytes or text (with an implicit ASCII encode/decode "step"); this is
 also the case for any seven-bit string literals. For this purpose, the typedef
 "ascii" can be used.
 
-BEST PRACTICE: Plugin file names should restrict themselves to the ASCII set
+BEST PRACTICE: Plugin file names should restrict themselves to ASCII characters
 for maximum cross-platform compatibility. File system encodings are a mess that
 I'd really rather not have to dig into. Also, avoid using a leading dot;
 currently, Gypsum does not acknowledge these specially, but in future, these
