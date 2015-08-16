@@ -404,6 +404,8 @@ void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
 	//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
 	//get the right address. TODO: Properly handle CNAMEs, including firing off other
 	//requests.
+	//TODO: If we get back a quad-A but fail to connect, try the A. This shouldn't
+	//preclude someone using IPv6 where it _is_ available, eg ::1 for localhost.
 	array responses = (resp->an->a + resp->an->aaaa) - ({0});
 	if (string ip = sizeof(responses) && responses[0])
 	{
