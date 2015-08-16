@@ -398,13 +398,19 @@ void ka(mapping conn)
 void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
 {
 	if (!conn->dnspending) return; //Already got a positive response. (If we fire A and AAAA requests, and the first one to respond has an answer, we ignore the second.)
-	if (mapping ans = sizeof(resp->an) && resp->an[0])
-		if (string ip = ans->aaaa || ans->a)
-		{
-			conn->dnspending=0;
-			complete_connection(ip, conn, info);
-			return;
-		}
+	//Hack: Collect up all A and AAAA responses, regardless of the query type fired off.
+	//Note that this depends on upstream DNS not sending us superfluous responses. But
+	//we'd depend on them to not send us outright forged responses anyway, so that's
+	//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
+	//get the right address. TODO: Properly handle CNAMEs, including firing off other
+	//requests.
+	array responses = (resp->an->a + resp->an->aaaa) - ({0});
+	if (string ip = sizeof(responses) && responses[0])
+	{
+		conn->dnspending=0;
+		complete_connection(ip, conn, info);
+		return;
+	}
 	if (!--conn->dnspending) say(conn->display,"%%% Unable to resolve host.");
 }
 
