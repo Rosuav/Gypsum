@@ -499,6 +499,7 @@ void connect(string world,mapping|void subw)
 	mapping info=persist["worlds"][world];
 	if (!info)
 	{
+		//TODO: Support IPv6 literals, without breaking the parsing of other things
 		if (sscanf(world,"%s%*[ :]%d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
 		else {say(subw,"%% Connect to what?"); return;}
 	}
