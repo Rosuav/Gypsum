@@ -186,7 +186,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	requests). The color of that padding could say "has note" etc. This would consume
 	a lot of space if used everywhere, but if it's used only when something has notes
 	attached to it, it would be reasonable. On the flip side, that would relayout the
-	window completely when a note is added, which is ugly. Hrm.
+	window completely when a note is added, which is ugly. Hrm. It'd really be better
+	to consume a top corner. Can I draw over an entry field somehow? Have another GTK
+	object on the same location (maybe one without an X window, and a child of the EF
+	if that's possible), on which I draw the overlay??
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
