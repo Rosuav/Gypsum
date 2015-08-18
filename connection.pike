@@ -460,8 +460,8 @@ mapping connect(object display,mapping info)
 	}
 	//Otherwise, resolve DNS asynchronously and then connect.
 	//Ideally, a /dc should wipe the conn mapping altogether, but since that
-	//isn't currently happening, the code (see window.pike) will have to be
-	//enhanced to explicitly check for and cancel any pending DNS lookups.
+	//isn't currently happening, the code (see window.pike) explicitly checks
+	//for and cancels any pending DNS lookups.
 	say(conn->display,"%%% Resolving "+info->host+"...");
 	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
 	object cli=Protocols.DNS.async_client();
