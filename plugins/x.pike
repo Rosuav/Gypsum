@@ -36,16 +36,16 @@ string calculate(mapping(string:mixed) subw,string expr)
 {
 	catch
 	{
-		int explain=has_prefix(expr,"#");
+		int explain=sscanf(expr,"#%s",expr);
+		sscanf(expr,"%s:%s",expr,string fmt);
 		mixed prev=subw->last_calc_result;
 		if (intp(prev) || floatp(prev)) prev=sprintf("int|float _=%O;\n",prev);
 		else prev="";
-		//Note that 'val' is declared as accepting a string just for the sake of the
-		//explain check below. You can't actually use this for strings.
-		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,G->G->window)()->calc();
+		int|float val=compile_string(prev+"int|float calc() {return "+expr+";}",0,G->G->window)()->calc();
 		subw->last_calc_result=val;
-		if (explain) val=expr[1..]+" = "+val;
-		return (string)val;
+		if (fmt) fmt=sprintf("%"+(fmt-"%"),val); else fmt=(string)val;
+		if (explain) fmt=expr+" = "+fmt;
+		return (string)fmt;
 	};
 	return expr;
 }
