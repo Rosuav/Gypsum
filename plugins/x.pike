@@ -45,7 +45,7 @@ string calculate(mapping(string:mixed) subw,string expr)
 		int|float|string val=compile_string(prev+"int|float calc() {return "+expr[explain..]+";}",0,G->G->window)()->calc();
 		subw->last_calc_result=val;
 		if (explain) val=expr[1..]+" = "+val;
-		return val;
+		return (string)val;
 	};
 	return expr;
 }
