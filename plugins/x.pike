@@ -16,7 +16,7 @@ accessed by the \"/x\" command. It's the best way to manipulate the internals of
 Gypsum, and it has some convenience shorthands which can be seen by looking at
 the source; also, it's a powerful Unicode text manipulator, with slicing, joining,
 and NFC/NFD transformations easily available. (Use '/x' on its own to quickly see
-the last result as text, rather than in its disambiguation display.)
+the last result as text, rather than in the normal disambiguation display.)
 
 Hilfe mode calls on Tools.Hilfe (the same as Pike's inbuilt interactive mode),
 and can handle multi-line expressions/commands, but is less convenient for
