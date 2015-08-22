@@ -157,7 +157,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//if (par->get_name()=="GtkScrolledWindow") //Is this reliable?
 			//As long as nobody calls set_name(), the default name should be the type name.
 			//Lance Dillon proposed adding a function which would retrieve the type name
-			//directly, but so long as I support older Pikes, I need to restrict myself to this.
+			//directly, but it wouldn't be in older Pikes anyway, so it's not worth adding.
 			//It may be worth putting in a version trap; on the other hand, I've yet to see
 			//any false positives from checking for the presence of get_hscrollbar, so while
 			//it may not be the clearest way to do things, it does work. No other source file
