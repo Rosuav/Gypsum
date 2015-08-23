@@ -407,7 +407,8 @@ void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
 	//TODO: If we get back a quad-A but fail to connect, try the A. This shouldn't
 	//preclude someone using IPv6 where it _is_ available, eg ::1 for localhost.
 	//TODO: Cache DNS responses (which we should do independently of the current
-	//connection attempt, and independently of the conn mapping)
+	//connection attempt, and independently of the conn mapping), and make that cache
+	//available to other modules.
 	array responses = (resp->an->a + resp->an->aaaa) - ({0});
 	if (string ip = sizeof(responses) && responses[0])
 	{
