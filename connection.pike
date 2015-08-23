@@ -408,7 +408,9 @@ void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
 	//preclude someone using IPv6 where it _is_ available, eg ::1 for localhost.
 	//TODO: Cache DNS responses (which we should do independently of the current
 	//connection attempt, and independently of the conn mapping), and make that cache
-	//available to other modules.
+	//available to other modules. Actually - would probably be worth having something
+	//like the Python socket.create_connection() function, which attempts a series of
+	//IPs (of both protocols) until one succeeds or it runs out.
 	array responses = (resp->an->a + resp->an->aaaa) - ({0});
 	if (string ip = sizeof(responses) && responses[0])
 	{
