@@ -930,3 +930,10 @@ program probe_plugin(string filename)
 	add_constant("COMPILE_ONLY");
 	return ret;
 }
+
+class DNS(string hostname,function callback)
+{
+	array(string) ips=({ });
+	//TODO: Look up hostname, get IP addresses
+	//When we have some, call the callback. It may be called more than once.
+}
