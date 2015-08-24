@@ -931,9 +931,24 @@ program probe_plugin(string filename)
 	return ret;
 }
 
-class DNS(string hostname,function callback)
+class DNS(string hostname,function callback,mixed ... cbargs)
 {
+	object cli=Protocols.DNS.async_client();
 	array(string) ips=({ });
+	int pending;
 	//TODO: Look up hostname, get IP addresses
 	//When we have some, call the callback. It may be called more than once.
+
+	void dnsresponse(string domain,mapping resp)
+	{
+		ips += (resp->an->a + resp->an->aaaa) - ({0});
+		callback(this,@cbargs);
+	}
+
+	void create()
+	{
+		string prot=persist["connection/protocol"];
+		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
+		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
+	}
 }
