@@ -944,7 +944,7 @@ class DNS(string hostname,function callback)
 	void dnsresponse(string domain,mapping resp)
 	{
 		ips += (resp->an->a + resp->an->aaaa) - ({0});
-		callback(this);
+		callback(this); //callback(this,@cbargs);
 	}
 
 	void create()
