@@ -931,7 +931,9 @@ program probe_plugin(string filename)
 	return ret;
 }
 
-class DNS(string hostname,function callback,mixed ... cbargs)
+//NOTE: Adding "mixed ... cbargs" would make sense here but doesn't seem to work.
+//Investigating.
+class DNS(string hostname,function callback)
 {
 	object cli=Protocols.DNS.async_client();
 	array(string) ips=({ });
@@ -942,7 +944,7 @@ class DNS(string hostname,function callback,mixed ... cbargs)
 	void dnsresponse(string domain,mapping resp)
 	{
 		ips += (resp->an->a + resp->an->aaaa) - ({0});
-		callback(this,@cbargs);
+		callback(this);
 	}
 
 	void create()
