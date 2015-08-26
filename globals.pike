@@ -931,8 +931,9 @@ program probe_plugin(string filename)
 	return ret;
 }
 
-//NOTE: Adding "mixed ... cbargs" would make sense here but doesn't seem to work.
-//Investigating.
+//NOTE: Adding "mixed ... cbargs" would make sense here but doesn't work in any current
+//Pikes. It may well be a bug, but even if it's fixed right now (20150826), it won't be
+//safe to use here for quite a while, so instead we just don't provide args.
 class DNS(string hostname,function callback)
 {
 	object cli=Protocols.DNS.async_client();
