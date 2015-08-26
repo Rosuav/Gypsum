@@ -933,9 +933,10 @@ program probe_plugin(string filename)
 
 //NOTE: Adding "mixed ... cbargs" would make sense here but doesn't work in any current
 //Pikes. It may well be a bug, but even if it's fixed right now (20150826), it won't be
-//safe to use here for quite a while, so instead we just don't provide args.
+//safe to use here for quite a while, so instead we collect them in create().
 class DNS(string hostname,function callback)
 {
+	array cbargs;
 	object cli=Protocols.DNS.async_client();
 	array(string) ips=({ });
 	int pending;
@@ -945,11 +946,12 @@ class DNS(string hostname,function callback)
 	void dnsresponse(string domain,mapping resp)
 	{
 		ips += (resp->an->a + resp->an->aaaa) - ({0});
-		callback(this); //callback(this,@cbargs);
+		callback(this,@cbargs);
 	}
 
-	void create()
+	void create(mixed ... args)
 	{
+		cbargs=args;
 		string prot=persist["connection/protocol"];
 		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
 		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
