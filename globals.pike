@@ -946,6 +946,11 @@ class DNS(string hostname,function callback)
 
 	void dnsresponse(string domain,mapping resp)
 	{
+		//TODO: Cache the result, complete with its TTL
+		//For simplicity, don't bother caching negative responses. If we
+		//get asked again for something that failed, it's quite possibly
+		//because network settings have changed and there's a chance it
+		//will now succeed.
 		ips += (resp->an->a + resp->an->aaaa) - ({0});
 		callback(this,@cbargs);
 	}
