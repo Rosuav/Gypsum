@@ -958,6 +958,9 @@ class DNS(string hostname,function callback)
 	void create(mixed ... args)
 	{
 		cbargs=args; //See above, can't be done the clean way.
+		//TODO: What should be done if connection/protocol changes and we
+		//have cached info? Should the cache retain A and AAAA records
+		//separately, and proceed with the two parts independently?
 		string prot=persist["connection/protocol"];
 		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
 		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
