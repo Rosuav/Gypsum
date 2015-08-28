@@ -966,3 +966,12 @@ class DNS(string hostname,function callback)
 		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
 	}
 }
+
+//Establish a socket connection to a specified host/port
+//The callback will be called with either a socket object or 0.
+//Connections will be attempted to all available IP addresses
+//for the specified host, in sequence.
+void establish_connection(string host_or_ip,int port,function callback)
+{
+	//stub
+}
