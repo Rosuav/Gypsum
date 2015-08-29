@@ -972,6 +972,8 @@ class DNS(string hostname,function callback)
 //The callback will be called with either a socket object or 0.
 //Connections will be attempted to all available IP addresses
 //for the specified host, in sequence.
+//TODO: Should the callback be given "notification" messages like
+//"Connecting to <ip>..." prior to the connection succeeding?
 void establish_connection(string host_or_ip,int port,function callback)
 {
 	//stub
