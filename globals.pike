@@ -694,7 +694,8 @@ class tabstatus(string name)
 	//that subw->world is not currently cleared on disconnection. But you
 	//won't normally get a new connection while you're already connected,
 	//so any nonzero world should be assumed to be "wasn't connected, now
-	//will be".)
+	//will be".) Note: This is called when the world selection is made, NOT
+	//when a connection is actually established. This may change in future.
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 

@@ -512,7 +512,6 @@ void connect(string world,mapping|void subw)
 		if (sscanf(world,"%s %d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
 		else {say(subw,"%% Connect to what?"); return;}
 	}
-	//NOTE: This happens regardless of connection success. TODO: Is that ideal?
 	values(G->G->tabstatuses)->connected(subw,world);
 	subw->world=world;
 	if (subw->connection && subw->connection->dnspending) {say(subw,"%% Connection pending, disconnect to abort"); return;}
