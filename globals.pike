@@ -963,6 +963,13 @@ class DNS(string hostname,function callback)
 		//have cached info? Should the cache retain A and AAAA records
 		//separately, and proceed with the two parts independently?
 		string prot=persist["connection/protocol"];
+		//IP address literals get "resolved" instantly.
+		if (prot=="*" || sscanf(hostname,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(hostname))
+		{
+			ips=({hostname});
+			callback(this,@cbargs);
+			return;
+		}
 		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
 		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
 	}
