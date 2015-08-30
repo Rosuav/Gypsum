@@ -982,6 +982,11 @@ class DNS(string hostname,function callback)
 //The callback receives three possible first arguments: an open
 //socket (indicating success), a string (indicating progress),
 //or 0 (indicating failure). The strings are human-readable.
+//NOTE: Any connection failure results in a simple 0 argument.
+//It's not currently possible to get information about _how_ a
+//connection failed (refused, timed out, etc) as the socket's
+//errno is not being retained properly. This may change in the
+//future, but will depend on a Pike change.
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
@@ -1001,7 +1006,7 @@ class establish_connection(string hostname,int port,function callback)
 	void tryconn()
 	{
 		if (sock) return;
-		if (!sizeof(dns->ips) && !dns->pending) callback(0,@cbargs);
+		if (!sizeof(dns->ips) && !dns->pending) callback(0,@cbargs); //We've run out of addresses to try. Connection failed.
 		[string ip,dns->ips]=Array.shift(dns->ips);
 		callback("Connecting to "+ip+"...", @cbargs);
 		sock=Stdio.File(); sock->open_socket();
