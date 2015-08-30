@@ -972,9 +972,39 @@ class DNS(string hostname,function callback)
 //The callback will be called with either a socket object or 0.
 //Connections will be attempted to all available IP addresses
 //for the specified host, in sequence.
-//TODO: Should the callback be given "notification" messages like
-//"Connecting to <ip>..." prior to the connection succeeding?
-void establish_connection(string host_or_ip,int port,function callback)
+//The callback receives three possible first arguments: an open
+//socket (indicating success), a string (indicating progress),
+//or 0 (indicating failure). The strings are human-readable.
+class establish_connection(string hostname,int port,function callback)
 {
-	//stub
+	object sock;
+	object dns=DNS(hostname,tryconn);
+	array cbargs;
+
+	void connected()
+	{
+		if (!sock->is_open() || !sock->query_address()) tryconn();
+		//Hack: Make absolutely sure that we can't attempt any more connections
+		//after one succeeds, by putting self into sock. If tryconn() sees that
+		//there's an object (any object) in sock, it'll do nothing; and if this
+		//object gets destruct()ed, calling methods on it won't work anyway.
+		callback(sock, @cbargs); sock=this;
+	}
+
+	void tryconn()
+	{
+		if (sock) return;
+		if (!sizeof(dns->ips) && !dns->pending) callback(0,@cbargs);
+		[string ip,dns->ips]=Array.shift(dns->ips);
+		callback("Connecting to "+ip+"...", @cbargs);
+		sock=Stdio.File(); sock->open_socket();
+		sock->set_nonblocking(0,connected,tryconn);
+		if (mixed ex=catch {sock->connect(ip,port);})
+		{
+			callback("Exception in connection: "+describe_error(ex), @cbargs);
+			tryconn(); //I doubt this will happen repeatedly, so just recurse
+		}
+	}
+
+	void create(mixed ... args) {cbargs=args;} //As above
 }
