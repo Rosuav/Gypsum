@@ -932,6 +932,9 @@ program probe_plugin(string filename)
 	return ret;
 }
 
+//Look up some sort of name and return one or more IP addresses
+//Note that an IP literal will result in the callback being called
+//before DNS() returns, and then never afterward. Be prepared for this.
 class DNS(string hostname,function callback)
 {
 	//NOTE: This would be more idiomatically spelled as "mixed ... cbargs" above, rather
