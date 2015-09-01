@@ -990,7 +990,9 @@ class DNS(string hostname,function callback)
 //errno is not being retained properly. This may change in the
 //future, but will depend on a Pike change. If that happens, a
 //connection failure will be signalled by another callback call,
-//possibly with an integer argument (errno).
+//possibly with an integer argument (errno). On a failed conn
+//with no errno available, hack it to something nonzero - maybe
+//a negative number, or maybe EOWNERDEAD (130). :)
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
