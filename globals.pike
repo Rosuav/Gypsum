@@ -988,7 +988,9 @@ class DNS(string hostname,function callback)
 //It's not currently possible to get information about _how_ a
 //connection failed (refused, timed out, etc) as the socket's
 //errno is not being retained properly. This may change in the
-//future, but will depend on a Pike change.
+//future, but will depend on a Pike change. If that happens, a
+//connection failure will be signalled by another callback call,
+//possibly with an integer argument (errno).
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
