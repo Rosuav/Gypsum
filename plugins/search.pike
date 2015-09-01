@@ -71,4 +71,6 @@ void create(string name)
 	statustxt->tooltip="Ctrl-F to search";
 	::create(name);
 	statustxt->signals=({gtksignal(statustxt->ef,"key_press_event",keypress,0,UNDEFINED,1)});
+	//Brief mode: cut out the "Search: " label, saving some horizontal space.
+	statustxt->lbl->set_text("Search: "*(!persist["search/brief"]));
 }
