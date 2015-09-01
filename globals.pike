@@ -943,10 +943,9 @@ class DNS(string hostname,function callback)
 	//support, it's safer to just use the non-idiomatic explicit form.
 	array cbargs;
 	object cli=Protocols.DNS.async_client();
-	array(string) ips=({ });
-	int pending;
-	//TODO: Look up hostname, get IP addresses
-	//When we have some, call the callback. It may be called more than once.
+
+	array(string) ips=({ }); //May be mutated; will only ever be appended to.
+	int pending; //If this is nonzero, the callback will be called again - possibly with more IPs (but possibly not)
 
 	void dnsresponse(string domain,mapping resp)
 	{
