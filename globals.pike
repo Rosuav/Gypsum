@@ -969,7 +969,7 @@ class DNS(string hostname,function callback)
 		if (prot=="*" || sscanf(hostname,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(hostname))
 		{
 			ips=({hostname});
-			//TODO: Should this be done with call_out so it's guaranteed to always happen _after_ the constructor finishes?
+			//TODO: Should this be done with call_out so it's guaranteed to always happen _after_ the constructor returns?
 			callback(this,@cbargs);
 			return;
 		}
