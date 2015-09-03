@@ -985,7 +985,12 @@ class DNS(string hostname,function callback)
 //The callback receives three possible first arguments: an open
 //socket (indicating success), a string (indicating progress),
 //or 0 (indicating failure). The strings are human-readable.
-//NOTE: Any connection failure results in a simple 0 argument.
+//Note that the zero indicates complete failure, rather than a
+//single failed connection; if no A/AAAA records are returned,
+//or if multiple are and they've all been tried, the result is
+//the same as the "classic" case of one IP address and a failed
+//connection.
+
 //It's not currently possible to get information about _how_ a
 //connection failed (refused, timed out, etc) as the socket's
 //errno is not being retained properly. This may change in the
