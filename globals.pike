@@ -1007,7 +1007,7 @@ class establish_connection(string hostname,int port,function callback)
 
 	void connected()
 	{
-		if (!sock->is_open() || !sock->query_address()) tryconn();
+		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn();}
 		//Hack: Make absolutely sure that we can't attempt any more connections
 		//after one succeeds, by putting self into sock. If tryconn() sees that
 		//there's an object (any object) in sock, it'll do nothing; and if this
