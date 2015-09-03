@@ -1002,7 +1002,7 @@ class DNS(string hostname,function callback)
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
-	object dns=DNS(hostname,tryconn);
+	object dns;
 	array cbargs;
 
 	void connected()
@@ -1030,5 +1030,5 @@ class establish_connection(string hostname,int port,function callback)
 		}
 	}
 
-	void create(mixed ... args) {cbargs=args;} //As above
+	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns above would do it before hostname is set, so it's done in create().
 }
