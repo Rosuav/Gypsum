@@ -1026,7 +1026,7 @@ class establish_connection(string hostname,int port,function callback)
 		if (mixed ex=catch {sock->connect(ip,port);})
 		{
 			callback("Exception in connection: "+describe_error(ex), @cbargs);
-			tryconn(); //I doubt this will happen repeatedly, so just recurse
+			tryconn(); //I doubt this will happen repeatedly (and definitely not infinitely), so just recurse
 		}
 	}
 
