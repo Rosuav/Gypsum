@@ -1008,11 +1008,12 @@ class establish_connection(string hostname,int port,function callback)
 	void connected()
 	{
 		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn();}
+		callback(sock, @cbargs);
 		//Hack: Make absolutely sure that we can't attempt any more connections
 		//after one succeeds, by putting self into sock. If tryconn() sees that
 		//there's an object (any object) in sock, it'll do nothing; and if this
 		//object gets destruct()ed, calling methods on it won't work anyway.
-		callback(sock, @cbargs); sock=this;
+		sock=this;
 	}
 
 	void tryconn()
