@@ -17,6 +17,9 @@ This is not intended to be used as it is, but referred to by plugin
 developers. It forms 'executable documentation'.
 ";
 
+constant config_persist_key="plugins/demo";
+constant config_description="Demo config value";
+
 // ----------------- inherit command ----------------- //
 
 int process(string param,mapping(string:mixed) subw)
@@ -25,6 +28,7 @@ int process(string param,mapping(string:mixed) subw)
 	say(subw, "%% Normally this should return 1. There are very few reasons");
 	say(subw, "%% for a slash command to return 0, but for consistency, the");
 	say(subw, "%% protocol is the same as for hooks etc.");
+	if (persist[config_persist_key]) say(subw, "%% My config value is: "+persist[config_persist_key]);
 	return 1;
 }
 
