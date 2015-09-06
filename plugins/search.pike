@@ -19,6 +19,8 @@ to the main input field.
 inherit statustext;
 inherit plugin_menu;
 
+//TODO: Have a "Brief Mode" config option. Currently the config_persist_key mechanic allows only strings.
+
 void find_string(string findme,mapping(string:mixed) subw)
 {
 	if (findme=="") {m_delete(subw,"search_last"); return;} //Blank search to reset the search pointer. (Any other search string will reset it, too.)
