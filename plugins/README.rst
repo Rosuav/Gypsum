@@ -117,7 +117,7 @@ performed.
   A line of text is about to be treated as a prompt. With some servers, this may
   include useful information such as hitpoint status. Note that "consuming" a
   prompt pretends that the server did not send it; any previous prompt will be
-  retained.
+  retained. There is no way to say "this isn't a prompt, keep it as text".
 
 - int closetab(mapping(string:mixed) subw,int index)
 
