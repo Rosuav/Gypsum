@@ -43,7 +43,7 @@ may be "", but it will never be 0. The subw mapping identifies the
 subwindow (aka tab) into which the command was typed; ideally (but not
 mandatorially) this should be where messages are sent, etc.
 
-If a command triggers some command being sent to the connection, it is
+If a command causes a command to be sent to the connection, it is
 courteous to clear the prompt prior to returning::
 
     subw->prompt = ({([])});
