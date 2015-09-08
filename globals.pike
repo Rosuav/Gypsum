@@ -15,6 +15,8 @@ void create(string n)
 	if (!G->G->windows) G->G->windows=([]);
 	if (!G->G->statustexts) G->G->statustexts=([]);
 	if (!G->G->tabstatuses) G->G->tabstatuses=([]);
+	if (!G->G->dns_a) G->G->dns_a=([]); //Two separate caches, for simplicity.
+	if (!G->G->dns_aaaa) G->G->dns_aaaa=([]); //0 means unknown or error; ({ }) meeans successful empty response.
 }
 
 //In any place where binary data is used, use the type name "bytes" rather than "string"
@@ -954,7 +956,10 @@ class DNS(string hostname,function callback)
 		//get asked again for something that failed, it's quite possibly
 		//because network settings have changed and there's a chance it
 		//will now succeed.
-		ips += (resp->an->a + resp->an->aaaa) - ({0});
+		array ans = (resp->an->a + resp->an->aaaa) - ({0});
+		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
+		else G->G->dns_a[domain]=ans;
+		ips += ans;
 		callback(this,@cbargs);
 	}
 
