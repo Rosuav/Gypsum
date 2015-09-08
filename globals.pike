@@ -951,11 +951,11 @@ class DNS(string hostname,function callback)
 
 	void dnsresponse(string domain,mapping resp)
 	{
-		//TODO: Cache the result, complete with its TTL
 		//For simplicity, don't bother caching negative responses. If we
 		//get asked again for something that failed, it's quite possibly
 		//because network settings have changed and there's a chance it
 		//will now succeed.
+		//TODO: Record the TTL somewhere
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
 		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
 		else G->G->dns_a[domain]=ans;
