@@ -955,7 +955,7 @@ class DNS(string hostname,function callback)
 		//get asked again for something that failed, it's quite possibly
 		//because network settings have changed and there's a chance it
 		//will now succeed.
-		//TODO: Record the TTL somewhere
+		//TODO: Record the TTL somewhere, or add a call_out to remove it
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
 		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
 		else G->G->dns_a[domain]=ans;
