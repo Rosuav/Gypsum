@@ -956,6 +956,12 @@ class DNS(string hostname,function callback)
 		//because network settings have changed and there's a chance it
 		//will now succeed.
 		//TODO: Record the TTL somewhere, or add a call_out to remove it
+		//TODO: If we have a positive response for one protocol, should we
+		//use that rather than repeating the DNS lookups for the other?
+		//eg if we look up minstrelhall.com and get 203.214.67.43 and no
+		//AAAA records, should we use the 3600 TTL from the A record as
+		//an indication that we shouldn't bother asking for AAAA records
+		//for the next hour?
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
 		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
 		else G->G->dns_a[domain]=ans;
