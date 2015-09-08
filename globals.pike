@@ -962,6 +962,12 @@ class DNS(string hostname,function callback)
 		//AAAA records, should we use the 3600 TTL from the A record as
 		//an indication that we shouldn't bother asking for AAAA records
 		//for the next hour?
+		//Note that technically there can be multiple different TTLs on
+		//different records of the same type. In practice this will be a
+		//rarity, so we can just take the lowest TTL from all answers and
+		//apply that to all of them. All it means is that we miss out on
+		//some possible caching... but frankly, I don't know what else
+		//we could do, and it's not a normal thing to come across!
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
 		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
 		else G->G->dns_a[domain]=ans;
