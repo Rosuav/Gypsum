@@ -469,7 +469,6 @@ mapping connect(object display,mapping info)
 	//connect immediately.
 	//TODO: Attempt connections on multiple IPs one after another???
 	say(conn->display,"%%% Resolving "+info->host+"...");
-	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
 	object cli=Protocols.DNS.async_client();
 	conn->dnspending=0;
 	if (prot!="6") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse,conn,info);}
