@@ -1509,6 +1509,9 @@ void create(string name)
 	GTK2.EntryCompletion compl=GTK2.EntryCompletion()->set_model(ls)->set_text_column(0)->set_minimum_key_length(2);
 	foreach (sort(indices(G->G->commands)),string kwd) ls->set_value(ls->append(),0,"/"+kwd);
 	win->tabs[0]->ef->set_completion(compl);
+
+	Note that an example of GTK2.EntryCompletion with multiple columns (might be good for adding descriptions) can
+	be found in my shed/translit.pike.
 	*/
 
 	//Build or rebuild the menus
