@@ -1049,5 +1049,5 @@ class establish_connection(string hostname,int port,function callback)
 		}
 	}
 
-	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns above would do it before hostname is set, so it's done in create().
+	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set, so it's done in create().
 }
