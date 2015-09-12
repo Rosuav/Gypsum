@@ -1027,16 +1027,12 @@ class establish_connection(string hostname,int port,function callback)
 	{
 		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn();}
 		callback(sock, @cbargs);
-		//Hack: Make absolutely sure that we can't attempt any more connections
-		//after one succeeds, by putting self into sock. If tryconn() sees that
-		//there's an object (any object) in sock, it'll do nothing; and if this
-		//object gets destruct()ed, calling methods on it won't work anyway.
-		sock=this;
+		callback=0; //We're done! Don't call the callback any more.
 	}
 
 	void tryconn()
 	{
-		if (sock) return;
+		if (sock || !callback) return;
 		if (!sizeof(dns->ips) && !dns->pending) callback(0,@cbargs); //We've run out of addresses to try. Connection failed.
 		[string ip,dns->ips]=Array.shift(dns->ips);
 		callback("Connecting to "+ip+"...", @cbargs);
