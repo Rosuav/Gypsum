@@ -969,6 +969,11 @@ class DNS(string hostname,function callback)
 		//apply that to all of them. All it means is that we miss out on
 		//some possible caching... but frankly, I don't know what else
 		//we could do, and it's not a normal thing to come across!
+		//Note that we depend on upstream DNS not sending us superfluous responses. But
+		//we'd depend on them to not send us outright forged responses anyway, so that's
+		//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
+		//get the right address. TODO: Properly handle CNAMEs, including firing off other
+		//requests.
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
 		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
 		else G->G->dns_a[domain]=ans;
