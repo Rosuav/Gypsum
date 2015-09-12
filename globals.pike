@@ -983,7 +983,9 @@ class DNS(string hostname,function callback)
 		//have cached info? Should the cache retain A and AAAA records
 		//separately, and proceed with the two parts independently?
 		string prot=persist["connection/protocol"];
-		//IP address literals get "resolved" instantly.
+		//IP address literals get "resolved" instantly. And if the user requested direct connection attempts, same.
+		//Note that direct connection attempts will normally result in synchronous DNS lookups. This will lag out the main
+		//thread, and thus cause distinctly unpleasant problems on timeouts. But if you want it, go for it.
 		if (prot=="*" || sscanf(hostname,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(hostname))
 		{
 			ips=({hostname});
