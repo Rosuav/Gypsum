@@ -121,7 +121,6 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%% WARNING: This may not work reliably on Windows.");
 		#endif
 		Stdio.File stdout=Stdio.File(),stderr=Stdio.File();
-		int start_time=time(1)-60;
 		Process.create_process(({"git","pull","--ff-only"}),(["stdout":stdout->pipe(Stdio.PROP_IPC),"stderr":stderr->pipe(Stdio.PROP_IPC),"callback":lambda()
 		{
 			say(subw,"git-> "+replace(String.trim_all_whites(stdout->read()),"\n","\ngit-> "));
