@@ -126,7 +126,7 @@ int process(string param,mapping(string:mixed) subw)
 		{
 			say(subw,"git-> "+replace(String.trim_all_whites(stdout->read()),"\n","\ngit-> "));
 			say(subw,"git-> "+replace(String.trim_all_whites(stderr->read()),"\n","\ngit-> "));
-			process("all",subw); //TODO: Update only those that have file_stat(f)->mtime>start_time
+			process("all",subw);
 		}]));
 		return 1;
 	}
