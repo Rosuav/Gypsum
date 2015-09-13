@@ -104,6 +104,14 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return (string)`+(@(array(int))parts);
 	}
 
+	//Allow HP (and only HP) to be entered as a sum and/or difference, eg 40+10-5 will be replaced with 45
+	string fmt_cur_hp(string val)
+	{
+		array parts=replace(val,"-","+-")/"+";
+		if (sizeof(parts)==1) return val;
+		return (string)`+(@(array(int))parts);
+	}
+
 	void set_value(string kwd,string val,multiset|void beenthere)
 	{
 		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
