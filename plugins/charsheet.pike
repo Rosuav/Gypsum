@@ -96,16 +96,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}
 	}
 
-	//Allow XP (and only XP) to be entered as a sum, eg 4000+1000 will be replaced with 5000
-	string fmt_xp(string val)
-	{
-		array parts=val/"+";
-		if (sizeof(parts)==1) return val;
-		return (string)`+(@(array(int))parts);
-	}
-
-	//Allow HP (and only HP) to be entered as a sum and/or difference, eg 40+10-5 will be replaced with 45
-	string fmt_cur_hp(string val)
+	//Allow numeric fields to be entered as a sum and/or difference, eg 40+10-5 will be replaced with 45
+	multiset(string) numerics=(<>);
+	string format_num(string val)
 	{
 		array parts=replace(val,"-","+-")/"+";
 		if (sizeof(parts)==1) return val;
@@ -136,7 +129,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		string kwd=args[-1];
 		string val=self->get_text();
 		//See if there's a reformatter function. If there is, it MUST be idempotent.
-		if (function f=this["fmt_"+kwd])
+		if (function f=numerics[kwd]?format_num:this["fmt_"+kwd])
 		{
 			string oldval=val; catch {val=f(val);};
 			if (val!=oldval) self->set_text(val);
@@ -211,6 +204,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 	GTK2.Entry num(string kwd,int|mapping|void width_or_props)
 	{
+		numerics[kwd]=1; //Flag it for summation formatting
 		GTK2.Entry ret=ef(kwd,width_or_props||3); //Smaller default width
 		return ret->set_alignment(0.5);
 	}
