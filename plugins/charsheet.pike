@@ -101,7 +101,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	string format_num(string val)
 	{
 		array parts=replace(val,"-","+-")/"+";
-		if (sizeof(parts)==1) return val;
+		if (sizeof(parts)==1) return val; //Note that without a plus sign, non-numerics won't cause problems.
 		return (string)`+(@(array(int))parts);
 	}
 
@@ -202,6 +202,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
+	//Force a field to be numeric, if at all possible. Formats it differently, and
+	//allows summation evaluation.
 	GTK2.Entry num(string kwd,int|mapping|void width_or_props)
 	{
 		numerics[kwd]=1; //Flag it for summation formatting
