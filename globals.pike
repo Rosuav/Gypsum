@@ -1030,11 +1030,12 @@ class establish_connection(string hostname,int port,function callback)
 	object dns;
 	array cbargs;
 
+	void cancel() {callback=0;} //Prevent further calls to the callback (eg if the user requests cancellation)
 	void connected()
 	{
 		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn();}
 		callback(sock, @cbargs);
-		callback=0; //We're done! Don't call the callback any more.
+		cancel();
 	}
 
 	void tryconn()
