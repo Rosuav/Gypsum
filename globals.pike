@@ -1024,6 +1024,9 @@ class DNS(string hostname,function callback)
 //possibly with an integer argument (errno). On a failed conn
 //with no errno available, hack it to something nonzero - maybe
 //a negative number, or maybe EOWNERDEAD (130). :)
+
+//Note that calling cancel() from inside the callback is not a
+//supported operation. TODO: Should it be?
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
