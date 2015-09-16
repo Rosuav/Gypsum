@@ -243,7 +243,7 @@ void sockread(mapping conn,bytes data)
 					}
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
-					default: break; //Should we explicitly reject (respond negatively to) unrecognized DO/WILL requests?
+					default: break; //Should we explicitly reject (respond negatively to) unrecognized DO/WILL requests? Currently Gypsum doesn't seem to play nicely with some non-MUD servers.
 				}
 				iac=iac[2..];
 				break;
