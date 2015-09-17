@@ -927,7 +927,7 @@ class zadvoptions
 		#define COMPAT(x) " Requires restart."+(has_index(all_constants(),"COMPAT_"+upper_case(x))?"\n\nCurrently active.":"\n\nCurrently inactive.")+"\n\nYou do NOT normally need to change this.","type":"int","path":"compat/"+x,"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compatibility mode",2:"Disable compatibility mode"])
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that can result in a segfault with message boxes."COMPAT("msgdlg")]),
-		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling, enable this to use Ctrl-P instead."COMPAT("pausekey")]),
+		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P instead."COMPAT("pausekey")]),
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int","desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.","options":([0:"Confirm if there are active connections",1:"Always confirm",-1:"Never confirm, incl when closing a tab"])]),
 		"Cursor at start/end":(["path":"window/cursoratstart","type":"int","desc":"When seeking through command history, should the cursor be placed at the start or end of the command?","options":([0:"End of command (default)",1:"Start of command"])]),
@@ -1258,14 +1258,12 @@ class promptsdlg
 
 /* The official key value (GDK_KEY_Pause) is 0xFF13, but Windows produces 0xFFFFFF (GDK_KEY_VoidSymbol)
 instead - and also produces it for other keys, eg Caps Lock. This makes it difficult, not to say
-dangerous, to provide the keystroke. In those cases, we can use Ctrl-P instead. */
-constant options_pause=({"Pa_use scroll",
-	#if constant(COMPAT_PAUSEKEY)
-	'p',GTK2.GDK_CONTROL_MASK
-	#else
-	0xFF13,0
-	#endif
-});
+dangerous, to provide the keystroke. In those cases, we can use Ctrl-P instead (see hack below). */
+#if constant(COMPAT_PAUSEKEY)
+constant options_pause="Pa_use scroll";
+#else
+constant options_pause=({"Pa_use scroll",0xFF13,0});
+#endif
 void pause()
 {
 	paused=!paused;
@@ -1529,6 +1527,8 @@ void create(string name)
 		GTK2.MenuItem item=arrayp(info)
 			? GTK2.MenuItem(info[0])->add_accelerator("activate",G->G->accel,info[1],info[2],GTK2.ACCEL_VISIBLE)
 			: GTK2.MenuItem(info); //String constants are just labels; arrays have accelerator key and modifiers.
+		//Hack: Add an additional accelerator, Ctrl-P for Pause.
+		if (key=="options_pause") item->add_accelerator("activate",G->G->accel,'p',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE);
 		item->show()->signal_connect("activate",this[name]);
 		menu->add(item);
 	}
