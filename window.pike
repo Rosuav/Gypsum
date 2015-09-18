@@ -1527,7 +1527,7 @@ void create(string name)
 		GTK2.MenuItem item=arrayp(info)
 			? GTK2.MenuItem(info[0])->add_accelerator("activate",G->G->accel,info[1],info[2],GTK2.ACCEL_VISIBLE)
 			: GTK2.MenuItem(info); //String constants are just labels; arrays have accelerator key and modifiers.
-		//Hack: Add an additional accelerator, Ctrl-P for Pause.
+		//Hack: Add an additional accelerator, Ctrl-P for Pause. Both are flagged Visible; on Linux this isn't a problem, but check other platforms.
 		if (key=="options_pause") item->add_accelerator("activate",G->G->accel,'p',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE);
 		item->show()->signal_connect("activate",this[name]);
 		menu->add(item);
