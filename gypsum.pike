@@ -73,6 +73,7 @@ void add_gypsum_constant(string name,mixed val)
 //Global so it can be queried by Advanced Options in window.pike
 //Note that previously-used compat option names should never be used again:
 //COMPAT_SIGNAL - inability to connect before a signal (additional parameter to signal_connect())
+//NOTE: No COMPAT options are needed for any 8.1 builds, nor for any 8.0 builds since the earliest.
 mapping(string:int) compat=([
 	#ifdef __NT__
 	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the shortcut for Pause Scrolling.
