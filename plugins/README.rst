@@ -490,7 +490,7 @@ may become "undiscoverable" or in some way hidden.
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
-But you can safely _read_ the following:
+You can safely read the following:
 
 * subw->connection - identical to conn, if there is one (there might not be).
 
