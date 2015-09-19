@@ -54,12 +54,8 @@ void bootstrap(string c)
 	werror("Bootstrapped "+c+"\n");
 }
 
-/**
- * Adds a constant to the global constant list. Allows for inheritance checks.
- *
- * @param Name	Name of the constant
- * @param Val	Value of the contant
- */
+//Adds a constant to the global constant list. Allows for inheritance checks.
+//Similar to add_constant(), but does not support the one-argument form.
 void add_gypsum_constant(string name,mixed val)
 {
 	globals[name]=val;
