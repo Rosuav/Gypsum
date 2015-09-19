@@ -1,4 +1,5 @@
 inherit hook;
+#if constant(SDL.Music)
 constant docstring=#"
 Play sounds in response to certain triggers.
 
@@ -10,6 +11,13 @@ Normal usage would be all on the default stream. But you can set up other stream
 
 NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
 ";
+#else
+constant docstring=#"
+Play sounds in response to certain triggers.
+
+Requires SDL.Music support which is currently unavailable on your system.
+";
+#endif
 
 //TODO: Replace sounds.ini with persist[] and a configdlg.
 //This whole thing needs a major rewrite, tbh. It's code from Gypsum's earliest days, and it shows its age.
