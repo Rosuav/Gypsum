@@ -1026,7 +1026,9 @@ class DNS(string hostname,function callback)
 //a negative number, or maybe EOWNERDEAD (130). :)
 
 //Note that calling cancel() from inside the callback is not a
-//supported operation. TODO: Should it be?
+//supported operation. TODO: Should it be? (It'll crash out with
+//an exception, most likely, which would then promptly end the
+//current operation. Not all that big a deal IMO.)
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
