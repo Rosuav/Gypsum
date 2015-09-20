@@ -529,3 +529,5 @@ You can safely read the following:
   is for you to set and Gypsum to read.
 
 Poke around in the source code for useful comments about each of these members.
+Note that the above names (subw, conn) are the conventional names in the core
+as well as in all plugins, so a text search for them should bring up all usage.
