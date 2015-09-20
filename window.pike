@@ -1508,7 +1508,7 @@ void create(string name)
 	foreach (sort(indices(G->G->commands)),string kwd) ls->set_value(ls->append(),0,"/"+kwd);
 	win->tabs[0]->ef->set_completion(compl);
 
-	Note that an example of GTK2.EntryCompletion with multiple columns (might be good for adding descriptions) can
+	Note that an example of GTK2.EntryCompletion with multiple columns (eg for adding descriptions to the completions) can
 	be found in my shed/translit.pike.
 	*/
 
