@@ -255,7 +255,7 @@ void sockread(mapping conn,bytes data)
 				{
 					if (iac[i]==IAC && iac[++i]==SE) {subneg=iac[..i]; iac=iac[i+1..]; break;} //Any other TELNET commands inside subneg will be buggy unless they're IAC IAC doubling
 				}
-				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do. (Actually, omitting this line will have the same effect, because the subscripting will throw an exception. So this is optional, and redundant, just like this sentence is redundant.)
+				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do.
 				subneg=replace(subneg,"\xFF\xFF","\xFF"); //Un-double IACs
 				switch (subneg[1])
 				{
