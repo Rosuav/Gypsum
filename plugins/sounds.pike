@@ -25,6 +25,8 @@ Requires SDL.Music support which is currently unavailable on your system.
 //knowledge gained elsewhere in the project. Trouble is, I don't actually use this feature, so it's not
 //going to get the natural and automatic testing of personal dev usage; it desperately needs a champion.
 
+//TODO: Simplify this massively, and then allow a fallback on Process.create_process(({"vlc","filename"}))
+
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
 //Options available:
