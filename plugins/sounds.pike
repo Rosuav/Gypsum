@@ -34,7 +34,7 @@ Requires SDL.Music support which is currently unavailable on your system.
 //loop: Number of times to loop; -1 for indefinite. Default: Play once.
 //stream: Which stream to play on. May be an integer or a string. Default: the integer 0 (not the same as the string "0").
 //noretrigger: If nonzero, this file will not be retriggered if it's already playing.
-mapping(string:mapping) triggers=([]);
+mapping(string:mapping(string:mixed)) triggers=([]);
 
 int output(mapping(string:mixed) subw,string line)
 {
