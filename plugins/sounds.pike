@@ -62,8 +62,9 @@ void create(string name)
 			sscanf(line,"%{%[^= ]=%[^ ]%*[ ]%}",array info);
 			triggers[curtrig]+=((mapping)info)&(<"loop","stream","noretrigger">);
 		}
+		foreach (indices(triggers),string trig) if (!triggers[trig]->file) m_delete(triggers,trig); //Malformed config file - no file name against a trigger. Drop those entries.
+		//rm("sounds.ini"); //Once there's a configdlg, we can use this same code to import, but then throw away the file.
 	};
-	foreach (indices(triggers),string trig) if (!triggers[trig]->file) m_delete(triggers,trig); //Malformed config file - no file name against a trigger. Drop those entries.
 	if (!G->G->sounds_playing)
 	{
 		SDL.init(SDL.INIT_AUDIO); atexit(SDL.quit);
