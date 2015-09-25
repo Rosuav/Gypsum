@@ -28,7 +28,9 @@ Requires SDL.Music support which is currently unavailable on your system.
 //TODO: Simplify this massively, and then allow a fallback on Process.create_process(({"vlc","filename"}))
 //That might include completely eliminating the whole concept of streams and looping and noretrigger.
 //Hmm. Actually, maybe it'd be better to deprecate this plugin exactly as it is, and put audio trigger
-//functionality into the timers plugin instead - either "audio at start" or "audio at end".
+//functionality into the timers plugin instead - either "audio at start" or "audio at end". Optionally, a
+//"halt current sound before playing" tickbox could cover quite a bit else. (And looping is possible with
+//VLC too, so we could still support that.)
 
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
