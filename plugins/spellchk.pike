@@ -53,7 +53,7 @@ void spellcheck(int all)
 	//haywire (or waiting for user input), and kill it. TODO: Test this.
 	mapping rc=Process.run(({"aspell","--encoding=utf-8","pipe"}),([
 		"stdin":string_to_utf8(txt),
-		"timeout":1,"timeout_callback":lambda(object p) {p->kill();}, //After one second, kill the process. It should be virtually instant anyway.
+		"timeout":0.2,"timeout_callback":lambda(object p) {p->kill();}, //It should be virtually instant, so kill it if it isn't. Don't lag out for too long.
 	]));
 	//Skip the first line and any that are just asterisks, output any others.
 	foreach ((rc->stdout/"\n")[1..],string line)
