@@ -61,7 +61,10 @@ void add_gypsum_constant(string name,mixed val)
 	globals[name]=val;
 	if (globalusage[name])
 	{
-		foreach (globalusage[name],string cur) if (!has_value(needupdate,cur)) needupdate+=({cur}); //Note: Does not use set operations; order is preserved.
+		//Note: Does not use set operations; order is preserved. This will tend to reduce the
+		//number of repeated rebuilds; if Y and Z both depend on X, and Z depends on Y, then
+		//most likely needupdate will list Y before Z, and they'll be rebuilt in affabeck.
+		foreach (globalusage[name],string cur) if (!has_value(needupdate,cur)) needupdate+=({cur});
 	}
 	globalusage[name]=({}); //Empty out the list, if there is one.
 }
