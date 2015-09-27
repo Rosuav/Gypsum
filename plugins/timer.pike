@@ -5,8 +5,6 @@ inherit command;
 inherit movablewindow;
 inherit plugin_menu;
 
-constant plugin_active_by_default = 1;
-
 constant docstring=#"
 Track ticking-down timers (in a separate window)
 
