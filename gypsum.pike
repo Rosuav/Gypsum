@@ -94,7 +94,7 @@ void create(string|void name)
 	//is the recommended way of applying new code.
 	G->needupdate+=({"globals.pike"});
 	//Add any new COMPAT options, based on their defaults. Edge case: It's theoretically possible that
-	//persist["compat/X"] has been preset somehow (or maybe you're bisecting or something), which might
+	//persist["compat/X"] has been preset somehow (or maybe you're downgrading Gypsum), which might
 	//make updating gypsum.pike different from the initial load. I doubt this is going to be significant.
 	foreach (indices(compat)-indices(G->compat),string kwd) if (compat[kwd]) add_constant("COMPAT_"+upper_case(kwd),1);
 	G->compat=compat;
