@@ -64,7 +64,9 @@ int input(mapping(string:mixed) subw,string line)
 		{
 			//Check for the special "calculator notation". Note that inline calculation should avoid
 			//subscripting, as it can't handle nested square brackets. The first ']' in the string
-			//ends the expression.
+			//ends the expression. (You could use "calc expr" followed by "$[_]" to get past that,
+			//but there are other limitations, eg the :fmt notation, so this shouldn't be treated as
+			//a fully-general expression evaluator. Use "/x" or "pike" for that.)
 			if (sscanf(line,"calc %s",string expr)) {say(subw,"%% "+calculate(subw,expr)); return 1;}
 			string newcmd="";
 			while (sscanf(line,"%s$[%s]%s",string before,string expr,string after)) {newcmd+=before+calculate(subw,expr); line=after||"";}
