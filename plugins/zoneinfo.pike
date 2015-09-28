@@ -101,7 +101,7 @@ int output(mapping(string:mixed) subw,string line)
 void showtime()
 {
 	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
-	string zone=persist["threshtime/statuszone"] || "Thresh";
+	string zone=persist["threshtime/statuszone"] || "UTC";
 	if (zone=="Thresh")
 	{
 		int th_year,th_mon,th_day,th_hour,th_min;
@@ -202,7 +202,7 @@ class menu_clicked
 					//And somehow, make that either work for both sbzone and convzone, or not be confusing. Hmm.... hmm.
 					//Maybe have a list box of active ones, with a tick box for the one that goes on statuszone?
 					//Maybe even a configdlg, although that's kinda overkill.
-					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"Thresh"),
+					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"UTC"),
 					"Converter timezones",win->convzone=GTK2.Entry()->set_width_chars(30)->set_text(zones*" "),
 				})))
 				->add(GTK2.HbuttonBox()
