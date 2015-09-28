@@ -24,6 +24,8 @@ Aliases cannot expand to other aliases, nor (currently) to slash commands.
 They will always expand to exactly one resulting command.
 ";
 
+//Note: In violation of best-practise, this is using "aliases/" when the plugin name is "alias".
+//It's not worth breaking backward compatibility for this, but DWISNWID and don't do this yourself.
 mapping(string:mapping(string:mixed)) aliases=persist->setdefault("aliases/simple",([]));
 
 int process(string param,mapping(string:mixed) subw)
