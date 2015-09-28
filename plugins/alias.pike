@@ -35,7 +35,7 @@ int process(string param,mapping(string:mixed) subw)
 		if (!sizeof(aliases)) {say(subw,"%% You have no aliases set ('/alias help' for usage)"); return 1;}
 		say(subw,"%% You have the following aliases set:");
 		foreach (sort(indices(aliases)),string from)
-			say(subw,"%%%% %-20s %=55s",from,aliases[from]->expansion);
+			say(subw,"%%%% %-20s %-=55s",from,aliases[from]->expansion);
 		say(subw,"%% See '/alias help' for more information.");
 		return 1;
 	}
