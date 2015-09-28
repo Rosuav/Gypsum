@@ -126,8 +126,8 @@ constant menu_label="Time zone converter";
 class menu_clicked
 {
 	inherit window;
-	array(string) zones;
-	void create() {zones=(persist["threshtime/zones"]||"local America/New_York UTC Thresh")/" "; ::create();}
+	array(string) zones=(persist["threshtime/zones"]||"local America/New_York UTC Thresh")/" ";
+	void create() {::create();}
 
 	GTK2.Entry ef(string name,int|void width)
 	{
