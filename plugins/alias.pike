@@ -38,7 +38,7 @@ int process(string param,mapping(string:mixed) subw)
 		say(subw,"%%%% %-*s %-=55s",size,"Alias","Expansion");
 		say(subw,"%%%% %-*s %-=55s",size,"=====","=========");
 		foreach (sort(indices(aliases)),string from)
-			say(subw,"%%%% %-*s %-=55s",size,from,aliases[from]->expansion);
+			say(subw,"%%%% %-*s %-=*s",size,from,75-size,aliases[from]->expansion);
 		say(subw,"%% See '/alias help' for more information.");
 		return 1;
 	}
