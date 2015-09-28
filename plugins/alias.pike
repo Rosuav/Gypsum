@@ -1,6 +1,6 @@
 //Simple aliases. Uses persist["aliases/simple"] to allow future expansion eg regex aliases.
 //NOTE: It's not possible to alias slash commands, currently. This could be special-cased.
-//It's also not possible to alias hook commands registered later than this plugin, for the
+//It's also not possible to alias hook commands alphabetically earlier than 'alias', for the
 //same reason that aliases can't get into infinite loops (they get injected via nexthook()).
 
 inherit command;
