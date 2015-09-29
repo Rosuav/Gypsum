@@ -262,6 +262,7 @@ void sockread(mapping conn,bytes data)
 					case TERMTYPE:
 						//Note that this is slightly abusive of the "terminal type" concept - it's more like a user-agent string.
 						//But it was already a bit stretched as soon as specific clients got mentioned - and everybody does that.
+						//TODO: Track repeated requests and send fallbacks.
 						if (subneg[2]==SEND) send_telnet(conn,
 							(string(0..255))({SB,TERMTYPE,IS})
 							+[string(0..127)]sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
