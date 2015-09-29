@@ -192,7 +192,7 @@ int process(string param,mapping(string:mixed) subw)
 	}
 	if (sscanf(param,"load %s",string data))
 	{
-		sscanf(param,"%{%O=%d%}",array(array(string|int)) data);
+		sscanf(data,"%{%O=%d%}",array(array(string|int)) data);
 		foreach (data,[string kwd,int next])
 			if (timers[kwd]) timers[kwd]->next=next;
 		persist->save();
