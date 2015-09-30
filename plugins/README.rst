@@ -497,7 +497,7 @@ You can safely read the following:
 * conn->display - identical to subw (there will always be this). Note that if you
   retain a connection mapping for future use, you can check if it's still current
   by seeing if conn->display->connection==conn - a reconnection will overwrite
-  subw->connection.
+  subw->connection. (Unrelated to subw->display, which is a GTK2 object.)
 
 * subw->world - (usually) short identifier for the current or most-recent
   world. This may be numeric and may even have spaces in it, but it should be
