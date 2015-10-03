@@ -490,12 +490,11 @@ plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
 You can safely read the following:
 
-* subw->connection - identical to conn, if there is one (there might not be).
+* subw->connection - referred to as conn, this mapping stores per-connection
+  info. It will be replaced with a new mapping any time a new connection is
+  attempted on this subw.
 
-* conn->display - identical to subw (there will always be this). Note that if you
-  retain a connection mapping for future use, you can check if it's still current
-  by seeing if conn->display->connection==conn - a reconnection will overwrite
-  subw->connection. (Unrelated to subw->display, which is a GTK2 object.)
+* conn->display - backref to subw, for convenience/certainty.
 
 * subw->world - (usually) short identifier for the current or most-recent
   world. This may be numeric and may even have spaces in it, but it should be
