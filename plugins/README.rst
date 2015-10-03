@@ -404,14 +404,11 @@ constant config_persist_key="pluginname/what_to_configure";
 constant config_description="Human-readable descriptive text";
 Explore other plugins for usage examples.
 
-ADVISORY: Commands can be synthesized directly to a subw or conn::
+ADVISORY: Commands can be synthesized directly to a subw::
 
-	send(conn,line+"\r\n");
+	send(subw,line+"\r\n");
 
-Note that a subwindow may not necessarily have a connection, though
-a connection will always have a display. (If you know that it's a
-subw, you can gain a little efficiency by explicitly sending to
-subw->connection, but this is optional. Sending to subw works.)
+(Note that a disconnected subwindow will silently ignore sent data.)
 This should be considered abnormal for an input hook, however, as
 it bypasses other hooks - use nexthook() instead. Alternatively,
 call G->G->window->execcommand() to send past all current hooks,
