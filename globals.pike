@@ -1024,11 +1024,6 @@ class DNS(string hostname,function callback)
 //possibly with an integer argument (errno). On a failed conn
 //with no errno available, hack it to something nonzero - maybe
 //a negative number, or maybe EOWNERDEAD (130). :)
-
-//Note that calling cancel() from inside the callback is not a
-//supported operation. TODO: Should it be? (It'll crash out with
-//an exception, most likely, which would then promptly end the
-//current operation. Not all that big a deal IMO.)
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
@@ -1048,7 +1043,7 @@ class establish_connection(string hostname,int port,function callback)
 		if (sock || !callback) return;
 		if (!sizeof(dns->ips) && !dns->pending) {callback(0,@cbargs); return;} //We've run out of addresses to try. Connection failed.
 		[string ip,dns->ips]=Array.shift(dns->ips);
-		callback("Connecting to "+ip+"...", @cbargs);
+		callback("Connecting to "+ip+"...", @cbargs); if (!callback) return;
 		sock=Stdio.File(); sock->open_socket();
 		sock->set_nonblocking(0,connected,tryconn);
 		if (mixed ex=catch {sock->connect(ip,port);})
