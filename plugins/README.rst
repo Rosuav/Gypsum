@@ -417,11 +417,11 @@ call G->G->window->execcommand() to send past all current hooks,
 as though the user had just typed the command. None of this is
 supported, however.
 
-ADVISORY: Additional information may be stored in subw and/or conn.
-This is not guaranteed, however, as there is no protection against
-collisions; but if you make your key begin with "plugins/pluginname/"
-(where pluginname is your plugin's name), this will most likely be
-safe.
+ADVISORY: Additional information may be stored in subw, or in subw->connection
+if it should apply to the current connection only. This is not guaranteed,
+however, as there is no protection against collisions; but if you make your key
+begin with "plugins/pluginname/" (where pluginname is your plugin's name), this
+will most likely be safe.
 
 ADVISORY: The subw/conn mappings may be saved for use in callbacks.
 However, if the subwindow or connection has been closed, their
