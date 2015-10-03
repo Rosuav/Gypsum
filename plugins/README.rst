@@ -423,9 +423,8 @@ however, as there is no protection against collisions; but if you make your key
 begin with "plugins/pluginname/" (where pluginname is your plugin's name), this
 will most likely be safe.
 
-ADVISORY: The subw/conn mappings may be saved for use in callbacks.
-However, if the subwindow or connection has been closed, their
-mappings will no longer be valid.
+ADVISORY: Save a reference to subw for use in callbacks, but be aware of the
+possibility that the tab has been closed before your callback occurs.
 
 BEST PRACTICE: Provide a constructor, which chains through to all parents'.
 If your plugin inherits only one mode (command, hook, window), a create()
