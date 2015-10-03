@@ -399,9 +399,11 @@ be added based on inherits and such.
 
 If your plugin needs a lot of configuration, the best way is to craft your own
 window and save into persist[]. But if all you need is one simple string, you
-can tie in with the main plugin config dialog by creating two constants:
+can tie in with the main plugin config dialog by creating two constants::
+
 constant config_persist_key="pluginname/what_to_configure";
 constant config_description="Human-readable descriptive text";
+
 Explore other plugins for usage examples.
 
 ADVISORY: Commands can be synthesized directly to a subw::
