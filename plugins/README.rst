@@ -132,15 +132,14 @@ performed.
   (currently there is no notification of which tab was previously selected).
 
 - DEPRECATED: Prior to 20150422, hook functions for input and output followed
-  different signatures. The old signatures are still valid; define either the new
-  function or the old, but not both::
+  different signatures. The old signatures are still valid, but new code should
+  not use them::
 
 	int inputhook(string line,mapping(string:mixed) subw)
 	int outputhook(string line,mapping(string:mixed) conn)
 
-  Note that the outputhook receives a connection, *not* a subwindow; if you use
-  this form of hook, use conn->display to access the corresponding subw. But for
-  preference, switch to using output() as described above.
+  Note that the outputhook receives a connection, *not* a subwindow. See below
+  for details of the two separate mappings.
 
 Window - 'inherit window'
 -------------------------
