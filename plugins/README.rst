@@ -85,12 +85,12 @@ performed.
   * A command's "param" is what comes after the command name. A hook's
     "line" is the entire line.
 
-  An input hook can feed a replacement command into the system with::
+  An input hook can feed a replacement line of text into the system with::
 
 	nexthook(subw, line);
 
   This can be either before or after returning 1 from the hook function.
-  If nexthook is successful, it will return 1, so modifying the command
+  If nexthook is successful, it will return 1, so modifying user input
   can be done by simply::
 
 	return nexthook(subw, modified_line);
