@@ -994,8 +994,7 @@ class DNS(string hostname,function callback)
 		if (prot=="*" || sscanf(hostname,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(hostname))
 		{
 			ips=({hostname});
-			//TODO: Should this be done with call_out so it's guaranteed to always happen _after_ the constructor returns?
-			callback(this,@cbargs);
+			call_out(callback,0,this,@cbargs); //The callback is always queued on the backend rather than being called synchronously.
 			return;
 		}
 		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
