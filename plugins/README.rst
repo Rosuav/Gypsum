@@ -104,7 +104,7 @@ performed.
   but this is not the normal form of processing and is not formally supported nor
   recommended. Similarly if nexthook is called to synthesize an input command
   that wasn't in response to an inputhook call. The purpose of this is to modify,
-  not create, input.
+  not create, input. This behaviour may change in the future.
 
 - int output(mapping(string:mixed) subw,string line)
 
