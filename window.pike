@@ -316,9 +316,9 @@ void subw_display_popup_menu()
 	menus->file->popup();
 }
 
-void subw_display_button_press_event(object self,object ev,mapping subw)
+int subw_display_button_press_event(object self,object ev,mapping subw)
 {
-	if (ev->type=="button_press" && ev->button==3) {subw_display_popup_menu(); return;}
+	if (ev->type=="button_press" && ev->button==3) {subw_display_popup_menu(); return 1;}
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	if (ev->type=="2button_press")
 	{
@@ -329,7 +329,7 @@ void subw_display_button_press_event(object self,object ev,mapping subw)
 		//a person's name, and then seeing that name with punctuation), this won't be hit.
 		string word=word_at_pos(subw,line,col);
 		if (highlightkeywords[word] || ev->state&GTK2.GDK_CONTROL_MASK) highlightwords(word);
-		return;
+		return 0;
 	}
 	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
