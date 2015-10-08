@@ -527,6 +527,15 @@ void connect(string world,mapping|void subw)
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
 }
 
+void subw_display_configure_event(object self,object ev,mapping subw)
+{
+	if (ev->width!=subw->last_width || ev->height!=subw->last_height)
+	{
+		subw->last_width = ev->width; subw->last_height = ev->height;
+		redraw(subw);
+	}
+}
+
 void redraw(mapping subw)
 {
 	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
