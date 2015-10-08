@@ -311,8 +311,14 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
 }
 
+void subw_display_popup_menu()
+{
+	menus->file->popup();
+}
+
 void subw_display_button_press_event(object self,object ev,mapping subw)
 {
+	if (ev->type=="button_press" && ev->button==3) {subw_display_popup_menu(); return;}
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	if (ev->type=="2button_press")
 	{
