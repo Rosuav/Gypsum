@@ -1471,7 +1471,7 @@ void makewindow()
 			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)GTK2.Menu()))
 			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
 		,0,0,0)
-		->add(win->notebook=GTK2.Notebook())
+		->add(win->notebook=GTK2.Notebook()->popup_enable())
 		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0) //May be worth making the size request optional. Some might want a shrinking statusbar, some might want to ensure they see everything.
 	);
 	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
