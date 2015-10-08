@@ -91,7 +91,7 @@ void create(string|void name)
 	//updated are here in this file, and not in update.pike itself; this means that
 	//it's the new version, not the old version, that defines it. Downloading (via
 	//git or http) a new set of files and then updating gypsum.pike from that set
-	//is the recommended way of applying new code.
+	//is the recommended way of applying new code. TODO: Should this wipe globalusage?
 	G->needupdate+=({"globals.pike"});
 	//Add any new COMPAT options, based on their defaults. Edge case: It's theoretically possible that
 	//persist["compat/X"] has been preset somehow (or maybe you're downgrading Gypsum), which might
