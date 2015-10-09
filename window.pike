@@ -543,7 +543,9 @@ void redraw(mapping subw)
 	if (subw==current_subw()) subw->activity=0;
 	//Check the current tab text before overwriting, to minimize flicker
 	string tabtext="* "*subw->activity+subw->tabtext;
-	if (win->notebook->get_tab_label_text(subw->page)!=tabtext) ({win->notebook->set_tab_label_text,win->notebook->set_menu_label_text})(subw->page,tabtext);
+	if (win->notebook->get_tab_label_text(subw->page)!=tabtext)
+		//Update both menu label and tab text to the same thing.
+		({win->notebook->set_tab_label_text,win->notebook->set_menu_label_text})(subw->page,tabtext);
 	subw->maindisplay->queue_draw();
 }
 
