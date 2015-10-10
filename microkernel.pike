@@ -10,6 +10,7 @@ int main()
 {
 	add_constant("add_gypsum_constant",add_constant);
 	add_constant("G",this);
+	add_constant("MICROKERNEL",1);
 	GTK2.setup_gtk();
 	object p=(object)"persist";
 	object g=(object)"globals";

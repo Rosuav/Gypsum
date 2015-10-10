@@ -225,8 +225,12 @@ class menu_clicked
 			closewindow();
 			//It's not easy to update the display window on the fly, so close it and open a new one.
 			//This causes a bit of messy flicker, and the code here looks a bit bizarre, but it works.
+			#if constant(MICROKERNEL)
+			write("Changes will take effect when you restart.\n");
+			#else
 			menu_clicked::closewindow();
 			menu_clicked();
+			#endif
 		}
 	}
 
