@@ -122,7 +122,7 @@ int process(string param,mapping(string:mixed) subw)
 	{
 		mixed ret="+param+#";
 		return ret;
-	}",".exec",this);};
+	}",".exec",G->G->window);};
 	
 	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
 	err=catch {G->G->last_x_result=tmp()->foo(subw,G->G->last_x_result);};
