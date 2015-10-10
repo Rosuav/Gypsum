@@ -5,8 +5,6 @@ The main routine is in gypsum.pike; it loads all the other modules.
 Needs a MUD server to connect to - I use Threshold RPG and Minstrel
 Hall myself, but any will do.
 
-You will need a Pike interpreter - see http://pike.lysator.liu.se/
-
 Installation information and tips for Windows and for Mac OS X can be found in
 README.WIN and README.OSX respectively. Installation on Linux depends on your
 distribution; check your package manager for "pike" or see the above web site.
