@@ -1,5 +1,4 @@
-# This directory can be used for logs, but they shouldn't be affected
+# This directory can be used for logs, which then won't be affected
 # by updates to Gypsum.
 *
-!.gitignore
 
