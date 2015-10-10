@@ -599,7 +599,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	gc->set_foreground(fg);
 	display->draw_text(gc,x,y,layout);
 	destruct(layout);
-	state[2]=x+(sz->x+sz->width)/1024;
+	state[2]+=(sz->x+sz->width)/1024;
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
