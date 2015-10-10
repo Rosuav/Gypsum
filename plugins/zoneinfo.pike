@@ -15,10 +15,8 @@ not for predicting in-game events such as bank hours.
 //Note that when Stash is launched, it may have its own clock. Auto-sync may
 //be tricky, but we can at least provide "Stash" as another pseudo-timezone.
 
-//TODO: Make this externally runnable, somehow. It could make a useful
-//stand-alone time zone converter. The Thresh pseudo-zone would be less useful
-//than simply converting between Olsen/tzdata times, so the output hook isn't
-//necessary there.
+//This can be invoked as a stand-alone application via timezone.pike (the
+//microkernel).
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
