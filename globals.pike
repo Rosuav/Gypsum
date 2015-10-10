@@ -577,6 +577,7 @@ class configdlg
 				return 1;
 			}
 		} while (ls->iter_next(iter));
+		return 0;
 	}
 
 	void dosignals()
