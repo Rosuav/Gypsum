@@ -531,6 +531,10 @@ void subw_display_configure_event(object self,object ev,mapping subw)
 {
 	if (ev->width!=subw->last_width || ev->height!=subw->last_height)
 	{
+		//Force a redraw any time the window size has changed. Sadly,
+		//we don't get an actual resize event, so we just have to trap
+		//configure_event and see if the size has actually changed.
+		//TODO: Does the width matter, or just the height?
 		subw->last_width = ev->width; subw->last_height = ev->height;
 		redraw(subw);
 	}
