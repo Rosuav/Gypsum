@@ -2,7 +2,7 @@
 
 TODO: Actually make this work reliably for stress-testing plugins.
 
-TODO: Neuter persist[] so it won't save to disk, for safety.
+TODO: Optionally neuter persist[] so it won't save to disk, for safety.
 */
 mapping G=(["window":([])]);
 
