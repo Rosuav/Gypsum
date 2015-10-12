@@ -220,7 +220,7 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 	void delete_content(string kwd,mapping(string:mixed) info) {redraw(current_subw());}
 }
 
-//Convert a y coordinate into a line number - like point_to_char() but gives only the line.
+//Convert a y coordinate into a line number - the first (and easiest) step of point_to_char()
 int point_to_line(mapping subw,int y)
 {
 	return limit(0,(y-(int)subw->scr->get_property("page size"))/subw->lineheight,sizeof(subw->lines)+1);
