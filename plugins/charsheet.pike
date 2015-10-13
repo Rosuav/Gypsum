@@ -111,6 +111,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		//but without succumbing to refloops (eg x: "y+1", y: "x+1"). Currently, depends are
 		//recalculated in the order they were added, which may not always be perfect.
 		//Consider using C3 linearization on the graph of deps - if it fails, error out.
+		//Or use Kahn 1962: https://en.wikipedia.org/wiki/Topological_sorting
 		if (val=="0") val="";
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
