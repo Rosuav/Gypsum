@@ -3,7 +3,7 @@ constant plugin_active_by_default = 1;
 
 constant docstring=#"
 Provides the status-bar search box. Press Ctrl-F to put the cursor into that
-box; Enter searches (again if the text is unchanged); Esc returns the cursor
+box; Enter searches (repeat to search again); Esc returns the cursor
 to the main input field.
 ";
 
