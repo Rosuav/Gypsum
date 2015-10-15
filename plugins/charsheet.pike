@@ -282,7 +282,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				if (name) set_value(name,val,beenthere);
 				lbl->set_text(val);
 			};
-			//if (name) say(0,"%%%% %O: %{%O %}",name,sort((array)symbols));
+			//if (name) say(0,"%%%% %O: %{%O %}",name,sort((array)symbols)); //Note that nameless calc() blocks don't need to be slotted into the evaluation order.
 			foreach ((array)symbols,string dep)
 				if (!depends[dep]) depends[dep]=({f2});
 				else depends[dep]+=({f2});
