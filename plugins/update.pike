@@ -147,7 +147,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	object self=(param!=".") && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
-	//The list will be built by the master object, we just need to process it (by recompiling things).
+	//The list will be built by the master during compilation; we just need to process it (by recompiling more files).
 	//Note that I don't want to simply use foreach here, because the array may change.
 	multiset(string) been_there_done_that=(<param>); //Don't update any file more than once. If there are circular references, stuff will be broken, but we won't infinite-loop.
 	while (sizeof(G->needupdate))
