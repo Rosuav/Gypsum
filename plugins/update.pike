@@ -109,7 +109,6 @@ void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to d
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="") {say(subw,"%% Update what?"); return 1;}
-	int cleanup=sscanf(param,"force %s",param); //Use "/update force some-file.pike" to clean up after building
 	if (param=="git")
 	{
 		say(subw,"%% Attempting git-based update...");
@@ -144,6 +143,7 @@ int process(string param,mapping(string:mixed) subw)
 	//Update everything by updating the main routine, which then updates globals.
 	//NOTE: Does NOT update persist.pike, deliberately.
 	if (param=="all") param="gypsum.pike";
+	int cleanup=sscanf(param,"force %s",param); //Use "/update force some-file.pike" to clean up after building (not compatible with 'all', nor the git/zip downloaders)
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	object self=(param!=".") && build(param); //"build ." to just rebuild what's already in queue
 	//Check for anything that inherits what we just updated, and recurse.
