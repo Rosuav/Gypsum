@@ -26,8 +26,7 @@ int simulate; //For command-line usage, allow a "don't actually save anything" t
 void unzip(string data,function callback,mixed|void callback_arg)
 {
 	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
-	//NOTE: The CRC must be parsed as %+-4c, as Gz.crc32() returns a *signed* integer.
-	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%+-4c%-4c%-4c%-2c%-2c%s",
+	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%-4c%-4c%-4c%-2c%-2c%s",
 		int minver,int flags,int method,int modtime,int moddate,int crc32,
 		int compsize,int uncompsize,int fnlen,int extralen,data))
 	{
@@ -66,7 +65,9 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		else if (eos!="") error("Malformed ZIP file (bad end-of-stream on %s)",fn);
 		if (sizeof(result)!=uncompsize) error("Malformed ZIP file (bad file size on %s)",fn);
 		#if constant(Gz)
-		if (Gz.crc32(result)!=crc32) error("Malformed ZIP file (bad CRC on %s)",fn);
+		//NOTE: In older Pikes, Gz.crc32() returns a *signed* integer.
+		int actual=Gz.crc32(result); if (actual<0) actual+=1<<32;
+		if (actual!=crc32) error("Malformed ZIP file (bad CRC on %s)",fn);
 		#endif
 		callback(fn,result,callback_arg);
 	}
