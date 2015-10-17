@@ -37,7 +37,7 @@ int wordchar(int ch)
 
 void spellcheck(int all)
 {
-	mapping subw=G->G->window->current_subw(); if (!subw) return;
+	mapping subw=G->G->window->current_subw();
 	string txt=subw->ef->get_text();
 	if (!all)
 	{

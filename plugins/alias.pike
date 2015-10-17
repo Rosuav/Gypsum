@@ -99,7 +99,7 @@ void menu_clicked() {aliasdlg("aliases/simple","Configure global aliases");}
 //Hack: A second plugin menu item.
 object hack=class {inherit plugin_menu; constant menu_label="Aliases - this world"; void menu_clicked()
 {
-	mapping subw=G->G->window->current_subw(); if (!subw) return;
+	mapping subw=G->G->window->current_subw();
 	if (!subw->world) {say(subw,"%% Connect to a world to configure its aliases."); return;}
 	persist->setdefault("aliases/simple/"+subw->world,([]));
 	aliasdlg("aliases/simple/"+subw->world,"Configure aliases for "+subw->world);

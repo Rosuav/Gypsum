@@ -97,7 +97,7 @@ mapping(string:mixed) subwindow(string txt)
 }
 
 /**
- * Return the subw mapping for the currently-active tab.
+ * Return the subw mapping for the currently-active tab - there will always be one.
  */
 mapping(string:mixed) current_subw() {return win->tabs[win->notebook->get_current_page()];}
 
