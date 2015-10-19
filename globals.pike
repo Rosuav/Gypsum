@@ -791,8 +791,7 @@ string line_text(array line)
 	return line[0]->text=filter(line,stringp)*"";
 }
 
-//Redirect a stream to a specified file
-//Undoes the redirect on destruction automatically.
+//Redirect a stream to a specified file; undoes the redirect on destruction automatically.
 //Passing a file name as the target will truncate it. Explicitly open the file if you wish to append.
 class redirect(Stdio.File file,string|Stdio.File|void target)
 {
