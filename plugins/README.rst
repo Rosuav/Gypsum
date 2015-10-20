@@ -233,6 +233,7 @@ and do everything directly.)
 
 Provide any or all of::
 
+	//Set any window properties desired - see GTK docs for details
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
 	//Create and return a widget (most likely a layout widget) representing all the custom content.
 	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
