@@ -328,6 +328,8 @@ int send(mapping conn,string text)
 //The passed string should begin just after the IAC, so (string(0..255))({GA}) will send IAC GA.
 //Subnegotiations will be automatically terminated; (string(0..255))({SB,.....}) will have IAC SE appended.
 //IAC doubling is performed automatically. This is identical to the Hogan specification, fwiw.
+//Note that plugins currently cannot receive TELNET responses from servers, so sending them isn't
+//particularly useful. This is mainly for core to use.
 void send_telnet(mapping conn,bytes data)
 {
 	data="\xFF"+replace(data,"\xFF","\xFF\xFF");
