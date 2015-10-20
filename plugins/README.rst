@@ -231,39 +231,50 @@ the work of a config dialog - as long as your configuration fits in
 the provided framework. (If it doesn't, just use window/movablewindow
 and do everything directly.)
 
-Provide any or all of::
+The most common usage requires only that you provide::
 
 	//Set any window properties desired - see GTK docs for details
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
+	constant persist_key="pluginname/whatever"; //Set this to the persist[] key where your data is stored
+	//Name all the fields that you care about, identifying them by type
+	constant strings=({"key1","key2","key3"}); //Omit any that aren't needed
+	constant ints=({"key4","key5","key6"});
+	constant bools=({"key7","key8","key9"});
 	//Create and return a widget (most likely a layout widget) representing all the custom content.
-	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
-	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
-	//it may be a GTK2.Label, or it may be omitted altogether).
 	GTK2.Widget make_content() { }
-	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping.
+
+You may also wish to include one or more of these::
+
+	constant allow_new=0; //Remove the -- New -- entry to prevent the creation of new elements
+	constant allow_delete=0; //Disable the Delete button (it'll always be visually present)
+	constant allow_rename=0; //Prevent renamings
+
+For more advanced usage, define these::
+
+	//Explicitly set the items mapping - if non-null, persist_key is ignored.
+	mapping(string:mapping(string:mixed)) items;
+	//Custom save/load hooks. Can be used in conjunction with the strings/ints/bools bindings.
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
-	constant allow_new=1; //Set to 0 to remove the -- New -- entry; if omitted, -- New -- will be present and entries can be created.
-	constant allow_delete=1; //Set to 0 to disable the Delete button (it'll always be present)
-	constant allow_rename=1; //Set to 0 to ignore changes to keywords
-	constant strings=({"key","key","key"}); //Simple bindings, see below
-	constant ints=({"key","key","key"});
-	constant bools=({"key","key","key"});
-	constant persist_key="pluginname/whatever"; //Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
-	constant descr_key="title"; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
+	//Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
+	constant descr_key="title";
 
-It looks dauntingly complicated, but it's fairly straight-forward. Look at
-examples using it (eg plugins/timer.pike) and replicate. Most of the elements
-have sane defaults; it's possible to create a fully functional configdlg by
-using persist_key, strings/ints/bools, and make_content() only.
+The most important function to create is make_content(), which needs to return
+a widgetful of GUI structure. A GTK2.Vbox or GTK2.Table would be the best
+choices for most cases. The GTK2Table and two_column convenience functions from
+globals.pike can help here; look at some examples of their use in other plugins
+for details.
 
-The simple bindings arrays are for the common case where a widget in win[]
-has the same name as a string or integer in info[]. In that case, you can
-simply list the keys in strings/ints and the saving and loading will be done
-for you (prior to save_content/load_content being called). In the case of
-bools, it's assumed that the objects are GTK2.CheckButton()s, and will have
-their active state set; the others will have their text set.
+As well as returning the top-level widget, make_content must create the GUI
+bindings for the important fields. Those listed in bools should be created as
+GTK2.CheckButtons; strings/ints can be GTK2.Entry, GTK2.Label (for read-only
+attributes), or anything else that can set/get text. To allow renames (if the
+allow_rename flag has not been set to zero), it should also create a win->kwd
+in the same way.
+
+More advanced usage can incorporate all of the above, and then make small
+tweaks to handle what doesn't work the easy way. It's code. Have at it!
 
 When the info keys are human readable, no other description is needed. But if
 they are not so, it may be helpful to provide a second column which adds some
