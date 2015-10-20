@@ -531,7 +531,7 @@ class configdlg
 	void makewindow()
 	{
 		object ls=GTK2.ListStore(({"string","string"}));
-		if (persist_key && !items) items=persist[persist_key];
+		if (persist_key && !items) items=persist->setdefault(persist_key,([]));
 		//TODO: Break out the list box code into a separate object - it'd be useful eg for zoneinfo.pike.
 		foreach (sort(indices(items)),string kwd)
 		{
