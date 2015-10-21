@@ -17,7 +17,10 @@ is applicable here - see http://semver.org/ for details.
 Every plugin has a name, which is the file name without any path or the
 ".pike" extension. Plugins are loaded in directory-walk order, but once
 bootstrapping is complete, only the file name matters. Initialization
-order can thus be modified by moving scripts into subdirectories.
+order can thus be modified by moving scripts into subdirectories. Note
+that a plugin should not depend on any other plugin; initialization order
+should not affect anything more significant than, say, the order of their
+status bar entries.
 
 A plugin may inherit any combination of the following, to gain access
 to Gypsum facilities and to implement the hook's functionality. Also, a
