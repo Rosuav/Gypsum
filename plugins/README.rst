@@ -344,12 +344,10 @@ Creates an entry on the 'Plugins' pull-down menu. Provide some or all of::
 	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
 	void menu_clicked() { }
 
-ADVISORY: Note that menu_clicked can be any callable, eg a class, not
-just a function. Be careful with this, though, as it may receive some
-arguments (it's currently used directly as a GTK signal handler). Works
-beautifully as long as this isn't a problem; a number of plugins do
-this by having an explicit create() that doesn't pass args on to its
-inherits.
+ADVISORY: Note that menu_clicked can be any callable, eg a class, not just
+a function. Be careful with this, though, as it may receive some arguments
+Works beautifully as long as this isn't a problem; a number of plugins do
+this by having an explicit create() that doesn't pass args on to its inherits.
 
 Uses for this include opening/showing a window or configdlg, giving
 statistical information to the user, giving usage information about a
