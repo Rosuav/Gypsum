@@ -15,8 +15,8 @@ promises can be added at any minor version, so backward compatibility is
 guaranteed only as far as that minor version. Semantic Versioning v2.0.0
 is applicable here - see http://semver.org/ for details.
 
-Every plugin has a name, which is the file name without any path or the
-".pike" extension. Plugins are loaded in directory-walk order, but once
+Plugins are identified by their base names (without any path or the ".pike"
+extension). Plugins are loaded in directory-walk order, but once
 bootstrapping is complete, only the file name matters. Initialization
 order can thus be modified by moving scripts into subdirectories. Note
 that a plugin should not depend on any other plugin; initialization order
