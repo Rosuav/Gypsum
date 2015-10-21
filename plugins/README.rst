@@ -1,3 +1,4 @@
+==============
 Gypsum Plugins
 ==============
 
@@ -21,6 +22,10 @@ order can thus be modified by moving scripts into subdirectories. Note
 that a plugin should not depend on any other plugin; initialization order
 should not affect anything more significant than, say, the order of their
 status bar entries.
+
+
+Plugin modes
+============
 
 A plugin may inherit any combination of the following, to gain access
 to Gypsum facilities and to implement the hook's functionality. Also, a
@@ -372,7 +377,7 @@ still provide a menu_label. It is used for introspection, and ideally should be
 indicative of what the actual label is likely to be, perhaps with placeholders.
 
 General notes
--------------
+=============
 
 All handlers should return 1 if processing is "complete" - if the
 command or line has been consumed. For commands, this should be the
