@@ -501,6 +501,10 @@ I'd really rather not have to dig into. Also, avoid using a leading dot;
 currently, Gypsum does not acknowledge these specially, but in future, these
 may become "undiscoverable" or in some way hidden.
 
+
+The subwindow mapping
+---------------------
+
 Certain elements in subw and conn are guaranteed, and designed to be read by
 plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
