@@ -379,11 +379,12 @@ indicative of what the actual label is likely to be, perhaps with placeholders.
 General notes
 =============
 
-All handlers should return 1 if processing is "complete" - if the
+Handlers should usually return 1 if processing is "complete" - if the
 command or line has been consumed. For commands, this should be the
 normal case, and suppresses the "Unknown command" message; for hooks,
 this indicates that the line should be hidden, as though it never
-happened.
+happened. In cases where there is no meaningful alternate processing,
+the return value is ignored, and the function can be declared void.
 
 Local output can be produced on any subw::
 
