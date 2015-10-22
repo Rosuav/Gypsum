@@ -490,7 +490,7 @@ BEST PRACTICE: Every "string" inside Gypsum is (or ought to be) a string of
 Unicode characters. If you need to work with bytes (maybe read from/written to
 a file), don't call it "string", call it "bytes" (which is a global typedef for
 string(0..255) or string(8bit)); that way, it's clear what's text and what's
-binary data. In some cases, a string(7bit) or string(0..127) can be used as
+binary data. In many cases, a string(7bit) or string(0..127) can be used as
 either bytes or text (with an implicit ASCII encode/decode "step"); this is
 also the case for any seven-bit string literals. For this purpose, the typedef
 "ascii" can be used.
