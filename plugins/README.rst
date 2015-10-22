@@ -510,23 +510,23 @@ plugins. Nothing is guaranteed for writing; however, poking around in the
 source code will show a number of interesting possibilities. Have fun. :)
 You can safely read the following:
 
-* subw->connection - referred to as conn, this mapping stores per-connection
+* `subw->connection` - referred to as conn, this mapping stores per-connection
   info. It will be replaced with a new mapping any time a new connection is
   attempted on this subw.
 
-* conn->display - backref to subw, for convenience/certainty.
+* `conn->display` - backref to subw, for convenience/certainty.
 
-* subw->world - (usually) short identifier for the current or most-recent
+* `subw->world` - (usually) short identifier for the current or most-recent
   world. This may be numeric and may even have spaces in it, but it should be
   string-for-string identical every time the same world is connected to. This is
   the recommended way to distinguish worlds in a way that a human will expect.
   (It is the "Keyword" from the connection dialog.)
 
-* conn->worldname - descriptive name for the current world (used as tab text,
+* `conn->worldname` - descriptive name for the current world (used as tab text,
   for instance). Should be used as a human-readable world description.
   (It is the "Name" from the connection dialog.)
 
-* conn->sock - socket object, if connected. It's currently possible for there to
+* `conn->sock` - socket object, if connected. It's currently possible for there to
   be a subw->connection but for its sock to be 0/absent; this may change in the
   future, with the entire connection mapping being disposed of. You should never
   see a closed socket object here, although it's briefly possible. DO NOT send
@@ -534,13 +534,13 @@ You can safely read the following:
   buffering), but it can be queried for IP addresses and other useful info. On
   Pikes which support it, socket attributes can be set/queried.
 
-* conn->debug_textread, conn->debug_ansiread, conn->debug_sockread - debug mode
+* `conn->debug_textread`, `conn->debug_ansiread`, `conn->debug_sockread` - debug mode
   flags. Each one enables display of incoming text at a different level. Great
   for figuring out exactly what's getting sent to you; otherwise, just a whole
   lot of noise. Changing these is perfectly safe (Gypsum itself will never set
   them, only read them).
 
-* subw->conn_debug - debug mode enabler. If this is set when a connection is
+* `subw->conn_debug` - debug mode enabler. If this is set when a connection is
   first established, all three of the above debug flags will be set on the new
   connection. This allows easy debugging of connection issues. As above, this
   is for you to set and Gypsum to read.
