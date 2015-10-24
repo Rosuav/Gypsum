@@ -353,7 +353,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					->add(GTK2Table(({
 						({"Name",ef("name",12),0,0,"Char level",num("level",8)}),
 						({"Race",ef("race",8),"HD",rare(ef("race_hd")),"Experience",num("xp",8)}),
-						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",calc("`+(@enumerate(level,1000,1000))-xp")}),
+						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",win->tnl=GTK2.Button()->add(calc("`+(@enumerate(level,1000,1000))-xp"))}),
 						({"Class",ef("class2",12),"Level",num("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
 						({"Class",ef("class3",12),"Level",num("level3"),
 							"Grapple",calc(#"(string)(([
@@ -690,6 +690,33 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	{
 		charsheets[owner][this]=0;
 		destruct();
+	}
+
+	//Level up assistant
+	class sig_tnl_clicked
+	{
+		inherit window;
+		void create() {::create();}
+
+		void makewindow()
+		{
+			GTK2.Vbox vbox=GTK2.Vbox(0,0);
+			
+			if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
+			{
+				//Not ready to level up yet.
+				vbox->add(GTK2.Label("You're not ready to level up yet. Sorry!"));
+			}
+			else
+			{
+				vbox->add(GTK2.Label("Ready to level up!"))
+				    ->add(win->pb_ding=GTK2.Button("Ding!"));
+			}
+			win->mainwindow=GTK2.Window((["title":"Level up assistant"]))->add(vbox
+				->add(stock_close())
+			);
+			::makewindow();
+		}
 	}
 }
 
