@@ -717,6 +717,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			);
 			::makewindow();
 		}
+
+		void sig_pb_ding_clicked()
+		{
+			set_value("level",(string)((int)data->level+1));
+			closewindow();
+		}
 	}
 }
 
