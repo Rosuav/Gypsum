@@ -669,7 +669,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						"read-only access - you have to trust your DM anyway.","wrap":1])),0,0,0)
 					->pack_start(ef("perms"),0,0,0)
 				),0,0,0)
-				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes"))))
+				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))))
 			,GTK2.Label("Administrivia"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Styles")->add(two_column(({
