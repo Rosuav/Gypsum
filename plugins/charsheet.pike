@@ -704,7 +704,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			
 			if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
 			{
-				//Not ready to level up yet.
 				vbox->add(GTK2.Label("You're not ready to level up yet. Sorry!"));
 			}
 			else
