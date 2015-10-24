@@ -700,20 +700,32 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 		void makewindow()
 		{
-			GTK2.Vbox vbox=GTK2.Vbox(0,0);
+			array stuff;
 			
 			if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
 			{
-				vbox->add(GTK2.Label("You're not ready to level up yet. Sorry!"));
+				stuff=({"You're not ready to level up yet. Sorry!",0});
 			}
 			else
 			{
-				vbox->add(GTK2.Label("Ready to level up!"))
-				    ->add(win->pb_ding=GTK2.Button("Ding!"));
+				//Start with the standard PHB classes. If the player currently has any of them, move them to the top with a separator.
+				array classes=({"Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rogue","Sorcerer","Wizard"});
+				array cur_cls=({ });
+				for (int i=1;i<10;++i) //There are only 4 entryfields up above (as of 20151024), but hey, more might be added!
+				{
+					string cls=String.sillycaps(data["class"+i] || "");
+					if (has_value(classes,cls)) {cur_cls+=({cls}); classes-=({cls});}
+				}
+				if (sizeof(cur_cls)) classes=cur_cls+({""})+classes;
+				stuff=({
+					"Ready to level up!",0,
+					"Class",win->ddcb_class=SelectBox(classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
+					//TODO: Hitpoints - show the dice
+					win->pb_ding=GTK2.Button("Ding!"),0,
+				});
 			}
-			win->mainwindow=GTK2.Window((["title":"Level up assistant"]))->add(vbox
-				->add(stock_close())
-			);
+			win->mainwindow=GTK2.Window((["title":"Level up assistant"]))
+				->add(two_column(stuff+({stock_close(),0})));
 			::makewindow();
 		}
 
