@@ -811,7 +811,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				(win["skill_"+s]=GTK2.Entry())->signal_connect("changed",calcskills);
 				tb[has_value(sk,s)]+=({skillnames[s],win["skill_"+s]});
 			}
-			if (!sizeof(tb[1])) tb=({"(pick a class)",0}); //Trust that tb[0] can't be empty
+			if (!sizeof(tb[1])) tb[1]=({"(pick a class)",0}); //Trust that tb[0] can't be empty
 			win->sk1->add(two_column(tb[1])->show_all());
 			win->sk2->add(two_column(tb[0])->show_all());
 			calcskills();
