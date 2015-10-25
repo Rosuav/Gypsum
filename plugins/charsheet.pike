@@ -797,6 +797,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				stuff=({"You're not ready to level up yet. Sorry!",0});
 			else
 			{
+				++lvl; //It's more useful to look at which level we're _gaining_, not the one we already have.
+
 				//Start with the standard PHB classes. If the player currently has any of them,
 				//move them to the top with a separator.
 				array all_classes=indices(classes),cur_cls=({ });
@@ -819,7 +821,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"Fort save improvement",win->fort=prefill("%s","fort"),
 					"Refl save improvement",win->refl=prefill("%s","refl"),
 					"Will save improvement",win->will=prefill("%s","will"),
-					"Stat increase", lvl%4 ? "(not this level)" : win->stat=SelectBox("STR INT WIS DEX CON CHA"/" "),
+					"Stat increase", lvl%4 ? "(not this level)" : (win->stat=SelectBox("STR INT WIS DEX CON CHA"/" ")),
+					"New feat", lvl%3 ? "(not this level)" : (win->feat=GTK2.Entry()),
+					!(lvl%3) && (win->feat_benefit=GTK2.Entry()), 0,
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -859,6 +863,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				add_value(save+"_base",mod[clslevel]-mod[clslevel-1]);
 			}
 			if (win->stat && win->stat->get_text()!="") add_value(win->stat->get_text(),1);
+			if (win->feat) for (int i=0;i<20;++i) if ((<0,"">)[data["feat_"+i]])
+			{
+				set_value("feat_"+i,win->feat->get_text());
+				set_value("feat_benefit_"+i,win->feat_benefit->get_text());
+				break;
+			}
 			closewindow();
 		}
 	}
