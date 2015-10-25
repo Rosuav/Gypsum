@@ -780,7 +780,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				}
 				stuff=({
 					"Ready to level up!",0,
-					"Class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
+					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
 					display("Hit points (roll d%d)","hd"),prefill("%d","fixedhp"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
