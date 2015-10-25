@@ -699,6 +699,61 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		inherit window;
 		void create() {::create();}
 
+		mapping classes=([
+			"Barbarian": ([
+				"hd": 12,
+			]),"Bard": ([
+				"hd": 6,
+			]),"Cleric": ([
+				"hd": 8,
+			]),"Druid": ([
+				"hd": 8,
+			]),"Fighter": ([
+				"hd": 10,
+			]),"Monk": ([
+				"hd": 8,
+			]),"Paladin": ([
+				"hd": 10,
+			]),"Ranger": ([
+				"hd": 8,
+			]),"Rogue": ([
+				"hd": 6,
+			]),"Sorcerer": ([
+				"hd": 4,
+			]),"Wizard": ([
+				"hd": 4,
+			]),
+		]);
+		array recalc=({ });
+
+		//Uses sprintf args based on the currently-selected class
+		GTK2.Entry prefill(string fmt,string ... args)
+		{
+			object obj=GTK2.Entry();
+			recalc+=({({obj,fmt,args})});
+			return obj;
+		}
+		GTK2.Label display(string fmt,string ... args)
+		{
+			object obj=GTK2.Label();
+			recalc+=({({obj,fmt,args})});
+			return obj;
+		}
+
+		//Magic object that can sprintf as anything
+		object unknown=class{string _sprintf(int c) {return "??";}}();
+		void sig_ddcb_class_changed()
+		{
+			string cls=win->ddcb_class->get_text();
+			mapping classinfo=classes[cls] || ([]);
+			foreach (recalc,[GTK2.Widget obj,string fmt,array(string) args])
+			{
+				array clsargs=allocate(sizeof(args));
+				foreach (args;int i;string kwd) clsargs[i]=has_index(classinfo,kwd)?classinfo[kwd]:unknown;
+				obj->set_text(sprintf(fmt,@clsargs));
+			}
+		}
+
 		void makewindow()
 		{
 			array stuff;
@@ -709,21 +764,27 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			}
 			else
 			{
-				//Start with the standard PHB classes. If the player currently has any of them, move them to the top with a separator.
-				array classes=({"Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rogue","Sorcerer","Wizard"});
-				array cur_cls=({ });
+				//Start with the standard PHB classes. If the player currently has any of them,
+				//move them to the top with a separator.
+				array all_classes=indices(classes),cur_cls=({ });
 				for (int i=1;i<10;++i) //There are only 4 entryfields up above (as of 20151024), but hey, more might be added!
 				{
 					string cls=String.sillycaps(data["class"+i] || "");
-					if (has_value(classes,cls)) {cur_cls+=({cls}); classes-=({cls});}
+					if (has_value(all_classes,cls)) {cur_cls+=({cls}); all_classes-=({cls});}
 				}
-				if (sizeof(cur_cls)) classes=cur_cls+({""})+classes;
+				if (sizeof(cur_cls)) all_classes=cur_cls+({""})+all_classes;
+				//Precalculate some things for convenience
+				foreach (classes;string cls;mapping info)
+				{
+					info->fixedhp = info->hd/2 + !((int)data->level&1);
+				}
 				stuff=({
 					"Ready to level up!",0,
-					"Class",win->ddcb_class=SelectBox(classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
-					//TODO: Hitpoints - show the dice
+					"Class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
+					display("Hit points (roll d%d)","hd"),prefill("%d","fixedhp"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
+				sig_ddcb_class_changed();
 			}
 			win->mainwindow=GTK2.Window((["title":"Level up assistant"]))
 				->add(two_column(stuff+({stock_close(),0})));
