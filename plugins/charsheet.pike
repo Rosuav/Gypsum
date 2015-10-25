@@ -260,7 +260,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	what s/he is doing. It is entirely possible to break things by mucking that
 	up. So take a bit of care, and don't deploy without knowing that it's right. :)
 	*/
-	GTK2.Widget calc(string formula,string|void name,string|void type)
+	GTK2.Widget calc(string formula,string|void name,string|void type,multiset|void dep_collector)
 	{
 		object lbl=GTK2.Label();
 		catch
@@ -282,6 +282,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				if (name) set_value(name,val,beenthere);
 				lbl->set_text(val);
 			};
+			if (dep_collector) {dep_collector[f2]=1; return lbl;}
 			//if (name) say(0,"%%%% %O: %{%O %}",name,sort((array)symbols)); //Note that nameless calc() blocks don't need to be slotted into the evaluation order.
 			foreach ((array)symbols,string dep)
 				if (!depends[dep]) depends[dep]=({f2});
