@@ -811,12 +811,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				//Precalculate some things for convenience
 				foreach (classes;string cls;mapping info)
 				{
-					info->fixedhp = info->hd/2 + !((int)data->level&1);
+					info->fixedhp = info->hd/2 + !((int)data->level&1) + (int)data->CON_mod;
 				}
 				stuff=({
 					"Ready to level up!",0,
 					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
-					display("Hit points (roll d%d)","hd"),win->hp=prefill("%d","fixedhp"),
+					display("Hit points (roll d%d+"+data->CON_mod+")","hd"),win->hp=prefill("%d","fixedhp"),
 					"BAB improvement",win->bab=prefill("%s","bab"),
 					"Fort save improvement",win->fort=prefill("%s","fort"),
 					"Refl save improvement",win->refl=prefill("%s","refl"),
