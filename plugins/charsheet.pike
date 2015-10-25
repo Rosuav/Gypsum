@@ -757,11 +757,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		void makewindow()
 		{
 			array stuff;
-			
-			if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
-			{
+			if (!(int)data->level)
+				stuff=({"This assistant cannot be used for first level.",0});
+			else if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
 				stuff=({"You're not ready to level up yet. Sorry!",0});
-			}
 			else
 			{
 				//Start with the standard PHB classes. If the player currently has any of them,
