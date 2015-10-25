@@ -816,7 +816,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				//Precalculate some things for convenience
 				foreach (classes;string cls;mapping info)
 				{
-					info->fixedhp = info->hd/2 + !((int)data->level&1) + (int)data->CON_mod;
+					info->fixedhp = max(info->hd/2 + !((int)data->level&1) + (int)data->CON_mod, 1);
 				}
 				stuff=({
 					"Ready to level up!",0,
