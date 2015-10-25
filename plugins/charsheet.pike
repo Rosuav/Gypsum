@@ -699,29 +699,47 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		inherit window;
 		void create() {::create();}
 
+		//Note that the BAB arrays start with a 0 entry for having zero levels in that class.
+		//This allows notations involving the difference between the current level and the previous.
+		constant bab=([
+			"Good":enumerate(21,1), //Going beyond level 20 should work easily enough if you need epic levels.
+			"Avg": enumerate(21,3)[*]/4,
+			"Poor":enumerate(21,1)[*]/2
+		]);
 		mapping classes=([
 			"Barbarian": ([
 				"hd": 12,
+				"bab": "Good",
 			]),"Bard": ([
 				"hd": 6,
+				"bab": "Avg",
 			]),"Cleric": ([
 				"hd": 8,
+				"bab": "Avg",
 			]),"Druid": ([
 				"hd": 8,
+				"bab": "Avg",
 			]),"Fighter": ([
 				"hd": 10,
+				"bab": "Good",
 			]),"Monk": ([
 				"hd": 8,
+				"bab": "Avg",
 			]),"Paladin": ([
 				"hd": 10,
+				"bab": "Good",
 			]),"Ranger": ([
 				"hd": 8,
+				"bab": "Good",
 			]),"Rogue": ([
 				"hd": 6,
+				"bab": "Avg",
 			]),"Sorcerer": ([
 				"hd": 4,
+				"bab": "Poor",
 			]),"Wizard": ([
 				"hd": 4,
+				"bab": "Poor",
 			]),
 		]);
 		array recalc=({ });
@@ -781,6 +799,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"Ready to level up!",0,
 					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
 					display("Hit points (roll d%d)","hd"),win->hp=prefill("%d","fixedhp"),
+					"BAB improvement",win->bab=prefill("%s","bab"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -794,18 +813,26 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}
 
 		//Convenience function for working with integers
-		void add_value(string kwd,int|string val) {set_value(kwd,(string)((int)data[kwd]+(int)val));}
+		int add_value(string kwd,int|string val)
+		{
+			val=(int)data[kwd]+(int)val;
+			set_value(kwd,(string)val);
+			return val;
+		}
+
 		void sig_pb_ding_clicked()
 		{
-			add_value("level",1);
+			int level=add_value("level",1),clslevel;
 			string cls=win->ddcb_class->get_text();
 			int classpos;
 			for (int i=1;i<10;++i)
 				if (data["class"+i]==cls) {classpos=i; break;} //Found it.
 				else if (!classpos && (<0,"">)[data["class"+i]]) classpos=i; //Found an empty slot - use that.
 			if (!classpos) say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!");
-			else {set_value("class"+classpos,cls); add_value("level"+classpos,1);}
+			else {set_value("class"+classpos,cls); clslevel=add_value("level"+classpos,1);}
 			add_value("hp",win->hp->get_text());
+			array bab=bab[win->bab->get_text()]; if (!bab) bab=({0})*21;
+			add_value("bab",bab[clslevel]-bab[clslevel-1]);
 			closewindow();
 		}
 	}
