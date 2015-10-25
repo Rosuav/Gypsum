@@ -790,9 +790,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		void makewindow()
 		{
 			array stuff;
-			if (!(int)data->level)
+			int lvl=(int)data->level;
+			if (!lvl)
 				stuff=({"This assistant cannot be used for first level.",0});
-			else if (`+(@enumerate((int)data->level,1000,1000))>(int)data->xp)
+			else if (`+(@enumerate(lvl,1000,1000))>(int)data->xp)
 				stuff=({"You're not ready to level up yet. Sorry!",0});
 			else
 			{
@@ -818,6 +819,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"Fort save improvement",win->fort=prefill("%s","fort"),
 					"Refl save improvement",win->refl=prefill("%s","refl"),
 					"Will save improvement",win->will=prefill("%s","will"),
+					"Stat increase", lvl%4 ? "(not this level)" : win->stat=SelectBox("STR INT WIS DEX CON CHA"/" "),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -856,6 +858,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				array mod=saves[win[save]->get_text()] || ({0})*21;
 				add_value(save+"_base",mod[clslevel]-mod[clslevel-1]);
 			}
+			if (win->stat && win->stat->get_text()!="") add_value(win->stat->get_text(),1);
 			closewindow();
 		}
 	}
