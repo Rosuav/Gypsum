@@ -105,6 +105,15 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return (string)`+(@(array(int))parts);
 	}
 
+	multiset(string) writepending=(<>);
+	void write_change(string kwd)
+	{
+		if (!send(subw,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd])))
+			//Can't do much :( But at least warn the user.
+			win->mainwindow->set_title("UNSAVED CHARACTER SHEET");
+		writepending[kwd]=0;
+	}
+
 	void set_value(string kwd,string val,multiset|void beenthere)
 	{
 		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
@@ -117,11 +126,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
 		beenthere[kwd]=1;
-		if (!send(subw,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]=val)))
-		{
-			win->mainwindow->set_title("UNSAVED CHARACTER SHEET");
-			return; //Can't do much :( But at least warn the user.
-		}
+		data[kwd]=val; writepending[kwd]=1; call_out(write_change,0,kwd);
 		if (depends[kwd]) depends[kwd](data,beenthere); //Call all the functions, in order
 	}
 
