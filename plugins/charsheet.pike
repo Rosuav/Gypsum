@@ -784,6 +784,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					display("Hit points (roll d%d)","hd"),prefill("%d","fixedhp"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
+				//If you're currently single-class, default to advancing in that class.
+				//You can always drop the list down and pick something else.
+				if (sizeof(cur_cls)==1) win->ddcb_class->set_text(cur_cls[0]);
 				sig_ddcb_class_changed();
 			}
 			win->mainwindow=GTK2.Window((["title":"Level up assistant"]))
