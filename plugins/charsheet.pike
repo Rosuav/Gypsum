@@ -867,7 +867,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				array mod=saves[win[save]->get_text()] || ({0})*21;
 				add_value(save+"_base",mod[clslevel]-mod[clslevel-1]);
 			}
-			if (win->stat && win->stat->get_text()!="") add_value(win->stat->get_text(),1);
+			if (win->stat)
+			{
+				string stat=win->stat->get_text();
+				int val=stat!="" && add_value(win->stat->get_text(),1);
+				if (stat=="CON" && !(val&1)) add_value("hp",level); //CON increase changes modifier? Gain 1 hp/level!
+			}
 			if (win->feat) for (int i=0;i<20;++i) if ((<0,"">)[data["feat_"+i]])
 			{
 				set_value("feat_"+i,win->feat->get_text());
