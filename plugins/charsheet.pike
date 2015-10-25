@@ -706,40 +706,55 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Avg": enumerate(21,3)[*]/4,
 			"Poor":enumerate(21,1)[*]/2
 		]);
+		constant saves=([
+			"Good": ({0})+enumerate(20,1,5)[*]/2,
+			"Poor": enumerate(21)[*]/3
+		]);
 		mapping classes=([
 			"Barbarian": ([
 				"hd": 12,
 				"bab": "Good",
+				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Bard": ([
 				"hd": 6,
 				"bab": "Avg",
+				"fort": "Poor", "refl": "Good", "will": "Good",
 			]),"Cleric": ([
 				"hd": 8,
 				"bab": "Avg",
+				"fort": "Good", "refl": "Poor", "will": "Good",
 			]),"Druid": ([
 				"hd": 8,
 				"bab": "Avg",
+				"fort": "Good", "refl": "Poor", "will": "Good",
 			]),"Fighter": ([
 				"hd": 10,
 				"bab": "Good",
+				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Monk": ([
 				"hd": 8,
 				"bab": "Avg",
+				"fort": "Good", "refl": "Good", "will": "Good",
 			]),"Paladin": ([
 				"hd": 10,
 				"bab": "Good",
+				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Ranger": ([
 				"hd": 8,
 				"bab": "Good",
+				"fort": "Good", "refl": "Good", "will": "Poor",
 			]),"Rogue": ([
 				"hd": 6,
 				"bab": "Avg",
+				"fort": "Poor", "refl": "Good", "will": "Poor",
 			]),"Sorcerer": ([
 				"hd": 4,
 				"bab": "Poor",
+				"fort": "Poor", "refl": "Poor", "will": "Good",
 			]),"Wizard": ([
 				"hd": 4,
 				"bab": "Poor",
+				"fort": "Poor", "refl": "Poor", "will": "Good",
 			]),
 		]);
 		array recalc=({ });
@@ -800,6 +815,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
 					display("Hit points (roll d%d)","hd"),win->hp=prefill("%d","fixedhp"),
 					"BAB improvement",win->bab=prefill("%s","bab"),
+					"Fort save improvement",win->fort=prefill("%s","fort"),
+					"Refl save improvement",win->refl=prefill("%s","refl"),
+					"Will save improvement",win->will=prefill("%s","will"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -831,8 +849,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (!classpos) say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!");
 			else {set_value("class"+classpos,cls); clslevel=add_value("level"+classpos,1);}
 			add_value("hp",win->hp->get_text());
-			array bab=bab[win->bab->get_text()]; if (!bab) bab=({0})*21;
+			array bab=bab[win->bab->get_text()] || ({0})*21;
 			add_value("bab",bab[clslevel]-bab[clslevel-1]);
+			foreach (({"fort","refl","will"}),string save)
+			{
+				array mod=saves[win[save]->get_text()] || ({0})*21;
+				add_value(save+"_base",mod[clslevel]-mod[clslevel-1]);
+			}
 			closewindow();
 		}
 	}
