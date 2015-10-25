@@ -821,7 +821,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					info->skills += (int)data->INT_mod;
 				}
 				stuff=({
-					"Ready to level up!",0,
+					GTK2.Label("Ready to level up!"),0,
 					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
 					display("Hit points (roll d%d+"+data->CON_mod+")","hd"),win->hp=prefill("%d","fixedhp"),
 					"BAB improvement",win->bab=prefill("%s","bab"),
