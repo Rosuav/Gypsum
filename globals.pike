@@ -365,7 +365,7 @@ class window
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
 		win->self=this;
 		if (!win->mainwindow) makewindow();
-		if (is_subwindow) win->mainwindow->set_transient_for(G->G->window->mainwindow);
+		if (is_subwindow) win->mainwindow->set_transient_for(win->_parentwindow || G->G->window->mainwindow);
 		win->mainwindow->set_skip_taskbar_hint(is_subwindow)->set_skip_pager_hint(is_subwindow)->show_all();
 		dosignals();
 	}
