@@ -794,6 +794,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 		void makewindow()
 		{
+			win->_parentwindow = charsheet::win->mainwindow;
 			array stuff;
 			int lvl=(int)data->level;
 			if (!lvl)
