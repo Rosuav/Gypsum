@@ -717,47 +717,47 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		]);
 		mapping classes=([
 			"Barbarian": ([
-				"hd": 12,
+				"hd": 12, "skills": 4,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Bard": ([
-				"hd": 6,
+				"hd": 6,  "skills": 6,
 				"bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Good",
 			]),"Cleric": ([
-				"hd": 8,
+				"hd": 8,  "skills": 2,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
 			]),"Druid": ([
-				"hd": 8,
+				"hd": 8,  "skills": 4,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
 			]),"Fighter": ([
-				"hd": 10,
+				"hd": 10, "skills": 2,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Monk": ([
-				"hd": 8,
+				"hd": 8,  "skills": 4,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Good", "will": "Good",
 			]),"Paladin": ([
-				"hd": 10,
+				"hd": 10, "skills": 2,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 			]),"Ranger": ([
-				"hd": 8,
+				"hd": 8,  "skills": 6,
 				"bab": "Good",
 				"fort": "Good", "refl": "Good", "will": "Poor",
 			]),"Rogue": ([
-				"hd": 6,
+				"hd": 6,  "skills": 8,
 				"bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Poor",
 			]),"Sorcerer": ([
-				"hd": 4,
+				"hd": 4,  "skills": 2,
 				"bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
 			]),"Wizard": ([
-				"hd": 4,
+				"hd": 4,  "skills": 2,
 				"bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
 			]),
@@ -817,6 +817,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				foreach (classes;string cls;mapping info)
 				{
 					info->fixedhp = max(info->hd/2 + !((int)data->level&1) + (int)data->CON_mod, 1);
+					if (data->race=="Human") ++info->skills; //One more skill point per level for being human
+					info->skills += (int)data->INT_mod;
 				}
 				stuff=({
 					"Ready to level up!",0,
@@ -829,6 +831,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					!(lvl%4) && "Stat increase", !(lvl%4) && (win->stat=SelectBox("STR INT WIS DEX CON CHA"/" ")),
 					!(lvl%3) && "New feat", !(lvl%3) && (win->feat=GTK2.Entry()),
 					!(lvl%3) && (win->feat_benefit=GTK2.Entry()), 0,
+					"Skill points", display("%d", "skills"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
