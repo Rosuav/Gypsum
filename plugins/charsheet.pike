@@ -821,8 +821,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"Fort save improvement",win->fort=prefill("%s","fort"),
 					"Refl save improvement",win->refl=prefill("%s","refl"),
 					"Will save improvement",win->will=prefill("%s","will"),
-					"Stat increase", lvl%4 ? "(not this level)" : (win->stat=SelectBox("STR INT WIS DEX CON CHA"/" ")),
-					"New feat", lvl%3 ? "(not this level)" : (win->feat=GTK2.Entry()),
+					!(lvl%4) && "Stat increase", !(lvl%4) && (win->stat=SelectBox("STR INT WIS DEX CON CHA"/" ")),
+					!(lvl%3) && "New feat", !(lvl%3) && (win->feat=GTK2.Entry()),
 					!(lvl%3) && (win->feat_benefit=GTK2.Entry()), 0,
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
