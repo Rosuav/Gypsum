@@ -781,7 +781,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				stuff=({
 					"Ready to level up!",0,
 					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
-					display("Hit points (roll d%d)","hd"),prefill("%d","fixedhp"),
+					display("Hit points (roll d%d)","hd"),win->hp=prefill("%d","fixedhp"),
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -794,9 +794,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			::makewindow();
 		}
 
+		//Convenience function for working with integers
+		void add_value(string kwd,int|string val) {set_value(kwd,(string)((int)data[kwd]+(int)val));}
 		void sig_pb_ding_clicked()
 		{
-			set_value("level",(string)((int)data->level+1));
+			add_value("level",1);
+			string cls=win->ddcb_class->get_text();
+			int classpos;
+			for (int i=1;i<10;++i)
+				if (data["class"+i]==cls) {classpos=i; break;} //Found it.
+				else if (!classpos && (<0,"">)[data["class"+i]]) classpos=i; //Found an empty slot - use that.
+			if (!classpos) say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!");
+			else {set_value("class"+classpos,cls); add_value("level"+classpos,1);}
+			add_value("hp",win->hp->get_text());
 			closewindow();
 		}
 	}
