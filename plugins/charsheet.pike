@@ -80,6 +80,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	constant is_subwindow=0;
 	constant pos_key="charsheet/winpos";
 	mapping(string:array(function)) depends=([]); //Whenever something changes, recalculate all its depends.
+	mapping(string:string) skillnames=([]); //For the convenience of the level-up assistant, map skill keywords to their names.
+	mapping(string:array(string)) class_skills=([]); //Parsed from the primary skill table - which skills are class skills for each class?
 
 	void create()
 	{
@@ -500,58 +502,59 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			,GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
-				+map(#"INT Appraise	Craft 1 (if related), Craft 2 (if related), Craft 3 (if related)
-					DEX Balance	AC, Tumble
-					CHA Bluff
-					STR Climb	AC, Use Rope (if climbing rope)
-					CON Concentration
-					INT *Craft 1
-					INT *Craft 2
-					INT *Craft 3
-					INT Decipher Script
-					CHA Diplomacy	Bluff, Knowledge Local, Sense Motive
-					INT Disable Device
-					CHA Disguise	Bluff (if acting in character)
-					DEX Escape Artist	AC, Use Rope (if involving ropes)
-					INT Forgery
-					CHA Gather Info	Knowledge Local
-					CHA Handle Animal
-					WIS Heal
-					DEX Hide	AC
-					CHA Intimidate	Bluff
-					STR Jump	AC, Tumble
-					INT Knowledge Arcana
-					INT Knowledge Local
-					INT Knowledge Nobility
-					INT Knowledge Nature	Survival
-					INT *Knowledge 1
-					INT *Knowledge 2
-					INT *Knowledge 3
-					INT *Knowledge 4
-					INT *Knowledge 5
-					INT *Knowledge 6
-					WIS Listen
-					DEX Move Silently	AC
-					DEX Open Lock
-					CHA *Perform 1
-					CHA *Perform 2
-					CHA *Perform 3
-					WIS *Profession 1
-					WIS *Profession 2
-					DEX Ride	Handle Animal
-					INT Search
-					WIS Sense Motive
-					DEX Sleight of Hand	AC, Bluff
-					INT Spellcraft	Knowledge Arcana, Use Magic Device (if deciphering scroll)
-					WIS Spot
-					WIS Survival	Search (if following tracks)
-					STR Swim	AC, AC
-					DEX Tumble	AC, Jump
-					CHA Use Magic Device	Decipher Script (if involving scrolls), Spellcraft (if involving scrolls)
-					DEX Use Rope	Escape Artist (if involving bindings)"/"\n",lambda(string s)
+				+map(#"INT Appraise	Brd,Rog	Craft 1 (if related), Craft 2 (if related), Craft 3 (if related)
+					DEX Balance	Brd,Mnk,Rog	AC, Tumble
+					CHA Bluff	Brd,Rog,Sor
+					STR Climb	Bbn,Brd,Ftr,Mnk,Rgr,Rog	AC, Use Rope (if climbing rope)
+					CON Concentration	Brd,Clr,Drd,Mnk,Pal,Rgr,Sor,Wiz
+					INT *Craft 1	Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					INT *Craft 2	Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					INT *Craft 3	Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					INT Decipher Script	Brd,Rog,Wiz
+					CHA Diplomacy	Brd,Clr,Drd,Mnk,Pal,Rog	Bluff, Knowledge Local, Sense Motive
+					INT Disable Device	Rog
+					CHA Disguise	Brd,Rog	Bluff (if acting in character)
+					DEX Escape Artist	Brd,Mnk,Rog	AC, Use Rope (if involving ropes)
+					INT Forgery	Rog
+					CHA Gather Info	Brd,Rog	Knowledge Local
+					CHA Handle Animal	Bbn,Drd,Ftr,Pal,Rgr
+					WIS Heal	Clr,Drd,Pal,Rgr
+					DEX Hide	Bbn,Mnk,Rgr,Rog	AC
+					CHA Intimidate	Bbn,Ftr,Rog	Bluff
+					STR Jump	Bbn,Brd,Ftr,Mnk,Rgr,Rog	AC, Tumble
+					INT Knowledge Arcana	Bbn,Clr,Mnk,Sor,Wiz
+					INT Knowledge Local	Brd,Rog,Wiz
+					INT Knowledge Nobility	Brd,Pal,Wiz
+					INT Knowledge Nature	Brd,Drd,Rgr,Wiz	Survival
+					INT *Knowledge 1	Brd,Wiz
+					INT *Knowledge 2	Brd,Wiz
+					INT *Knowledge 3	Brd,Wiz
+					INT *Knowledge 4	Brd,Wiz
+					INT *Knowledge 5	Brd,Wiz
+					INT *Knowledge 6	Brd,Wiz
+					WIS Listen	Bbn,Brd,Drd,Mnk,Rgr,Rog
+					DEX Move Silently	Brd,Mnk,Rgr,Rog	AC
+					DEX Open Lock	Rog
+					CHA *Perform 1	Brd,Mnk,Rog
+					CHA *Perform 2	Brd,Mnk,Rog
+					CHA *Perform 3	Brd,Mnk,Rog
+					WIS *Profession 1	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					WIS *Profession 2	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					DEX Ride	Bbn,Drd,Ftr,Pal,Rgr	Handle Animal
+					INT Search	Rgr,Rog
+					WIS Sense Motive	Brd,Mnk,Pal,Rog
+					DEX Sleight of Hand	Brd,Rog	AC, Bluff
+					INT Spellcraft	Brd,Clr,Drd,Sor,Wiz	Knowledge Arcana, Use Magic Device (if deciphering scroll)
+					WIS Spot	Drd,Mnk,Rgr,Rog
+					WIS Survival	Bbn,Drd,Rgr	Search (if following tracks)
+					STR Swim	Bbn,Brd,Drd,Ftr,Mnk,Rgr,Rog	AC, AC
+					DEX Tumble	Brd,Mnk,Rog	AC, Jump
+					CHA Use Magic Device	Brd,Rog	Decipher Script (if involving scrolls), Spellcraft (if involving scrolls)
+					DEX Use Rope	Rgr,Rog	Escape Artist (if involving bindings)"/"\n",lambda(string s)
 				{
-					sscanf(s,"%*[\t]%s %[^\t]\t%s",string stat,string|object desc,string syn);
+					sscanf(s,"%*[\t]%s %[^\t]\t%[^\t]\t%s",string stat,string|object desc,string cls,string syn);
 					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
+					skillnames[kwd]=desc; foreach (cls/",",string c) class_skills[c]+=({kwd});
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
 						desc=desc[1..];
@@ -716,47 +719,47 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Poor": enumerate(21)[*]/3
 		]);
 		mapping classes=([
-			"Barbarian": ([
+			"Barbarian": (["abbr": "Brb",
 				"hd": 12, "skills": 4,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
-			]),"Bard": ([
+			]),"Bard": (["abbr": "Brd",
 				"hd": 6,  "skills": 6,
 				"bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Good",
-			]),"Cleric": ([
+			]),"Cleric": (["abbr": "Clr",
 				"hd": 8,  "skills": 2,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
-			]),"Druid": ([
+			]),"Druid": (["abbr": "Drd",
 				"hd": 8,  "skills": 4,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
-			]),"Fighter": ([
+			]),"Fighter": (["abbr": "Ftr",
 				"hd": 10, "skills": 2,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
-			]),"Monk": ([
+			]),"Monk": (["abbr": "Mnk",
 				"hd": 8,  "skills": 4,
 				"bab": "Avg",
 				"fort": "Good", "refl": "Good", "will": "Good",
-			]),"Paladin": ([
+			]),"Paladin": (["abbr": "Pal",
 				"hd": 10, "skills": 2,
 				"bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
-			]),"Ranger": ([
+			]),"Ranger": (["abbr": "Rgr",
 				"hd": 8,  "skills": 6,
 				"bab": "Good",
 				"fort": "Good", "refl": "Good", "will": "Poor",
-			]),"Rogue": ([
+			]),"Rogue": (["abbr": "Rog",
 				"hd": 6,  "skills": 8,
 				"bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Poor",
-			]),"Sorcerer": ([
+			]),"Sorcerer": (["abbr": "Sor",
 				"hd": 4,  "skills": 2,
 				"bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
-			]),"Wizard": ([
+			]),"Wizard": (["abbr": "Wiz",
 				"hd": 4,  "skills": 2,
 				"bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
@@ -778,6 +781,16 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			return obj;
 		}
 
+		void calcskills()
+		{
+			string cls=win->ddcb_class->get_text();
+			mapping classinfo=classes[cls] || ([]);
+			array sk=class_skills[classinfo->abbr] || ({ });
+			int spent=0;
+			foreach (skillnames;string n;) spent += (2-has_value(sk,n)) * (int)win["skill_"+n]->get_text();
+			win->skillpoints->set_text(sprintf("%d/%d",spent,classinfo->skills));
+		}
+
 		//Magic object that can sprintf as anything
 		object unknown=class{string _sprintf(int c) {return "??";}}();
 		void sig_ddcb_class_changed()
@@ -790,6 +803,18 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				foreach (args;int i;string kwd) clsargs[i]=has_index(classinfo,kwd)?classinfo[kwd]:unknown;
 				obj->set_text(sprintf(fmt,@clsargs));
 			}
+			if (win->sk1->get_child()) {win->sk1->remove(win->sk1->get_child()); win->sk2->remove(win->sk2->get_child());}
+			array sk=class_skills[classinfo->abbr] || ({ });
+			array tb=({({ }),({ })});
+			foreach (sort(indices(skillnames)),string s)
+			{
+				(win["skill_"+s]=GTK2.Entry())->signal_connect("changed",calcskills);
+				tb[has_value(sk,s)]+=({skillnames[s],win["skill_"+s]});
+			}
+			if (!sizeof(tb[1])) tb=({"(pick a class)",0}); //Trust that tb[0] can't be empty
+			win->sk1->add(two_column(tb[1])->show_all());
+			win->sk2->add(two_column(tb[0])->show_all());
+			calcskills();
 		}
 
 		void makewindow()
@@ -832,7 +857,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					!(lvl%4) && "Stat increase", !(lvl%4) && (win->stat=SelectBox("STR INT WIS DEX CON CHA"/" ")),
 					!(lvl%3) && "New feat", !(lvl%3) && (win->feat=GTK2.Entry()),
 					!(lvl%3) && (win->feat_benefit=GTK2.Entry()), 0,
-					"Skill points", display("%d", "skills"),
+					"Skill points", win->skillpoints=GTK2.Label("0/0"),
+					GTK2.Frame("Class skills")->add(win->sk1=GTK2.ScrolledWindow((["hscrollbar-policy":GTK2.POLICY_NEVER]))->set_size_request(-1,150)),0,
+					GTK2.Frame("Cross-class skills (double cost)")->add(win->sk2=GTK2.ScrolledWindow((["hscrollbar-policy":GTK2.POLICY_NEVER]))->set_size_request(-1,150)),0,
 					win->pb_ding=GTK2.Button("Ding!"),0,
 				});
 				//If you're currently single-class, default to advancing in that class.
@@ -883,6 +910,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				set_value("feat_benefit_"+i,win->feat_benefit->get_text());
 				break;
 			}
+			foreach (win;string kwd;mixed data) if (sscanf(kwd,"skill_%s",string sk) && sk)
+				if (int value=(int)data->get_text()) add_value(sk+"_rank",value);
 			closewindow();
 		}
 	}
