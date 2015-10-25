@@ -624,8 +624,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						recalc(data,(<kwd+"_synergy">));
 					}
 					return ({
-						//TODO: Have some way of showing "currently-being-gained" skills, incl class vs cross-class, and total cost
-						//Or maybe a "level builder"? Pick your class, it shows you which skills etc.
 						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),synergy_desc,rare(noex(num(kwd+"_other"))),
 						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
 						ef(kwd+"_notes",10),
