@@ -145,7 +145,7 @@ int process(string param,mapping(string:mixed) subw)
 	if (param=="all") param="gypsum.pike";
 	int cleanup=sscanf(param,"force %s",param); //Use "/update force some-file.pike" to clean up after building (not compatible with 'all', nor the git/zip downloaders)
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
-	object self=(param!=".") && build(param); //"build ." to just rebuild what's already in queue
+	object self=(param!=".") && build(param); //"build ." to just rebuild what's already in queue (for debugging the update system only, and undocumented)
 	//Check for anything that inherits what we just updated, and recurse.
 	//The list will be built by the master during compilation; we just need to process it (by recompiling more files).
 	//Note that I don't want to simply use foreach here, because the array may change.
