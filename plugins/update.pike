@@ -7,12 +7,11 @@ constant docstring=#"
 Live code updater
 
 In most cases, this is able to download and apply the latest Gypsum without
-requiring a restart. This plugin also handles the unloading of other plugins
-(and yes, it is capable of unloading itself, after which you will need to
-reenable it (using the plugin configuration menu) before you can unload any
-other plugins).
+requiring a restart. Simply use Plugins|Update Gypsum to upgrade - there are
+frequent changes, although not all of them are necessarily exciting :)
 
 Plugin developers, this will be your primary tool for loading in new code.
+After editing a file, use '/update filename' to apply the change.
 ";
 
 constant plugin_active_by_default = 1;
