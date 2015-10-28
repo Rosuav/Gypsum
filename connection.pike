@@ -191,6 +191,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 						case 0: conn->bold=0; conn->bg=0; conn->fg=7; break;
 						case 1: conn->bold=8; break;
 						case 2: conn->bold=0; break;
+						case 3..9: break; //Unsupported but recognized codes eg blink
 						case 30..37: conn->fg=param-30; break;
 						case 40..47: conn->bg=param-40; break;
 						default: if (!conn["unknown_ansi_"+param+"m"]) {conn["unknown_ansi_"+param+"m"]=1; say(conn->display,"%%%% %O produced unknown ANSI code \\e[%dm\n",conn->worldname,param);}
