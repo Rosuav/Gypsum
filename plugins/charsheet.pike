@@ -866,6 +866,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				});
 				//If you're currently single-class, default to advancing in that class.
 				//You can always drop the list down and pick something else.
+				//Note that this will also pick up the case where you have one PHB
+				//class and one or more other classes (eg prestige classes). It'll
+				//assume that you want to advance in the PHB class. Since this tool
+				//can't be used for prestige classes anyway, this shouldn't be too bad.
 				if (sizeof(cur_cls)==1) win->ddcb_class->set_text(cur_cls[0]);
 				sig_ddcb_class_changed();
 			}
