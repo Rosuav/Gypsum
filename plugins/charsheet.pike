@@ -502,6 +502,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			,GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
+				//	Stat and skill name	Class skill for these classes	Synergies, including Armor Check penalty and conditionals.
 				+map(#"INT Appraise		Brd,Rog				Craft 1 (if related), Craft 2 (if related), Craft 3 (if related)
 					DEX Balance		Brd,Mnk,Rog			AC, Tumble
 					CHA Bluff		Brd,Rog,Sor
