@@ -893,9 +893,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			int classpos;
 			for (int i=1;i<10;++i)
 				if (data["class"+i]==cls) {classpos=i; break;} //Found it.
-				else if (!classpos && (<0,"">)[data["class"+i]]) classpos=i; //Found an empty slot - use that.
-			if (!classpos) say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!");
-			else {set_value("class"+classpos,cls); clslevel=add_value("level"+classpos,1);}
+				else if (!classpos && (<0,"">)[data["class"+i]]) classpos=i; //Found an empty slot - use that if not found.
+			if (!classpos) {say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!"); return;}
+			set_value("class"+classpos,cls); clslevel=add_value("level"+classpos,1);
 			add_value("hp",win->hp->get_text());
 			array bab=bab[win->bab->get_text()] || ({0})*21;
 			add_value("bab",bab[clslevel]-bab[clslevel-1]);
