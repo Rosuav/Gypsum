@@ -894,7 +894,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			for (int i=1;i<10;++i)
 				if (data["class"+i]==cls) {classpos=i; break;} //Found it.
 				else if (!classpos && (<0,"">)[data["class"+i]]) classpos=i; //Found an empty slot - use that if not found.
-			if (!classpos) {say(subw,"%% ERROR: Cannot multiclass so broadly with this assistant!"); return;}
+			if (!classpos) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Cannot multiclass so broadly with this assistant!",win->mainwindow); return;}
 			set_value("class"+classpos,cls); clslevel=add_value("level"+classpos,1);
 			add_value("hp",win->hp->get_text());
 			array bab=bab[win->bab->get_text()] || ({0})*21;
