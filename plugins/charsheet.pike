@@ -909,6 +909,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				string stat=win->stat->get_text();
 				int val=stat!="" && add_value(win->stat->get_text(),1);
 				if (stat=="CON" && !(val&1)) add_value("hp",level); //CON increase changes modifier? Gain 1 hp/level!
+				//Note that increasing your INT modifier will permit you another skill point this level,
+				//which isn't taken into account. But the skill point counting is just estimates anyway.
 			}
 			if (win->feat) for (int i=0;i<20;++i) if ((<0,"">)[data["feat_"+i]])
 			{
