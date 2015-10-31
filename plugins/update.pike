@@ -22,6 +22,11 @@ int simulate; //For command-line usage, allow a "don't actually save anything" t
 //Note that content errors will be thrown, but previously-parsed content has already been
 //passed to the callback. This may be considered a feature.
 //Note that this can't cope with prefixed zip data (eg a self-extracting executable).
+//It is also poorly suited to large files, as it keeps all parts of the process in memory;
+//in the pathological case of a gigantic one-file zip, this will have the original data, the
+//compressed chunk, the uncompressed result, and several intermediate sscanf temporaries,
+//all in memory simultaneously. See my shed/unzip.pike for a Stdio.Buffer implementation -
+//it requires Pike 8.0 (this one runs happily on 7.8), but should keep less in memory.
 void unzip(string data,function callback,mixed|void callback_arg)
 {
 	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
