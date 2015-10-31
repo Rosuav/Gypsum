@@ -30,7 +30,7 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		int compsize,int uncompsize,int fnlen,int extralen,data))
 	{
 		string fn=data[..fnlen-1]; data=data[fnlen..]; //I can't use %-2H for these, because the two lengths come first and then the two strings. :(
-		string extra=data[..extralen-1]; data=data[extralen..];
+		string extra=data[..extralen-1]; data=data[extralen..]; //Not actually used, and I have no idea whether it'll ever be important to Gypsum update.
 		string zip=data[..compsize-1]; data=data[compsize..];
 		if (flags&8) {zip=data; data=0;} //compsize will be 0 in this case.
 		string result,eos;
