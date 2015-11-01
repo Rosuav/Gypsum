@@ -112,9 +112,10 @@ void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_availa
 void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
 
 #if constant(G)
+string default_mode = file_stat(".git") ? "git" : "zip";
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="") param=mode;
+	if (param=="") param=default_mode;
 	if (param=="git")
 	{
 		say(subw,"%% Attempting git-based update...");
@@ -254,14 +255,13 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 	return 1;
 }
 
-string mode = file_stat(".git") ? "git" : "zip";
 constant menu_label="Update Gypsum";
-void menu_clicked() {process(mode,G->G->window->current_subw());}
+void menu_clicked() {process("",G->G->window->current_subw());}
 
 void create(string name)
 {
 	::create(name);
-	set_menu_text(menu_label+" ("+mode+")");
+	set_menu_text(menu_label+" ("+default_mode+")");
 	G->G->commands->unload=unload;
 }
 #else
