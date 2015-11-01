@@ -114,7 +114,7 @@ void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to d
 #if constant(G)
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="") {say(subw,"%% Update what?"); return 1;}
+	if (param=="") param=mode;
 	if (param=="git")
 	{
 		say(subw,"%% Attempting git-based update...");
