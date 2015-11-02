@@ -216,8 +216,8 @@ class menu_clicked
 			multiset(string) validzones=(multiset)(Calendar.TZnames.zonenames()+({"Thresh","local"})+indices(Calendar.TZnames.abbr2zones));
 			string convzone=win->convzone->get_text();
 			string sbzone=win->sbzone->get_text();
-			if (!validzones[sbzone]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Status bar timezone not recognized.",0); return;}
-			foreach (convzone/" ",string z) if (!validzones[z]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Timezone "+z+" not recognized.",0); return;}
+			if (!validzones[sbzone]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Status bar timezone not recognized.",win->mainwindow); return;}
+			foreach (convzone/" ",string z) if (!validzones[z]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Timezone "+z+" not recognized.",win->mainwindow); return;}
 			persist["threshtime/zones"]=convzone;
 			persist["threshtime/statuszone"]=sbzone;
 			closewindow();
