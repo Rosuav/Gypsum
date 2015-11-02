@@ -93,7 +93,6 @@ class MessageBox
 
 	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb,mixed|void cb_arg)
 	{
-		if (!parent) parent=G->G->window->mainwindow; //NOTE: Gypsum-specific check, not compatible with being broken out into a separate file
 		callback=cb;
 		#if constant(COMPAT_MSGDLG)
 		::create(flags,type,buttons,message);

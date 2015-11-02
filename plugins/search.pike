@@ -38,7 +38,7 @@ void find_string(string findme,mapping(string:mixed) subw,int from_scroll)
 		}
 	}
 	m_delete(subw,"search_last");
-	MessageBox(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK,"Not found.",0);
+	MessageBox(0,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK,"Not found.",G->G->window->mainwindow);
 }
 
 int keypress(object self,array|object ev)
