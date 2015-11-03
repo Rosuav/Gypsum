@@ -73,13 +73,14 @@ void add_gypsum_constant(string name,mixed val)
 //Note that previously-used compat option names should never be used again:
 //COMPAT_SIGNAL - inability to connect before a signal (additional parameter to signal_connect())
 //NOTE: No COMPAT options are needed for any 8.1 builds, nor for any 8.0 builds since the earliest.
+//For current COMPAT options, look near usage for a more full explanation of the flag's purpose.
 mapping(string:int) compat=([
 	#ifdef __NT__
 	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the shortcut for Pause Scrolling.
 	#else
 	"pausekey":0, //"Pause" key correctly generates Pause 0xFF13, so it's usable.
 	#endif
-	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix - see usage
+	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix
 	"msgdlg":([7.8:876])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
 ]);
 
