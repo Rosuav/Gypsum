@@ -76,7 +76,7 @@ void add_gypsum_constant(string name,mixed val)
 //For current COMPAT options, look near usage for a more full explanation of the flag's purpose.
 mapping(string:int) compat=([
 	#ifdef __NT__
-	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the shortcut for Pause Scrolling.
+	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the only shortcut for Pause Scrolling.
 	#else
 	"pausekey":0, //"Pause" key correctly generates Pause 0xFF13, so it's usable.
 	#endif
