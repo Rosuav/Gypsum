@@ -78,7 +78,7 @@ mapping(string:int) compat=([
 	#ifdef __NT__
 	"pausekey":1, //"Pause" key generates VoidSymbol 0xFFFFFF, so use Ctrl-P as the only shortcut for Pause Scrolling.
 	#else
-	"pausekey":0, //"Pause" key correctly generates Pause 0xFF13, so it's usable.
+	"pausekey":0, //"Pause" key correctly generates Pause 0xFF13, so it's usable. (Ctrl-P will also be available.)
 	#endif
 	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix
 	"msgdlg":([7.8:876])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
