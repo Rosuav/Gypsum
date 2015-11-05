@@ -106,7 +106,7 @@ int main(int argc,array(string) argv)
 	replace_master(mymaster());
 
 	//Use the usual add_constant for these, not add_gypsum_constant(). They won't be replaced.
-	add_constant("add_gypsum_constant",add_gypsum_constant);
+	add_constant("add_gypsum_constant",add_gypsum_constant); //TODO: Do we even need this? It might be better to use G->add_gypsum_constant instead.
 	add_constant("G",this);
 	add_constant("started",time());
 	bootstrap("persist.pike");
