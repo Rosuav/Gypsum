@@ -1499,7 +1499,6 @@ void create(string name)
 	add_gypsum_constant("build",build);
 	G->G->connection->say=say;
 	if (!win->tabs) win->tabs=({ });
-	else win->tabs->signals=0; //Compat (20150608): Wipe out the old-style signal array, just in case.
 	if (G->G->window) monochrome=G->G->window->monochrome;
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
