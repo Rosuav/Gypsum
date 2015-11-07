@@ -15,6 +15,8 @@ mapping(string:multiset(object)) charsheets;
 //I update code so much? Are old versions of the code getting left around? Worse, is it
 //that the window isn't getting properly disposed of when it closes? I've never managed
 //to actually recreate the problem in a stress-test. :(
+//May not be happening any more - not sure. At any rate, it's not so laggy, and I've had
+//Gypsum up for the past month-ish.
 
 //TODO: Figure out a way to have multiple completely different character sheet designs.
 //This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
