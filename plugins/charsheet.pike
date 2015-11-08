@@ -73,9 +73,8 @@ charsheet, and both are aliases for existing mappings.
 //you could use "roll d20+STR", which works without any extra effort.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
-	"STR":"d20+{STR_mod}", //etc
 	"grapple":"d20+{grapple}",
-	"Fort save":"d20+{fort_save}", //etc
+	"Fort save":"d20+{fort_save}", //Renamings might help
 	//plus skills and attacks
 ]);
 
