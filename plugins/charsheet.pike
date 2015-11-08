@@ -847,7 +847,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				foreach (classes;string cls;mapping info)
 				{
 					info->fixedhp = max(info->hd/2 + !((int)data->level&1) + (int)data->CON_mod, 1);
-					if (data->race=="Human") ++info->skills; //One more skill point per level for being human
+					info->skilldesc = info->skills+"+INT";
+					if (data->race=="Human") {++info->skills; info->skilldesc+="+1";} //One more skill point per level for being human
 					info->skills += (int)data->INT_mod;
 				}
 				stuff=({
@@ -863,7 +864,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					!(lvl%3) && "New feat", !(lvl%3) && (win->feat=GTK2.Entry()),
 					!(lvl%3) && (win->feat_benefit=GTK2.Entry()), 0,
 					display("%s","dontforget"), 0,
-					"Skill points", win->skillpoints=GTK2.Label("0/0"),
+					display("Skill points: %s","skilldesc"), win->skillpoints=GTK2.Label("0/0"),
 					GTK2.Frame("Class skills")->add(win->sk1=GTK2.ScrolledWindow((["hscrollbar-policy":GTK2.POLICY_NEVER]))->set_size_request(-1,150)),0,
 					GTK2.Frame("Cross-class skills (double cost)")->add(win->sk2=GTK2.ScrolledWindow((["hscrollbar-policy":GTK2.POLICY_NEVER]))->set_size_request(-1,150)),0,
 					win->pb_ding=GTK2.Button("Ding!"),0,
