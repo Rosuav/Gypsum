@@ -68,6 +68,9 @@ charsheet, and both are aliases for existing mappings.
 //they should simply be auto-provided as part of the charsheet load blob. Alternatively, _only_
 //update them when something changes, which means you won't get a bunch of pointless aliases
 //the moment you use the charsheet for anything.
+//NOTE: As of 20151108, the MH roll engine has been upgraded to better handle charsheet entries
+//automatically. Some aliases may therefore be unnecessary; for instance, instead of "roll STR"
+//you could use "roll d20+STR", which works without any extra effort.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
 	"STR":"d20+{STR_mod}", //etc
