@@ -199,7 +199,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 					conn->curmsg[-1]=conn->curmsg[-1];
 					conn->curmsg+=({conn->curcolor=G->G->window->mkcolor(conn->fg+conn->bold,conn->bg),""});
 					break;
-					default: break; //Ignore unknowns without error
+					default: conn["unknown_ansi_"+ansi[i]]=1; break; //Ignore unknowns without error - log them for curiosity value though
 				}
 				ansi=ansi[i+1..];
 				break colorloop;
