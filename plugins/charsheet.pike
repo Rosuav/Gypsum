@@ -848,7 +848,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				{
 					info->fixedhp = max(info->hd/2 + !((int)data->level&1) + (int)data->CON_mod, 1);
 					info->skilldesc = info->skills+"+INT";
-					if (data->race=="Human") {++info->skills; info->skilldesc+="+1";} //One more skill point per level for being human
+					if (data->race=="Human") {++info->skills; info->skilldesc+="+1";} //Humans get another skill point per level
 					info->skills += (int)data->INT_mod;
 				}
 				stuff=({
