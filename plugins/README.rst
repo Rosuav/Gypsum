@@ -168,12 +168,20 @@ GTK signals can be connected in two ways. Where possible, use this shorthand::
 
 	void sig_someobj_some_event() {...}
 
-This is useful only in the simple and common case where no other parameters are
-needed - no parameter to the function, connect after rather than before, etc.
+This covers the simple and common case where a function (or class, which would
+be instantiated when the signal occurs - useful for buttons that open windows)
+is to be called with no custom parameter or other configuration. The signal is
+connected after the normal action; to connect before, instead, adorn the name::
+
+	void sig_b4_someobj_some_event() {...}
+
 Every time your plugin is (re)loaded, this function will be connected to the
 "some_event" signal of win->someobj. (Note that the documentation may refer to
 a signal as "some-event". This is equivalent - hyphens and underscores can be
-used interchangeably.) For the less common cases, override this function::
+used interchangeably.)
+
+For the less common cases, eg providing callback arguments or detail strings,
+override this function::
 
 	void dosignals()
 	{
