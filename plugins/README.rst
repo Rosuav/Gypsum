@@ -221,6 +221,20 @@ stock objects are available:
 Note that constructing more than one of a stock object on a given window is not
 guaranteed to work, and may result in signals not being connected correctly.
 
+In addition to the regular GTK2 objects, Gypsum provides a few of its own
+widgets for use on windows and configdlgs. These are mostly thin wrappers
+around existing widgets, designed to play more nicely with the rest of Gypsum.
+
+* MultiLineEntryField - the classic MLE can be used in all the same ways that
+  a single-line entry field can, but GTK2.TextView lacks crucial methods. This
+  corrects that by adding set_text() and get_text().
+* SelectBox - for drop-down lists of strings, and also has [gs]et_text()
+* GTK2Table - table layout based on a 2D array of widgets and strings
+* two_column - thin wrapper around GTK2Table for the most common use
+
+More details about all can be found by exploring the source (globals.pike).
+
+
 Movable window - 'inherit movablewindow'
 ----------------------------------------
 
