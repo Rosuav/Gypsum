@@ -359,6 +359,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		fixsizes(wid->get_children()[*]);
 	}
 
+	//To make an alternate character sheet, start by subclassing this. Then you can override a function to
+	//change the page layout, or add/remove/reorder pages in this array.
+	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"});
 	GTK2.Widget Page_Vital_Stats()
 	{
 		return GTK2.Vbox(0,20)
@@ -722,7 +725,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	void makewindow()
 	{
 		GTK2.Notebook nb=GTK2.Notebook();
-		foreach (({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"}), string page)
+		foreach (pages, string page)
 			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(nb);
 		::makewindow();
