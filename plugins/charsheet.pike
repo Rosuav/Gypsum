@@ -660,16 +660,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				)));
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Spells()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(Page_Gear(),GTK2.Label("Gear"))
-			->append_page(Page_Inven(),GTK2.Label("Inven"))
-			->append_page(Page_Description(),GTK2.Label("Description"))
-			->append_page(Page_Skills(),GTK2.Label("Skills"))
-			->append_page(Page_Feats(),GTK2.Label("Feats"))
-			->append_page(GTK2.Vbox(0,10)
+		return GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Prepared spells, by level/tier")->add(GTK2Table(({
 					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_prepared",i,n[*])*"+");}),
@@ -694,8 +687,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						))})});
 					}
 					return ret;
-				}())))
-			,GTK2.Label("Spells"))
+				}())));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
+			->append_page(Page_Gear(),GTK2.Label("Gear"))
+			->append_page(Page_Inven(),GTK2.Label("Inven"))
+			->append_page(Page_Description(),GTK2.Label("Description"))
+			->append_page(Page_Skills(),GTK2.Label("Skills"))
+			->append_page(Page_Feats(),GTK2.Label("Feats"))
+			->append_page(Page_Spells(),GTK2.Label("Spells"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
 					->pack_start(GTK2.Label((["label":
