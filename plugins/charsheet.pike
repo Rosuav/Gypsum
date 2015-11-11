@@ -513,14 +513,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				->add(GTK2.Frame("Languages known")->add(mle("languages")));
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Skills()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(Page_Gear(),GTK2.Label("Gear"))
-			->append_page(Page_Inven(),GTK2.Label("Inven"))
-			->append_page(Page_Description(),GTK2.Label("Description"))
-			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
+		return GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
 				//	Stat and skill name	Class skill for these classes	Synergies, including Armor Check penalty and conditionals.
 				+map(#"INT Appraise		Brd,Rog				Craft 1 (if related), Craft 2 (if related), Craft 3 (if related)
@@ -649,8 +644,17 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
 						ef(kwd+"_notes",10),
 					});
-				})
-			)),GTK2.Label("Skills"))
+				})));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
+			->append_page(Page_Gear(),GTK2.Label("Gear"))
+			->append_page(Page_Inven(),GTK2.Label("Inven"))
+			->append_page(Page_Description(),GTK2.Label("Description"))
+			->append_page(Page_Skills(),GTK2.Label("Skills"))
 			->append_page(GTK2.Vbox(0,10)
 				->add(GTK2.ScrolledWindow()->add(GTK2Table(
 					({({"Feat name","Benefit(s)"})})
