@@ -362,6 +362,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//To make an alternate character sheet, start by subclassing this. Then you can override a function to
 	//change the page layout, or add/remove/reorder pages in this array.
 	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"});
+
 	GTK2.Widget Page_Vital_Stats()
 	{
 		return GTK2.Vbox(0,20)
