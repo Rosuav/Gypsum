@@ -719,17 +719,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(Page_Gear(),GTK2.Label("Gear"))
-			->append_page(Page_Inven(),GTK2.Label("Inven"))
-			->append_page(Page_Description(),GTK2.Label("Description"))
-			->append_page(Page_Skills(),GTK2.Label("Skills"))
-			->append_page(Page_Feats(),GTK2.Label("Feats"))
-			->append_page(Page_Spells(),GTK2.Label("Spells"))
-			->append_page(Page_Administrivia(),GTK2.Label("Administrivia"))
-			->append_page(Page_Help(),GTK2.Label("Help"))
-		);
+		GTK2.Notebook nb=GTK2.Notebook();
+		foreach (({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"}), string page)
+			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(nb);
 		::makewindow();
 		//call_out(fixsizes,0,win->mainwindow);
 	}
