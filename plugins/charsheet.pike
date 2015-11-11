@@ -438,11 +438,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				);
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Gear()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(GTK2.Hbox(0,20)
+		return GTK2.Hbox(0,20)
 				->add(GTK2.Vbox(0,10)
 					->add(weapon("1","primary"))
 					->add(weapon("2","secondary"))
@@ -477,8 +475,14 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						->add(ef("gear_3_name",15))
 						->add(ef("gear_4_name",15))
 					),0,0,0)
-				,0,0,0)
-			,GTK2.Label("Gear"))
+				,0,0,0);
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
+			->append_page(Page_Gear(),GTK2.Label("Gear"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(({
 				({GTK2Table(({ //Yep, a table in a table. Tidier than a Vbox with two tables.
 					({"Total weight",calc(sprintf("0%{+inven_qty_%d*inven_wgt_%<d%}",enumerate(20)),"inven_tot_weight","float"),
