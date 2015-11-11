@@ -478,12 +478,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				,0,0,0);
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Inven()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(Page_Gear(),GTK2.Label("Gear"))
-			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(({
+		return GTK2.ScrolledWindow()->add(GTK2Table(({
 				({GTK2Table(({ //Yep, a table in a table. Tidier than a Vbox with two tables.
 					({"Total weight",calc(sprintf("0%{+inven_qty_%d*inven_wgt_%<d%}",enumerate(20)),"inven_tot_weight","float"),
 					"Size mod",GTK2.Hbox(0,0)
@@ -500,8 +497,15 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				})),0,0}),
 				({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})
 				})+map(enumerate(50),lambda(int i) {return ({ef("inven_"+i,20),noex(num("inven_qty_"+i)),noex(num("inven_wgt_"+i))});})
-			))
-			,GTK2.Label("Inven"))
+			));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
+			->append_page(Page_Gear(),GTK2.Label("Gear"))
+			->append_page(Page_Inven(),GTK2.Label("Inven"))
 			->append_page(GTK2.Vbox(0,20)
 				->pack_start(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
