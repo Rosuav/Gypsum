@@ -690,6 +690,20 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				}())));
 	}
 
+	GTK2.Widget Page_Administrivia()
+	{
+		return GTK2.Vbox(0,10)
+				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
+					->pack_start(GTK2.Label((["label":
+						"Your own account always has full access. You may grant access to any other account or character here; "
+						"on save, the server will translate these names into canonical account names. You will normally want to "
+						"name your Dungeon Master here, unless of course you are the DM. Note that there is no provision for "
+						"read-only access - you have to trust your DM anyway.","wrap":1])),0,0,0)
+					->pack_start(ef("perms"),0,0,0)
+				),0,0,0)
+				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))));
+	}
+
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
@@ -700,17 +714,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			->append_page(Page_Skills(),GTK2.Label("Skills"))
 			->append_page(Page_Feats(),GTK2.Label("Feats"))
 			->append_page(Page_Spells(),GTK2.Label("Spells"))
-			->append_page(GTK2.Vbox(0,10)
-				->pack_start(GTK2.Frame("Permissions")->add(GTK2.Vbox(0,0)
-					->pack_start(GTK2.Label((["label":
-						"Your own account always has full access. You may grant access to any other account or character here; "
-						"on save, the server will translate these names into canonical account names. You will normally want to "
-						"name your Dungeon Master here, unless of course you are the DM. Note that there is no provision for "
-						"read-only access - you have to trust your DM anyway.","wrap":1])),0,0,0)
-					->pack_start(ef("perms"),0,0,0)
-				),0,0,0)
-				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))))
-			,GTK2.Label("Administrivia"))
+			->append_page(Page_Administrivia(),GTK2.Label("Administrivia"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Styles")->add(two_column(({
 					"This is a string entry field. It takes words.",ef("help_ef"),
