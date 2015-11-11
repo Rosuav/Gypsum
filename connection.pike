@@ -214,7 +214,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
 
 /**
- * Socket read callback. Handles TELNET protocol, then passes actual socket text along to ansiread().
+ * Socket read callback. Handles TELNET protocol and character encodings, passing resultant socket text to ansiread().
  *
  * @param conn Current connection
  * @param data Raw bytes received from the socket (encoded text with embedded TELNET codes)
