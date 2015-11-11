@@ -350,6 +350,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				set(kw,"");
 	}
 
+	//Attempt to register all widgets' current sizes as their minimums.
+	//This was an attempt to cut down on resize cost, but it didn't help much.
 	void fixsizes(GTK2.Widget wid)
 	{
 		mapping sz=wid->size_request();
