@@ -500,13 +500,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			));
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Description()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
-			->append_page(Page_Gear(),GTK2.Label("Gear"))
-			->append_page(Page_Inven(),GTK2.Label("Inven"))
-			->append_page(GTK2.Vbox(0,20)
+		return GTK2.Vbox(0,20)
 				->pack_start(GTK2Table(({
 					({"Age",ef("age"),"Skin",ef("skin")}),
 					({"Gender",ef("gender"),"Eyes",ef("eyes")}),
@@ -514,8 +510,16 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					({"Weight",ef("weight"),"Carried",calc("inven_tot_weight",0,"float")}),
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
 				})),0,0,0)
-				->add(GTK2.Frame("Languages known")->add(mle("languages")))
-			,GTK2.Label("Description"))
+				->add(GTK2.Frame("Languages known")->add(mle("languages")));
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
+			->append_page(Page_Gear(),GTK2.Label("Gear"))
+			->append_page(Page_Inven(),GTK2.Label("Inven"))
+			->append_page(Page_Description(),GTK2.Label("Description"))
 			->append_page(GTK2.ScrolledWindow()->add(GTK2Table(
 				({({"Name","Stat","Mod","Rank","Synergy","Other","Total","Notes"})})
 				//	Stat and skill name	Class skill for these classes	Synergies, including Armor Check penalty and conditionals.
