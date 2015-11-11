@@ -647,6 +647,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				})));
 	}
 
+	GTK2.Widget Page_Feats()
+	{
+		return GTK2.Vbox(0,10)
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(
+					({({"Feat name","Benefit(s)"})})
+					+map(enumerate(20),lambda(int i) {return ({ef("feat_"+i,15),ef("feat_benefit_"+i,25)});})
+				)))
+				->add(GTK2.ScrolledWindow()->add(GTK2Table(
+					({({"Special ability","Benefit(s)"})})
+					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,15),ef("ability_benefit_"+i,25)});})
+				)));
+	}
+
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
@@ -655,16 +668,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			->append_page(Page_Inven(),GTK2.Label("Inven"))
 			->append_page(Page_Description(),GTK2.Label("Description"))
 			->append_page(Page_Skills(),GTK2.Label("Skills"))
-			->append_page(GTK2.Vbox(0,10)
-				->add(GTK2.ScrolledWindow()->add(GTK2Table(
-					({({"Feat name","Benefit(s)"})})
-					+map(enumerate(20),lambda(int i) {return ({ef("feat_"+i,15),ef("feat_benefit_"+i,25)});})
-				)))
-				->add(GTK2.ScrolledWindow()->add(GTK2Table(
-					({({"Special ability","Benefit(s)"})})
-					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,15),ef("ability_benefit_"+i,25)});})
-				)))
-			,GTK2.Label("Feats"))
+			->append_page(Page_Feats(),GTK2.Label("Feats"))
 			->append_page(GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Prepared spells, by level/tier")->add(GTK2Table(({
 					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
