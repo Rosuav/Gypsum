@@ -357,10 +357,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		fixsizes(wid->get_children()[*]);
 	}
 
-	void makewindow()
+	GTK2.Widget Page_Vital_Stats()
 	{
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
-			->append_page(GTK2.Vbox(0,20)
+		return GTK2.Vbox(0,20)
 				->pack_start(GTK2.Hbox(0,10)
 					->add(GTK2Table(({
 						({"Name",ef("name",12),0,0,"Char level",num("level",8)}),
@@ -436,8 +435,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						({"Speed",num("speed")}),
 						({"BAB",num("bab")}),
 					})))
-				)
-			,GTK2.Label("Vital Stats"))
+				);
+	}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Notebook()
+			->append_page(Page_Vital_Stats(),GTK2.Label("Vital Stats"))
 			->append_page(GTK2.Hbox(0,20)
 				->add(GTK2.Vbox(0,10)
 					->add(weapon("1","primary"))
