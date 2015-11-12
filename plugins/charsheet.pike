@@ -982,7 +982,11 @@ int output(mapping(string:mixed) subw,string line)
 		if (line=="<=== Charsheet ===>")
 		{
 			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(subw,"charsheet_eax")));};
-			if (mappingp(data)) charsheet(subw,m_delete(subw,"charsheet_acct"),data);
+			if (mappingp(data))
+			{
+				program cs_type = this["charsheet_"+data->cs_type] || charsheet;
+				cs_type(subw,m_delete(subw,"charsheet_acct"),data);
+			}
 			return 0;
 		}
 		subw->charsheet_eax+=line+"\n";
