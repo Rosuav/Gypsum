@@ -9,6 +9,8 @@ inherit hook;
 
 constant plugin_active_by_default = 1;
 
+array(string) cs_types = array_sscanf(indices(this)[*],"charsheet_%s")*({ });
+
 mapping(string:multiset(object)) charsheets;
 
 //TODO: Figure out why this is sometimes disgustingly laggy on Sikorsky. Is it because
@@ -963,6 +965,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			closewindow();
 		}
 	}
+}
+
+class charsheet_35ed
+{
+	inherit charsheet;
+	constant desc="3.5th Ed";
 }
 
 int output(mapping(string:mixed) subw,string line)
