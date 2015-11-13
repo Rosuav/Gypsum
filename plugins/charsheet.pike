@@ -10,6 +10,7 @@ inherit hook;
 constant plugin_active_by_default = 1;
 
 array(string) cs_types = array_sscanf(indices(this)[*],"charsheet_%s")*({ });
+mapping(string:string) cs_descr = (mapping)lambda(string s) {return ({s,this["charsheet_"+s]->desc});}(cs_types[*]);
 
 mapping(string:multiset(object)) charsheets;
 
@@ -709,6 +710,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						"read-only access - you have to trust your DM anyway.","wrap":1])),0,0,0)
 					->pack_start(ef("perms"),0,0,0)
 				),0,0,0)
+				->pack_start(GTK2.Hbox(0,10)
+					->pack_start(GTK2.Label("Char sheet layout"),0,0,0)
+					->pack_start(win->ddcb_cs_type=select("cs_type",cs_types),0,0,0)
+					->add(win->lbl_cs_type=GTK2.Label(""))
+				,0,0,0)
+				->pack_start(win->lbl_cs_type_changed=GTK2.Label(""),0,0,0)
 				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))));
 	}
 
@@ -723,6 +730,16 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					"This is something you'll want to read off.",readme("Save vs help",calc("10+help_num+help_rare")),
 				}))),0,0,0)
 				->add(GTK2.Label((["label":"Whenever you update something here, it can affect your roll aliases. Check 'help roll alias' in game for details.","wrap":1])));
+	}
+
+	void sig_ddcb_cs_type_changed()
+	{
+		string type=win->ddcb_cs_type->get_text();
+		string changed="Changes will take effect next time you open this sheet.";
+		if ("charsheet_"+type==function_name(this_program)) {type="Current type: "+cs_descr[type]; changed="";}
+		else type="Changing to: "+cs_descr[type];
+		win->lbl_cs_type->set_text(type);
+		win->lbl_cs_type_changed->set_text(changed);
 	}
 
 	void makewindow()
