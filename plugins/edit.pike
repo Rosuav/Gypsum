@@ -17,6 +17,11 @@ constant plugin_active_by_default = 1;
 constant config_persist_key="editor/wrap";
 constant config_description="Wrap width (eg 80)";
 
+#if !constant(GTK2.SourceView)
+#define SourceView TextView
+#define SourceBuffer TextBuffer
+#endif
+
 class editor(mapping(string:mixed) subw,string initial)
 {
 	inherit movablewindow;
