@@ -990,6 +990,14 @@ class charsheet_35ed
 	constant desc="3.5th Ed";
 }
 
+class charsheet_npc
+{
+	inherit charsheet;
+	constant desc="Cut-down NPC sheet";
+	constant pages = ({"Vital Stats", "Gear", "Feats", "Spells", "Administrivia"});
+	//TODO: Also simplify some of the pages themselves (by overriding)
+}
+
 int output(mapping(string:mixed) subw,string line)
 {
 	if (sscanf(line,"===> Charsheet @%s <===",string acct))
