@@ -55,7 +55,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded files.\n\n"+describe_error(ex);
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
-				->add(win->mle=GTK2.TextView(win->buf=GTK2.TextBuffer()->set_text(txt)))
+				->add(win->mle=GTK2.SourceView(win->buf=GTK2.SourceBuffer()->set_text(txt)))
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":subw?"_Send":"_Save","use-underline":1,"focus-on-click":0])))
