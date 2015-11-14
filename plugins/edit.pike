@@ -21,7 +21,7 @@ constant config_description="Wrap width (eg 80)";
 //Not all systems have GTK2.SourceView available. Sadly, this means I have to
 //remain compatible with GTK2.TextView to get any editing at all, and simply
 //use SourceView as a TextView with additional features (eg undo/redo).
-//#define NO_SOURCE_VIEW //If I need to know this elsewhere, guard.
+#define NO_SOURCE_VIEW //If I need to know this elsewhere, guard.
 #define SourceView TextView
 #define SourceBuffer TextBuffer
 #endif
@@ -51,6 +51,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		//TODO: "framing" parameters - start command, end command - which will then be kept out of the actual popup
 		//Hmm. Downside: Since this framing would be used by the server to say "save to this file name", it'd be harder
 		//to hack a "save as" feature by editing the target file name. Is that a problem?
+		//Non-popup framing would allow line numbering to be accurate to the file itself.
 		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
 		params=(mapping)(parm||([]));
 		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
@@ -73,6 +74,9 @@ class editor(mapping(string:mixed) subw,string initial)
 				->add(stock_close()->set_focus_on_click(0))
 			,0,0,0)
 		);
+		#ifndef NO_SOURCE_VIEW
+		//win->mle->set_show_line_numbers(1);
+		#endif
 		int line=(int)params->line,col=(int)params->col;
 		GTK2.TextIter iter;
 		if (col==-1)
