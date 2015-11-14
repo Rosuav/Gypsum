@@ -291,10 +291,8 @@ For more advanced usage, define these::
 	constant descr_key="title";
 
 The most important function to create is make_content(), which needs to return
-a widgetful of GUI structure. A GTK2.Vbox or GTK2.Table would be the best
-choices for most cases. The GTK2Table and two_column convenience functions from
-globals.pike can help here; look at some examples of their use in other plugins
-for details.
+a widgetful of GUI structure. In many cases, two_column will serve your needs;
+look at some examples of configdlgs in other code.
 
 As well as returning the top-level widget, make_content must create the GUI
 bindings for the important fields. Those listed in bools should be created as
