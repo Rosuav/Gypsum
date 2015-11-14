@@ -54,7 +54,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		//Non-popup framing would allow line numbering to be accurate to the file itself.
 		sscanf(initial,"#%{ %s=%[^\n ]%}\n%s",array(array(string)) parm,initial);
 		params=(mapping)(parm||([]));
-		::create(); //No name. Each one should be independent. Note that this breaks compat-mode window position saving.
+		::create();
 	}
 
 	void makewindow()
