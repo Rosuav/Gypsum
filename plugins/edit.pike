@@ -75,6 +75,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			,0,0,0)
 		);
 		#ifndef NO_SOURCE_VIEW
+		//TODO: Menu with these kinds of options?
 		//win->mle->set_show_line_numbers(1);
 		#endif
 		int line=(int)params->line,col=(int)params->col;
