@@ -18,6 +18,7 @@ character, fill in your character name above.
 //persist["plugins/vote/nexttime/"+ip] or similar.
 //The detection of external IP could ideally be tied in to Threshold RPG's
 //server, but otherwise, any What Is My IP service would do.
+//Or possibly tie in with vote.thresholdrpg.com??
 inherit plugin_menu;
 inherit statusevent;
 
