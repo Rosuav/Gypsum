@@ -76,7 +76,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		);
 		#ifndef NO_SOURCE_VIEW
 		//TODO: Menu with these kinds of options?
-		//win->mle->set_show_line_numbers(1);
+		if ((int)persist["editor/line_numbers"]) win->mle->set_show_line_numbers(1);
 		#endif
 		int line=(int)params->line,col=(int)params->col;
 		GTK2.TextIter iter;
