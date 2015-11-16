@@ -88,7 +88,7 @@ class menu_clicked
 
 	void sig_newtip_clicked()
 	{
-		win->tip->set_text(replace(replace(random(tips),({"\n","\t"})," "),"  "," "));
+		win->tip->set_text(replace(replace(random(tips),({"\n","\t"})," "),"  "," ")); //Note: Strictly ordered replacements here, to collapse the tips correctly.
 		//Note that shrinking the window gives consistent results, but not particularly tidy ones.
 		//It might be better to force the size of the label in some convenient way.
 		win->mainwindow->resize(1,1);
