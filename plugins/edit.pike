@@ -63,6 +63,14 @@ class editor(mapping(string:mixed) subw,string initial)
 		if (mixed ex=!txt && catch {txt=String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";})
 			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded text files.\n\n"+describe_error(ex);
 		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
+			#ifndef NO_SOURCE_VIEW
+			->pack_start(GTK2.MenuBar()
+				->add(GTK2.MenuItem("_Options")->set_submenu(win->optmenu=GTK2.Menu()
+					->add(GTK2.SeparatorMenuItem())
+					->add(win->save_defaults=GTK2.MenuItem("Save defaults"))
+				))
+			,0,0,0)
+			#endif
 			->add(GTK2.ScrolledWindow()
 				->add(win->mle=GTK2.SourceView(win->buf=GTK2.SourceBuffer()->set_text(txt)))
 			)
@@ -74,11 +82,15 @@ class editor(mapping(string:mixed) subw,string initial)
 			,0,0,0)
 		);
 		#ifndef NO_SOURCE_VIEW
-		//TODO: Menu with these kinds of options?
-		foreach (flags,string f)
+		foreach (flags,string desc)
 		{
-			f=lower_case(replace(f,({" ","/"}),"_"));
-			if ((int)persist["editor/"+f]) win->mle["set_"+f](1);
+			string f=lower_case(replace(desc,({" ","/"}),"_"));
+			GTK2.CheckMenuItem item=GTK2.CheckMenuItem(desc);
+			//Note that we don't need reload support, so makewindow() will only ever
+			//be called once, and we can simply connect signals directly.
+			item->signal_connect("toggled",toggle_option,f);
+			if ((int)persist["editor/"+f]) {win->mle["set_"+f](1); item->set_active(1);}
+			win->optmenu->insert(item,0);
 		}
 		#endif
 		int line=(int)params->line,col=(int)params->col;
@@ -172,6 +184,20 @@ class editor(mapping(string:mixed) subw,string initial)
 		string txt=String.trim_all_whites(win->buf->get_text(win->buf->get_start_iter(),win->buf->get_end_iter(),0));
 		string newtxt=wrap_text(txt,wrap);
 		if (newtxt!=txt) win->buf->set_text(newtxt+"\n");
+	}
+
+	void toggle_option(GTK2.MenuItem self,string flag)
+	{
+		win->mle["set_"+flag](self->get_active());
+	}
+
+	void sig_save_defaults_activate()
+	{
+		foreach (flags,string desc)
+		{
+			string f=lower_case(replace(desc,({" ","/"}),"_"));
+			persist["editor/"+f]=win->mle["get_"+f]();
+		}
 	}
 }
 
