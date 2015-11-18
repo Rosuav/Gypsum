@@ -74,9 +74,12 @@ class editor(mapping(string:mixed) subw,string initial)
 		);
 		#ifndef NO_SOURCE_VIEW
 		//TODO: Menu with these kinds of options?
-		if ((int)persist["editor/line_numbers"]) win->mle->set_show_line_numbers(1);
-		if ((int)persist["editor/auto_indent"]) win->mle->set_auto_indent(1);
-		if ((int)persist["editor/smart_home_end"]) win->mle->set_smart_home_end(1);
+		array flags=({"Show line numbers", "Auto indent", "Smart Home/End"});
+		foreach (flags,string f)
+		{
+			f=lower_case(replace(f,({" ","/"}),"_"));
+			if ((int)persist["editor/"+f]) win->mle["set_"+f](1);
+		}
 		#endif
 		int line=(int)params->line,col=(int)params->col;
 		GTK2.TextIter iter;
