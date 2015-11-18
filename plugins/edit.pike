@@ -21,7 +21,7 @@ constant config_description="Wrap width (eg 80)";
 //Not all systems have GTK2.SourceView available. Sadly, this means I have to
 //remain compatible with GTK2.TextView to get any editing at all, and simply
 //use SourceView as a TextView with additional features (eg undo/redo).
-#define NO_SOURCE_VIEW //If I need to know this elsewhere, guard.
+#define NO_SOURCE_VIEW
 #define SourceView TextView
 #define SourceBuffer TextBuffer
 #endif
