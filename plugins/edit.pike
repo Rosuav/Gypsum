@@ -33,6 +33,7 @@ class editor(mapping(string:mixed) subw,string initial)
 	constant pos_key="editor/winpos";
 	constant load_size=1;
 	mapping(string:string) params;
+	constant flags=({"Show line numbers", "Auto indent", "Smart Home/End"});
 
 	void create()
 	{
@@ -74,7 +75,6 @@ class editor(mapping(string:mixed) subw,string initial)
 		);
 		#ifndef NO_SOURCE_VIEW
 		//TODO: Menu with these kinds of options?
-		array flags=({"Show line numbers", "Auto indent", "Smart Home/End"});
 		foreach (flags,string f)
 		{
 			f=lower_case(replace(f,({" ","/"}),"_"));
