@@ -735,7 +735,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	void sig_ddcb_cs_type_changed()
 	{
 		string type=win->ddcb_cs_type->get_text();
-		string changed="Changes will take effect next time you open this sheet.";
+		string changed="This change will take effect next time you open this sheet.";
 		if ("charsheet_"+type==function_name(this_program)) {type="Current type: "+cs_descr[type]; changed="";}
 		else type="Changing to: "+cs_descr[type];
 		win->lbl_cs_type->set_text(type);
