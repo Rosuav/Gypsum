@@ -378,7 +378,7 @@ class window
 	int hidewindow()
 	{
 		win->mainwindow->hide();
-		return 1; //Allow this to be used as a delete_event (suppressing window destruction). Note that this can make updating tricky - be aware of this.
+		return 1; //Simplify anti-destruction as "return hidewindow()". Note that this can make updating tricky - be aware of this.
 	}
 	int closewindow()
 	{
