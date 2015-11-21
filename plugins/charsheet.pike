@@ -353,15 +353,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				set(kw,"");
 	}
 
-	//Attempt to register all widgets' current sizes as their minimums.
-	//This was an attempt to cut down on resize cost, but it didn't help much.
-	void fixsizes(GTK2.Widget wid)
-	{
-		mapping sz=wid->size_request();
-		wid->set_size_request(sz->width,sz->height);
-		fixsizes(wid->get_children()[*]);
-	}
-
 	//To make an alternate character sheet, start by subclassing this. Then you can override a function to
 	//change the page layout, or add/remove/reorder pages in this array.
 	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"});
@@ -749,7 +740,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(nb);
 		::makewindow();
-		//call_out(fixsizes,0,win->mainwindow);
 	}
 
 	void sig_mainwindow_destroy()
