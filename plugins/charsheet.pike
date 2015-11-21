@@ -20,6 +20,8 @@ mapping(string:multiset(object)) charsheets;
 //to actually recreate the problem in a stress-test. :(
 //May not be happening any more - not sure. At any rate, it's not so laggy, and I've had
 //Gypsum up for the past month-ish.
+//Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
+//problem actually comes from somewhere else in Gypsum, and this is just a symptom.
 
 //TODO: Figure out a way to have multiple completely different character sheet designs.
 //This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
