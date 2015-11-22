@@ -23,16 +23,7 @@ mapping(string:multiset(object)) charsheets;
 //Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
 //problem actually comes from somewhere else in Gypsum, and this is just a symptom.
 
-//TODO: Figure out a way to have multiple completely different character sheet designs.
-//This is the 3.5ed one; a new 5ed one may be coming along, and any others should then
-//be easy. The server shouldn't mind (it cares about very few identifiers), so this
-//can basically be client-selectable. Ideally, it should be possible to have multiple
-//different charsheets active simultaneously; this may require something that saves to
-//a special type flag or something on the server. How do you choose when doing up a
-//brand new charsheet though?? Hmm.
-//Maybe the mode-switch should be done client-side. When you change it, it closes and
-//reopens, and you see a completely new layout... UI nightmare or elegant hack?
-//Also, to what extent should distinct charsheets share content? As much as possible,
+//TODO: To what extent should distinct charsheets share content? As much as possible,
 //or only where it truly has the exact same semantics?
 
 //Should roll aliases be controlled by the server or the client? I could give full
