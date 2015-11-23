@@ -244,7 +244,7 @@ and loading of the window position. Provide one additional constant::
 	constant pos_key="plugins/plugin_name/winpos";
 
 This will be used as the persist[] key in which the window position
-is stored. Optionally also provide::
+is stored. Optionally also set::
 
 	constant load_size=1; //To resize on startup to the last saved size
 
