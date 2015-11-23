@@ -267,7 +267,7 @@ The most common usage requires only that you provide::
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
 	constant persist_key="pluginname/whatever"; //Set this to the persist[] key where your data is stored
 	//Name all the fields that you care about, identifying them by type
-	constant strings=({"key1","key2","key3"}); //Omit any that aren't needed
+	constant strings=({"key1","key2","key3"}); //One or more of these three
 	constant ints=({"key4","key5","key6"});
 	constant bools=({"key7","key8","key9"});
 	//Create and return a widget (most likely a layout widget) representing all the custom content.
