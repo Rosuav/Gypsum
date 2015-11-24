@@ -23,9 +23,6 @@ mapping(string:multiset(object)) charsheets;
 //Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
 //problem actually comes from somewhere else in Gypsum, and this is just a symptom.
 
-//TODO: To what extent should distinct charsheets share content? As much as possible,
-//or only where it truly has the exact same semantics?
-
 //Should roll aliases be controlled by the server or the client? I could give full
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
@@ -967,6 +964,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	}
 }
 
+//To create new charsheet designs, copy existing pages where possible, or
+//create new pages that use the same data where possible. Use unique names
+//for unique fields, and common names for broadly common fields, like stats.
 class charsheet_35ed
 {
 	inherit charsheet;
