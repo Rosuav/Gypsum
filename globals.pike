@@ -189,7 +189,7 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 	GTK2.Table tb=GTK2.Table(sizeof(contents[0]),sizeof(contents),0);
 	foreach (contents;int y;array(string|GTK2.Widget) row) foreach (row;int x;string|GTK2.Widget obj) if (obj)
 	{
-		int opt;
+		int opt=0;
 		if (stringp(obj)) {obj=GTK2.Label(label_opts+(["label":obj])); opt=GTK2.Fill;}
 		else if (_noexpand[obj]) _noexpand[obj]=0; //Remove it from the set so we don't hang onto references to stuff we don't need
 		else opt=GTK2.Fill|GTK2.Expand;
