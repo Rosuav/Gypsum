@@ -80,17 +80,9 @@ class aliasdlg(string persist_key)
 {
 	inherit configdlg;
 	constant strings=({"expansion"});
+	constant labels=({"Alias","Expansion","Use %* to expand to everything typed\nafter the alias name."});
 	mapping(string:mixed) windowprops=(["modal":1]);
 	void create(string title) {windowprops->title=title; ::create();}
-
-	GTK2.Widget make_content() 
-	{
-		return two_column(({
-			"Alias",win->kwd=GTK2.Entry(),
-			"Expansion",win->expansion=GTK2.Entry(),
-			"Use %* to expand to everything typed\nafter the alias name.",0,
-		}));
-	}
 }
 
 constant menu_label="Aliases - global";
