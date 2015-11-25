@@ -601,11 +601,7 @@ class configdlg
 	//By default, makes a two_column based on collect_widgets.
 	GTK2.Widget make_content()
 	{
-		return two_column(({
-			"Alias",win->kwd=GTK2.Entry(),
-			"Expansion",win->expansion=GTK2.Entry(),
-			"Use %* to expand to everything typed\nafter the alias name.",0,
-		}));
+		return two_column(collect_widgets());
 	}
 
 	//Attempt to select the given keyword - returns 1 if found, 0 if not
