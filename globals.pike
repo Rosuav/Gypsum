@@ -570,6 +570,7 @@ class configdlg
 	array(string|GTK2.Widget) collect_widgets()
 	{
 		array stuff = ({ });
+		array atend = ({ });
 		Iterator lbl = get_iterator(labels);
 		if (!lbl) return stuff;
 		if (allow_rename)
@@ -579,14 +580,21 @@ class configdlg
 		}
 		foreach (strings+ints, string name)
 		{
-			stuff += ({lbl->value(), win[name]=GTK2.Entry()});
-			if (!lbl->next()) return stuff;
+			string desc=lbl->value();
+			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end.
+				atend += ({GTK2.Frame(desc)->add(
+					win[name]=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
+				),0});
+			else
+				stuff += ({desc, win[name]=GTK2.Entry()});
+			if (!lbl->next()) return stuff+atend;
 		}
 		foreach (bools, string name)
 		{
 			stuff += ({0,win[name]=GTK2.CheckButton(lbl->value())});
-			if (!lbl->next()) return stuff;
+			if (!lbl->next()) return stuff+atend;
 		}
+		stuff += atend; //Now grab any multiline strings
 		//Now consume the remaining entries making text. There'll most
 		//likely be zero or one of them.
 		foreach (lbl;;string text)
