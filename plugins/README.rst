@@ -270,8 +270,7 @@ The most common usage requires only that you provide::
 	constant strings=({"key1","key2","key3"}); //One or more of these three
 	constant ints=({"key4","key5","key6"});
 	constant bools=({"key7","key8","key9"});
-	//Create and return a widget (most likely a layout widget) representing all the custom content.
-	GTK2.Widget make_content() { }
+	constant labels=({"Keyword", "Key 1", "Key 2", "Key 3", "Key 4"}); //Labels for the above three, in order
 
 You may also wish to include one or more of these::
 
@@ -283,6 +282,8 @@ For more advanced usage, define these::
 
 	//Explicitly set the items mapping - if non-null, persist_key is ignored.
 	mapping(string:mapping(string:mixed)) items;
+	//Create and return a widget (most likely a layout widget) representing all the custom content.
+	GTK2.Widget make_content() { }
 	//Custom save/load hooks. Can be used in conjunction with the strings/ints/bools bindings.
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window

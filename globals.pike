@@ -449,11 +449,6 @@ class configdlg
 	inherit window;
 	//Provide me...
 	mapping(string:mixed) windowprops=(["title":"Configure"]);
-	//Create and return a widget (most likely a layout widget) representing all the custom content.
-	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
-	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
-	//it may be a GTK2.Label, or it may be omitted altogether).
-	GTK2.Widget make_content() { }
 	mapping(string:mapping(string:mixed)) items; //Will never be rebound. Will generally want to be an alias for a better-named mapping, or something out of persist[] (and see persist_key)
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
@@ -466,6 +461,7 @@ class configdlg
 	constant strings=({ }); //Simple string bindings - see plugins/README
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
+	constant labels=({ }); //Labels for the above
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY. Details may change, though the feature is almost certainly going to stick around.
 	//... end provide me.
@@ -563,6 +559,53 @@ class configdlg
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(win->new_iter||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
+	}
+
+	//Iterates over labels, applying them to controls in this order:
+	//1) win->kwd, if allow_rename is not zeroed
+	//2) strings, creating Entry()
+	//3) ints, ditto
+	//4) bools, creating CheckButton()
+	//5) Descriptive text underneath
+	array(string|GTK2.Widget) collect_widgets()
+	{
+		array stuff = ({ });
+		Iterator lbl = get_iterator(labels);
+		if (!lbl) return stuff;
+		if (allow_rename)
+		{
+			stuff += ({lbl->value(), win->kwd=GTK2.Entry()});
+			if (!lbl->next()) return stuff;
+		}
+		foreach (strings+ints, string name)
+		{
+			stuff += ({lbl->value(), win[name]=GTK2.Entry()});
+			if (!lbl->next()) return stuff;
+		}
+		foreach (bools, string name)
+		{
+			stuff += ({0,win[name]=GTK2.CheckButton(lbl->value())});
+			if (!lbl->next()) return stuff;
+		}
+		//Now consume the remaining entries making text. There'll most
+		//likely be zero or one of them.
+		foreach (lbl;;string text)
+			stuff += ({text, 0});
+		return stuff;
+	}
+
+	//Create and return a widget (most likely a layout widget) representing all the custom content.
+	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
+	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
+	//it may be a GTK2.Label, or it may be omitted altogether).
+	//By default, makes a two_column based on collect_widgets.
+	GTK2.Widget make_content()
+	{
+		return two_column(({
+			"Alias",win->kwd=GTK2.Entry(),
+			"Expansion",win->expansion=GTK2.Entry(),
+			"Use %* to expand to everything typed\nafter the alias name.",0,
+		}));
 	}
 
 	//Attempt to select the given keyword - returns 1 if found, 0 if not
