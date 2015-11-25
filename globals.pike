@@ -575,7 +575,7 @@ class configdlg
 		if (!lbl) return stuff;
 		if (allow_rename)
 		{
-			stuff += ({lbl->value(), win->kwd=GTK2.Entry()});
+			stuff += ({lbl->value(), win->kwd=noex(GTK2.Entry())});
 			if (!lbl->next()) return stuff;
 		}
 		foreach (strings+ints, string name)
@@ -586,12 +586,12 @@ class configdlg
 					win[name]=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
 				),0});
 			else
-				stuff += ({desc, win[name]=GTK2.Entry()});
+				stuff += ({desc, win[name]=noex(GTK2.Entry())});
 			if (!lbl->next()) return stuff+atend;
 		}
 		foreach (bools, string name)
 		{
-			stuff += ({0,win[name]=GTK2.CheckButton(lbl->value())});
+			stuff += ({0,win[name]=noex(GTK2.CheckButton(lbl->value()))});
 			if (!lbl->next()) return stuff+atend;
 		}
 		stuff += atend; //Now grab any multiline strings
