@@ -583,7 +583,7 @@ class configdlg
 			string desc=lbl->value();
 			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end.
 				atend += ({GTK2.Frame(desc)->add(
-					win[name]=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
+					win[name]=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(225,70)
 				),0});
 			else
 				stuff += ({desc, win[name]=noex(GTK2.Entry())});
