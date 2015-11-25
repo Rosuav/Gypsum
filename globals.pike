@@ -598,7 +598,8 @@ class configdlg
 	//If allow_rename (see below), this must assign to win->kwd a GTK2.Entry for editing the keyword;
 	//otherwise, win->kwd is optional (it may be present and read-only (and ignored on save), or
 	//it may be a GTK2.Label, or it may be omitted altogether).
-	//By default, makes a two_column based on collect_widgets.
+	//By default, makes a two_column based on collect_widgets. It's easy to override this to add some
+	//additional widgets before or after the ones collect_widgets creates.
 	GTK2.Widget make_content()
 	{
 		return two_column(collect_widgets());
