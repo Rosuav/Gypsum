@@ -59,15 +59,14 @@ class config
 
 	GTK2.Widget make_content()
 	{
-		return GTK2.Vbox(0,10)
-			->pack_start(two_column(({
+		return two_column(({
 				"Keyword",win->kwd=GTK2.Entry(),
 				"Time",win->time=GTK2.Entry(),
 				0,win->present=GTK2.CheckButton("Present when done"),
-			})),0,0,0)
-			->pack_start(GTK2.Frame("Trigger text")->add(
-				win->trigger=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
-			),1,1,0);
+				GTK2.Frame("Trigger text")->add(
+					win->trigger=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
+				),0,
+			}));
 	}
 
 	void load_content(mapping(string:mixed) info)
