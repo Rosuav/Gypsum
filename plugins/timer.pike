@@ -53,21 +53,10 @@ class config
 {
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
-	constant strings=({"trigger"});
+	constant strings=({"time","trigger"});
 	constant bools=({"present"});
 	constant persist_key="timer/timers";
-
-	GTK2.Widget make_content()
-	{
-		return two_column(({
-				"Keyword",win->kwd=noex(GTK2.Entry()),
-				"Time",win->time=noex(GTK2.Entry()),
-				0,win->present=noex(GTK2.CheckButton("Present when done")),
-				GTK2.Frame("Trigger text")->add(
-					win->trigger=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
-				),0,
-			}));
-	}
+	constant labels=({"Keyword", "Time", "\nTrigger text", "Present when done"});
 
 	void load_content(mapping(string:mixed) info)
 	{
