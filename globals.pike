@@ -566,7 +566,8 @@ class configdlg
 	//2) strings, creating Entry()
 	//3) ints, ditto
 	//4) bools, creating CheckButton()
-	//5) Descriptive text underneath
+	//5) strings, if marked to create MultiLineEntryField()
+	//6) Descriptive text underneath
 	array(string|GTK2.Widget) collect_widgets()
 	{
 		array stuff = ({ });
