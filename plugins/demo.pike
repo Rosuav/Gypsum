@@ -105,16 +105,7 @@ class config
 	constant strings=({"meaning"});
 	constant ints=({"value"});
 	constant bools=({"useful"});
-
-	GTK2.Widget make_content() 
-	{
-		return two_column(({
-			"Thing",win->kwd=GTK2.Entry(),
-			"Meaning",win->meaning=GTK2.Entry(),
-			"Value",win->value=GTK2.Entry(),
-			0,win->useful=GTK2.CheckButton("Is useful"),
-		}));
-	}
+	constant labels=({"Thing", "Meaning", "Value", "Is useful"});
 
 	void save_content(mapping(string:mixed) info)
 	{
