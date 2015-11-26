@@ -142,6 +142,7 @@ void makelabels()
 	win->display->set_col_spacings(4)->show_all();
 	showtimes();
 	if (sizeof(timers)==1) win->mainwindow->set_no_show_all(0)->show_all();
+	//TODO: Shrink the window to fit the new content, iff it was already minimum size.
 }
 
 void makewindow()
