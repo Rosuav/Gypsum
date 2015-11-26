@@ -49,23 +49,13 @@ class statusbar_double_click
 	inherit configdlg;
 	constant ints=({"total","count","min","max"});
 	constant strings=({"sscanf"});
+	constant labels=({"Keyword","\nPattern (capture with %d)","Total","Count","Min","Max"});
 	constant persist_key="stats/monitors";
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
 
 	GTK2.Widget make_content()
 	{
-		return GTK2.Vbox(0,10)
-			->pack_start(two_column(({
-				"Keyword",win->kwd=GTK2.Entry(),
-				"Total",win->total=GTK2.Label(),
-				"Count",win->count=GTK2.Label(),
-				"Min",win->min=GTK2.Label(),
-				"Max",win->max=GTK2.Label(),
-				win->reset_stats=GTK2.Button("Reset stats"),0,
-			})),0,0,0)
-			->pack_start(GTK2.Frame("Pattern (capture with %d)")->add(
-				win->sscanf=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(250,70)
-			),1,1,0);
+		return two_column(collect_widgets()+({win->reset_stats=GTK2.Button("Reset stats"),0}));
 	}
 
 	void sig_reset_stats_clicked()
