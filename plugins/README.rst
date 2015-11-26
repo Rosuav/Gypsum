@@ -291,16 +291,13 @@ For more advanced usage, define these::
 	//Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
 	constant descr_key="title";
 
-The most important function to create is make_content(), which needs to return
-a widgetful of GUI structure. In many cases, two_column will serve your needs;
-look at some examples of configdlgs in other code.
-
-As well as returning the top-level widget, make_content must create the GUI
-bindings for the important fields. Those listed in bools should be created as
-GTK2.CheckButtons; strings/ints can be GTK2.Entry, GTK2.Label (for read-only
-attributes), or anything else that can set/get text. To allow renames (if the
-allow_rename flag has not been set to zero), it should also create a win->kwd
-in the same way.
+The layout of your window is governed by the broad structure of a configdlg,
+with a "content block" incorporated in the right hand panel. The simplest way
+to generate a content block is to provide labels for your fields, which will
+then be paired off with the most obvious GUI widget for each one - GTK2.Entry
+for strings and ints (including the keyword, if allow_rename isn't zeroed),
+GTK2.CheckButton for bools, and MultiLineEntryField for multi-line strings
+(mark these by starting the label with "\n").
 
 More advanced usage can incorporate all of the above, and then make small
 tweaks to handle what doesn't work the easy way. It's code. Have at it!
