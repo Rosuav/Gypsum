@@ -21,6 +21,9 @@ Sikorsky have a persist[0] non-string key; this may have been an error. It is th
 preventing save-as-JSON. This may be worth migrating to. Note that the stability of the file
 will never be guaranteed; it's still not advisable to git-manage it if you care about clean
 diffs. But it would be a lot easier for people to poke around in it.
+
+BEST PRACTICE: Restrict your persist data to JSON-safe values: strings, ints, floats, arrays
+of JSON-safe values, and mappings with string keys and JSON-safe values.
 */
 
 object persist=class(string savefn)
