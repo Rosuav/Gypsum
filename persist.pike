@@ -54,6 +54,8 @@ object persist=class(string savefn)
 		dec=dec[dec[0]..]; //Trim off the padding
 		data=decode_value(dec);
 	}) error("Incorrect password.");
+
+	This would pretty much destroy any chance of it being usable by other programs though.
 	*/
 
 	mapping(string:mixed) data=([]);
