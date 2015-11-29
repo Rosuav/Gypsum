@@ -55,7 +55,9 @@ object persist=class(string savefn)
 		data=decode_value(dec);
 	}) error("Incorrect password.");
 
-	This would pretty much destroy any chance of it being usable by other programs though.
+	This would pretty much destroy any chance of it being usable by other programs though. Also,
+	it'd mean you can't even get the window up without entering your password (since pos/size are
+	stored in persist), which means we don't really have any sort of GUI... this would be a pain.
 	*/
 
 	mapping(string:mixed) data=([]);
