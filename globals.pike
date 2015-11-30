@@ -600,7 +600,8 @@ class configdlg
 		//Now consume the remaining entries making text. There'll most
 		//likely be zero or one of them.
 		foreach (lbl;;string text)
-			stuff += ({text, 0});
+			if (text[0]=='\n') stuff += ({GTK2.Label(text)->set_line_wrap(1), 0});
+			else stuff += ({text, 0});
 		return stuff;
 	}
 
