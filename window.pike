@@ -209,7 +209,7 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 	}
 	void save_content(mapping(string:mixed) info)
 	{
-		info->lastchange=time(); load_content(info);
+		win->lastchange->set_text(ctime(info->lastchange=time())[..<1]);
 		redraw(current_subw());
 	}
 	void load_content(mapping(string:mixed) info)
