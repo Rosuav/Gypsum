@@ -222,7 +222,7 @@ void menu_clicked()
 
 int process(string param,mapping(string:mixed) subw)
 {
-	if (param=="") {menu_clicked(); return 1;}
+	if (param=="") {say(subw,"%% Opening empty editor"); menu_clicked(); return 1;}
 	if (mixed ex=catch {param=fn(param);}) {say(subw,"%% "+describe_error(ex)); return 1;}
 	say(subw,"%%%% Pop-out editing %s",param);
 	editor(0,param);
