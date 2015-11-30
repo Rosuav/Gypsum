@@ -1635,9 +1635,15 @@ constant file_connect_menu="_Connect";
 class connect_menu
 {
 	inherit configdlg;
-	constant strings=({"name","host","logfile","descr","writeme"});
+	constant strings=({"name","host","descr","writeme","logfile"});
 	constant ints=({"port"});
 	constant bools=({"use_ka"});
+	constant labels=({
+		"Keyword", "Name", "Host name",
+		"\nDescription", "\nText to output upon connect", "\nAuto-log", //Since these are multi-line fields, they go after the next two.
+		"Port", "Use keep-alive",
+		"\nLogs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", " ",
+	});
 	constant persist_key="worlds";
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
 
@@ -1669,28 +1675,9 @@ class connect_menu
 
 	GTK2.Widget make_content()
 	{
-		return GTK2.Vbox(0,10)
-			->pack_start(two_column(({
-				"Keyword",win->kwd=GTK2.Entry(),
-				"Name",win->name=GTK2.Entry(),
-				"Host name",win->host=GTK2.Entry(),
-				"Port",win->port=GTK2.Entry(),
-				0,win->use_ka=GTK2.CheckButton("Use keep-alive"), //No separate label, but don't span - keep it in the second column.
-			})),0,0,0)
-			->add(GTK2.Frame("Description")->add(
-				win->descr=MultiLineEntryField()->set_size_request(250,70)
-			))
-			->add(GTK2.Frame("Text to output upon connect")->add(
-				win->writeme=MultiLineEntryField()->set_size_request(250,70)
-			))
-			->add(GTK2.Frame("Auto-log")->add(GTK2.Vbox(0,5)->set_border_width(5)
-				->add(win->logfile=GTK2.Entry())
-				->add(GTK2.Label("Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.")->set_line_wrap(1))
-			))
-			->pack_start(GTK2.HbuttonBox()->add(
-				win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))
-			),0,0,0)
-		;
+		return two_column(collect_widgets() +
+			({GTK2.HbuttonBox()->add(win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))),0})
+		);
 	}
 }
 
