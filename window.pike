@@ -1652,7 +1652,7 @@ class connect_menu
 	void save_content(mapping(string:mixed) info)
 	{
 		//On save, point pathless names into Logs
-		if (info->logfile && info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text(info->logfile = "Logs/" + info->logfile);
+		if (info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text(info->logfile = "Logs/" + info->logfile);
 		//Maybe TODO: Obscure the contents of writeme so it's not instantly obvious what people's passwords are.
 		//It's just a maybe since they have to be decryptable without any sort of password, and they get sent
 		//across the internet in clear text anyway.
