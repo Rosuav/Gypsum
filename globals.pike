@@ -598,8 +598,8 @@ class configdlg
 			stuff += ({0,win[name]=noex(GTK2.CheckButton(lbl->value()))});
 			if (!lbl->next()) return stuff+atend;
 		}
-		stuff += atend; //Now grab any multiline strings
-		//Now consume the remaining entries making text. There'll most
+		stuff += atend; //Now grab any multiline string fields
+		//Finally, consume the remaining entries making text. There'll most
 		//likely be zero or one of them.
 		foreach (lbl;;string text)
 			if (text[0]=='\n') stuff += ({noex(GTK2.Label(text)->set_line_wrap(1)), 0});
