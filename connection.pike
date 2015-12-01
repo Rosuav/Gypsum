@@ -344,7 +344,7 @@ void send_telnet(mapping conn,bytes data)
 mapping(string:mixed) makeconn(object display,mapping info)
 {
 	mixed col=G->G->window->mkcolor(7,0);
-	string writeme=string_to_utf8(info->writeme||"");
+	string writeme=string_to_utf8(info->writeme||""); //If writeme gets obscured, this is where it'd get decoded.
 	if (writeme!="" && writeme[-1]!='\n') writeme+="\n"; //Ensure that the initial text ends with at least one newline
 	writeme=replace(replace(writeme,"\n","\r\n"),"\r\r","\r"); //Clean up newlines just to be sure
 	return ([
