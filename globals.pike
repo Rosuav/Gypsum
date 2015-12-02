@@ -573,7 +573,7 @@ class configdlg
 	//any other widget types eg SelectBox.
 	//Hmm. Instead of this, would it be better to pass in an array alternating
 	//labels and field names, and adorning the field names to say whether they
-	//should be added to "'strings", "9ints", or "?bools", and build those from
+	//should be added to "'strings", "#ints", or "?bools", and build those from
 	//this? Then multi-line ones could be identified as "''fieldname", order
 	//could be completely custom, and something could be done for other types
 	//too. Worth doing or not?
