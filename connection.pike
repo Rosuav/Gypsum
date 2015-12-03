@@ -376,6 +376,7 @@ void sockaccept(mapping conn)
 void connected(mapping conn)
 {
 	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened. Shouldn't normally happen, I think, but let's be safe.
+	conn->errno = 0; catch {conn->errno = conn->sock->errno();}; //Try to snapshot the errno... maybe
 	if (!conn->sock->is_open() || !conn->sock->query_address()) {connfailed(conn); return;} //It actually failed to connect, despite coming through to this callback.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
@@ -390,6 +391,7 @@ void connfailed(mapping conn)
 {
 	if (!conn->sock) return; //If the user disconnects and reattempts, this callback will eventually happen, pointing to an old conn mapping. Ignore it.
 	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
+	if (conn->errno) say(conn->display,"%%%%%% Snapshot errno: %s [%d]",strerror(conn->errno),conn->errno);
 	conn->sock->close();
 	sockclosed(conn);
 }
