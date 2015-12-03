@@ -307,6 +307,8 @@ class plugin_menu
 //there's nothing useful to show; although this can cause unnecessary flicker, and so should be kept
 //to a minimum (don't show/hide/show/hide in rapid succession). Note that this (via a subclass)
 //implements the core window, not just plugin windows, as there's no fundamental difference.
+//Transient windows (eg popups etc) are best implemented with nested classes - see usage of configdlg
+//('inherit configdlg') for the most common example of this.
 class window
 {
 	constant provides="window";
