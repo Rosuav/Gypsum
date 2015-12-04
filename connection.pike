@@ -35,7 +35,8 @@ Then it might be worth actually disposing of the connection mapping on close.
 
 //On first load, there won't be a global say, so any usage will bomb until
 //window.pike gets loaded (trying to call the integer 0). It'll then be
-//overwritten by the newly-loaded window.pike.
+//overwritten by the newly-loaded window.pike. At no time do we directly
+//reference the constant; otherwise there would be a refloop.
 function say=G->globals->say;
 
 /**
