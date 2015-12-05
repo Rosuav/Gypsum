@@ -1,4 +1,4 @@
-The best way to install Gypsum on OS X is to use Homebrew. Start by typing:
+The best way to install Gypsum on OS X is to use Homebrew. Start by opening a terminal and typing:
 $ brew install pike
 You may need to additionally install XQuartz:
 http://xquartz.macosforge.org/
