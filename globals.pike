@@ -777,8 +777,6 @@ ascii pike_version()
 		__REAL_MAJOR__,__REAL_MINOR__,__REAL_BUILD__,
 		#ifdef __NT__
 		"Win",
-		#elif defined(__OS2__)
-		"OS/2",
 		#elif defined(__APPLE__)
 		"Mac",
 		#elif defined(__amigaos__)
