@@ -187,7 +187,8 @@ override this function::
 	{
 		::dosignals();
 		win->signals+=({
-			gtksignal(win->someobj,"some_event",callback),
+			gtksignal(win->someobj,"some_event",callback,"arg"),
+			gtksignal(win->otherobj,"blah",b4_callback,"arg",UNDEFINED,1),
 			//... as many as needed
 		});
 	}
