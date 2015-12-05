@@ -9,14 +9,14 @@ stream=kwd - which stream to play on. The default stream is separate from all na
 noretrigger=1 - if set, this file will not be retriggered if it's already playing.
 
 :A sailor announces: We have arrived
-../sounds/foghorn.wav
+../Sounds/foghorn.wav
 
 :Psion Library of Sagacious Knowledge
-../music/library.mp3
+../Music/library.mp3
 loop=-1 stream=bgm noretrigger=1
 
 :Jumpin' Jehosephat's Java Junction
-../music/coffee.mp3
+../Music/coffee.mp3
 loop=-1 stream=bgm noretrigger=1
 
 :Silence Room
