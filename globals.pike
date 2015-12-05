@@ -791,7 +791,7 @@ ascii pike_version()
 
 //Attempt to invoke a web browser. Returns 1 if it believes it did, 0 if not.
 //Currently always calls on an external command, and has no way of knowing
-//whether it truly succeeded or not.
+//whether it truly succeeded or not; in any case, it's asynchronous.
 int invoke_browser(string url)
 {
 	foreach (({
