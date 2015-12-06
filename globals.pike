@@ -779,8 +779,7 @@ ascii pike_version()
 		"Win",
 		#elif defined(__APPLE__)
 		"Mac",
-		#elif defined(__amigaos__)
-		"Amiga",
+		//Other platforms may also be able to run Gypsum, but I don't support them.
 		#else
 		"Linux",
 		#endif
