@@ -9,7 +9,7 @@ type this:
 That'll make a yellow highlight. (Other numbers for other colors, per the
 usual definitions.)
 
-By default, you get a non-personalized link. To personalize it to your
+By default, you get a non-personalized TMS link. To personalize it to your
 character, fill in your character name above.
 ";
 //TODO: Tie this to an IP address, not to a computer. This MAY mean syncing
