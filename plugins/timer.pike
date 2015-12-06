@@ -42,7 +42,6 @@ and the ability to start *or stop* a timer on any line. Or maybe this should
 simply expose an API??? There's absolutely no precedent for one plugin offering
 an API to other plugins, but it could be pretty handy. */
 
-int regenclick; //Doesn't need to be retained; it doesn't make a lot of difference if it's wrong, but it minorly (not perfectly) improves tick-down stability. For Threshold RPG hp/sp/ep markers.
 constant pos_key="timer/winpos";
 
 mapping(string:mapping(string:mixed)) timers=persist->setdefault("timer/timers",([]));
@@ -91,14 +90,14 @@ int output(mapping(string:mixed) subw,string line)
 	{
 		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
 		int t=time(1);
-		int ofs=(regenclick-t)%22;
+		int ofs=(subw->regenclick-t)%22;
 		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
 		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
 		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
 		showtimes();
 		return 0;
 	}
-	if ((<"Your body has recuperated.","You are completely healed.","You sizzle with mystical energy.">)[line]) regenclick=time(1);
+	if ((<"Your body has recuperated.","You are completely healed.","You sizzle with mystical energy.">)[line]) subw->regenclick=time(1);
 	foreach (sort(indices(timers));int i;string kwd)
 	{
 		mapping tm=timers[kwd];
