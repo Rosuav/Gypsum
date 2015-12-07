@@ -718,10 +718,8 @@ class statustext_maxwidth
 	}
 }
 
-//ADVISORY and under testing: Per-tab status.
+//ADVISORY and currently undocumented: Per-tab status.
 //The maketabstatus() function will be called for every subwindow
-//(modulo transitional forms - any tab created in a719d or earlier
-//won't have the necessary Vbox, and will therefore be ignored)
 //and every time a subwindow is created. Currently, info for the
 //per-subwindow stats is stored in subw[], using the plugin name as
 //part of the key. This means there's actually no unified infomap as
