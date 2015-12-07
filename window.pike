@@ -1365,6 +1365,8 @@ to be called on elsewhere, it's better to make it part of core (maybe globals). 
 current use of plugins/update.pike by other modules is an unnecessary dependency; it
 may still be convenient to have /update handled by that file, but the code that's
 called on elsewhere should be broken out into core.
+20151208: What use of plugins/update.pike by other modules? Is that build() above?
+Or is it the way Plugins|Configure calls on its unload() function (non-critical)?
 */
 void discover_plugins(string dir)
 {
