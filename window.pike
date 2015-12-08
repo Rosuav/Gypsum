@@ -1366,7 +1366,8 @@ current use of plugins/update.pike by other modules is an unnecessary dependency
 may still be convenient to have /update handled by that file, but the code that's
 called on elsewhere should be broken out into core.
 20151208: What use of plugins/update.pike by other modules? Is that build() above?
-Or is it the way Plugins|Configure calls on its unload() function (non-critical)?
+Or is it the way Plugins|Configure calls on its unload() function (non-critical and
+marked with its own TODO down below)?
 */
 void discover_plugins(string dir)
 {
