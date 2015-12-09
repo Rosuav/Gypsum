@@ -57,9 +57,6 @@ function say=G->globals->say;
  * CP-1252; this allows adjacent lines to be encoded differently, as long as
  * each line has one single encoding. This also means that occasional CP-1252
  * can potentially have a marked impact on performance.
- *
- * @param bytes Incoming 8-bit data
- * @return string Resulting Unicode text
  */
 #if constant(Charset)
 object cp1252=Charset.decoder("1252"); //Pike 8.0 and 8.1 have Charset at top-level; 8.1 has it nowhere else.
