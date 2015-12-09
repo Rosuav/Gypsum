@@ -397,6 +397,8 @@ string hovertext(mapping subw,int line)
 		//going to change, but it'd still look ugly to have the ts vanish suddenly.
 		//20151209: The timestamp's disappearance would cause other text to snap right,
 		//so it's definitely ugly. Maintaining this simplicity for the time being.
+		//TODO: Should this default to local instead of to UTC? Tidier for some, but at
+		//the expense of others. What's best?
 		mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
 		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
