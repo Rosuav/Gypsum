@@ -399,7 +399,8 @@ string hovertext(mapping subw,int line)
 		//so it's definitely ugly. Maintaining this simplicity for the time being.
 		//TODO: Should this default to local instead of to UTC? Tidier for some, but at
 		//the expense of others. What's best?
-		mapping ts=(persist["window/timestamp_local"]?localtime:gmtime)(meta->timestamp);
+		int zone=persist["window/timestamp_local"]; if (zone==2) zone=0;
+		mapping ts=(zone?localtime:gmtime)(meta->timestamp);
 		txt+="  "+strftime(persist["window/timestamp"]||default_ts_fmt,ts);
 		//Add further meta-information display here
 	}; //Ignore errors. The text should be progressively appended to, so any failure will simply result in truncated hover text.
@@ -968,7 +969,7 @@ class zadvoptions
 		"Present action":(["path":"notif/present","type":"int","desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour depends somewhat on your window manager.","options":([0:"Mark the window as 'urgent'",1:"Request immediate presentation"])]),
 		"Reopen closed tabs":(["path":"reopentabs","type":"int","desc":"Bring back what once was yours... When Gypsum is invoked, you can have it reopen with whatever tabs were previously open. Or you can reopen some fixed set every time.","options":([0:"Do nothing",1:"Remember but don't retrieve",2:"Retrieve but don't remember",3:"Retrieve, and remember"])]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better."]),
-		"Timestamp localtime":(["path":"window/timestamp_local","desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.","type":"int","options":([0:"Normal - use UTC",1:"Use your local time"])]),
+		"Timestamp localtime":(["path":"window/timestamp_local","desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.","type":"int","options":([0:"Default (currently UTC)",1:"Use your local time",2:"Use UTC"])]),
 		"Up arrow":(["path":"window/uparr","type":"int","desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?","options":([0:"No",1:"Yes"])]),
 		"Wrap":(["path":"window/wrap","desc":"Wrap text to the specified width (in characters). 0 to disable.","type":"int"]),
 		"Wrap indent":(["path":"window/wrapindent","default":"","desc":"Indent/prefix wrapped text with the specified text or number of spaces.","savefunc":numbers_to_spaces]),
