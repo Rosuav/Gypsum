@@ -523,11 +523,11 @@ void connect(string world,mapping|void subw)
 		if (sscanf(world,"%s %d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
 		else {say(subw,"%% Connect to what?"); return;}
 	}
-	values(G->G->tabstatuses)->connected(subw,world);
-	subw->world=world;
 	//Use alternate syntax for these once 7.8 support can be dropped
 	if (subw->connection && subw->connection->dnspending) {say(subw,"%% Connection pending, disconnect to abort"); return;}
 	if (subw->connection && subw->connection->sock) {say(subw,"%% Already connected."); return;}
+	values(G->G->tabstatuses)->connected(subw,world);
+	subw->world=world;
 	subw->connection=G->G->connection->connect(subw,info);
 	subw->tabtext=info->tabtext || info->name || "(unnamed)";
 }
