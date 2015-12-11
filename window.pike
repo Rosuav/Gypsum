@@ -855,7 +855,7 @@ void enterpressed(mapping subw,string|void cmd)
 //have been processed.
 //NOTE: This function is called externally, but only (as of 20150813) from connection.
 //This may end up getting moved to a more generic location and made more available.
-int runhooks(string hookname,string|void skiphook,mapping(string:mixed) subw,mixed ... otherargs)
+int runhooks(string hookname,string skiphook,mapping(string:mixed) subw,mixed ... otherargs)
 {
 	//Sort by name for consistency. May be worth keeping them sorted somewhere, but I'm not seeing performance problems.
 	array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks);
