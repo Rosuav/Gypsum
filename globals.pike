@@ -759,7 +759,8 @@ class tabstatus(string name)
 	//so any nonzero world should be assumed to be "wasn't connected, now
 	//will be".) Note: This is called when the world selection is made, NOT
 	//when a connection is actually established. This may change in future.
-	//This MAY end up being moved to the 'hook' inheritable. (???)
+	//This MAY end up being moved to the 'hook' inheritable. (???) If it
+	//does, it might need to also distinguish "connecting" from "connected".
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 
