@@ -761,6 +761,8 @@ class tabstatus(string name)
 	//when a connection is actually established. This may change in future.
 	//This MAY end up being moved to the 'hook' inheritable. (???) If it
 	//does, it might need to also distinguish "connecting" from "connected".
+	//Possibly a "connection phase" that goes from "DNS" to "connecting"
+	//to "connected" to "disconnected", and depends on subw->world??
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 
