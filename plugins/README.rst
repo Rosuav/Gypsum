@@ -137,7 +137,9 @@ performed.
 - int switchtabs(mapping(string:mixed) subw)
 
   The user has just selected a new tab. The subw mapping represents the _new_ tab
-  (currently there is no notification of which tab was previously selected).
+  (currently there is no notification of which tab was previously selected). This
+  event cannot be 'consumed' (although returning 1 will still prevent other hooks
+  from seeing it).
 
 - DEPRECATED: Prior to 20150422, hook functions for input and output followed
   different signatures. The old signatures are still valid, but new code should
