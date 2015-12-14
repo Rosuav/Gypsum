@@ -10,6 +10,7 @@ Tracks status separately for each subwindow.
 inherit hook;
 inherit tabstatus;
 
+string tooltip="Threshold RPG hitpoints";
 int barlength=persist["hpgraph/barlength"] || 100; //Number of pixels. Larger takes up more space but gives better resolution.
 int barthickness=persist["hpgraph/barthickness"] || 7; //Number of pixels. Larger takes up more space (way more) but is more visible. Per bar.
 int fadedelay=persist["hpgraph/fadedelay"] || 60; //Number of seconds after update that the display fades
