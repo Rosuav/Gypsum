@@ -753,6 +753,7 @@ class tabstatus(string name)
 	}
 
 	//Internal: Update the tooltip based on the previously-set strings
+	//TODO: Doesn't seem to be working :(
 	void update_tooltip(mapping(string:mixed) subw) {G->G->tooltips->set_tip(subw["tabstatus/"+name],subw["tabstatus/"+name+"/tooltip"] || tooltip);}
 
 	//If !subw, sets the global default tip. If !newtip, resets to default.
