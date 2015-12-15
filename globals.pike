@@ -756,6 +756,7 @@ class tabstatus(string name)
 	void update_tooltip(mapping(string:mixed) subw) {G->G->tooltips->set_tip(subw["tabstatus/"+name],subw["tabstatus/"+name+"/tooltip"] || tooltip);}
 
 	//If !subw, sets the global default tip. If !newtip, resets to default.
+	//Not really happy with how this function basically has two completely different modes.
 	void set_tooltip(mapping(string:mixed) subw,string newtip)
 	{
 		if (subw)
