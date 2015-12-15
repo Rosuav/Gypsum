@@ -876,9 +876,7 @@ void execcommand(mapping subw,string cmd,string|void skiphook)
 	send(subw->connection,cmd+"\r\n");
 }
 
-/**
- * Engage/disengage password mode
- */
+//Engage/disengage password mode
 void   password(mapping subw) {subw->passwordmode=1; subw->ef->set_visibility(0);}
 void unpassword(mapping subw) {subw->passwordmode=0; subw->ef->set_visibility(1);}
 
