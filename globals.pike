@@ -749,26 +749,20 @@ class tabstatus(string name)
 			->set_shadow_type(GTK2.SHADOW_ETCHED_OUT);
 		if (!G->G->tooltips) G->G->tooltips=GTK2.Tooltips();
 		subw->tabstatus->pack_start(subw["tabstatus/"+name]=frm->show_all(),0,0,0);
-		update_tooltip(subw);
+		_update_tooltip(subw);
 	}
 
-	//Internal: Update the tooltip based on the previously-set strings
-	void update_tooltip(mapping(string:mixed) subw) {G->G->tooltips->set_tip(subw["tabstatus/"+name],subw["tabstatus/"+name+"/tooltip"] || tooltip);}
+	//After changing this->tooltip, call update_tooltips to change each subw's tooltip.
+	void update_tooltips() {foreach (G->G->window->win->tabs,mapping subw) _update_tooltip(subw);}
 
-	//If !subw, sets the global default tip. If !newtip, resets to default.
-	//Not really happy with how this function basically has two completely different modes.
+	//Internal: Update the tooltip based on the previously-set strings
+	void _update_tooltip(mapping(string:mixed) subw) {G->G->tooltips->set_tip(subw["tabstatus/"+name],subw["tabstatus/"+name+"/tooltip"] || tooltip);}
+
+	//If !newtip, resets to default.
 	void set_tooltip(mapping(string:mixed) subw,string newtip)
 	{
-		if (subw)
-		{
-			subw["tabstatus/"+name+"/tooltip"]=newtip;
-			update_tooltip(subw);
-		}
-		else
-		{
-			tooltip=newtip || "(no tooltip set by plugin "+name+")";
-			foreach (G->G->window->win->tabs,mapping subw) update_tooltip(subw);
-		}
+		subw["tabstatus/"+name+"/tooltip"]=newtip;
+		_update_tooltip(subw);
 	}
 
 	//ADVISORY: Override this to be notified when a world is (dis)connected
