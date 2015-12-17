@@ -200,7 +200,8 @@ GTK2.Table GTK2Table(array(array(string|GTK2.Widget)) contents,mapping|void labe
 }
 
 //Derivative of GTK2Table above, specific to a two-column layout. Takes a 1D array.
-//This is the most normal way to lay out labelled objects - alternate labels and objects, or use CheckButtons without labels.
+//This is the most normal way to lay out labelled objects - alternate string labels and objects, or use CheckButtons without labels.
+//The labels will be right justified.
 GTK2.Table two_column(array(string|GTK2.Widget) contents) {return GTK2Table(contents/2,(["xalign":1.0]));}
 
 //End of generic GTK utility classes/functions
