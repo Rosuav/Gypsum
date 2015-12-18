@@ -800,6 +800,7 @@ ascii pike_version()
 		"Mac",
 		//Other platforms may also be able to run Gypsum, but I don't support them.
 		#else
+		//Linux doesn't have a define, so we assume that any unrecognized platform is Linux.
 		"Linux",
 		#endif
 	);
