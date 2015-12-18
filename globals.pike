@@ -821,6 +821,8 @@ int invoke_browser(string url)
 		#else
 		//Linux, various. Try the first one in the list; if it doesn't
 		//work, go on to the next, and the next. A sloppy technique. :(
+		//TODO: Remember which one worked on this computer - or at least
+		//this session - and save some effort.
 		({"xdg-open"}),
 		({"exo-open"}),
 		({"gnome-open"}),
