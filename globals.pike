@@ -877,6 +877,7 @@ string line_text(array line)
 
 //Redirect a stream to a specified file; undoes the redirect on destruction automatically.
 //Passing a file name as the target will truncate it. Explicitly open the file if you wish to append.
+//Does this need to be global? It's used in exactly one place.
 class redirect(Stdio.File file,string|Stdio.File|void target)
 {
 	Stdio.File dup;
