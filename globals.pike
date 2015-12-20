@@ -875,42 +875,6 @@ string line_text(array line)
 	return line[0]->text=filter(line,stringp)*"";
 }
 
-//Redirect a stream to a specified file; undoes the redirect on destruction automatically.
-//Passing a file name as the target will truncate it. Explicitly open the file if you wish to append.
-//Does this need to be global? It's used in exactly one place.
-class redirect(Stdio.File file,string|Stdio.File|void target)
-{
-	Stdio.File dup;
-	void create()
-	{
-		#if __VERSION__ < 8.0
-		//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
-		//so we reach into the object's internals.
-		dup=Stdio.File();
-		dup->assign(file->_fd->dup());
-		#else
-		dup=file->dup();
-		#endif
-		if (!target)
-		{
-			//Is there a cross-platform way to find the null device? Python has os.devnull for that.
-			#ifdef __NT__
-			target="nul";
-			#else
-			target="/dev/null";
-			#endif
-		}
-		if (stringp(target)) target=Stdio.File(target,"wct");
-		target->dup2(file);
-		target->close();
-	}
-	void destroy()
-	{
-		//Undo the redirection by assigning the old copy back in.
-		dup->dup2(file);
-	}
-}
-
 //Format an integer seconds according to a base value. The base ensures that
 //the display is stable as the time ticks down.
 string format_time(int delay,int|void base,int|void resolution)

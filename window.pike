@@ -121,10 +121,27 @@ void settabs(int w)
 {
 	//This currently produces a spew of warnings. I don't know of a way to suppress them, and
 	//everything does seem to be functioning correctly. So we suppress stderr for the moment.
-	object silence_errors=redirect(Stdio.stderr);
+	#if __VERSION__ < 8.0
+	//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
+	//so we reach into the object's internals.
+	Stdio.File dup=Stdio.File();
+	dup->assign(Stdio.stderr->_fd->dup());
+	#else
+	Stdio.File dup=Stdio.stderr->dup();
+	#endif
+	//Is there a cross-platform way to find the null device? Python has os.devnull for that.
+	#ifdef __NT__
+	Stdio.File target=Stdio.File("nul","wct");
+	#else
+	Stdio.File target=Stdio.File("/dev/null","wct");
+	#endif
+	target->dup2(Stdio.stderr);
+	target->close();
 	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed)
 	for (int i=1;i<20;++i) //Number of tab stops to place
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
+	//Undo the redirection by assigning the old copy back in.
+	dup->dup2(Stdio.stderr);
 }
 
 //Set/update fonts and font metrics
