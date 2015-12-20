@@ -150,10 +150,10 @@ void setfonts(mapping(string:mixed) subw)
 	subw->display->modify_font(getfont("display"));
 	subw->ef->modify_font(getfont("input"));
 	mapping dimensions=subw->display->create_pango_layout("n")->index_to_pos(0);
-	//Note that lineheight is the expected height of every line, but charwidth
-	//is simply an average - it's used for tab widths and such, that's all.
-	subw->lineheight=dimensions->height/1024; subw->charwidth=dimensions->width/1024;
-	settabs(subw->charwidth);
+	//Note that lineheight is the expected height of every line, but enwidth
+	//is simply an "average character" used solely to define tab widths.
+	subw->lineheight=dimensions->height/1024; subw->enwidth=dimensions->width/1024;
+	settabs(subw->enwidth);
 }
 
 //Reestablish event handlers for all subwindows as well as for the main window
@@ -1602,7 +1602,7 @@ void create(string name)
 		}
 		else m_delete(win->plugin_mtime,fn);
 	}
-	settabs(win->tabs[0]->charwidth);
+	settabs(win->tabs[0]->enwidth);
 }
 
 int sig_mainwindow_destroy() {exit(0);}
