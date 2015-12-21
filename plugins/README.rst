@@ -86,12 +86,17 @@ performed.
   * Only one command processor is ever called for a given command - the
     one whose name matches the command entered. Every hook is called for
     every command.
+  * A command processor will normally consume its command. A hook will
+    normally permit it through unchanged.
   * Command processors handle slash commands (eg "/alias"). Hooks handle
     what would otherwise go to the MUD (those without slashes).
   * In "password mode" (where inputted text is hidden), hooks are not
     called. Commands still will be, though.
   * A command's "param" is what comes after the command name. A hook's
     "line" is the entire line.
+  * In summary: A hook interacts with the stream of commands flowing from
+    the human to the remote server, but a slash command is explicitly
+    called upon by the human.
 
   An input hook can feed a replacement line of text into the system with::
 
