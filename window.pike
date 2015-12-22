@@ -121,6 +121,9 @@ void settabs(int w)
 {
 	//This currently produces a spew of warnings. I don't know of a way to suppress them, and
 	//everything does seem to be functioning correctly. So we suppress stderr for the moment.
+	//Sigh. Eight times as many lines of code to suppress stderr as to do the actual work. :(
+	//Even a best case measurement puts this at 5 lines to redirect, 3 being guarded. Is there
+	//any better way to do this?
 	#if __VERSION__ < 8.0
 	//Pike 7.8's Stdio.File::dup() doesn't seem to work properly,
 	//so we reach into the object's internals.
@@ -137,6 +140,7 @@ void settabs(int w)
 	#endif
 	target->dup2(Stdio.stderr);
 	target->close();
+	//Redirection complete. Now let's do some actual work.
 	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed - it's restating the defaults)
 	for (int i=1;i<20;++i) //Number of tab stops to place
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
