@@ -137,7 +137,7 @@ void settabs(int w)
 	#endif
 	target->dup2(Stdio.stderr);
 	target->close();
-	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed)
+	tabstops=(({GTK2.PangoTabArray})*8)(0,1); //Construct eight TabArrays (technically the zeroth one isn't needed - it's restating the defaults)
 	for (int i=1;i<20;++i) //Number of tab stops to place
 		foreach (tabstops;int pos;object ta) ta->set_tab(i,GTK2.PANGO_TAB_LEFT,8*w*i-pos*w);
 	//Undo the redirection by assigning the old copy back in.
