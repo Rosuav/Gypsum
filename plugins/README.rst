@@ -78,7 +78,7 @@ performed.
 
 - int input(mapping(string:mixed) subw,string line)
 
-  An input hook is very similar in structure to a command processor, with
+  An input hook looks very similar to a command processor, but take note of
   the following distinctions:
 
   * The intention is for a hook to manipulate text that would be sent to the
