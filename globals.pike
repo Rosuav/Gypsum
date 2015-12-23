@@ -879,14 +879,6 @@ string line_text(array line)
 //the display is stable as the time ticks down.
 string format_time(int delay,int|void base,int|void resolution)
 {
-	/*
-	Open question: Is it better to show 60 seconds as "60" or as "01:00"?
-
-	Previously, this would show it as 60 (unless it's ticking down from a longer time, of course),
-	but this makes HP/SP/EP display - which can't know what they're ticking down from - to look
-	a bit odd. Changing it 20140117 to show as 01:00. Question is still open as to how it ought
-	best to be done. There are arguments on both sides.
-	*/
 	if (resolution) delay-=delay%resolution;
 	if (delay<=0) return "";
 	switch (max(delay,base))
