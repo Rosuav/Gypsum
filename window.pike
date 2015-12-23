@@ -155,7 +155,13 @@ void setfonts(mapping(string:mixed) subw)
 	subw->ef->modify_font(getfont("input"));
 	mapping dimensions=subw->display->create_pango_layout("n")->index_to_pos(0);
 	//Note that lineheight is the expected height of every line, but enwidth
-	//is simply an "average character" used solely to define tab widths.
+	//is simply an "average character" used solely to define tab widths. The
+	//actual width of a displayed slab of text is measured directly at point
+	//of rendering. If it's ever possible for the *height* of arbitrary text
+	//to vary from the default, lineheight should be set to the "max normal"
+	//height - occasional lines exceeding that won't be too bad, and picking
+	//the theoretical absolute tallest line might mean ugly normal display -
+	//best to aim for the normal case.
 	subw->lineheight=dimensions->height/1024; subw->enwidth=dimensions->width/1024;
 	settabs(subw->enwidth);
 }
