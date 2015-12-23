@@ -149,7 +149,7 @@ class menu_clicked
 		void maketimer(string kw,int interval,string trigger)
 		{
 			box->pack_start(cb(
-				kw+" - "+format_time(interval,interval),
+				kw+" - "+format_time(interval),
 				({"timer/timers",kw}),(["time":interval,"trigger":trigger]),
 				makelabels,
 			),0,0,0);
