@@ -896,7 +896,7 @@ string origin(function|object func)
 	//Always go via the program, in case the function actually comes from an inherited parent.
 	program pgm=functionp(func)?function_program(func):object_program(func);
 	string def=Program.defined(pgm);
-	return def && (def/":")[0]; //Assume we don't have absolute Windows paths here, which this would break
+	return def && (def/":")[0]; //Assume we don't have absolute Windows paths here, which this would break (though Cygwin-style paths would be fine)
 }
 
 //Figure out an actual file name based on the input
