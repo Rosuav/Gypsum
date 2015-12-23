@@ -883,7 +883,7 @@ string format_time(int delay,int|void base,int|void resolution)
 	if (delay<=0) return "";
 	switch (max(delay,base))
 	{
-		case 0..59: return sprintf("%02d",delay);
+		case ..59: return sprintf("%02d",delay);
 		case 60..3599: return sprintf("%02d:%02d",delay/60,delay%60);
 		default: return sprintf("%02d:%02d:%02d",delay/3600,(delay/60)%60,delay%60);
 	}
