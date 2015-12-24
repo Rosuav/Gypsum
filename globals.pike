@@ -920,7 +920,7 @@ string fn(string param)
 	//use a relative path, but manually loaded ones could be problematic. (This is
 	//an issue for loading plugins off a different drive, obviously. It is unsolvable for now.)
 	//Frankly, I doubt anyone will need to put plugins into absolute paths; the zz_local path
-	//should be sufficient for most normal use cases.
+	//should be sufficient for most normal use cases, even on Windows.
 	if (has_value(param,":")) sscanf(param,"%s:",param);
 
 	//Attempt to turn a base-name-only and/or a pathless name into a real name
