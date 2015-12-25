@@ -154,7 +154,7 @@ performed.
 	int outputhook(string line,mapping(string:mixed) conn)
 
   Note that the outputhook receives a connection, *not* a subwindow. See below
-  for details of the two separate mappings.
+  for details of the two separate mappings. Or just use output() instead :)
 
 Window - 'inherit window'
 -------------------------
