@@ -27,7 +27,7 @@ A plugin MAY be loaded from somewhere other than Gypsum's 'plugins/'
 directory, but this is not advisable and may cause issues with some minor
 features (eg the insta-edit and insta-update features of the corresponding
 plugins). Also, paths on Windows-like platforms MUST NOT contain drive letters;
-this entirely precludes the loading of plugins frorm any drive other than the
+this entirely precludes the loading of plugins from any drive other than the
 one Gypsum is run from.
 
 
