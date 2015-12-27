@@ -516,51 +516,52 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					INT *Craft 1		Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
 					INT *Craft 2		Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
 					INT *Craft 3		Bbn,Brd,Clr,Drd,Ftr,Mnk,Pal,Rgr,Rog,Sor,Wiz
-					INT Decipher Script	Brd,Rog,Wiz
+					INT +Decipher Script	Brd,Rog,Wiz
 					CHA Diplomacy		Brd,Clr,Drd,Mnk,Pal,Rog		Bluff, Knowledge Local, Sense Motive
-					INT Disable Device	Rog
+					INT +Disable Device	Rog
 					CHA Disguise		Brd,Rog				Bluff (if acting in character)
 					DEX Escape Artist	Brd,Mnk,Rog			AC, Use Rope (if involving ropes)
 					INT Forgery		Rog
 					CHA Gather Info		Brd,Rog				Knowledge Local
-					CHA Handle Animal	Bbn,Drd,Ftr,Pal,Rgr
+					CHA +Handle Animal	Bbn,Drd,Ftr,Pal,Rgr
 					WIS Heal		Clr,Drd,Pal,Rgr
 					DEX Hide		Bbn,Mnk,Rgr,Rog			AC
 					CHA Intimidate		Bbn,Ftr,Rog			Bluff
 					STR Jump		Bbn,Brd,Ftr,Mnk,Rgr,Rog		AC, Tumble
-					INT Knowledge Arcana	Bbn,Clr,Mnk,Sor,Wiz
-					INT Knowledge Local	Brd,Rog,Wiz
-					INT Knowledge Nobility	Brd,Pal,Wiz
-					INT Knowledge Nature	Brd,Drd,Rgr,Wiz			Survival
-					INT *Knowledge 1	Brd,Wiz
-					INT *Knowledge 2	Brd,Wiz
-					INT *Knowledge 3	Brd,Wiz
-					INT *Knowledge 4	Brd,Wiz
-					INT *Knowledge 5	Brd,Wiz
-					INT *Knowledge 6	Brd,Wiz
+					INT +Knowledge Arcana	Bbn,Clr,Mnk,Sor,Wiz
+					INT +Knowledge Local	Brd,Rog,Wiz
+					INT +Knowledge Nobility	Brd,Pal,Wiz
+					INT +Knowledge Nature	Brd,Drd,Rgr,Wiz			Survival
+					INT +*Knowledge 1	Brd,Wiz
+					INT +*Knowledge 2	Brd,Wiz
+					INT +*Knowledge 3	Brd,Wiz
+					INT +*Knowledge 4	Brd,Wiz
+					INT +*Knowledge 5	Brd,Wiz
+					INT +*Knowledge 6	Brd,Wiz
 					WIS Listen		Bbn,Brd,Drd,Mnk,Rgr,Rog
 					DEX Move Silently	Brd,Mnk,Rgr,Rog	AC
-					DEX Open Lock		Rog
+					DEX +Open Lock		Rog
 					CHA *Perform 1		Brd,Mnk,Rog
 					CHA *Perform 2		Brd,Mnk,Rog
 					CHA *Perform 3		Brd,Mnk,Rog
-					WIS *Profession 1	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
-					WIS *Profession 2	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					WIS +*Profession 1	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
+					WIS +*Profession 2	Brd,Clr,Drd,Mnk,Pal,Rgr,Rog,Sor,Wiz
 					DEX Ride		Bbn,Drd,Ftr,Pal,Rgr		Handle Animal
 					INT Search		Rgr,Rog
 					WIS Sense Motive	Brd,Mnk,Pal,Rog
-					DEX Sleight of Hand	Brd,Rog	AC, Bluff
-					INT Spellcraft		Brd,Clr,Drd,Sor,Wiz		Knowledge Arcana, Use Magic Device (if deciphering scroll)
+					DEX +Sleight of Hand	Brd,Rog	AC, Bluff
+					INT +Spellcraft		Brd,Clr,Drd,Sor,Wiz		Knowledge Arcana, Use Magic Device (if deciphering scroll)
 					WIS Spot		Drd,Mnk,Rgr,Rog
 					WIS Survival		Bbn,Drd,Rgr			Search (if following tracks)
 					STR Swim		Bbn,Brd,Drd,Ftr,Mnk,Rgr,Rog	AC, AC
-					DEX Tumble		Brd,Mnk,Rog			AC, Jump
-					CHA Use Magic Device	Brd,Rog				Decipher Script (if involving scrolls), Spellcraft (if involving scrolls)
+					DEX +Tumble		Brd,Mnk,Rog			AC, Jump
+					CHA +Use Magic Device	Brd,Rog				Decipher Script (if involving scrolls), Spellcraft (if involving scrolls)
 					DEX Use Rope		Rgr,Rog				Escape Artist (if involving bindings)"/"\n",lambda(string s)
 				{
 					sscanf(s,"%*[\t]%s %[^\t]%*[\t]%[^\t]%*[\t]%s",string stat,string|object desc,string cls,string syn);
 					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
 					skillnames[kwd]=desc; foreach (cls/",",string c) class_skills[c]+=({kwd});
+					int trainedonly = desc[0]=='+'; if (trainedonly) desc=desc[1..];
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
 						desc=desc[1..];
@@ -631,7 +632,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					}
 					return ({
 						desc,stat,noex(calc(stat+"_mod")),noex(num(kwd+"_rank")),synergy_desc,rare(noex(num(kwd+"_other"))),
-						noex(calc(sprintf("%s_mod+%s_rank+%<s_synergy+%<s_other",stat,kwd),"skill_"+kwd)),
+						noex(calc(sprintf("(%s_mod+%s_rank+%<s_synergy+%<s_other)*(!!%<s_rank||%d)",stat,kwd,!trainedonly),"skill_"+kwd)),
 						ef(kwd+"_notes",10),
 					});
 				})));
