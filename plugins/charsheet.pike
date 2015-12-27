@@ -289,8 +289,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (dep_collector) {dep_collector[f2]=1; return lbl;}
 			//if (name) say(0,"%%%% %O: %{%O %}",name,sort((array)symbols)); //Note that nameless calc() blocks don't need to be slotted into the evaluation order.
 			foreach ((array)symbols,string dep)
-				if (!depends[dep]) depends[dep]=({f2});
-				else depends[dep]+=({f2});
+				depends[dep]+=({f2});
 			f2(data,(<name>));
 		};
 		return lbl;
@@ -626,8 +625,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 								->show_all();
 						});
 						foreach (synergies,[string dep,int type,string desc])
-							if (!depends[dep]) depends[dep]=({recalc});
-							else depends[dep]+=({recalc});
+							depends[dep]+=({recalc});
 						recalc(data,(<kwd+"_synergy">));
 					}
 					return ({
