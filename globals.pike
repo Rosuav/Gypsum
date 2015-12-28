@@ -430,21 +430,6 @@ class movablewindow
 
 //Base class for a configuration dialog. Permits the setup of anything where you
 //have a list of keyworded items, can create/retrieve/update/delete them by keyword.
-/* Idea: Allow the displayed name to differ from the items[] key. This could be
-done with a translation mapping, for instance; and a standard rule of "0 means
--- New --" could allow us to distinguish the 'real' New from one that happens
-to have that keyword value. I can think of two ways to do this within GTK: one,
-subclass ListStore to return different values; two, subclass CellRendererText
-to display certain strings differently. Obviously the latter is better! But I
-can't get either to work, at the moment. The key functions don't seem to come
-back to Pike code. It might require writing C level code, which would mean I
-can't depend on this technique (as it won't work on all platforms and old Pike
-versions). Still, if this could be done, it would be handy. Maybe it can be
-pulled off by having a two-column ListStore, where the first is the keyword
-and the second is the display text?? Might have synchronization problems,
-though. Would need to dig into it and see how well it actually works. */
-//Note that the strongest call for the above idea (the numpad nav dlg) is now
-//coping in a different way, albeit unideally, so this isn't urgent.
 //It may be worth breaking out some of this code into a dedicated ListBox class
 //for future reuse. Currently I don't actually need that for Gypsum, but it'd
 //make a nice utility class for other programs.
@@ -467,7 +452,7 @@ class configdlg
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant labels=({ }); //Labels for the above
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
-	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions. ADVISORY. Details may change, though the feature is almost certainly going to stick around.
+	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	//... end provide me.
 
 	void create() {::create();} //Pass on no args to the window constructor - all configdlgs are independent

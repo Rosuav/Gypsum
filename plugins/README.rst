@@ -303,8 +303,7 @@ For more advanced usage, define these::
 	void save_content(mapping(string:mixed) info) { } //Retrieve content from the window and put it in the mapping.
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
-	//Set this to a key inside the info mapping to populate with descriptions. ADVISORY.
-	constant descr_key="title";
+	constant descr_key="title"; //Set this to a key inside the info mapping to populate with descriptions.
 
 The layout of your window is governed by the broad structure of a configdlg,
 with a "content block" incorporated in the right hand panel. The simplest way
@@ -319,8 +318,7 @@ tweaks to handle what doesn't work the easy way. It's code. Have at it!
 
 When the info keys are human readable, no other description is needed. But if
 they are not so, it may be helpful to provide a second column which adds some
-human-readable descriptive text to the main list box. This feature is currently
-classed ADVISORY, and the details may change drastically. See its one and only
+human-readable descriptive text to the main list box. See its one and only
 current use (as of 20141230) in window.pike, 'class keyboard', for usage.
 
 Note that a configdlg will normally want to be a nested class, invoked when
