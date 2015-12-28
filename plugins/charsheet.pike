@@ -580,7 +580,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						array(array(string|int)) synergies=({ });
 						foreach (syn/", ",string s)
 						{
-							if (s=="AC") {synergies+=({({"bodyarmor_acpen",-1,"Armor penalty"}),({"shield_acpen",-1,"Shield penalty"})}); continue;} //Non-skill but still a synergy... of sorts.
+							//Hack: Armor Check penalties aren't skills, but they're synergies... of a sort. Negative synergies, if you like.
+							if (s=="AC") {synergies+=({({"bodyarmor_acpen",-1,"Armor penalty"}),({"shield_acpen",-1,"Shield penalty"})}); continue;}
 							sscanf(s,"%s (%s)",string kw,string cond);
 							//Simple synergy: 5 or more ranks gives +2, possibly conditionally.
 							//If there's a condition, ignore it from the normal figure (which
