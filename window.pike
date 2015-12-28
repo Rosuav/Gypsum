@@ -547,7 +547,8 @@ void connect(string world,mapping|void subw)
 			//parsing, as it'll instead be parsed as "hostname port".
 			string ip=(world/":")[..<1]*":";
 			string port=(world/":")[-1];
-			if (ip!="" && (int)port!=0 && port==(string)(int)port) world=ip+" "+port; //And then parse it on the spaces two lines down, so there's only one place that constructs that mapping
+			if (ip!="" && (int)port!=0 && port==(string)(int)port) world=ip+" "+port;
+			//And then parse it on the spaces two lines down, so there's only one place that constructs that mapping
 		}
 		if (sscanf(world,"%s %d",string host,int port) && port) info=(["host":host,"port":port,"name":sprintf("%s : %d",host,port)]);
 		else {say(subw,"%% Connect to what?"); return;}
