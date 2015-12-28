@@ -35,7 +35,9 @@ void showtime()
 	if (t<=0)
 	{
 		setstatus("VOTE: NOW!");
-		if (int col=persist["plugins/vote/color"]) statustxt->evbox->modify_bg(GTK2.STATE_NORMAL,G->G->window->colors[col]); //Reaching into core here, not a pledged feature but it's convenient to do it this way
+		if (int col=persist["plugins/vote/color"])
+			//Reaching into core here; not a pledged feature but it's convenient to do it this way
+			statustxt->evbox->modify_bg(GTK2.STATE_NORMAL,G->G->window->colors[col]);
 	}
 	else
 	{
