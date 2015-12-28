@@ -989,7 +989,8 @@ class zadvoptions
 			"type":"int","path":"compat/"+x,"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compatibility mode",2:"Disable compatibility mode"])
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
 		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that can result in a segfault with message boxes."COMPAT("msgdlg")]),
-		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. If pressing Pause doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P exclusively."COMPAT("pausekey")]),
+		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. "
+			"If pressing Pause doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P exclusively."COMPAT("pausekey")]),
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int",
 			"desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.",
