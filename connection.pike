@@ -265,7 +265,9 @@ void sockread(mapping conn,bytes data)
 				string subneg;
 				for (int i=1;i<sizeof(iac);++i)
 				{
-					if (iac[i]==IAC && iac[++i]==SE) {subneg=iac[..i]; iac=iac[i+1..]; break;} //Any other TELNET commands inside subneg will be buggy unless they're IAC IAC doubling
+					//Any other TELNET commands inside subneg will be buggy unless they're IAC IAC doubling
+					//IAC followed by anything other than IAC or SE may cause broken behaviour.
+					if (iac[i]==IAC && iac[++i]==SE) {subneg=iac[..i]; iac=iac[i+1..]; break;}
 				}
 				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do.
 				subneg=replace(subneg,"\xFF\xFF","\xFF"); //Un-double IACs
