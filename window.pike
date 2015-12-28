@@ -513,7 +513,9 @@ void say(mapping subw,string|array msg,mixed ... args)
 	subw->activity=1;
 	if (!mainwindow->is_active()) switch (persist["notif/activity"])
 	{
-		case 1: if (subw!=current_subw()) break; //Play with fall-through. If the config option is 2, present the window regardless of current_page; if it's one, present only if current page; otherwise, don't present.
+		//Abuse fall-through. If the config option is 2, present the window regardless of
+		//current_page; if it's one, present only if current page; otherwise, don't present.
+		case 1: if (subw!=current_subw()) break;
 		case 2: if (paused) break; //Present the window only if we're not paused.
 			//Okay, so let's present ourselves.
 			if (persist["notif/present"]) mainwindow->present();
