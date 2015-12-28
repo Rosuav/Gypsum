@@ -609,11 +609,19 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 	//TODO maybe: Highlight any current search term as per the keywords
 	if (!monochrome) foreach (highlightkeywords;string word;mapping info) if (word!="" && has_value(txt,word))
 	{
-		if (txt==word) {bg=colors[info->bgcol||13]; break;} //Special case: If the highlight is the whole string, change background color and fall through (otherwise we have infinite recursion).
-		sscanf(txt,"%s"+word+"%s",string before,string after);
-		painttext(state,before,fg,bg); //Normal text before the keyword
+		if (txt==word)
+		{
+			//If the highlight is the whole string, change background color and fall through.
+			bg = colors[info->bgcol||13];
+			break;
+		}
+		//Otherwise, fracture the string and paint the three parts separately.
+		//If any part is empty, it'll be quickly ignored. Note that we can't
+		//paint out of order; text MUST always be drawn strictly left to right.
+		array pieces = txt/word;
+		painttext(state,pieces[0],fg,bg); //Normal text before the keyword
 		painttext(state,word,fg,colors[info->bgcol||13]); //Different background color for the keyword
-		painttext(state,after,fg,bg); //And normal text afterward.
+		painttext(state,pieces[1..]*word,fg,bg); //And normal text afterward.
 		return;
 	}
 	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,int tabpos]=state;
