@@ -357,6 +357,13 @@ name. To change this to something more useful, put this in create()::
 This must be done prior to calling ::create(), as there is currently no
 way to alter the tooltip post-creation. (This may change in future.)
 
+For more stable display, you may demand that the label never be reduced in
+width. This is more ugly in some cases, but less ugly in others. Just add::
+
+	constant fixedwidth = 1;
+
+to your inherits, and all will be done for you.
+
 Status text with eventbox - 'inherit statusevent'
 -------------------------------------------------
 

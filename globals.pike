@@ -646,6 +646,7 @@ class statustext
 {
 	constant provides="status bar entry";
 	mapping(string:mixed) statustxt=([]);
+	constant fixedwidth = 0; //Set to 1 to ensure that the width never shrinks.
 	void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
@@ -662,7 +663,11 @@ class statustext
 		}
 	}
 	GTK2.Widget makestatus() {return statustxt->lbl=GTK2.Label((["xalign":0.0]));}
-	void setstatus(string txt) {statustxt->lbl->set_text(txt);}
+	void setstatus(string txt)
+	{
+		statustxt->lbl->set_text(txt);
+		if (fixedwidth) statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
+	}
 }
 
 //Like statustext, but has an eventbox and responds to a double-click.
@@ -689,19 +694,6 @@ class statusevent
 	}
 
 	void statusbar_double_click() {/* Override me */}
-}
-
-//Like statustext, but keeps track of it greatest width and never shrinks from it
-//The width is measured and set on statustxt->lbl.
-//Currently considered ADVISORY for plugins as the name may change.
-class statustext_maxwidth
-{
-	inherit statustext;
-	void setstatus(string txt)
-	{
-		statustxt->lbl->set_text(txt);
-		statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
-	}
 }
 
 //ADVISORY and currently undocumented: Per-tab status.

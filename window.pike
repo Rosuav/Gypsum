@@ -1,5 +1,5 @@
 //GUI handler.
-inherit statustext_maxwidth;
+inherit statustext; constant fixedwidth = 1;
 inherit movablewindow;
 constant is_subwindow=0;
 
