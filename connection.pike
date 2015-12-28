@@ -297,7 +297,12 @@ void sockread(mapping conn,bytes data)
 			default: break;
 		}
 		conn->readbuffer=iac;
-	}) {/*werror("ERROR in sockread: %s\n",describe_backtrace(ex));*/ return;} //On error, just go back and wait for more data. Really, this ought to just catch IndexError in the event of trying to read too far into iac[], but I can't be bothered checking at the moment.
+	}) {
+		//On error, just go back and wait for more data. Really, this ought to just catch attempts to read too far into iac[],
+		//but I can't be bothered checking at the moment. If weird stuff happens, uncomment this and start catching errors.
+		//werror("ERROR in sockread: %s\n",describe_backtrace(ex));
+		return;
+	}
 	ansiread(conn,bytes_to_string(conn->readbuffer),1); conn->readbuffer="";
 }
 
