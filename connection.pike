@@ -116,7 +116,7 @@ void textread(mapping conn,string data,int end_of_block)
 		//optionally clear it out; otherwise, reinstate the real prompt and
 		//let this go back to being part of a line of text. Note that the
 		//real_prompt stashed prompt will be removed regardless.
-		if (conn->display->prompt==conn->curmsg) conn->display->prompt=old_prompt; //Note that this is an identity check, not an equality check. If anything disrupts this, it's not the same prompt.
+		if (conn->display->prompt==conn->curmsg) conn->display->prompt=old_prompt; //If anything changed the prompt, it won't point to the same array.
 		else if (!persist["prompt/retain_pseudo"]) conn->curmsg=({([]),conn->curcolor,conn->curline=""});
 		//else we're retaining the pseudo-prompt as lines of text, and leaving no prompt because the user typed something, so do nothing
 	}
