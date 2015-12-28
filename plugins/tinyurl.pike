@@ -182,7 +182,7 @@ void tinify(object self,int response,array args)
 			//Take the tail end (the hex ID) and discard the rest.
 			url="http://www.thinkgeek.com/"+((url/"?")[0]/"/"-({""}))[-1]; //Pick the last non-empty path component, ignoring any querystring
 		}
-		else if (has_prefix(url,"http://notalwaysright.com/") || has_prefix(url,"http://notalwaysrelated.com/") || has_prefix(url,"http://notalwaysromantic.com/") || has_prefix(url,"http://notalwaysworking.com/") || has_prefix(url,"http://notalwayslearning.com/") || has_prefix(url,"http://notalwaysfriendly.com/"))
+		else if (has_prefix(url,"http://notalways")) //eg notalwaysright.com, notalwaysworking.com, etc
 		{
 			//Trim the middle section by taking the last path component (which should be the numeric part) and taking the first part and that, up to maxlen characters.
 			sscanf(url,"%s?%*s",url); //Dispose of any querystring, eg RSS feed source info
