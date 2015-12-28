@@ -113,7 +113,8 @@ int process(string param,mapping(string:mixed) subw)
 	float pi=3.141592653589793; float π=pi;
 	float tau=pi*2, τ=π*2;
 	Time tm(string|int t,int ... parts) {if (stringp(t)) {parts=(array(int))(t/\":\"); t=0;} foreach (parts,int p) t=(t*60)+p; return Time(t);}
-	int say(mixed ... args) {if (sizeof(args)==1 || stringp(args[0])) window->say(0,@args); else window->say(@args);} //Allow say(str) without extra boilerplate (declared int rather than void so it quietly returns zero)
+	//Allow say(str) without extra boilerplate (declared int rather than void so it quietly returns zero - no warning about void expressions)
+	int say(mixed ... args) {if (sizeof(args)==1 || stringp(args[0])) window->say(0,@args); else window->say(@args);}
 	string nfc(string txt) {return Unicode.normalize(txt,\"NFC\");} function NFC=nfc;
 	string nfd(string txt) {return Unicode.normalize(txt,\"NFD\");} function NFD=nfd;
 	//Add any other 'convenience names' here
