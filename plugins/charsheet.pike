@@ -369,7 +369,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						({"Silver",num("wealth_silver",7)}),
 						({"Copper",num("wealth_copper",7)}),
 						({"Total gp",calc("(wealth_plat*1000+wealth_gold*100+wealth_silver*10+wealth_copper)/100")}),
-						//({"(4ed)",calc("(wealth_plat*10000+wealth_gold*100+wealth_silver*10+wealth_copper)/100")}), //4th ed has platinum worth ten times as much as 3.5ed does
 					}))))
 				,0,0,0)
 				->add(GTK2.Hbox(0,20)
