@@ -548,9 +548,9 @@ The subwindow mapping
 ---------------------
 
 Certain elements in subw and conn are guaranteed, and designed to be read by
-plugins. Nothing is guaranteed for writing; however, poking around in the
-source code will show a number of interesting possibilities. Have fun. :)
-You can safely read the following:
+plugins. In general, these are for you to read but not replace or mutate;
+however, poking around in the source code will show a number of interesting
+possibilities. Have fun. :) The following keys should always exist:
 
 * subw->connection - referred to as conn, this mapping stores per-connection
   info. It will be replaced with a new mapping any time a new connection is
