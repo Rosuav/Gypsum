@@ -684,6 +684,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		spells->remove(spells->get_children()[*]);
 		for (int i=1;i<10;++i)
 		{
+			//NOTE: This does not add a 'depends' entry for the stat, for two reasons.
+			//Firstly, we're actually cheating a bit here, and using the base stat without
+			//modifiers; and secondly, stats change a lot more often than we'd like, and the
+			//chances that a change will affect spells-per-day are low. (TODO: If your INT
+			//stat is reduced and you've already prepared Wizard spells, what happens?)
 			depends["class"+i] += ({spells_per_day_box});
 			depends["level"+i] += ({spells_per_day_box});
 			array info=spells_per_day[lower_case(data["class"+i] || "")];
@@ -692,8 +697,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				array desc=allocate(10,"");
 				//If you're at epic level and the tables haven't been updated, use the highest available info.
 				int lvl=min((int)data["level"+i], sizeof(info)-1); if (!lvl) continue;
+				string stat = info[0];
+				int max = (int)data[stat] - 10; //With a spell stat of 15, you can cast 5th tier spells but not 6th.
 				int bonusspells=0; //TODO
-				foreach (info[lvl];int i;int spells) desc[i]=(string)(spells+bonusspells);
+				foreach (info[lvl];int i;int spells)
+					desc[i] = i>max ? stat : (string)(spells+bonusspells);
 				spells->pack_start(GTK2.Frame(data["class"+i]+" spells per day per level/tier")->add(GTK2Table(({
 					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					GTK2.Label(desc[*]), //Explicitly labellify the strings so they don't get noex'd
