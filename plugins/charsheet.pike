@@ -759,6 +759,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Good": ({0})+enumerate(20,1,5)[*]/2,
 			"Poor": enumerate(21)[*]/3
 		]);
+		//TODO: Spells per day per tier per class
 		mapping classes=([
 			"Barbarian": (["abbr": "Brb",
 				"hd": 12, "skills": 4, "bab": "Good",
