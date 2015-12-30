@@ -650,13 +650,52 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				)));
 	}
 
+	//Subclasses can override this (or mutate it) to quickly change the spells-per-day info.
+	//Keep the class names to lowercase ASCII.
+	mapping spells_per_day = ([
+		"bard":({"CHA",
+			({2}),
+			({3,0}),
+			({3,1,0}),
+			({3,2,0}),
+			({3,3,1}),
+			({3,3,2}),
+			({3,3,2,0}),
+			({3,3,3,1}),
+			({3,3,3,2}),
+			({3,3,3,2}),
+		}),
+	]);
+
+	GTK2.Widget spells_per_day_box()
+	{
+		GTK2.Vbox spells = win->spells_per_day;
+		if (!spells) spells = win->spells_per_day = GTK2.Vbox(0,10)->add(GTK2.Label("Remove me"));
+		spells->remove(spells->get_children()[*]);
+		for (int i=1;i<10;++i)
+		{
+			depends["class"+i] += ({spells_per_day_box});
+			depends["level"+i] += ({spells_per_day_box});
+			array info=spells_per_day[lower_case(data["class"+i] || "")];
+			if (info)
+			{
+				array desc=allocate(10,"");
+				//If you're at epic level and the tables haven't been updated, use the highest available info.
+				int lvl=min((int)data["level"+i], sizeof(info)-1); if (!lvl) continue;
+				int bonusspells=0; //TODO
+				foreach (info[lvl];int i;int spells) desc[i]=(string)(spells+bonusspells);
+				spells->pack_start(GTK2.Frame(data["class"+i]+" spells per day per level/tier")->add(GTK2Table(({
+					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
+					GTK2.Label(desc[*]), //Explicitly labellify the strings so they don't get noex'd
+				}))),0,0,0);
+			}
+		}
+		return spells->show_all();
+	}
+
 	GTK2.Widget Page_Spells()
 	{
-		return GTK2.Vbox(0,10)
-				->pack_start(GTK2.Frame("Spells per day per level/tier")->add(GTK2Table(({
-					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
-					map(enumerate(10),lambda(int i) {return num(sprintf("spells_t%d_per_day",i),2);}),
-				}))),0,0,0)
+		return GTK2.Vbox(0,10)->pack_start(spells_per_day_box(),0,0,0)
 				->pack_start(GTK2.Frame("Prepared spells, by level/tier")->add(GTK2Table(({
 					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					map(enumerate(10),lambda(int i) {array n=enumerate(30); return calc(sprintf("spells_t%d_%d_prepared",i,n[*])*"+");}),
@@ -759,7 +798,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Good": ({0})+enumerate(20,1,5)[*]/2,
 			"Poor": enumerate(21)[*]/3
 		]);
-		//TODO: Spells per day per tier per class
 		mapping classes=([
 			"Barbarian": (["abbr": "Brb",
 				"hd": 12, "skills": 4, "bab": "Good",
