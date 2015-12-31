@@ -86,7 +86,7 @@ mapping(string:mixed) subwindow(string txt)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
 	//Note: It'd be nice if Ctrl-Z could do an Undo in in subw->ef. It's
 	//probably impractical though - GTK doesn't offer that directly, I'd
-	//have to do the work myself.
+	//have to do the work myself. (Or hack it in with a SourceView-ish.)
 	setfonts(subw);
 	collect_signals("subw_",subw,subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
