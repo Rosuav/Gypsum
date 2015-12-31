@@ -828,9 +828,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				int lvl=min((int)data["level"+i], sizeof(info)-1); if (!lvl) continue;
 				string stat = info[0];
 				int max = (int)data[stat] - 10; //With a spell stat of 15, you can cast 5th tier spells but not 6th.
-				int bonusspells=0; //TODO
+				int bonusspells = (int)data[stat+"_mod"] + 4;
 				foreach (info[lvl];int i;int spells)
-					desc[i] = i>max ? stat : (string)(spells+bonusspells);
+				{
+					int tierbonus = (bonusspells-i)/4;
+					if (!i || tierbonus < 0) tierbonus = 0;
+					desc[i] = i>max ? stat : (string)(spells + tierbonus);
+				}
 				spells->pack_start(GTK2.Frame(data["class"+i]+" spells per day per level/tier")->add(GTK2Table(({
 					({"L0","L1","L2","L3","L4","L5","L6","L7","L8","L9"}),
 					GTK2.Label(desc[*]), //Explicitly labellify the strings so they don't get noex'd
