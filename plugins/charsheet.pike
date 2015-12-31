@@ -718,6 +718,28 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			({6,5,5,5,5,5,4,4,3,3}),
 			({6,5,5,5,5,5,4,4,4,4}),
 		}),
+		"paladin":({"WIS",
+			({ }),
+			({ }),
+			({ }), //No spells for three levels (detect evil isn't counted)
+			({0}),
+			({0}),
+			({1}),
+			({1}),
+			({1,0}),
+			({1,0}),
+			({1,1}),
+			({1,1,0}),
+			({1,1,1}),
+			({1,1,1}),
+			({2,1,1,0}),
+			({2,1,1,1}),
+			({2,2,1,1}),
+			({2,2,2,1}),
+			({3,2,2,1}),
+			({3,3,3,2}),
+			({3,3,3,3}),
+		}),
 	]);
 
 	GTK2.Widget spells_per_day_box()
