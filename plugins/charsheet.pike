@@ -820,6 +820,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			{
 				array desc=allocate(10,"");
 				//If you're at epic level and the tables haven't been updated, use the highest available info.
+				//(Not that epic level data would be hard or anything. I just haven't done it.)
 				int lvl=min((int)data["level"+i], sizeof(info)-1); if (!lvl) continue;
 				string stat = info[0];
 				int max = (int)data[stat] - 10; //With a spell stat of 15, you can cast 5th tier spells but not 6th.
