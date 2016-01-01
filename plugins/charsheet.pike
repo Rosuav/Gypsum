@@ -813,11 +813,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		spells->remove(spells->get_children()[*]);
 		for (int i=1;i<10;++i)
 		{
-			//NOTE: This does not add a 'depends' entry for the stat, despite it affecting
-			//spell availability. It's broadly assumed that any change to the stat will
-			//cause a change to its modifier. This isn't quite true (eg moving from an INT
-			//of 14 to an INT of 15 won't change your modifier, but it would enable fifth
-			//tier spells), but it's extremely close to true.
 			depends["class"+i] += ({spells_per_day_box});
 			depends["level"+i] += ({spells_per_day_box});
 			array info=spells_per_day[lower_case(data["class"+i] || "")];
@@ -829,6 +824,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				string stat = info[0];
 				int max = (int)data[stat] - 10; //With a spell stat of 15, you can cast 5th tier spells but not 6th.
 				int bonusspells = (int)data[stat+"_mod"] + 4;
+				depends[stat] += ({spells_per_day_box});
 				depends[stat+"_mod"] += ({spells_per_day_box});
 				foreach (info[lvl];int i;int spells)
 				{
