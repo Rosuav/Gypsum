@@ -80,6 +80,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	mapping(string:string) skillnames=([]); //For the convenience of the level-up assistant, map skill keywords to their names.
 	mapping(string:array(string)) class_skills=([]); //Parsed from the primary skill table - which skills are class skills for each class?
 
+	int errors=0;
 	void create()
 	{
 		if (!charsheets[owner]) charsheets[owner]=(<>);
@@ -93,6 +94,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				//Maybe aliases should be callable objects, rather than lambda functions - might be easier.
 			}
 		}
+		if (errors) say(subw,"%%%% %d load-time errors - see console for details",errors);
 	}
 
 	//Allow numeric fields to be entered as a sum and/or difference, eg 40+10-5 will be replaced with 45
@@ -291,7 +293,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			foreach ((array)symbols,string dep)
 				depends[dep]+=({f2});
 			f2(data,(<name>));
-		}) werror("^^ %O\n",formula); //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
+		}) {++errors; werror("^^ %O\n",formula);} //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
 		return lbl;
 	}
 
