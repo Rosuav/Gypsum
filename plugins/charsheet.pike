@@ -563,6 +563,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					int trainedonly = desc[0]=='+'; if (trainedonly) desc=desc[1..];
 					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
 					skillnames[kwd]=desc; foreach (cls/",",string c) class_skills[c]+=({kwd});
+					//Due to a bug in charsheet.pike for about 50 commits from Dec 27th 2015 until
+					//Jan 4th 2016, some data could have been mis-stored. Look for it and retrieve.
+					if (string bad=m_delete(data,"+"+kwd+"_rank"))
+					{
+						string keep=data[kwd+"_rank"];
+						if (!(int)bad) //Easy. Ignore zeroes.
+							;
+						if (!keep || !(int)keep) //Easy. Lift it in to replace a null entry.
+							data[kwd+"_rank"] = bad;
+						else say(subw,"%%%% CAUTION: Double data for %O - bad %O, keeping %O", desc, bad, keep);
+						send(subw,sprintf("charsheet @%s del +%s_rank\r\n",owner,kwd));
+					}
+					//End retrieval. Remove when not needed.
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
 						desc=desc[1..];
