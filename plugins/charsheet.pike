@@ -267,7 +267,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	GTK2.Widget calc(string formula,string|void name,string|void type,multiset|void dep_collector)
 	{
 		object lbl=GTK2.Label();
-		catch
+		if (mixed ex=catch
 		{
 			if (!type) type="int";
 			//Phase zero: Precompile, to get a list of used symbols
@@ -291,7 +291,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			foreach ((array)symbols,string dep)
 				depends[dep]+=({f2});
 			f2(data,(<name>));
-		};
+		}) werror("^^ %O\n",formula); //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
 		return lbl;
 	}
 
