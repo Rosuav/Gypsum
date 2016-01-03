@@ -594,4 +594,6 @@ as well as in all plugins, so a text search for them should bring up all usage.
 Caution: Do not try to explore these by typing "/x subw" at the console! One of
 the elements (subw->lines) is an array of all the lines of text in the window,
 with each element represented by another array. This can easily add thousands
-of lines of output to your display, and really isn't very useful :)
+of lines of output to your display, and really isn't very useful :) Instead,
+use "/x indices(subw)" to see the available keys. Similarly with conn - check
+"/x indices(subw->connection)" rather than dumping the whole thing out.
