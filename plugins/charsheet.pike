@@ -560,9 +560,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					DEX Use Rope		Rgr,Rog				Escape Artist (if involving bindings)"/"\n",lambda(string s)
 				{
 					sscanf(s,"%*[\t]%s %[^\t]%*[\t]%[^\t]%*[\t]%s",string stat,string|object desc,string cls,string syn);
+					int trainedonly = desc[0]=='+'; if (trainedonly) desc=desc[1..];
 					string kwd=replace(lower_case(desc),({"*"," "}),({"","_"}));
 					skillnames[kwd]=desc; foreach (cls/",",string c) class_skills[c]+=({kwd});
-					int trainedonly = desc[0]=='+'; if (trainedonly) desc=desc[1..];
 					if (desc[0]=='*') //Editable fields (must have unique descriptions)
 					{
 						desc=desc[1..];
