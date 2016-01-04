@@ -51,6 +51,8 @@ Should it be context sensitive? It could be reconfigured in subw_ef_changed().
 	//Each 'line' represents one line that came from the MUD. In theory, they might be wrapped for display, which would
 	//mean taking up more than one display line, though currently this is not implemented.
 	//Each entry must begin with a metadata mapping and then alternate between color and string, in that order.
+	//Hmm. It would make accidental "/x subw" usage a lot easier if this were a dedicated array-like object.
+	//What would be the quinseconses of that? Would it kill performance? It's a pretty hot path.
 	array(array(mapping|int|string)) lines=({ });
 	array(mapping|int|string) prompt=({([])}); //NOTE: If this is ever reassigned, other than completely overwriting it, check pseudo-prompt handling (in connection.pike).
 	GTK2.DrawingArea display;
