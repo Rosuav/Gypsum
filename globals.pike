@@ -1036,29 +1036,32 @@ class DNS(string hostname,function callback)
 //the same as the "classic" case of one IP address and a failed
 //connection.
 
-//It's not currently possible to get information about _how_ a
-//connection failed (refused, timed out, etc) as the socket's
-//errno is not being retained properly. This may change in the
-//future, but will depend on a Pike change. If that happens, a
-//connection failure will be signalled by another callback call,
-//possibly with an integer argument (errno). On a failed conn
-//with no errno available, hack it to something nonzero - maybe
-//a negative number, or maybe EOWNERDEAD (130). :)
-//Currently, though, *all* connection failures are getting lost;
-//all we get is "it's not connected". This MUST be looked into.
+//If connections fail for different reasons, this information is
+//lost. Only the one most recent socket connection errno is kept;
+//in the common case where there is only one IP address for the
+//host name, this is fine, but if there are both IPv4 and IPv6
+//addresses, it's possible that an interesting error on the IPv4
+//will be ousted by the uninteresting error that this computer has
+//no IPv6 routing. It may be necessary to make errno into an array.
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
 	object dns;
 	array cbargs;
+	int errno; //If 0, no socket connections have failed - maybe it was DNS that failed instead.
 
 	void cancel() {callback=0;} //Prevent further calls to the callback (eg if the user requests cancellation)
 	void connected()
 	{
-		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn();}
+		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn(); return;}
 		callback(sock, @cbargs);
 		cancel();
 	}
+
+	//Having *something*, anything, as a socket-read callback seems to make the socket-disconnect
+	//callback functional. HUH?!?
+	void readable() {callback("Socket is bizarrely readable");}
+	void connfailed() {errno = sock->errno(); sock = 0; tryconn();}
 
 	void tryconn()
 	{
@@ -1067,7 +1070,7 @@ class establish_connection(string hostname,int port,function callback)
 		[string ip,dns->ips]=Array.shift(dns->ips);
 		callback("Connecting to "+ip+"...", @cbargs); if (!callback) return;
 		sock=Stdio.File(); sock->open_socket();
-		sock->set_nonblocking(0,connected,tryconn);
+		sock->set_nonblocking(readable,connected,connfailed);
 		if (mixed ex=catch {sock->connect(ip,port);})
 		{
 			callback("Exception in connection: "+describe_error(ex), @cbargs);

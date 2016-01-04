@@ -437,10 +437,11 @@ mapping connect(object display,mapping info)
 void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 {
 	if (stringp(status)) {say(conn->display, "%%% "+status); return;}
-	m_delete(conn, "establish"); //De-floop
+	int errno = m_delete(conn, "establish")->errno; //De-floop
 	if (!status)
 	{
-		say(conn->display,"%%%%%% Error connecting to %s: unknown error [0]",conn->worldname);
+		if (!errno) say(conn->display, "%%% Unable to resolve host name.");
+		else say(conn->display, "%%%%%% Error connecting to %s: %s [%d]", conn->worldname, strerror(errno), errno);
 		return;
 	}
 	conn->sock = status;
