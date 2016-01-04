@@ -991,11 +991,15 @@ class DNS(string hostname,function callback)
 		//get the right address. TODO: Properly handle CNAMEs, including firing off other
 		//requests.
 		//TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
-		array ans = (resp->an->a + resp->an->aaaa) - ({0});
-		mapping m = (resp->qd[0]->type==Protocols.DNS.T_AAAA) ? G->G->dns_aaaa : G->G->dns_a;
-		m[domain] = ans;
-		call_out(m_delete, min(@resp->an->ttl), m, domain);
-		ips += ans; --pending;
+		if (resp->an)
+		{
+			array ans = (resp->an->a + resp->an->aaaa) - ({0});
+			mapping m = (resp->qd[0]->type==Protocols.DNS.T_AAAA) ? G->G->dns_aaaa : G->G->dns_a;
+			m[domain] = ans;
+			call_out(m_delete, min(@resp->an->ttl), m, domain);
+			ips += ans;
+		}
+		--pending;
 		callback(this,@cbargs);
 	}
 
