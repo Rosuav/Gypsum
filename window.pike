@@ -531,7 +531,7 @@ void connect(string world,mapping|void subw)
 	{
 		//Disconnect
 		if (!subw->connection) return;
-		if (subw->connection->dnspending) {subw->connection->dnspending=0; say(subw,"%%% Cancelled.");}
+		if (subw->connection->establish) {m_delete(subw->connection,"establish")->cancel(); say(subw,"%%% Cancelled.");}
 		if (!subw->connection->sock) return; //Silent if nothing to dc
 		subw->connection->sock->close(); G->G->connection->sockclosed(subw->connection);
 		return;
@@ -554,7 +554,7 @@ void connect(string world,mapping|void subw)
 		else {say(subw,"%% Connect to what?"); return;}
 	}
 	//Use alternate syntax for these once 7.8 support can be dropped
-	if (subw->connection && subw->connection->dnspending) {say(subw,"%% Connection pending, disconnect to abort"); return;}
+	if (subw->connection && subw->connection->establish) {say(subw,"%% Connection pending, disconnect to abort"); return;}
 	if (subw->connection && subw->connection->sock) {say(subw,"%% Already connected."); return;}
 	values(G->G->tabstatuses)->connected(subw,world);
 	subw->world=world;

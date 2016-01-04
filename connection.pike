@@ -388,51 +388,12 @@ void sockaccept(mapping conn)
 	}
 }
 
-//Callback for when a connection is successfully established. Not replaced in existing sockets when connection.pike is updated.
-//Seems to be being called even when a connection fails. Pike bug? Investigate on multiple Pikes. Seems consistent on 8.1 on Linux, at least. Also seen on 8.0.97 on Linux.
-//And sock->errno() is still zero, too, so we don't get a clue that way.
-void connected(mapping conn)
-{
-	if (!conn->sock) return; //Connection must have failed eg in sock->connect() - sockclosed() has already happened. Shouldn't normally happen, I think, but let's be safe.
-	conn->errno = 0; catch {conn->errno = conn->sock->errno();}; //Try to snapshot the errno... maybe
-	if (!conn->sock->is_open() || !conn->sock->query_address()) {connfailed(conn); return;} //It actually failed to connect, despite coming through to this callback.
-	say(conn->display,"%%% Connected to "+conn->worldname+".");
-	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
-	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
-	G->G->sockets[conn->sock]=1;
-	ka(conn);
-}
-
-//Callback for when the connection fails. Oddly, this appears not to be happening - it's coming through to connected() instead. Investigate.
-//Despite the trap inside connected(), we're still worse off to the value of errno - so we have no idea _why_ the connection failed.
-void connfailed(mapping conn)
-{
-	if (!conn->sock) return; //If the user disconnects and reattempts, this callback will eventually happen, pointing to an old conn mapping. Ignore it.
-	say(conn->display,"%%%%%% Error connecting to %s: %s [%d]",conn->worldname,strerror(conn->sock->errno()),conn->sock->errno());
-	if (conn->errno) say(conn->display,"%%%%%% Snapshot errno: %s [%d]",strerror(conn->errno),conn->errno);
-	conn->sock->close();
-	sockclosed(conn);
-}
-
 //Periodic call_out for keep-alive - invoked separately for each connection
 void ka(mapping conn)
 {
 	if (!conn->sock) return;
 	send_telnet(conn,(string(0..255))({GA})); //(note, cannot use the typedef 'bytes' here due to a Pike parser limitation)
 	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
-}
-
-void dnsresponse(string domain,mapping resp,mapping conn,mapping info)
-{
-	if (!conn->dnspending) return; //Already got a positive response. (If we fire A and AAAA requests, and the first one to respond has an answer, we ignore the second.)
-	array responses = (resp->an->a + resp->an->aaaa) - ({0});
-	if (string ip = sizeof(responses) && responses[0])
-	{
-		conn->dnspending=0;
-		complete_connection(ip, conn, info);
-		return;
-	}
-	if (!--conn->dnspending) say(conn->display,"%%% Unable to resolve host.");
 }
 
 //Establish a connection - the sole constructor for conn mappings.
@@ -466,31 +427,24 @@ mapping connect(object display,mapping info)
 		if (mixed ex=catch {conn->logfile=Stdio.File(fn,"wac");}) say(conn->display,"%%%% Unable to open log file %O\n%%%% %s",fn,describe_error(ex));
 		else say(conn->display,"%%%% Logging to %O",fn);
 	}
-	string prot=persist["connection/protocol"];
-	if (prot=="*" || sscanf(info->host,"%d.%d.%d.%d",int q,int w,int e,int r)==4 || Protocols.IPv6.parse_addr(info->host))
-	{
-		complete_connection(info->host, conn, info);
-		return conn;
-	}
-	//Otherwise, resolve DNS asynchronously and then connect.
-	//Ideally, a /dc should wipe the conn mapping altogether, but since that
-	//isn't currently happening, the code (see window.pike) explicitly checks
-	//for and cancels any pending DNS lookups.
 	say(conn->display,"%%% Resolving "+info->host+"...");
-	object cli=Protocols.DNS.async_client();
-	conn->dnspending=0;
-	if (prot!="6") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse,conn,info);}
-	if (prot!="4") {++conn->dnspending; cli->do_query(info->host,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse,conn,info);}
+	conn->establish = establish_connection(info->host, (int)info->port, complete_connection, conn);
 	return conn;
 }
 
 //Follow on from connect(), either immediately or after a DNS lookup
 //Normally 'ip' will be, as the name suggests, an IP address; but if connection/protocol is "*", it can be a name.
-void complete_connection(string ip, mapping conn, mapping info)
+void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 {
-	say(conn->display,"%%% Connecting to "+ip+" : "+info->port+"...");
-	conn->sock=Stdio.File(); conn->sock->set_id(conn); //Refloop
-	conn->sock->open_socket();
+	if (stringp(status)) {say(conn->display, "%%% "+status); return;}
+	m_delete(conn, "establish"); //De-floop
+	if (!status)
+	{
+		say(conn->display,"%%%%%% Error connecting to %s: unknown error [0]",conn->worldname);
+		return;
+	}
+	conn->sock = status;
+	conn->sock->set_id(conn); //Refloop
 	//Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol
 	//which is not in trunk 8.0) - can improve latency, not critical
 	if (conn->sock->nodelay) conn->sock->nodelay();
@@ -500,12 +454,11 @@ void complete_connection(string ip, mapping conn, mapping info)
 	#if constant(Stdio.IPTOS_LOWDELAY)
 	conn->sock->setsockopt(Stdio.IPPROTO_IP,Stdio.IP_TOS,Stdio.IPTOS_LOWDELAY|Stdio.IPTOS_RELIABILITY);
 	#endif
-	conn->sock->set_nonblocking(0,connected,connfailed);
-	if (mixed ex=catch {conn->sock->connect(ip,(int)info->port);}) //Should now be fast - DNS lookups should happen elsewhere.
-	{
-		say(conn->display,"%%% "+describe_error(ex));
-		sockclosed(conn);
-	}
+	say(conn->display,"%%% Connected to "+conn->worldname+".");
+	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
+	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
+	G->G->sockets[conn->sock]=1;
+	ka(conn);
 }
 
 void create(string name)
