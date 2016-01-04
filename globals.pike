@@ -983,10 +983,8 @@ class DNS(string hostname,function callback)
 		//for the next hour?
 		//Note that technically there can be multiple different TTLs on
 		//different records of the same type. In practice this will be a
-		//rarity, so we can just take the lowest TTL from all answers and
-		//apply that to all of them. All it means is that we miss out on
-		//some possible caching... but frankly, I don't know what else
-		//we could do, and it's not a normal thing to come across!
+		//rarity, so we just take the lowest TTL from all answers and
+		//apply that to all of them. Simpler that way :)
 		//Note that we depend on upstream DNS not sending us superfluous responses. But
 		//we'd depend on them to not send us outright forged responses anyway, so that's
 		//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
