@@ -1020,7 +1020,7 @@ class DNS(string hostname,function callback)
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
 	}
 
-	string _sprintf(int type) {return type=='O' && sprintf("DNS %O -> %d/({%{%O,%}})",hostname,pending,ips);}
+	string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
 }
 
 //Establish a socket connection to a specified host/port
