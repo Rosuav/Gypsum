@@ -1046,6 +1046,8 @@ class DNS(string hostname,function callback)
 //possibly with an integer argument (errno). On a failed conn
 //with no errno available, hack it to something nonzero - maybe
 //a negative number, or maybe EOWNERDEAD (130). :)
+//Currently, though, *all* connection failures are getting lost;
+//all we get is "it's not connected". This MUST be looked into.
 class establish_connection(string hostname,int port,function callback)
 {
 	object sock;
