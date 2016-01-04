@@ -965,7 +965,7 @@ class DNS(string hostname,function callback)
 	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
 	object cli=Protocols.DNS.async_client();
 
-	array(string) ips=({ }); //May be mutated; will only ever be appended to.
+	array(string) ips=({ }); //May be mutated by the callback; will only ever be appended to, here.
 	int pending; //If this is nonzero, the callback will be called again - possibly with more IPs (but possibly not)
 
 	void dnsresponse(string domain,mapping resp)
