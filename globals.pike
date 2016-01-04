@@ -994,9 +994,10 @@ class DNS(string hostname,function callback)
 		//requests.
 		//TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
 		array ans = (resp->an->a + resp->an->aaaa) - ({0});
-		if (resp->qd[0]->type==Protocols.DNS.T_AAAA) G->G->dns_aaaa[domain]=ans;
-		else G->G->dns_a[domain]=ans;
-		ips += ans;
+		mapping m = (resp->qd[0]->type==Protocols.DNS.T_AAAA) ? G->G->dns_aaaa : G->G->dns_a;
+		m[domain] = ans;
+		call_out(m_delete, min(@resp->an->ttl), m, domain);
+		ips += ans; --pending;
 		callback(this,@cbargs);
 	}
 
