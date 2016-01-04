@@ -1020,6 +1020,8 @@ class DNS(string hostname,function callback)
 		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
 	}
+
+	string _sprintf(int type) {return type=='O' && sprintf("DNS %O -> %d/({%{%O,%}})",hostname,pending,ips);}
 }
 
 //Establish a socket connection to a specified host/port
