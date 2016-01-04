@@ -1066,7 +1066,7 @@ class establish_connection(string hostname,int port,function callback)
 	void tryconn()
 	{
 		if (sock || !callback) return;
-		if (!sizeof(dns->ips) && !dns->pending) {callback(0,@cbargs); return;} //We've run out of addresses to try. Connection failed.
+		if (!sizeof(dns->ips)) {if (!dns->pending) callback(0,@cbargs); return;} //If we've run out of addresses to try, connection has failed. Otherwise wait for more DNS.
 		[string ip,dns->ips]=Array.shift(dns->ips);
 		callback("Connecting to "+ip+"...", @cbargs); if (!callback) return;
 		sock=Stdio.File(); sock->open_socket();
