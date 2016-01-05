@@ -64,6 +64,7 @@ charsheet, and both are aliases for existing mappings.
 //NOTE: As of 20151108, the MH roll engine has been upgraded to better handle charsheet entries
 //automatically. Some aliases may therefore be unnecessary; for instance, instead of "roll STR"
 //you could use "roll d20+STR", which works without any extra effort.
+//Additionally, this can allow skills to be simply "roll d20+skill_Open_Lock", and thus static.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
 	"grapple":"d20+{grapple}",
