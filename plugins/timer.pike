@@ -155,6 +155,9 @@ void makewindow()
 
 void sig_mainwindow_button_press_event(object self,object ev)
 {
+	//NOTE: Sometimes, a combination of click events can result in drag AND config
+	//both happening. I'm not sure exactly what triggers this, and it's only minorly
+	//ugly, so it's probably not worth trying to figure out a hack to prevent it.
 	if (ev->type=="2button_press") config(); //aka double-click (not right-click, not chord)
 	else self->begin_move_drag(ev->button,ev->x_root,ev->y_root,ev->time);
 }
