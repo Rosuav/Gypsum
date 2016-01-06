@@ -112,6 +112,8 @@ class MessageBox
 	}
 }
 
+//A message box that calls its callback only if the user chooses OK. If you need to do something
+//on Cancel, use MessageBox above.
 class confirm
 {
 	inherit MessageBox;
