@@ -1594,7 +1594,8 @@ void makewindow()
 	mainwindow->add_accel_group(accel)->add(GTK2.Vbox(0,0)
 		->pack_start(GTK2.MenuBar()
 			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
-			//reason won't accept a GTK2.Menu, which is a subclass of Widget.
+			//reason won't accept a GTK2.Menu, which is a subclass of Widget. This is
+			//true as of Pike 8.1, and probably not worth the hassle of tracking down.
 			->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
 			->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
 			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)GTK2.Menu()))
