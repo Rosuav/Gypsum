@@ -202,6 +202,9 @@ void tinify(object self,int response,array args)
 			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,
 				Protocols.HTTP.Query()->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
 				{
+					//CJA 20160108: Some URLs are rejected - eg https://mail.python.org/pipermail/python-dev/2016-January/142657.html
+					//These come back with an error message. We should pass the original URL through unchanged,
+					//and display the error to the user. TODO.
 					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string url);
 					//We have a response!
 					lineparts[pos]="http://"+url;
