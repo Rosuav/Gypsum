@@ -112,7 +112,7 @@ class MessageBox
 	}
 }
 
-//A message box that calls its callback only if the user chooses OK. If you need to do something
+//A message box that calls its callback only if the user chooses OK. If you need to do cleanup
 //on Cancel, use MessageBox above.
 class confirm
 {
