@@ -229,7 +229,7 @@ turn closing into hiding::
 Certain stock objects with obvious events can be created with simple
 function calls. Use of these functions guarantees a consistent look, and
 also automatically connects the appropriate signal handler. The following
-stock objects are available:
+stock object is available, and more may be added in the future:
 
 * stock_close() - a Close button, which will call closewindow().
 
