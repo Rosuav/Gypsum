@@ -203,8 +203,8 @@ void tinify(object self,int response,array args)
 				Protocols.HTTP.Query()->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
 				{
 					//CJA 20160108: Some URLs are rejected - eg https://mail.python.org/pipermail/python-dev/2016-January/142657.html
-					//These come back with an error message. We should pass the original URL through unchanged,
-					//and display the error to the user. TODO.
+					//These come back with an error message. Pass the original URL through unchanged.
+					//TODO: Display the error to the user.
 					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string shorturl);
 					//We have a response!
 					if (!shorturl) lineparts[pos]=url;
