@@ -207,7 +207,13 @@ void tinify(object self,int response,array args)
 					//TODO: Display the error to the user.
 					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string shorturl);
 					//We have a response!
-					if (!shorturl) {lineparts[pos]=url; G->G->tinyurl_error_text=query->unicode_data();}
+					if (!shorturl)
+					{
+						//Something went wrong. There might be an error message to tease out.
+						G->G->tinyurl_error_text=query->unicode_data();
+						//Most importantly, we should simply keep the URL as-is.
+						lineparts[pos]=url;
+					}
 					else lineparts[pos]="http://"+shorturl;
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 				});},lambda(object query)
