@@ -205,9 +205,10 @@ void tinify(object self,int response,array args)
 					//CJA 20160108: Some URLs are rejected - eg https://mail.python.org/pipermail/python-dev/2016-January/142657.html
 					//These come back with an error message. We should pass the original URL through unchanged,
 					//and display the error to the user. TODO.
-					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string url);
+					sscanf(query->unicode_data(),"%*shttp://preview.%s<",string shorturl);
 					//We have a response!
-					lineparts[pos]="http://"+url;
+					if (!shorturl) lineparts[pos]=url;
+					else lineparts[pos]="http://"+shorturl;
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
 				});},lambda(object query)
 				{
