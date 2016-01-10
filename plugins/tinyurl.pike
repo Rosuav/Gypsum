@@ -213,6 +213,7 @@ void tinify(object self,int response,array args)
 						G->G->tinyurl_error_text=query->unicode_data();
 						//Most importantly, we should simply keep the URL as-is.
 						lineparts[pos]=url;
+						say(subw, "%% TinyURL returned an error - explore G->G->tinyurl_error_text");
 					}
 					else lineparts[pos]="http://"+shorturl;
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
