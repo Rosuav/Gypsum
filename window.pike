@@ -489,6 +489,11 @@ void say(mapping subw,string|array msg,mixed ... args)
 	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
 	//it'll wrap at any color change as if it were a space. This is unideal, but it
 	//simplifies the code a bit.
+	//TODO: Wrap based on pixel width as measured by Pango, rather than character count.
+	//This will probably need to drag in some of point_to_char (maybe separate it out into
+	//two parts, one of which takes just a line and an X coordinate?). It would then solve
+	//the oddities of tab handling and such.
+	//TODO: Should pixel width be (allowed to be) entered in ens?
 	int wrap=persist["window/wrap"]; string wrapindent=persist["window/wrapindent"]||"";
 	int pos=0;
 	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
