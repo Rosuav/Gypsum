@@ -1055,6 +1055,7 @@ class establish_connection(string hostname,int port,function callback)
 	object dns;
 	array cbargs;
 	int errno; //If 0, no socket connections have failed - maybe it was DNS that failed instead.
+	string data_rcvd = "";
 
 	void cancel() {callback=0;} //Prevent further calls to the callback (eg if the user requests cancellation)
 	void connected()
@@ -1065,8 +1066,8 @@ class establish_connection(string hostname,int port,function callback)
 	}
 
 	//Having *something*, anything, as a socket-read callback seems to make the socket-disconnect
-	//callback functional. HUH?!?
-	void readable() {callback("Socket is bizarrely readable", @cbargs);}
+	//callback functional. HUH?!? So we have to snapshot the text for the caller, just in case.
+	void readable(mixed id,bytes data) {data_rcvd += data;}
 	void connfailed() {errno = sock->errno(); sock = 0; tryconn();}
 
 	void tryconn()

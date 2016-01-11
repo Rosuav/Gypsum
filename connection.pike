@@ -437,11 +437,11 @@ mapping connect(object display,mapping info)
 void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 {
 	if (stringp(status)) {say(conn->display, "%%% "+status); return;}
-	int errno = m_delete(conn, "establish")->errno; //De-floop
+	object est = m_delete(conn, "establish"); //De-floop
 	if (!status)
 	{
-		if (!errno) say(conn->display, "%%% Unable to resolve host name.");
-		else say(conn->display, "%%%%%% Error connecting to %s: %s [%d]", conn->worldname, strerror(errno), errno);
+		if (!est->errno) say(conn->display, "%%% Unable to resolve host name.");
+		else say(conn->display, "%%%%%% Error connecting to %s: %s [%d]", conn->worldname, strerror(est->errno), est->errno);
 		return;
 	}
 	conn->sock = status;
@@ -460,6 +460,7 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	//Not that that'll be likely - you'd have to "/update connection" while in the middle of establishing one -
 	//but it's pretty cheap to do these lookups, and it'd be a nightmare to debug if it were ever wrong.
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
+	G->G->connection->sockread(conn, est->data_rcvd);
 	G->G->sockets[conn->sock]=1;
 	ka(conn);
 }
