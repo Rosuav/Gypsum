@@ -1066,7 +1066,7 @@ class establish_connection(string hostname,int port,function callback)
 
 	//Having *something*, anything, as a socket-read callback seems to make the socket-disconnect
 	//callback functional. HUH?!?
-	void readable() {callback("Socket is bizarrely readable");}
+	void readable() {callback("Socket is bizarrely readable", @cbargs);}
 	void connfailed() {errno = sock->errno(); sock = 0; tryconn();}
 
 	void tryconn()
