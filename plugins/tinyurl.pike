@@ -214,7 +214,7 @@ void tinify(object self,int response,array args)
 						//Most importantly, we should simply keep the URL as-is.
 						lineparts[pos]=url;
 						say(subw, "%% TinyURL returned an error - retaining URL unchanged.");
-						say(subw, "%% TODO: Explore G->G->tinyurl_error_text and parse it.");
+						say(subw, "%% (TODO: Explore G->G->tinyurl_error_text and parse it.)");
 					}
 					else lineparts[pos]="http://"+shorturl;
 					if (!has_value(lineparts,0)) nexthook(subw,lineparts*"");
