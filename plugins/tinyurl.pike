@@ -192,7 +192,7 @@ void tinify(object self,int response,array args)
 		else if (has_prefix(url,"http://www.youtube.com/watch?v="))
 		{
 			//Cut it down to just "v=" and no parameters
-			url=(url/"&")[0]; //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
+			sscanf(url, "%s&", url); //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
 		}
 		if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
 		else
