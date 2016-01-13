@@ -194,11 +194,15 @@ void tinify(object self,int response,array args)
 			//Cut it down to just "v=" and no parameters
 			sscanf(url, "%s&", url); //Simple! Cheats a bit, but seems to work - v= is always the first part of the URL.
 		}
-		if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
+		if (String.width(url)>8)
+		{
+			say("%% Multibyte characters in URLs are not supported - ignoring URL.");
+			lineparts+=({url});
+		}
+		else if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
 		else
 		{
 			lineparts+=({0}); //Add a spot for the shorter URL.
-			//TODO: Cope with non-ASCII URLs. Possibly by throwing an error, as they're most likely to be invalid.
 			Protocols.HTTP.do_async_method("GET","http://tinyurl.com/create.php",(["url":url]),0,
 				Protocols.HTTP.Query()->set_callbacks(lambda(object query,int pos) {query->async_fetch(lambda()
 				{
