@@ -280,11 +280,17 @@ both messes at once.
 array(int) point_to_char(mapping subw,int x,int y)
 {
 	int line=point_to_line(subw,y);
-	string txt=line_text((line>=sizeof(subw->lines))?subw->prompt:subw->lines[line]);
+	return ({line, point_to_pos(subw, line, x)});
+}
+
+int point_to_pos(mapping subw, array|string|int line, int x)
+{
+	if (intp(line)) line = (line>=sizeof(subw->lines))?subw->prompt:subw->lines[line];
+	string txt=stringp(line) ? line : line_text(line);
 	object layout=subw->display->create_pango_layout(txt);
 	mapping pos=layout->xy_to_index((x-3)*1024,0);
 	destruct(layout);
-	if (!pos) return ({line,sizeof(txt)});
+	if (!pos) return sizeof(txt);
 	//In pos->index, we have a *byte* position. We need to convert this into
 	//a *character* position, as txt is Unicode. Pango counts bytes using
 	//UTF-8 under the covers; so let's do a rather ham-fisted byte->char
@@ -295,7 +301,7 @@ array(int) point_to_char(mapping subw,int x,int y)
 	int bytepos=pos->index;
 	int charpos=sizeof(utf8_to_string(string_to_utf8(txt[..bytepos-1])[..bytepos-1]));
 	//Yeah, ouch.
-	return ({line,charpos});
+	return charpos;
 }
 
 string word_at_pos(mapping subw,int line,int col)
