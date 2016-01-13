@@ -197,7 +197,7 @@ void tinify(object self,int response,array args)
 		if (String.width(url)>8)
 		{
 			//Note that this will actually accept Latin-1 characters. But it's way quicker to just look for string width.
-			say("%% Multibyte characters in URLs are not supported - ignoring URL.");
+			say(subw, "%% Multibyte characters in URLs are not supported - ignoring URL.");
 			lineparts+=({url});
 		}
 		else if (sizeof(url)<=maxlen) lineparts+=({url}); //We've managed a "simple shortening"!
