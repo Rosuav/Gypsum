@@ -42,6 +42,7 @@ class editor(mapping(string:mixed) subw,string initial)
 		//	line - line number for initial cursor position, default 0 ie first line of file
 		//	col - column for initial cursor pos, default to 0 ie beginning of line; -1 for end of line
 		//	once_use - if present (value is ignored), the Send button becomes Save/Quit, and will be used once only
+		//	title - if present, is appended to the window title
 		//Note that the parameter values are all strings, despite several of them looking like integers. Explicitly intify if needed.
 		//Absence of a parameter is the only way to get an integer 0 from the mapping.
 		//TODO: "framing" parameters - start command, end command - which will then be kept out of the actual popup
@@ -57,7 +58,9 @@ class editor(mapping(string:mixed) subw,string initial)
 		string txt=subw && initial;
 		if (mixed ex=!txt && catch {txt=String.trim_all_whites(utf8_to_string(Stdio.read_file(initial)||""))+"\n";})
 			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded text files.\n\n"+describe_error(ex);
-		win->mainwindow=GTK2.Window((["title":"Pop-Out Editor","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
+		string title = "Gypsum Editor";
+		if (params->title) title += " - " + params->title;
+		win->mainwindow=GTK2.Window((["title":title, "type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
 			#ifndef NO_SOURCE_VIEW
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_Options")->set_submenu(win->optmenu=GTK2.Menu()
