@@ -59,7 +59,7 @@ function say=G->globals->say;
  * can potentially have a marked impact on performance.
  */
 #if constant(Charset)
-object cp1252=Charset.decoder("1252"); //Pike 8.0 and 8.1 have Charset at top-level; 8.1 has it nowhere else.
+object cp1252=Charset.decoder("1252"); //Pike 8.1 has Charset at top-level. (8.0 has both this and the 7.8 one, as aliases.)
 #else
 object cp1252=Locale.Charset.decoder("1252"); //Pike 7.8 has Charset hidden behind Locale, but otherwise equivalently functional
 #endif
