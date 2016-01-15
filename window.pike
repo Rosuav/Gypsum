@@ -495,15 +495,11 @@ void say(mapping subw,string|array msg,mixed ... args)
 	//Wrap msg into lines, making at least one entry. Note that, in current implementation,
 	//it'll wrap at any color change as if it were a space. This is unideal, but it
 	//simplifies the code a bit.
-	//TODO: Wrap based on pixel width as measured by Pango, rather than character count.
-	//This will probably need to drag in some of point_to_char (maybe separate it out into
-	//two parts, one of which takes just a line and an X coordinate?). It would then solve
-	//the oddities of tab handling and such.
-	//The calculation will be based on a specified character position to wrap at, using
-	//subw->charwidth; effectively, wrap position is specified as a number of ens.
+	//Width calculation is based on a number of ens as specified by the user.
 	//Note that this will still be a 'hard wrap'. The line will be broken according to the
 	//wrap width at the time it was received, NOT the time it gets displayed.
-	int wrap=persist["window/wrap"]; string wrapindent=persist["window/wrapindent"]||"";
+	int wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]);
+	string wrapindent = persist["window/wrapindent"] || "";
 	int pos=0;
 	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
 	{
@@ -520,9 +516,11 @@ void say(mapping subw,string|array msg,mixed ... args)
 			//Note that this will refuse to break at or within the wrapindent, on subsequent lines (to prevent an infinite loop).
 			if ((!wrappos || (sizeof(lines) && wrappos<=sizeof(wrapindent))) && !pos) wrappos=wrap;
 			cur[-1]=part[..wrappos-1];
-			msg=({msg[0]+([]),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
+			//Remove msg[0]->text as it will have changed - and also ensure we have a new mapping.
+			msg=({msg[0]-(<"text">),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
+			wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]);
 		}
-		lines+=({cur});
+		m_delete(cur[0], "text"); lines+=({cur});
 		i=pos=0;
 	}
 	subw->lines+=lines+({msg});
