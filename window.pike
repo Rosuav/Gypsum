@@ -501,6 +501,8 @@ void say(mapping subw,string|array msg,mixed ... args)
 	//the oddities of tab handling and such.
 	//The calculation will be based on a specified character position to wrap at, using
 	//subw->charwidth; effectively, wrap position is specified as a number of ens.
+	//Note that this will still be a 'hard wrap'. The line will be broken according to the
+	//wrap width at the time it was received, NOT the time it gets displayed.
 	int wrap=persist["window/wrap"]; string wrapindent=persist["window/wrapindent"]||"";
 	int pos=0;
 	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
