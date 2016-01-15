@@ -498,7 +498,7 @@ void say(mapping subw,string|array msg,mixed ... args)
 	//Width calculation is based on a number of ens as specified by the user.
 	//Note that this will still be a 'hard wrap'. The line will be broken according to the
 	//wrap width at the time it was received, NOT the time it gets displayed.
-	int wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]);
+	int wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 	string wrapindent = persist["window/wrapindent"] || "";
 	int pos=0;
 	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
@@ -518,7 +518,7 @@ void say(mapping subw,string|array msg,mixed ... args)
 			cur[-1]=part[..wrappos-1];
 			//Remove msg[0]->text as it will have changed - and also ensure we have a new mapping.
 			msg=({msg[0]-(<"text">),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
-			wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]);
+			wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 		}
 		m_delete(cur[0], "text"); lines+=({cur});
 		i=pos=0;
