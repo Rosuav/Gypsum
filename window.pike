@@ -1082,7 +1082,7 @@ class zadvoptions
 			"options":([0:"No",1:"Yes"]),
 		]),
 		"Wrap":(["path":"window/wrap","type":"int",
-			"desc":"Wrap text to the specified width (in characters). 0 to disable.",
+			"desc":"Wrap text to the specified width (in characters - measured by an 'n'). 0 to disable.",
 		]),
 		"Wrap indent":(["path":"window/wrapindent","default":"",
 			"desc":"Indent/prefix wrapped text with the specified text or number of spaces.",
