@@ -288,7 +288,7 @@ int point_to_pos(mapping subw, array|string|int line, int x)
 	if (intp(line)) line = (line>=sizeof(subw->lines))?subw->prompt:subw->lines[line];
 	string txt=stringp(line) ? line : line_text(line);
 	object layout=subw->display->create_pango_layout(txt);
-	mapping pos=layout->xy_to_index((x-3)*1024,0);
+	mapping pos=layout->xy_to_index(max((x-3)*1024,0),0); //Never let the position fall below zero!
 	destruct(layout);
 	if (!pos) return sizeof(txt);
 	//In pos->index, we have a *byte* position. We need to convert this into
