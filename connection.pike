@@ -233,6 +233,8 @@ void sockread(mapping conn,bytes data)
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
 	{
 		ansiread(conn,bytes_to_string(data),0); conn->readbuffer="\xff"+iac;
+		//Once we've seen at least one TELNET command from the server, begin the keep-alive.
+		if (!conn->seen_telnet) {conn->seen_telnet=1; ka(conn);}
 		switch (iac[0])
 		{
 			case IAC: ansiread(conn,"\xFF",0); conn->readbuffer=conn->readbuffer[2..]; break;
@@ -462,7 +464,6 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->connection->sockread(conn, est->data_rcvd);
 	G->G->sockets[conn->sock]=1;
-	ka(conn);
 }
 
 void create(string name)
