@@ -234,6 +234,7 @@ void sockread(mapping conn,bytes data)
 	{
 		ansiread(conn,bytes_to_string(data),0); conn->readbuffer="\xff"+iac;
 		//Once we've seen at least one TELNET command from the server, begin the keep-alive.
+		//Hopefully the server isn't waiting for us...
 		if (!conn->seen_telnet) {conn->seen_telnet=1; ka(conn);}
 		switch (iac[0])
 		{
