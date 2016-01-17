@@ -356,7 +356,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					->add(GTK2Table(({
 						({"Name",ef("name",12),0,0,"Char level",num("level",8)}),
 						({"Race",ef("race",8),"HD",rare(ef("race_hd")),"Experience",num("xp",8)}),
-						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",win->tnl=GTK2.Button()->add(calc("`+(@enumerate(level,1000,1000))-xp"))}),
+						({"Class",ef("class1",12),"Level",num("level1"),"To next lvl",win->tnl=GTK2.Button()->add(calc("(level && `+(@enumerate(level,1000,1000)))-xp"))}),
 						({"Class",ef("class2",12),"Level",num("level2"),"Size",select("size",({"Fine","Diminutive","Tiny","Small","Medium","Large","Huge","Gargantuan","Colossal"}))}),
 						({"Class",ef("class3",12),"Level",num("level3"),
 							"Grapple",calc(#"(string)(([
