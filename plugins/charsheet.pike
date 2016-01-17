@@ -294,7 +294,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			foreach ((array)symbols,string dep)
 				depends[dep]+=({f2});
 			f2(data,(<name>));
-		}) {++errors; werror("^^ %O\n",formula);} //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
+		}) {++errors; werror("%s\n^^ %O\n",describe_backtrace(ex),formula);} //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
 		return lbl;
 	}
 
