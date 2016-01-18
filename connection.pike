@@ -270,6 +270,8 @@ void sockread(mapping conn,bytes data)
 				{
 					//Any other TELNET commands inside subneg will be buggy unless they're IAC IAC doubling
 					//IAC followed by anything other than IAC or SE may cause broken behaviour.
+					//This loop can't be replaced with a simple sscanf(iac,"%s\xFF\xF0%s") as that would
+					//misparse a properly-doubled IAC followed by a data byte that happened to be 0xF0.
 					if (iac[i]==IAC && iac[++i]==SE) {subneg=iac[..i]; iac=iac[i+1..]; break;}
 				}
 				if (!subneg) return; //We don't have the complete subnegotiation. Wait till we do.
