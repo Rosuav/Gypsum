@@ -496,7 +496,7 @@ void say(mapping subw,string|array msg,mixed ... args)
 	//it'll wrap at any color change as if it were a space. This is unideal, but it
 	//simplifies the code a bit.
 	//Width calculation is based on a number of ens as specified by the user.
-	//Note that this will still be a 'hard wrap'. The line will be broken according to the
+	//Note that this is a 'hard wrap'. The line will be broken according to the
 	//wrap width at the time it was received, NOT the time it gets displayed.
 	int wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 	string wrapindent = persist["window/wrapindent"] || "";
