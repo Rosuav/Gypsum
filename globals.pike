@@ -844,7 +844,7 @@ int beep(int|void times)
  *
  * Will cache its response. This may cause problems, if the line can get
  * changed. Anything that mutates a line MUST m_delete(line[0],"text");
- * to wipe that cache. (See a couple of examples in window.pike.)
+ * to wipe that cache. (See a couple of examples in window.pike, esp say().)
  */
 string line_text(array line)
 {
