@@ -711,6 +711,9 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	for an infinitely-slow system.
 
 	TODO: Use microkernel.pike to stress-test some of this, eg with the zoneinfo and/or charsheet plugins.
+
+	CJA 20160120: Haven't seen this in quite a while now, and I'm pretty sure I've had Gypsum running for
+	multiple months. But I'm not throwing the notes away just yet.
 	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
