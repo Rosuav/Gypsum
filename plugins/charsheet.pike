@@ -198,7 +198,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	window completely when a note is added, which is ugly. Hrm. It'd really be better
 	to consume a top corner. Can I draw over an entry field somehow? Have another GTK
 	object on the same location (maybe one without an X window, and a child of the EF
-	if that's possible), on which I draw the overlay??
+	if that's possible), on which I draw the overlay?? TODO: Investigate get_style().
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
