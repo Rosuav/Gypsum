@@ -137,7 +137,8 @@ void textread(mapping conn,string data,int end_of_block)
 	//Note that properly-marked prompts (IAC GA) are handled in sockread(), so this is just for the ones the server didn't mark.
 
 	//Hack for Threshold RPG: "Pseudo-marked prompts". The server sends a specific bit of text that means it's more likely to be a prompt.
-	//This may need to become conn->prompt_suffix and world-configurable. Fortunately it's not TOO likely to have false positives.
+	//This may need to become conn->prompt_suffix and world-configurable. Fortunately it's not TOO likely to have false positives (though
+	//they do happen, even on Thresh itself).
 	string prompt_suffix = persist["prompt/suffix"] || "==> ";
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
