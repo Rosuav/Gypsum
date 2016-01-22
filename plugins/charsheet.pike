@@ -205,6 +205,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	Alternatively, use stock icons. I can't find a way to *remove* one, but setting a
 	stock icon for those with notes and then having a "muted" version for those where
 	notes have been removed should do. Next load, the muted icons will disappear.
+	-- See shed/stock_icons.pike and shed/draw_on_ef.pike for experiments.
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
