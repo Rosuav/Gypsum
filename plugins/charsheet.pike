@@ -206,6 +206,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	stock icon for those with notes and then having a "muted" version for those where
 	notes have been removed should do. Next load, the muted icons will disappear.
 	-- See shed/stock_icons.pike and shed/draw_on_ef.pike for experiments.
+	Use GTK2.STOCK_EDIT for "has note" and GTK2.STOCK_FILE for "has no note".
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
