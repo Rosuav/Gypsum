@@ -205,8 +205,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	Alternatively, use stock icons. I can't find a way to *remove* one, but setting a
 	stock icon for those with notes and then having a "muted" version for those where
 	notes have been removed should do. Next load, the muted icons will disappear.
-	-- See shed/stock_icons.pike and shed/draw_on_ef.pike for experiments.
+	-- See shed/{stock_icons,draw_on_ef,icon_press}.pike for experiments.
 	Use GTK2.STOCK_EDIT for "has note" and GTK2.STOCK_FILE for "has no note".
+	Making the stock icons clickable is easy, but due to a flaw in older Pikes, it'll
+	spew GTK criticals. I hope this doesn't crash anything. Once we have a stable 8.0
+	Windows build, that won't be a problem, so I can just recommend that people use a
+	different method of opening up the note (eg F2).
 	*/
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
