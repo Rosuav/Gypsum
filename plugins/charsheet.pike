@@ -181,38 +181,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}
 	}
 
-	/* TODO: Make these entryfields able to record notes.
-	If a note is recorded against a field, it needs to have a marker (maybe a colored
-	triangle on one corner, like GDocs?), and pressing F2 should show that note. Also
-	notes can be created with F2, so what it really means is that a non-blank note is
-	represented in some way. Ideally, the note should record who put it there and, if
-	possible, when (and/or when it was last edited).
-
-	One possible implementation would be to put the Entry inside an Alignment, inside
-	an EventBox, inside an enigma. The Alignment supports padding (EventBoxes don't),
-	the EventBox supports color changing (the Alignment doesn't), so the sum total is
-	an Entry with a bit of color beside it (as many pixels as the Alignment's padding
-	requests). The color of that padding could say "has note" etc. This would consume
-	a lot of space if used everywhere, but if it's used only when something has notes
-	attached to it, it would be reasonable. On the flip side, that would relayout the
-	window completely when a note is added, which is ugly. Hrm. It'd really be better
-	to consume a top corner. Can I draw over an entry field somehow? Have another GTK
-	object on the same location (maybe one without an X window, and a child of the EF
-	if that's possible), on which I draw the overlay?? TODO: Investigate get_style(),
-	which theoretically might be able to let me draw on arbitrary windows. I have yet
-	to have success with it though.
-
-	Alternatively, use stock icons. I can't find a way to *remove* one, but setting a
-	stock icon for those with notes and then having a "muted" version for those where
-	notes have been removed should do. Next load, the muted icons will disappear.
-	-- See shed/{stock_icons,draw_on_ef,icon_press}.pike for experiments.
-	Use GTK2.STOCK_EDIT for "has note" and GTK2.STOCK_FILE for "has no note".
-	-- Turns out it IS possible, just wasn't documented. No muted icons needed.
-	Making the stock icons clickable is easy, but due to a flaw in older Pikes, it'll
-	spew GTK criticals. I hope this doesn't crash anything. Once we have a stable 8.0
-	Windows build, that won't be a problem, so I can just recommend that people use a
-	different method of opening up the note (eg F2).
-	*/
+	mapping(GTK2.Widget:string) ef_kwd = ([]); //As with noex(), this can be done with [sg]et_data() in recent Pikes.
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
 		if (!width_or_props) width_or_props=5;
@@ -220,6 +189,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		object ret=win[kwd]=GTK2.Entry(width_or_props)->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
 		ret->signal_connect("focus-in-event",ensurevisible);
+		ret->signal_connect("icon-press", edit_notes); //Note that older Pikes have assertion errors here. If this causes segfaults, recommend F2 instead.
+		if (data["note_"+kwd] && data["note_"+kwd]!="") ret->set_icon_from_stock(GTK2.ENTRY_ICON_SECONDARY,GTK2.STOCK_EDIT);
+		ef_kwd[ret] = kwd;
 		return ret;
 	}
 
@@ -923,9 +895,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 	GTK2.Widget Page_Help()
 	{
+		data["note_help_notes"]="Demo note";
 		return GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Styles")->add(two_column(({
 					"This is a string entry field. It takes words.",ef("help_ef"),
+					"This entry field has notes attached. Press F2 to edit notes.",ef("help_notes"),
 					"This is a numeric entry field.",num("help_num"),
 					"This is a rarely-used field. You'll normally leave it blank.",rare(num("help_rare")),
 					"This field is calculated as the sum of the above two.",calc("help_num+help_rare"),
@@ -949,7 +923,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		GTK2.Notebook nb=GTK2.Notebook();
 		foreach (pages, string page)
 			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))->add(nb);
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))
+			->add(nb)
+			->add_accel_group(GTK2.AccelGroup()
+				->connect(0xFFBF,0,0,edit_notes_f2,0)
+			)
+		;
 		::makewindow();
 	}
 
@@ -957,6 +936,42 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	{
 		charsheets[owner][this]=0;
 		destruct();
+	}
+
+	void edit_notes_f2() {edit_notes(win->mainwindow->get_focus());}
+	class edit_notes(object ef)
+	{
+		inherit window;
+		string kwd;
+		void create()
+		{
+			kwd = ef_kwd[ef];
+			if (!kwd) {MessageBox(0,0,GTK2.BUTTONS_OK,"Unable to store notes there",charsheet::win->mainwindow); return;}
+			::create();
+		}
+
+		void makewindow()
+		{
+			win->_parentwindow = charsheet::win->mainwindow;
+			win->mainwindow=GTK2.Window((["title":"Notes for "+kwd,"modal":1]))->add(GTK2.Vbox(0,0)
+				->add(win->mle=MultiLineEntryField()
+					->set_text(data["note_"+kwd]||"")
+					->set_size_request(200,150)
+				)
+				->pack_start(GTK2.HbuttonBox()
+					->add(win->close=GTK2.Button((["label":GTK2.STOCK_CLOSE,"use-stock":1])))
+				,0,0,0)
+			);
+		}
+
+		void sig_close_clicked()
+		{
+			string txt = win->mle->get_text();
+			set_value("note_"+kwd, txt);
+			if (txt == "") ef->set_icon_from_pixbuf(GTK2.ENTRY_ICON_SECONDARY,0);
+			else ef->set_icon_from_stock(GTK2.ENTRY_ICON_SECONDARY,GTK2.STOCK_EDIT);
+			closewindow();
+		}
 	}
 
 	//Level up assistant
