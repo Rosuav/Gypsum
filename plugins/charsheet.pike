@@ -207,6 +207,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	notes have been removed should do. Next load, the muted icons will disappear.
 	-- See shed/{stock_icons,draw_on_ef,icon_press}.pike for experiments.
 	Use GTK2.STOCK_EDIT for "has note" and GTK2.STOCK_FILE for "has no note".
+	-- Turns out it IS possible, just wasn't documented. No muted icons needed.
 	Making the stock icons clickable is easy, but due to a flaw in older Pikes, it'll
 	spew GTK criticals. I hope this doesn't crash anything. Once we have a stable 8.0
 	Windows build, that won't be a problem, so I can just recommend that people use a
