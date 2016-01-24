@@ -143,12 +143,15 @@ class menu_clicked
 		}))));
 		win->mainwindow=GTK2.Window((["title":"Time Zone Conversion"]))->add(box
 			->add(GTK2.HbuttonBox()
-				->add(win->set_now=GTK2.Button("Set today"))
+				->add(win->pick_date=GTK2.Button("Pick date"))
 				->add(win->config=GTK2.Button("Configure"))
 				->add(GTK2.HbuttonBox()->add(stock_close()))
 			)
 		);
-		sig_set_now_clicked(); //Before signals get connected.
+		//Before signals get connected, set to current time.
+		int tm=time();
+		set_rl_time(tm);
+		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
 		::makewindow();
 	}
 
@@ -232,11 +235,31 @@ class menu_clicked
 		}
 	}
 
-	void sig_set_now_clicked()
+	class sig_pick_date_clicked
 	{
-		int tm=time();
-		set_rl_time(tm);
-		set_th_time(persist["threshtime/sync_th"]+(tm-persist["threshtime/sync_rl"])/5);
+		inherit window;
+		string zone;
+		void create() {::create();}
+		void makewindow()
+		{
+			array z = zones - ({"thresh"}); //The picker uses the first non-Thresh time you have selected ("local", by default)
+			if (!sizeof(z)) {MessageBox(0,0,GTK2.BUTTONS_OK,"Need RL time for the picker",menu_clicked::win->mainwindow); return;}
+			zone = z[0];
+			win->_parentwindow = menu_clicked::win->mainwindow;
+			win->mainwindow=GTK2.Window((["title":"Date picker"]))->add(GTK2.Vbox(0,0)
+				->add(win->calendar=GTK2.Calendar())
+				->pack_start(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
+			);
+		}
+		void sig_calendar_day_selected()
+		{
+			mapping d=win->calendar->get_date();
+			mapping win=menu_clicked::win;
+			win[zone+"_year"]->set_text((string)d->year);
+			win[zone+"_mon"]->set_active(d->month);
+			win[zone+"_day"]->set_text((string)d->day);
+		}
+		void sig_calendar_day_selected_double_click() {closewindow();}
 	}
 
 	void convert_th()
