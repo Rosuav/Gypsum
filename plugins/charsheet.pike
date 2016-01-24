@@ -958,19 +958,17 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					->set_text(data["note_"+kwd]||"")
 					->set_size_request(200,150)
 				)
-				->pack_start(GTK2.HbuttonBox()
-					->add(win->close=GTK2.Button((["label":GTK2.STOCK_CLOSE,"use-stock":1])))
-				,0,0,0)
+				->pack_start(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
 		}
 
-		void sig_close_clicked()
+		void closewindow()
 		{
 			string txt = win->mle->get_text();
 			set_value("note_"+kwd, txt);
 			if (txt == "") ef->set_icon_from_pixbuf(GTK2.ENTRY_ICON_SECONDARY,0);
 			else ef->set_icon_from_stock(GTK2.ENTRY_ICON_SECONDARY,GTK2.STOCK_EDIT);
-			closewindow();
+			::closewindow();
 		}
 	}
 
