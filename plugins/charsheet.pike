@@ -923,7 +923,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		GTK2.Notebook nb=GTK2.Notebook();
 		foreach (pages, string page)
 			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
-		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)"),"type":GTK2.WINDOW_TOPLEVEL]))
+		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)")]))
 			->add(nb)
 			->add_accel_group(GTK2.AccelGroup()
 				->connect(0xFFBF,0,0,edit_notes_f2,0)
