@@ -60,7 +60,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			txt="Error reading "+initial+" - this editor works solely with UTF-8 encoded text files.\n\n"+describe_error(ex);
 		string title = "Gypsum Editor";
 		if (params->title) title += " - " + params->title;
-		win->mainwindow=GTK2.Window((["title":title, "type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":title]))->add(GTK2.Vbox(0,0)
 			#ifndef NO_SOURCE_VIEW
 			->pack_start(GTK2.MenuBar()
 				->add(GTK2.MenuItem("_Options")->set_submenu(win->optmenu=GTK2.Menu()
