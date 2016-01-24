@@ -828,7 +828,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				int bonusspells = (int)data[stat+"_mod"] + 4;
 				depends[stat] += ({spells_per_day_box});
 				depends[stat+"_mod"] += ({spells_per_day_box});
-				foreach (info[lvl];int i;string|int spells) if (intp(spells))
+				foreach (info[lvl];int i;string|int spells) if (intp(spells)) //A blank slot indicates complete absence of spells at that tier (but 0 means "only bonus spells")
 				{
 					int tierbonus = (bonusspells-i)/4;
 					if (!i || tierbonus < 0) tierbonus = 0;
