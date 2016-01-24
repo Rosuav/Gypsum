@@ -953,7 +953,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		void makewindow()
 		{
 			win->_parentwindow = charsheet::win->mainwindow;
-			win->mainwindow=GTK2.Window((["title":"Notes for "+kwd,"modal":1]))->add(GTK2.Vbox(0,0)
+			win->mainwindow=GTK2.Window((["title":"Notes for "+kwd]))->add(GTK2.Vbox(0,0)
 				->add(win->mle=MultiLineEntryField()
 					->set_text(data["note_"+kwd]||"")
 					->set_size_request(200,150)
