@@ -115,7 +115,7 @@ class menu_clicked
 
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes","type":GTK2.WINDOW_TOPLEVEL]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes"]))->add(GTK2.Vbox(0,0)
 			->add(GTK2Table(({
 				({bighead("Element"),bighead("Owner"),bighead("Notes")->set_alignment(0.0,0.5),0,0,0}),
 				({subhead("Persons"),"",""}),
