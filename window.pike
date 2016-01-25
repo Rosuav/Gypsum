@@ -1744,7 +1744,7 @@ void save_html_response(object self,int btn)
 	}
 	f->write("</code></pre><hr></body></html>\n");
 	f->close();
-	MessageBox(0,GTK2.MESSAGE_INFO,GTK2.BUTTONS_OK,"Saved to "+fn,mainwindow);
+	MessageBox(0,0,GTK2.BUTTONS_OK,"Saved to "+fn,mainwindow);
 }
 
 constant file_closewindow="E_xit";
