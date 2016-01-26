@@ -978,7 +978,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		inherit window;
 		void create() {::create();}
 
-		//Note that the BAB arrays start with a 0 entry for having zero levels in that class.
+		//Note that the BAB and save arrays start with a 0 entry for having zero levels in that class.
 		//This allows notations involving the difference between the current level and the previous.
 		constant bab=([
 			"Good":enumerate(21,1), //Going beyond level 20 should work easily enough if you need epic levels.
