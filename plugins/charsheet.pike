@@ -1108,7 +1108,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				{
 					string cls=String.sillycaps(data["class"+i] || "");
 					if (has_value(all_classes,cls)) {cur_cls+=({cls}); all_classes-=({cls});}
-					if (cls=="Fighter" && !(1&(int)data["level"+i])) classes->Fighter->dontforget="";
+					if (cls=="Fighter" && !(1&(int)data["level"+i])) classes->Fighter->dontforget=""; //Fighter bonus feat every second level only
 				}
 				if (sizeof(cur_cls)) all_classes=cur_cls+({""})+all_classes;
 				//Precalculate some things for convenience
