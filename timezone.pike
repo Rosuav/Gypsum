@@ -1,8 +1,7 @@
-/* Debug harness in potentia.
+/* Stand-alone driver for the timezone converter
 
-TODO: Actually make this work reliably for stress-testing plugins.
-
-TODO: Optionally neuter persist[] so it won't save to disk, for safety.
+Most of the 'guts' of the code is in plugins/zoneinfo.pike; some important code is
+also in globals.pike.
 */
 mapping G=(["window":([])]);
 
