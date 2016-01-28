@@ -13,6 +13,7 @@ int main()
 	GTK2.setup_gtk();
 	object p=(object)"persist";
 	object g=(object)"globals";
+	//Nerf a couple of inheritables that we don't need (minimizes the differences inside zoneinfo)
 	add_constant("plugin_menu",class{});
 	add_constant("statusevent",class{mapping statustxt=([]); void setstatus(string txt) {}});
 	object o=((program)"plugins/zoneinfo")("plugins/zoneinfo.pike");
