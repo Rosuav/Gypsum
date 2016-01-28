@@ -17,6 +17,7 @@ int main()
 	add_constant("plugin_menu",class{});
 	add_constant("statusevent",class{mapping statustxt=([]); void setstatus(string txt) {}});
 	object o=((program)"plugins/zoneinfo")("plugins/zoneinfo.pike");
+	//TODO: Find some other way to detect "no more windows" so we don't need to inject a signal
 	o->menu_clicked()->win->mainwindow->signal_connect("destroy",lambda() {exit(0);});
 	return -1;
 }
