@@ -16,7 +16,8 @@ not for predicting in-game events such as bank hours.
 //be tricky, but we can at least provide "Stash" as another pseudo-timezone.
 
 //This can be invoked as a stand-alone application via timezone.pike (the
-//microkernel).
+//microkernel). Ideally, there should be as little as possible special code
+//to handle this case. So far that has not been attained, but it's close.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined?
