@@ -20,7 +20,7 @@ not for predicting in-game events such as bank hours.
 //to handle this case. So far that has not been attained, but it's close.
 inherit hook;
 inherit plugin_menu;
-inherit statusevent; //TODO: Should this use the maxwidth variant? If so, how should the two variants be combined? Without Python-style mixins, maybe it's best to have one statusbar inheritable??
+inherit statusevent; constant fixedwidth = 1;
 
 constant plugin_active_by_default = 1;
 
