@@ -200,7 +200,7 @@ class menu_clicked
 			win->mainwindow=GTK2.Window((["title":"Choose time zones for display"]))->add(GTK2.Vbox(0,0)
 				->add(two_column(({
 					GTK2.Label("Time zones should be taken from the tzdata list."),0,
-					//TODO: Make a timezone picker, in two parts (pick a region (or "Special" for local and Thresh), then a city)
+					//TODO: Make a timezone picker, in two parts (pick a region, then a city, or "Special/Local" and "Special/Thresh")
 					//And somehow, make that either work for both sbzone and convzone, or not be confusing. Hmm.... hmm.
 					//Maybe have a list box of active ones, with a tick box for the one that goes on statuszone?
 					//Maybe even a configdlg, although that's kinda overkill.
