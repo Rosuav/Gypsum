@@ -382,10 +382,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 							))
 						)
 						->add(GTK2.Frame("Saves")->add(GTK2Table(({
-							({"","Base","Ability","Misc","Total"}),
-							({"Fort",num("fort_base"),calc("CON_mod"),rare(num("fort_misc")),calc("fort_base+CON_mod+fort_misc","fort_save")}),
-							({"Refl",num("refl_base"),calc("DEX_mod"),rare(num("refl_misc")),calc("refl_base+DEX_mod+refl_misc","refl_save")}),
-							({"Will",num("will_base"),calc("WIS_mod"),rare(num("will_misc")),calc("will_base+WIS_mod+will_misc","will_save")}),
+							({"","Base","Ability","Eq","Misc","Total"}),
+							({"Fort",num("fort_base"),calc("CON_mod"),num("fort_eq"),rare(num("fort_misc")),calc("fort_base+CON_mod+fort_eq+fort_misc","fort_save")}),
+							({"Refl",num("refl_base"),calc("DEX_mod"),num("refl_eq"),rare(num("refl_misc")),calc("refl_base+DEX_mod+refl_eq+refl_misc","refl_save")}),
+							({"Will",num("will_base"),calc("WIS_mod"),num("will_eq"),rare(num("will_misc")),calc("will_base+WIS_mod+will_eq+will_misc","will_save")}),
 						}))))
 					)
 				)
