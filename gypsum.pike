@@ -118,7 +118,7 @@ int main(int argc,array(string) argv)
 		if (config==1 || (!config && dflt)) add_constant("COMPAT_"+upper_case(kwd),1);
 	}
 
-	GTK2.setup_gtk();
+	GTK2.setup_gtk(({"Gypsum"}));
 	//These are initialized in dependency order. Everyone uses globals, window uses connection::send (which is
 	//actually circular, but connection has a patch hook for say), and plugins (loaded by window) depend on core.
 	bootstrap("globals.pike");
