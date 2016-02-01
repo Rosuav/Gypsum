@@ -204,6 +204,7 @@ class menu_clicked
 					//And somehow, make that either work for both sbzone and convzone, or not be confusing. Hmm.... hmm.
 					//Maybe have a list box of active ones, with a tick box for the one that goes on statuszone?
 					//Maybe even a configdlg, although that's kinda overkill.
+					//Should "Special/local" be translated into just "local", or should that become the standard format?
 					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"UTC"),
 					"Converter timezones",win->convzone=GTK2.Entry()->set_width_chars(30)->set_text(zones*" "),
 				})))
