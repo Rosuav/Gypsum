@@ -125,7 +125,8 @@ constant menu_label="Time zone converter";
 class menu_clicked
 {
 	inherit window;
-	array(string) zones=(persist["threshtime/zones"]||"local America/New_York UTC Thresh")/" ";
+	//I can't decide whether it's better to separate with spaces (as per the example) or newlines. Accepting both for now.
+	array(string) zones=replace(persist["threshtime/zones"]||"local America/New_York UTC Thresh","\n"," ")/" "-({""});
 	void create() {::create();}
 
 	GTK2.Entry ef(string name,int|void width)
@@ -197,17 +198,38 @@ class menu_clicked
 
 		void makewindow()
 		{
+			object store = win->store = GTK2.TreeStore(({"string", "string"}));
+			mapping(string:GTK2.TreeIter) regions=([]);
+			store->set_row(store->append(), ({"local - your local time", "local"}));
+			store->set_row(store->append(), ({"Thresh - in-game time in Threshold RPG", "Thresh"}));
+			foreach (sort(Calendar.TZnames.zonenames()), string zone)
+			{
+				array(string) parts = zone/"/"; //eg "America/New_York", "Australia/Melbourne", "America/Argentina/Buenos_Aires"
+				object lastreg = UNDEFINED;
+				for (int i=0;i<sizeof(parts);++i)
+				{
+					string region = parts[..i] * "/";
+					if (!regions[region])
+						store->set_value(regions[region] = store->append(lastreg), 0, parts[i]);
+					lastreg = regions[region];
+				}
+				store->set_value(lastreg, 1, zone); //Set column 1 only on the leaf nodes.
+			}
 			win->mainwindow=GTK2.Window((["title":"Choose time zones for display"]))->add(GTK2.Vbox(0,0)
-				->add(two_column(({
-					GTK2.Label("Time zones should be taken from the tzdata list."),0,
-					//TODO: Make a timezone picker, in two parts (pick a region, then a city, or "Special/Local" and "Special/Thresh")
-					//And somehow, make that either work for both sbzone and convzone, or not be confusing. Hmm.... hmm.
-					//Maybe have a list box of active ones, with a tick box for the one that goes on statuszone?
-					//Maybe even a configdlg, although that's kinda overkill.
-					//Should "Special/local" be translated into just "local", or should that become the standard format?
-					"Status bar timezone",win->sbzone=GTK2.Entry()->set_text(persist["threshtime/statuszone"]||"UTC"),
-					"Converter timezones",win->convzone=GTK2.Entry()->set_width_chars(30)->set_text(zones*" "),
-				})))
+				->add(GTK2.Frame("Status bar timezone")->add(
+					win->sbzone=GTK2.Entry()
+						->set_text(persist["threshtime/statuszone"]||"UTC")
+				))
+				->add(GTK2.Frame("Converter timezones")->add(GTK2.ScrolledWindow()
+					->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
+					->add(win->convzone=MultiLineEntryField()->set_size_request(100,100)->set_text(zones*"\n"))
+				))
+				->add(GTK2.ScrolledWindow()
+					->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
+					->add(win->timezones=GTK2.TreeView(store)->set_size_request(400,250)
+						->append_column(GTK2.TreeViewColumn("Available regions - double-click to add",GTK2.CellRendererText(),"text",0))
+					)
+				)
 				->add(GTK2.HbuttonBox()
 					->add(win->pb_ok=GTK2.Button("OK"))
 					->add(stock_close())
@@ -216,13 +238,23 @@ class menu_clicked
 			::makewindow();
 		}
 
+		void sig_timezones_row_activated(object self,object iter,object col,mixed arg)
+		{
+			iter = win->store->get_iter(iter); //It actually comes in as a TreePath, which isn't very useful.
+			string tz = win->store->get_value(iter, 1);
+			if (tz=="") return; //TODO: Don't be silent
+			string zones = win->convzone->get_text();
+			if (zones!="" && zones[-1]!='\n') zones += "\n";
+			win->convzone->set_text(zones + tz);
+		}
+
 		void sig_pb_ok_clicked()
 		{
 			multiset(string) validzones=(multiset)(Calendar.TZnames.zonenames()+({"Thresh","local"})+indices(Calendar.TZnames.abbr2zones));
 			string convzone=win->convzone->get_text();
 			string sbzone=win->sbzone->get_text();
 			if (!validzones[sbzone]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Status bar timezone not recognized.",win->mainwindow); return;}
-			foreach (convzone/" ",string z) if (!validzones[z]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Timezone "+z+" not recognized.",win->mainwindow); return;}
+			foreach (convzone/"\n",string z) if (!validzones[z]) {MessageBox(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Timezone "+z+" not recognized.",win->mainwindow); return;}
 			persist["threshtime/zones"]=convzone;
 			persist["threshtime/statuszone"]=sbzone;
 			closewindow();
