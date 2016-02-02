@@ -200,8 +200,10 @@ class menu_clicked
 		{
 			object store = win->store = GTK2.TreeStore(({"string", "string"}));
 			mapping(string:GTK2.TreeIter) regions=([]);
-			store->set_row(store->append(), ({"local - your local time", "local"}));
-			store->set_row(store->append(), ({"Thresh - in-game time in Threshold RPG", "Thresh"}));
+			object special = store->append(); store->set_value(special, 0, "Special");
+			store->set_row(store->append(special), ({"local - your local time", "local"}));
+			store->set_row(store->append(special), ({"UTC - Coordinated Universal Time", "UTC"}));
+			store->set_row(store->append(special), ({"Thresh - in-game time in Threshold RPG", "Thresh"}));
 			foreach (sort(Calendar.TZnames.zonenames()), string zone)
 			{
 				array(string) parts = zone/"/"; //eg "America/New_York", "Australia/Melbourne", "America/Argentina/Buenos_Aires"
