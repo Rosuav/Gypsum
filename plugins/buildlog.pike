@@ -19,6 +19,7 @@ int process(string param,mapping(string:mixed) subw)
 	switch (param)
 	{
 		case "on": case "activate":
+			//Note that the real work happens in window.pike - this just sets the flag saying "yes, log please".
 			if (G->G->buildlog) say(subw,"%% Build log already active, '/buildlog off' to deactivate.");
 			else {G->G->buildlog=([]); say(subw,"%% Build log activated, '/buildlog off' to deactivate.");}
 			return 1;
