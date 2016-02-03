@@ -125,7 +125,7 @@ constant menu_label="Time zone converter";
 class menu_clicked
 {
 	inherit window;
-	//I can't decide whether it's better to separate with spaces (as per the example) or newlines. Accepting both for now.
+	//Previously the zones were separated by spaces, but now they're separated by newlines. Accept either.
 	array(string) zones=replace(persist["threshtime/zones"]||"local America/New_York UTC Thresh","\n"," ")/" "-({""});
 	void create() {::create();}
 
