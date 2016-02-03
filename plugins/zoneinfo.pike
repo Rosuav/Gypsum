@@ -96,10 +96,9 @@ int output(mapping(string:mixed) subw,string line)
 	}
 }
 
-//Update the display with the current time
 void showtime()
 {
-	remove_call_out(statustxt->ticker); statustxt->ticker=call_out(this_function,1);
+	statustxt->ticker=call_out(this_function,1);
 	string zone=persist["threshtime/statuszone"] || "UTC";
 	if (zone=="Thresh")
 	{
@@ -346,5 +345,5 @@ void create(string name)
 	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1399531774; persist["threshtime/sync_th"]=205512058;}
 	statustxt->tooltip="Current date/time - double-click for converter";
 	::create(name);
-	showtime();
+	remove_call_out(statustxt->ticker); showtime();
 }
