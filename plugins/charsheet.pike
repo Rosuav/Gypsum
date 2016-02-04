@@ -28,14 +28,8 @@ mapping(string:multiset(object)) charsheets;
 //done by sending the regular 'roll alias' command, even); then things like saves
 //could use different dice rolls for different systems, without hacks.
 /* Current server-side roll alias creation looks like this; ra is roll aliases, cs is
-charsheet, and both are aliases for existing mappings.
-				ra->init=sprintf("d20%+d",(int)cs->init);
-				foreach ("STR DEX INT WIS CON CHA"/" ",string kwd)
-					ra[kwd]=sprintf("d20%+d",(int)cs[kwd+"_mod"]);
-				ra->grapple=replace("d20+"+cs->grapple,"+-","-");
-				ra["Fort save"]=sprintf("d20%+d",(int)cs->fort_save);
-				ra["Refl save"]=ra["Reflex save"]=sprintf("d20%+d",(int)cs->refl_save);
-				ra["Will save"]=sprintf("d20%+d",(int)cs->will_save);
+charsheet, and both are aliases for existing mappings. Most aliases are handled by the
+automatic system that simply takes the value and puts it after "d20+".
 				multiset(string) done_kwd=(<>);
 				foreach (sort(indices(cs)),string kwd)
 				{
@@ -47,8 +41,6 @@ charsheet, and both are aliases for existing mappings.
 							if (string val=cs[kwd+"_"+mode]) ra[rollkw+mode]=val;
 						if (string val=cs[kwd+"_hit"]) ra[rollkw+"to-hit"]=ra[rollkw+"to-crit"]=val;
 					}
-					else if (sscanf(kwd,"skill_%s",string kw))
-						ra[kw]=sprintf("d20%+d",(int)cs[kwd]);
 				}
 */
 //Alias definitions could be done like this. Each braced token becomes a dependency; if it
@@ -65,6 +57,9 @@ charsheet, and both are aliases for existing mappings.
 //automatically. Some aliases may therefore be unnecessary; for instance, instead of "roll STR"
 //you could use "roll d20+STR", which works without any extra effort.
 //Additionally, this can allow skills to be simply "roll d20+skill_Open_Lock", and thus static.
+//Even better: As of 20160204, the MH roll engine can handle "roll STR" (case-folded) to become
+//"roll d20+STR", and even handles skill checks and stuff. So all that would be needed here
+//would be attacks.
 mapping(string:string) aliases=([
 	"init":"d20+{init}",
 	"grapple":"d20+{grapple}",
