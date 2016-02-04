@@ -27,7 +27,7 @@ mapping(string:multiset(object)) charsheets;
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
 //could use different dice rolls for different systems, without hacks.
-/* Current server-side roll alias creation actually doesn't do much - it just creates named
+/* Current server-side roll alias creation actually does very little - it just creates named
 aliases for the weapons, using "{attack_1} to-hit" as an alias for "attack_1_hit" (literally
 that string - it gets reparsed elsewhere). It also cleans out any that used to be there. So
 the aliases you have are actually quite few in number and simple in design. Everything else
