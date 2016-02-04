@@ -27,45 +27,15 @@ mapping(string:multiset(object)) charsheets;
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
 //could use different dice rolls for different systems, without hacks.
-/* Current server-side roll alias creation looks like this; ra is roll aliases, cs is
-charsheet, and both are aliases for existing mappings. Most aliases are handled by the
-automatic system that simply takes the value and puts it after "d20+".
-				multiset(string) done_kwd=(<>);
-				foreach (sort(indices(cs)),string kwd)
-				{
-					if (sscanf(kwd,"attack_%s",string kw) && !has_value(kw,"_"))
-					{
-						if (done_kwd[kw]) continue; done_kwd[kw]=1; //First one found wins.
-						string rollkw=cs[kwd]||""; if (rollkw!="") rollkw+=" ";
-						foreach (({"hit","dmg","crit"}),string mode)
-							if (string val=cs[kwd+"_"+mode]) ra[rollkw+mode]=val;
-						if (string val=cs[kwd+"_hit"]) ra[rollkw+"to-hit"]=ra[rollkw+"to-crit"]=val;
-					}
-				}
+/* Current server-side roll alias creation actually doesn't do much - it just creates named
+aliases for the weapons, using "{attack_1} to-hit" as an alias for "attack_1_hit" (literally
+that string - it gets reparsed elsewhere). It also cleans out any that used to be there. So
+the aliases you have are actually quite few in number and simple in design. Everything else
+is handled by one simple system: "roll init" becomes "roll d20+{init}" where {init} is the
+value of your charsheet's "init" field (and the "d20+" is elided if the field includes any
+non-numerics). Once I have support for some other system here, we can look at alternative
+ways of implementing that on the server (maybe a custom template to replace "d20+%s"?).
 */
-//Alias definitions could be done like this. Each braced token becomes a dependency; if it
-//changes, the alias is rewritten. Any instance of "+-" gets replaced with "-" for readability.
-//Alternatively: Handle aliases by keeping a local record of what we think the server has. Any
-//time anything gets changed, zip through the alias definitions, see if any appears to be now
-//different from what it was, and if so, submit the change. Would require either querying the
-//server on charsheet opening, or assuming no aliases at first, and updating lots of them on
-//first edit. Querying would be better; we need a machine-readable dump of aliases - or maybe
-//they should simply be auto-provided as part of the charsheet load blob. Alternatively, _only_
-//update them when something changes, which means you won't get a bunch of pointless aliases
-//the moment you use the charsheet for anything.
-//NOTE: As of 20151108, the MH roll engine has been upgraded to better handle charsheet entries
-//automatically. Some aliases may therefore be unnecessary; for instance, instead of "roll STR"
-//you could use "roll d20+STR", which works without any extra effort.
-//Additionally, this can allow skills to be simply "roll d20+skill_Open_Lock", and thus static.
-//Even better: As of 20160204, the MH roll engine can handle "roll STR" (case-folded) to become
-//"roll d20+STR", and even handles skill checks and stuff. So all that would be needed here
-//would be attacks.
-mapping(string:string) aliases=([
-	"init":"d20+{init}",
-	"grapple":"d20+{grapple}",
-	"Fort save":"d20+{fort_save}", //Renamings might help
-	//plus skills and attacks
-]);
 
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
@@ -82,14 +52,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		if (!charsheets[owner]) charsheets[owner]=(<>);
 		charsheets[owner][this]=1;
 		::create(); //No name. Each one should be independent.
-		foreach (aliases;string alias;string expansion)
-		{
-			if (sscanf(expansion,"%{%*s{%s}%}",array deps)) foreach (deps,[string dep])
-			{
-				//TODO: Add a dependency - update 'alias' whenever 'dep' changes
-				//Maybe aliases should be callable objects, rather than lambda functions - might be easier.
-			}
-		}
 		if (errors) say(subw,"%%%% %d load-time errors - see console for details",errors);
 	}
 
