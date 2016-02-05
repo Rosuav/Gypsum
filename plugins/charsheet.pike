@@ -146,7 +146,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		object ret=win[kwd]=GTK2.Entry(width_or_props)->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
 		ret->signal_connect("focus-in-event",ensurevisible);
-		ret->signal_connect("icon-press", edit_notes); //Note that older Pikes have assertion errors here. If this causes segfaults, recommend F2 instead.
+		ret->signal_connect("icon-press", edit_notes); //Note that older Pikes have assertion errors on the click event. If this causes segfaults, recommend F2 instead.
 		if (data["note_"+kwd] && data["note_"+kwd]!="") ret->set_icon_from_stock(GTK2.ENTRY_ICON_SECONDARY,GTK2.STOCK_EDIT);
 		ef_kwd[ret] = kwd;
 		return ret;
