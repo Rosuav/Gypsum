@@ -138,7 +138,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}
 	}
 
-	mapping(GTK2.Widget:string) ef_kwd = ([]); //As with noex(), this can be done with [sg]et_data() in recent Pikes.
+	mapping(GTK2.Entry:string) ef_kwd = ([]); //As with noex(), this can be done with [sg]et_data() in recent Pikes.
 	GTK2.Entry ef(string kwd,int|mapping|void width_or_props)
 	{
 		if (!width_or_props) width_or_props=5;
