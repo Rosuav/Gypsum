@@ -852,7 +852,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 	GTK2.Widget Page_Help()
 	{
-		data["note_help_notes"]="Demo note";
+		data["note_help_notes"]="Demo note"; //Note that the user can edit the note, and even blank it. Foot, bullet, bang.
 		return GTK2.Vbox(0,10)
 				->pack_start(GTK2.Frame("Styles")->add(two_column(({
 					"This is a string entry field. It takes words.",ef("help_ef"),
