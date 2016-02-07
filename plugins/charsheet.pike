@@ -34,7 +34,8 @@ the aliases you have are actually quite few in number and simple in design. Ever
 is handled by one simple system: "roll init" becomes "roll d20+{init}" where {init} is the
 value of your charsheet's "init" field (and the "d20+" is elided if the field includes any
 non-numerics). Once I have support for some other system here, we can look at alternative
-ways of implementing that on the server (maybe a custom template to replace "d20+%s"?).
+ways of implementing that on the server (maybe a custom template to replace "d20+%s"?) -
+extremely non-urgent though, and should be done with advice from some DM, preferably.
 */
 
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
