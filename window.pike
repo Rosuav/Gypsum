@@ -1774,6 +1774,7 @@ class connect_menu
 		"Port", "Use keep-alive",
 		"\nLogs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", " ",
 	});
+	//TODO: Have a drop-down list of connection types - Plain, Telnet, and maybe later SSL
 	constant persist_key="worlds";
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
 
