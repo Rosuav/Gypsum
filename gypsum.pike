@@ -66,7 +66,7 @@ void add_gypsum_constant(string name,mixed val)
 		//most likely needupdate will list Y before Z, and they'll be rebuilt in affabeck.
 		foreach (globalusage[name],string cur) if (!has_value(needupdate,cur)) needupdate+=({cur});
 	}
-	globalusage[name]=({}); //Empty out the list, if there is one.
+	globalusage[name] = ({ });
 }
 
 //Global so it can be queried by Advanced Options in window.pike
