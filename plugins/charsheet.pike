@@ -27,6 +27,10 @@ mapping(string:multiset(object)) charsheets;
 //control to the client, and then it'd all be in one logical place (and they could be
 //done by sending the regular 'roll alias' command, even); then things like saves
 //could use different dice rolls for different systems, without hacks.
+//Actually, it's probably easier to have the server control it; it *knows* the previously
+//stored values for charsheet entries, rather than assuming (imagine, for instance, the case
+//where a charsheet gets orphanned for a while, and then reconnects). But maybe there could
+//be a per-system setting somewhere that makes changes.
 /* Current server-side roll alias creation actually does very little - it just creates named
 aliases for the weapons, using "{attack_1} to-hit" as an alias for "attack_1_hit" (literally
 that string - it gets reparsed elsewhere). It also cleans out any that used to be there. So
