@@ -22,26 +22,6 @@ mapping(string:multiset(object)) charsheets;
 //Gypsum up for the past month-ish.
 //Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
 //problem actually comes from somewhere else in Gypsum, and this is just a symptom.
-
-//Should roll aliases be controlled by the server or the client? I could give full
-//control to the client, and then it'd all be in one logical place (and they could be
-//done by sending the regular 'roll alias' command, even); then things like saves
-//could use different dice rolls for different systems, without hacks.
-//Actually, it's probably easier to have the server control it; it *knows* the previously
-//stored values for charsheet entries, rather than assuming (imagine, for instance, the case
-//where a charsheet gets orphanned for a while, and then reconnects). But maybe there could
-//be a per-system setting somewhere that makes changes.
-/* Current server-side roll alias creation actually does very little - it just creates named
-aliases for the weapons, using "{attack_1} to-hit" as an alias for "attack_1_hit" (literally
-that string - it gets reparsed elsewhere). It also cleans out any that used to be there. So
-the aliases you have are actually quite few in number and simple in design. Everything else
-is handled by one simple system: "roll init" becomes "roll d20+{init}" where {init} is the
-value of your charsheet's "init" field (and the "d20+" is elided if the field includes any
-non-numerics). Once I have support for some other system here, we can look at alternative
-ways of implementing that on the server (maybe a custom template to replace "d20+%s"?) -
-extremely non-urgent though, and should be done with advice from some DM, preferably.
-*/
-
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
