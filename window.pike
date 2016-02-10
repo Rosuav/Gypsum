@@ -1511,6 +1511,8 @@ void discover_plugins(string dir)
 			program compiled=probe_plugin(fn);
 			//Note that if compilation fails, this will still put in an entry. It'd then require manual
 			//overriding to say "go and activate this"; the active_by_default marker will no longer work.
+			//This matters only in rare situations, eg where the plugin depends on something that doesn't
+			//exist on this system (maybe a Pike issue). Developers, be aware. Everyone else, don't care.
 			plugins[fn]=(["active":compiled && compiled->plugin_active_by_default]);
 		}
 	}
