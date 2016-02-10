@@ -758,6 +758,7 @@ class tabstatus(string name)
 	//Possibly a "connection phase" that goes from "resolving" to "connecting"
 	//to "connected" to "disconnected", and depends on subw->world?? It's
 	//not as if the previous world will be all that useful anyway.
+	//Not actually used anywhere usefully. Could just drop it.
 	void connected(mapping(string:mixed) subw,string world) { }
 }
 
