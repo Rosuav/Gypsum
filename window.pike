@@ -1469,6 +1469,7 @@ object build(string param)
 	//something and now doesn't, it will continue to be updated when
 	//that something is updated, until the plugin gets unloaded. This
 	//is not considered to be a major issue, and is not worth fixing.
+	//(A forced update won't do this. But a full unload/reload will.)
 	program compiled; catch {compiled=compile_file(param,this);};
 	if (!compiled) {say(0,"%% Compilation failed.\n"); return 0;}
 	say(0,"%% Compiled.");
