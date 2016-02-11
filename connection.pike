@@ -57,6 +57,15 @@ function say=G->globals->say;
  * CP-1252; this allows adjacent lines to be encoded differently, as long as
  * each line has one single encoding. This also means that occasional CP-1252
  * can potentially have a marked impact on performance.
+ *
+ * Of course, a naive byte-based server might receive other encodings from its
+ * clients (usually ASCII-compatible eight-bit encodings). There's no way for
+ * Gypsum to cope with this. But a naive client that sends a wrong encoding is
+ * likely also to assume that everything it receives is in that encoding, so
+ * this can only be an issue if (a) the server's naively sharing bytes around,
+ * (b) most of the clients speak ASCII, (c) one client uses another encoding,
+ * (d) another client uses Gypsum, and (e) the ASCII clients don't care enough
+ * to raise an issue with the one broken client. I reckon we're pretty safe :)
  */
 #if constant(Charset)
 object cp1252=Charset.decoder("1252"); //Pike 8.1 has Charset at top-level. (8.0 has both this and the 7.8 one, as aliases.)
