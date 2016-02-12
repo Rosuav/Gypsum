@@ -1622,7 +1622,7 @@ void makewindow()
 		->add(win->notebook=GTK2.Notebook()->popup_enable())
 		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0)
 	);
-	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window.
+	call_out(mainwindow->present,0); //After any plugin windows have loaded, grab - or attempt to grab - focus back to the main window. Seems to work better than presenting immediately as well.
 	::makewindow();
 }
 
