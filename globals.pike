@@ -667,6 +667,7 @@ class statustext
 	void setstatus(string txt)
 	{
 		statustxt->lbl->set_text(txt);
+		//TODO: Have a 'reset width' operation that reshrinks?
 		if (fixedwidth) statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
 	}
 }
