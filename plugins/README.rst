@@ -28,7 +28,9 @@ directory, but this is not advisable and may cause issues with some minor
 features (eg the insta-edit and insta-update features of the corresponding
 plugins). Also, paths on Windows-like platforms MUST NOT contain drive letters;
 this entirely precludes the loading of plugins from any drive other than the
-one Gypsum is run from.
+one Gypsum is run from. The best place to develop your own plugin is in the
+zz_local subdirectory, where it will never be overwritten by a future update,
+even if the name conflicts with a newly-created standard plugin.
 
 
 Plugin modes
