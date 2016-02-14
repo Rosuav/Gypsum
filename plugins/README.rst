@@ -461,9 +461,9 @@ can tie in with the main plugin config dialog by creating two constants::
 	constant config_description="Human-readable descriptive text";
 
 Explore other plugins for usage examples. Regardless of the style of config,
-it's best to restrict persist usage to JSON-safe values: strings, integers,
+you must restrict persist usage to JSON-safe values: strings, integers,
 floats, arrays of JSON-safe values, and mappings with string keys and JSON-safe
-values. This is currently not enforced, but may in the future be. All values
+values. This is currently not enforced, but will in the future be. All values
 MUST be able to be represented using encode_value().
 
 ADVISORY: Commands can be synthesized directly to a subw::
