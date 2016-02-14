@@ -16,9 +16,8 @@ to update itself; so the advice is simply: Don't do that. The former may eventua
 problem, but this is performance-critical (saving persist[] needs to be able to be done with
 no visible UX impact), so I don't want to put too much into the encoding step.
 
-Saving in JSON would place restrictions on what can be persisted. Currently, both Traal and
-Sikorsky have a persist[0] non-string key; this may have been an error. It is the only thing
-preventing save-as-JSON. This may be worth migrating to. Note that the stability of the file
+Saving in JSON would place restrictions on what can be persisted, but nothing currently
+stored by core is violating it. External plugins unknown. Note that the stability of the file
 will never be guaranteed; it's still not advisable to git-manage it if you care about clean
 diffs. But it would be a lot easier for people to poke around in it.
 
