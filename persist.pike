@@ -19,7 +19,8 @@ no visible UX impact), so I don't want to put too much into the encoding step.
 Saving in JSON would place restrictions on what can be persisted, but nothing currently
 stored by core is violating it. External plugins unknown. Note that the stability of the file
 will never be guaranteed; it's still not advisable to git-manage it if you care about clean
-diffs. But it would be a lot easier for people to poke around in it.
+diffs (PIKE_CANONICAL can be used, but there's still churn in a lot of places). But it would
+be a lot easier for people to poke around in it.
 
 BEST PRACTICE: Restrict your persist data to JSON-safe values: strings, ints, floats, arrays
 of JSON-safe values, and mappings with string keys and JSON-safe values.
