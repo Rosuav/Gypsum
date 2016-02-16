@@ -1,5 +1,6 @@
 //NOTE: COMPAT_* options are not set when this file is loaded, and therefore cannot be used.
-//(They will exist if the file is reloaded post-startup, but still should not be used.)
+//(They will exist if the file is reloaded post-startup, but still should not be probed.)
+//This file MUST be able to run on either side of every compat option.
 
 /* Currently, persistent data is saved into a binary blob file in the current directory.
 
