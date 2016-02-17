@@ -75,7 +75,7 @@ object persist=class(string savefn)
 
 	//Retrievals and mutations work as normal; mutations trigger a save().
 	mixed `[](string idx) {return data[idx];}
-	mixed `[]=(string idx,mixed val) {save(); return data[idx]=val;}
+	mixed `[]=(string idx,mixed val) {save(); if (catch {Standards.JSON.encode(val);}) werror("** WARNING ** Non-JSONable data stored in persist[%O]!\n",idx); return data[idx]=val;}
 	mixed _m_delete(string idx) {save(); return m_delete(data,idx);}
 
 	//Like the Python dict method of the same name, will save a default back in if it wasn't defined.
