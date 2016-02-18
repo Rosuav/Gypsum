@@ -91,6 +91,7 @@ class MessageBox
 	inherit GTK2.MessageDialog;
 	function callback;
 
+	//flags: Normally 0. type: 0 for info, else GTK2.MESSAGE_ERROR or similar. buttons: GTK2.BUTTONS_OK etc.
 	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb,mixed|void cb_arg)
 	{
 		callback=cb;
