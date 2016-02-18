@@ -1727,10 +1727,10 @@ void save_html()
 	dlg->set_current_folder(".");
 }
 
-void save_html_response(object self,int btn)
+void save_html_response(object dlg,int btn)
 {
-	string fn=self->get_filename();
-	self->destroy();
+	string fn=dlg->get_filename();
+	dlg->destroy();
 	if (btn!=GTK2.RESPONSE_OK) return;
 	mapping(string:mixed) subw=current_subw();
 	Stdio.File f=Stdio.File(fn,"wct");
