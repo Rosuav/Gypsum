@@ -134,6 +134,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		ret->signal_connect("icon-press", edit_notes); //Note that older Pikes have assertion errors on the click event. If this causes segfaults, recommend F2 instead.
 		#if constant(GTK2.ENTRY_ICON_SECONDARY)
 		//This doesn't work on older GTKs, but it's non-essential. The F2 key is still available (or, should be!).
+		//Note that older GTKs may have crashy bugs, so it's definitely not recommended to use anything older than
+		//2.24.x, but at least this way you don't get completely locked out of the charsheet.
 		if (data["note_"+kwd] && data["note_"+kwd]!="") ret->set_icon_from_stock(GTK2.ENTRY_ICON_SECONDARY,GTK2.STOCK_EDIT);
 		#endif
 		ef_kwd[ret] = kwd;
