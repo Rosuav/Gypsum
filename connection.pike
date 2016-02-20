@@ -148,7 +148,7 @@ void textread(mapping conn,string data,int end_of_block)
 	//Hack for Threshold RPG: "Pseudo-marked prompts". The server sends a specific bit of text that means it's more likely to be a prompt.
 	//This may need to become conn->prompt_suffix and world-configurable. Fortunately it's not TOO likely to have false positives (though
 	//they do happen, even on Thresh itself).
-	string prompt_suffix = persist["prompt/suffix"] || "==> ";
+	string prompt_suffix = persist["prompt/suffix"] || "==> "; //Note that blank is not the same as absent. (TODO: Should it be?)
 	if (prompt_suffix!="" && has_suffix(conn->curline,prompt_suffix))
 	{
 		//Let's pretend this is a prompt. Unfortunately that's not guaranteed, but
