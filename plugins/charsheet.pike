@@ -134,8 +134,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
-	//Force a field to be numeric, if at all possible. Formats it differently, and
-	//allows summation evaluation.
+	//Display a field as numeric. Formats it differently, and allows summation evaluation,
+	//though it doesn't actually force it to store only numbers.
 	GTK2.Entry num(string kwd,int|mapping|void width_or_props)
 	{
 		numerics[kwd]=1; //Flag it for summation formatting
