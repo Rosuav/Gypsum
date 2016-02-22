@@ -75,7 +75,8 @@ mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
 	win->tabs+=({subw});
-	//Build the subwindow
+	//Currently this uses a GTK2.Entry for input; would it be better to use a TextArea, to allow
+	//for some greater customizations?
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
 			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
