@@ -77,6 +77,9 @@ mapping(string:mixed) subwindow(string txt)
 	win->tabs+=({subw});
 	//Currently this uses a GTK2.Entry for input; would it be better to use a TextArea, to allow
 	//for some greater customizations? Could decorate misspelled words, for instance.
+	//Random notes: sort(String.fuzzymatch(words[*], checkme), words); best = words[<4..];
+	//This takes roughly 150ms on 100K words, which is borderline acceptable if done once
+	//and in response to user interaction. Not sure how to simplify that check.
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
 			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
