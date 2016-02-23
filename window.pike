@@ -79,11 +79,11 @@ mapping(string:mixed) subwindow(string txt)
 	object scr;
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
+			[persist["window/tabstatus_left"]?"pack_start":"pack_end"](subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
 				->add(subw->display=GTK2.DrawingArea()->add_events(GTK2.GDK_POINTER_MOTION_MASK|GTK2.GDK_BUTTON_PRESS_MASK|GTK2.GDK_BUTTON_RELEASE_MASK))
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_ALWAYS)
 			)
-			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 		)
 		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(
 			scr=GTK2.ScrolledWindow()->add(subw->ef=MultiLineEntryField())->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
@@ -1097,6 +1097,10 @@ class zadvoptions
 		"Reopen closed tabs":(["path":"reopentabs","type":"int",
 			"desc":"Bring back what once was yours... When Gypsum is invoked, you can have it reopen with whatever tabs were previously open. Or you can reopen some fixed set every time.",
 			"options":([0:"Do nothing",1:"Remember but don't retrieve",2:"Retrieve but don't remember",3:"Retrieve, and remember"]),
+		]),
+		"Tab status side":(["path":"window/tabstatus_left","type":"int",
+			"desc":"Per-tab status (eg HP graph) can go to the left or the right of the main window. Changes apply to new tabs only.",
+			"options":([0:"Default (right)", 1:"Left"]),
 		]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,
 			"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better.",
