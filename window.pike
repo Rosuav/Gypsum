@@ -1698,7 +1698,7 @@ class configure_plugins
 	}
 }
 
-#ifnef COMPAT_BOOM2
+#ifndef COMPAT_BOOM2
 //SourceView has a few uglinesses, including bracket-matching that changes the background.
 //Neuter them somewhat by not setting the background. (They'll still be allowed to change
 //font weight etc, just not the background.)
