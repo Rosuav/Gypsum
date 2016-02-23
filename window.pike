@@ -103,7 +103,7 @@ mapping(string:mixed) subwindow(string txt)
 	//Note that a GTK2.TextView doesn't actually support password mode, the way GTK2.Entry does.
 	//So we hack it with white-on-white.
 	subw->efbuf->create_tag("password",(["background":"white","foreground":"white"]));
-	subw->efbuf->create_tag("misspelled",(["background":"red"]));
+	subw->efbuf->create_tag("misspelled",(["background":persist["window/dictionary/badcolor"]||"red"]));
 	subw_efbuf_modified_changed(subw->efbuf,subw);
 	call_out(redraw,0,subw);
 	return subw;
@@ -1254,11 +1254,14 @@ you may be able to use /usr/share/dict/words for this; otherwise, you will
 need to locate a valid dictionary and point Gypsum to it here. Blank to
 disable; if a dictionary file is enabled, the local word list is also
 active, otherwise it is not."))
-			->add(GTK2.Frame("Additional words:")
+			->add(GTK2.Frame("Additional words:")->add(GTK2.ScrolledWindow()
 				->add(win->morewords=MultiLineEntryField()
 					->set_text(persist["window/dictionary/words"]||"")
 					->set_size_request(400,250)
-				)
+				)->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC))
+			)
+			->add(GTK2.Frame("Misspelled word color:")
+				->add(win->badcolor=GTK2.Entry()->set_text(persist["window/dictionary/badcolor"]||"red"))
 			)
 			->add(GTK2.HbuttonBox()
 				->add(win->pb_ok=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_OK])))
@@ -1271,6 +1274,7 @@ active, otherwise it is not."))
 	{
 		persist["window/dictionary"] = win->dictfile->get_text();
 		persist["window/dictionary/words"] = win->morewords->get_text();
+		persist["window/dictionary/badcolor"] = win->badcolor->get_text();
 		update_dictionary();
 		closewindow();
 	}
@@ -1703,6 +1707,8 @@ void update_dictionary()
 	all_words += "\n" + persist["window/dictionary/words"]||""; //Include local words
 	dictionary = filter(all_words / "\n", lambda(string x) {return x!="" && x==lower_case(x);});
 	is_word = (multiset)dictionary;
+	foreach (win->tabs,mapping subw)
+		subw->efbuf->get_tag_table()->lookup("misspelled")->set_property("background",persist["window/dictionary/badcolor"]||"red");
 }
 
 void makewindow()
