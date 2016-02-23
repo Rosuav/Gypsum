@@ -76,11 +76,6 @@ mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
 	win->tabs+=({subw});
-	//Currently this uses a GTK2.Entry for input; would it be better to use a TextArea, to allow
-	//for some greater customizations? Could decorate misspelled words, for instance.
-	//Random notes: sort(String.fuzzymatch(words[*], checkme), words); best = words[<4..];
-	//This takes roughly 150ms on 100K words, which is borderline acceptable if done once
-	//and in response to user interaction. Not sure how to simplify that check.
 	object scr;
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
@@ -1697,6 +1692,12 @@ class configure_plugins
 		//an annoying deploop).
 		G->G->commands->unload("confirm "+sel,current_subw());
 	}
+}
+
+void subw_efbuf_apply_tag(mixed ... args)
+{
+	args[-1]="(subw)";
+	write("apply_tag: %O\n",args);
 }
 
 void update_dictionary()
