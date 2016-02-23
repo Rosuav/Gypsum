@@ -1694,12 +1694,6 @@ class configure_plugins
 	}
 }
 
-void subw_efbuf_apply_tag(mixed ... args)
-{
-	args[-1]="(subw)";
-	write("apply_tag: %O\n",args);
-}
-
 void update_dictionary()
 {
 	string dict = persist["window/dictionary"];
