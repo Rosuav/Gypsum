@@ -1038,7 +1038,7 @@ class zadvoptions
 		]),
 		"Dictionary":(["path":"window/dictionary", "type":"string","default":"", //TODO: "type":"file" and a file dialog
 			"desc":"Enable the spell-checker by selecting a dictionary. On Unix-like systems, you may be able to use /usr/share/dict/words "
-				"for this; otherwise, you will need to locate a valid dictionary and point Gypsum to it here.",
+				"for this; otherwise, you will need to locate a valid dictionary and point Gypsum to it here. Blank to disable.",
 			"savefunc":update_dictionary,
 		]),
 		"Down arrow":(["path":"window/downarr","type":"int",

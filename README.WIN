@@ -25,3 +25,10 @@ Gypsum into Program Files is unnecessary and may cause permissions issues.)
 Once you have this installed and working, you can normally keep up-to-date with
 the latest Gypsum improvements by using the Plugins|Update Gypsum menu item in
 the program itself.
+
+Additional Windows-specific notes:
+* The inbuilt spell checker requires a word list. Lacking /usr/share/dict/words,
+  Windows cannot use this out of the box. Download a wordlist file from
+  https://sourceforge.net/projects/wordlist/files/speller/2016.01.19/
+  and unzip it into the Gypsum directory; point the dictionary to the main file,
+  and you should be able to live-check your typing.
