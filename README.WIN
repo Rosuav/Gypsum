@@ -30,5 +30,6 @@ Additional Windows-specific notes:
 * The inbuilt spell checker requires a word list. Lacking /usr/share/dict/words,
   Windows cannot use this out of the box. Download a wordlist file from
   https://sourceforge.net/projects/wordlist/files/speller/2016.01.19/
+  eg https://sourceforge.net/projects/wordlist/files/speller/2016.01.19/wordlist-en_US-2016.01.19.zip/download
   and unzip it into the Gypsum directory; point the dictionary to the main file,
   and you should be able to live-check your typing.
