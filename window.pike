@@ -129,6 +129,28 @@ GTK2.PangoFontDescription getfont(string category)
 	return fontdesc[fontname] || (fontdesc[fontname]=GTK2.PangoFontDescription(fontname));
 }
 
+void spellcheck(object self, array args)
+{
+	[mapping subw, string old, string new] = args;
+	subw->ef->set_text(replace(subw->ef->get_text(), old, new));
+}
+
+void subw_ef_populate_popup(object ef,object menu,mapping subw)
+{
+	if (!is_word || !subw->misspelled) return;
+	foreach (subw->misspelled, string checkme)
+	{
+		array(string) words = dictionary + ({ });
+		sort(String.fuzzymatch(words[*], checkme), words);
+		foreach (words[<4..], string suggestion)
+		{
+			GTK2.MenuItem item=GTK2.MenuItem(sprintf("Spell: %s -> %s", checkme, suggestion));
+			item->show()->signal_connect("activate",spellcheck, ({subw, checkme, suggestion}));
+			menu->add(item);
+		}
+	}
+}
+
 //Update the tabstops array based on a new pixel width
 void settabs(int w)
 {
@@ -1452,6 +1474,7 @@ void subw_efbuf_modified_changed(object buf,mapping subw)
 		buf->remove_tag_by_name("misspelled", buf->get_start_iter(), buf->get_end_iter());
 		int pos = 0, nextpos = -1;
 		int cursor = self->get_position();
+		subw->misspelled = ({ });
 		foreach (txt/" ", string word)
 		{
 			pos = nextpos+1; nextpos = pos + sizeof(word);
@@ -1460,6 +1483,7 @@ void subw_efbuf_modified_changed(object buf,mapping subw)
 			if (word == "") continue;
 			if (word != lower_case(word)) continue; //Or should it be lower-cased??
 			if (is_word[word]) continue; //Correctly spelled.
+			if (!has_value(subw->misspelled, word)) subw->misspelled += ({word});
 			buf->apply_tag_by_name("misspelled", buf->get_iter_at_offset(pos), buf->get_iter_at_offset(nextpos));
 		}
 	}
