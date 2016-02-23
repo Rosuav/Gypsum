@@ -43,7 +43,7 @@ should be added as suggestions?
 4) Other?
 5) Local commands, if the user's already typed a slash. Should be easy enough.
 
-Should it be context sensitive? It could be reconfigured in subw_ef_changed().
+Should it be context sensitive? It could be reconfigured in subw_efbuf_modified_changed().
 */
 
 /* Each subwindow is defined with a mapping(string:mixed) - some useful elements are:
@@ -88,16 +88,17 @@ mapping(string:mixed) subwindow(string txt)
 			)
 			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 		)
-		->pack_end(subw->ef=GTK2.Entry(),0,0,0)
+		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(subw->ef=MultiLineEntryField()),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
-	//Note: It'd be nice if Ctrl-Z could do an Undo in in subw->ef. It's
-	//probably impractical though - GTK doesn't offer that directly, I'd
-	//have to do the work myself. (Or hack it in with a SourceView-ish.)
+	subw->efbuf=subw->ef->get_buffer();
 	setfonts(subw);
 	collect_signals("subw_",subw,subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	values(G->G->tabstatuses)->install(subw);
-	subw_ef_changed(subw->ef,subw);
+	//Note that a GTK2.TextView doesn't actually support password mode, the way GTK2.Entry does.
+	//So we hack it with white-on-white.
+	subw->efbuf->create_tag("password",(["background":"white","foreground":"white"]));
+	subw_efbuf_modified_changed(subw->efbuf,subw);
 	call_out(redraw,0,subw);
 	return subw;
 }
@@ -178,9 +179,6 @@ void dosignals()
 	::dosignals();
 	foreach (win->tabs,mapping subw) collect_signals("subw_",subw,subw);
 }
-
-//Snapshot the selection bounds so the switch_page handler can reset them
-int subw_ef_focus_in_event(object self,object ev,mapping subw) {subw->cursor_pos_last_focus_in=self->get_selection_bounds();}
 
 //Snap the scroll bar to the bottom every time its range changes (ie when a line is added)
 void subw_scr_changed(object self,mapping subw)
@@ -753,7 +751,7 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 void settext(mapping subw,string text)
 {
 	subw->ef->set_text(text);
-	if (!persist["window/cursoratstart"]) subw->ef->set_position(sizeof(text));
+	if (persist["window/cursoratstart"]) subw->ef->set_position(0);
 }
 
 int subw_b4_ef_key_press_event(object self,array|object ev,mapping subw)
@@ -817,7 +815,7 @@ int subw_b4_ef_key_press_event(object self,array|object ev,mapping subw)
 				win->notebook->set_current_page(page);
 				return 1;
 			}
-			subw->ef->set_position(subw->ef->insert_text("\t",1,subw->ef->get_position()));
+			subw->efbuf->insert_at_cursor("\t",1);
 			return 1;
 		}
 		case 0xFF55: //PgUp
@@ -1431,9 +1429,12 @@ void monochrome_mode()
 }
 
 //Update the entry field's color based on channel color definitions
-void subw_ef_changed(object self,mapping subw)
+void subw_efbuf_modified_changed(object self,mapping subw)
 {
+	self->set_modified(0);
+	self = subw->ef; //Really we want an event attached to the display field, not the buffer.
 	array(int) col=({255,255,255});
+	if (subw->passwordmode) self->set_visibility(0);
 	if (mapping c=channels[(self->get_text()/" ")[0]]) col=({c->r,c->g,c->b});
 	if (equal(subw->cur_fg,col)) return;
 	subw->cur_fg=col;
@@ -1835,9 +1836,6 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 	//and names all the arguments. All I really need is 'page'. End caution.
 	mapping subw=win->tabs[page];
 	subw->activity=0;
-	//Reset the cursor pos based on where it was last time focus entered the EF. This is
-	//distinctly weird, but it prevents the annoying default behaviour of selecting all.
-	if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 	//Note that this, while not technically part of the boom2 bugfix, is fixed in the
 	//same Pike versions, and there's really not a lot of point separating them.
 	#if constant(COMPAT_BOOM2)
@@ -1848,7 +1846,6 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 		//if the args are omitted (making this a closure).
 		win->notebook->set_tab_label_text(subw->page,subw->tabtext);
 		if (win->notebook->get_current_page()==page) subw->ef->grab_focus();
-		if (subw->cursor_pos_last_focus_in) subw->ef->select_region(@subw->cursor_pos_last_focus_in);
 		call_out(redraw,0,subw);
 		runhooks("switchtabs",0,subw);
 	#if constant(COMPAT_BOOM2)

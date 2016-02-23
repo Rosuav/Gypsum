@@ -129,20 +129,45 @@ class confirm
 	}
 }
 
-//Exactly the same as a GTK2.TextView but with set_text() and get_text() methods like the GTK2.Entry
-//Should be able to be used like an Entry.
+//Exactly the same as a GTK2.TextView but with additional methods for GTK2.Entry compatibility.
+//Do not provide a buffer; create this with no args, and if you need access to the buffer, call
+//obj->get_buffer() separately.
 class MultiLineEntryField
 {
+	#if constant(GTK2.SourceView)
+	inherit GTK2.SourceView;
+	#else
 	inherit GTK2.TextView;
+	#endif
 	this_program set_text(mixed ... args)
 	{
-		get_buffer()->set_text(@args);
+		object buf=get_buffer();
+		buf->begin_user_action();
+		buf->set_text(@args);
+		buf->end_user_action();
 		return this;
 	}
 	string get_text()
 	{
 		object buf=get_buffer();
 		return buf->get_text(buf->get_start_iter(),buf->get_end_iter(),0);
+	}
+	this_program set_position(int pos)
+	{
+		object buf=get_buffer();
+		buf->place_cursor(buf->get_iter_at_offset(pos));
+		return this;
+	}
+	int get_position()
+	{
+		object buf=get_buffer();
+		return buf->get_iter_at_mark(buf->get_insert())->get_offset();
+	}
+	this_program set_visibility(int state)
+	{
+		object buf=get_buffer();
+		(state?buf->remove_tag_by_name:buf->apply_tag_by_name)("password", buf->get_start_iter(), buf->get_end_iter());
+		return this;
 	}
 }
 
@@ -583,7 +608,7 @@ class configdlg
 			string desc=lbl->value();
 			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end.
 				atend += ({GTK2.Frame(desc)->add(
-					win[name]=MultiLineEntryField((["buffer":GTK2.TextBuffer(),"wrap-mode":GTK2.WRAP_WORD_CHAR]))->set_size_request(225,70)
+					win[name]=MultiLineEntryField()->set_wrap_mode(GTK2.WRAP_WORD_CHAR)->set_size_request(225,70)
 				),0});
 			else
 				stuff += ({desc, win[name]=noex(GTK2.Entry())});
