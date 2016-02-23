@@ -80,6 +80,7 @@ mapping(string:mixed) subwindow(string txt)
 	//Random notes: sort(String.fuzzymatch(words[*], checkme), words); best = words[<4..];
 	//This takes roughly 150ms on 100K words, which is borderline acceptable if done once
 	//and in response to user interaction. Not sure how to simplify that check.
+	object scr;
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
 			->add(subw->maindisplay=GTK2.ScrolledWindow((["hadjustment":GTK2.Adjustment(),"vadjustment":subw->scr=GTK2.Adjustment(),"background":"black"]))
@@ -89,10 +90,11 @@ mapping(string:mixed) subwindow(string txt)
 			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 		)
 		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(
-			GTK2.ScrolledWindow()->add(subw->ef=MultiLineEntryField())->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
+			scr=GTK2.ScrolledWindow()->add(subw->ef=MultiLineEntryField())->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
 		),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
 	subw->efbuf=subw->ef->get_buffer();
+	scr->get_hscrollbar()->set_size_request(1,1);
 	setfonts(subw);
 	collect_signals("subw_",subw,subw);
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
