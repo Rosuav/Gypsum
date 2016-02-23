@@ -25,6 +25,7 @@ constant pos_key="window/winpos";
 constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
+multiset(string) is_word=0; array(string) dictionary=0;
 
 //Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
 //It may be worth having some means of marking new worlds to be added. Or maybe have a way to recreate a lost world from the template??
@@ -102,6 +103,7 @@ mapping(string:mixed) subwindow(string txt)
 	//Note that a GTK2.TextView doesn't actually support password mode, the way GTK2.Entry does.
 	//So we hack it with white-on-white.
 	subw->efbuf->create_tag("password",(["background":"white","foreground":"white"]));
+	subw->efbuf->create_tag("misspelled",(["background":"red"]));
 	subw_efbuf_modified_changed(subw->efbuf,subw);
 	call_out(redraw,0,subw);
 	return subw;
@@ -1034,6 +1036,11 @@ class zadvoptions
 			"desc":"When seeking through command history, should the cursor be placed at the start or end of the command?",
 			"options":([0:"End of command (default)",1:"Start of command"]),
 		]),
+		"Dictionary":(["path":"window/dictionary", "type":"string","default":"", //TODO: "type":"file" and a file dialog
+			"desc":"Enable the spell-checker by selecting a dictionary. On Unix-like systems, you may be able to use /usr/share/dict/words "
+				"for this; otherwise, you will need to locate a valid dictionary and point Gypsum to it here.",
+			"savefunc":update_dictionary,
+		]),
 		"Down arrow":(["path":"window/downarr","type":"int",
 			"desc":"When you press Down when you haven't been searching back through command history, what should be done?",
 			"options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"]),
@@ -1433,13 +1440,30 @@ void monochrome_mode()
 }
 
 //Update the entry field's color based on channel color definitions
-void subw_efbuf_modified_changed(object self,mapping subw)
+void subw_efbuf_modified_changed(object buf,mapping subw)
 {
-	self->set_modified(0);
-	self = subw->ef; //Really we want an event attached to the display field, not the buffer.
+	buf->set_modified(0);
+	object self = subw->ef; //Really we want an event attached to the display field, not the buffer.
 	array(int) col=({255,255,255});
+	string txt = self->get_text();
 	if (subw->passwordmode) self->set_visibility(0);
-	if (mapping c=channels[(self->get_text()/" ")[0]]) col=({c->r,c->g,c->b});
+	else if (is_word) //No spell checking of passwords
+	{
+		buf->remove_tag_by_name("misspelled", buf->get_start_iter(), buf->get_end_iter());
+		int pos = 0, nextpos = -1;
+		int cursor = self->get_position();
+		foreach (txt/" ", string word)
+		{
+			pos = nextpos+1; nextpos = pos + sizeof(word);
+			if (pos <= cursor && cursor <= nextpos) continue; //Ignore the word where the cursor is
+			word = filter(word, wordchar);
+			if (word == "") continue;
+			if (word != lower_case(word)) continue; //Or should it be lower-cased??
+			if (is_word[word]) continue; //Correctly spelled.
+			buf->apply_tag_by_name("misspelled", buf->get_iter_at_offset(pos), buf->get_iter_at_offset(nextpos));
+		}
+	}
+	if (mapping c=channels[(txt/" ")[0]]) col=({c->r,c->g,c->b});
 	if (equal(subw->cur_fg,col)) return;
 	subw->cur_fg=col;
 	self->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
@@ -1611,6 +1635,14 @@ class configure_plugins
 	}
 }
 
+void update_dictionary()
+{
+	string dict = persist["window/dictionary"];
+	if (!dict || dict=="") {is_word=0; dictionary=0; return;} //Disable spell checking
+	dictionary = filter((Stdio.read_file(dict)||"") / "\n", lambda(string x) {return x!="" && x==lower_case(x);});
+	is_word = (multiset)dictionary;
+}
+
 void makewindow()
 {
 	win->mainwindow=mainwindow=GTK2.Window(GTK2.WindowToplevel);
@@ -1722,6 +1754,7 @@ void create(string name)
 		else m_delete(win->plugin_mtime,fn);
 	}
 	settabs(win->tabs[0]->enwidth);
+	update_dictionary();
 }
 
 int sig_mainwindow_destroy() {exit(0);}

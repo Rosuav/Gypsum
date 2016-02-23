@@ -24,17 +24,6 @@ object hack=class {
 	void menu_clicked() {spellcheck(1);}
 }("spellcheck_all");
 
-//Determine if the given character is part of a word.
-//This is a tricky thing, because it's based on user expectations, not
-//strict logic. Most of it is handled by Unicode.is_wordchar(), but
-//that cuts out apostrophe, so "doesn't" would count as two separate
-//words. For the moment, I'm just hard-coding the ASCII apostophe as a
-//special case; it may be necessary to use some other detection method.
-int wordchar(int ch)
-{
-	return ch=='\'' || Unicode.is_wordchar(ch);
-}
-
 void spellcheck(int all)
 {
 	mapping subw=G->G->window->current_subw();
