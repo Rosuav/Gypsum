@@ -88,7 +88,9 @@ mapping(string:mixed) subwindow(string txt)
 			)
 			->pack_end(subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
 		)
-		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(subw->ef=MultiLineEntryField()),0,0,0)
+		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(
+			GTK2.ScrolledWindow()->add(subw->ef=MultiLineEntryField())->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
+		),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
 	subw->efbuf=subw->ef->get_buffer();
 	setfonts(subw);
