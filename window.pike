@@ -1058,11 +1058,6 @@ class zadvoptions
 			"desc":"When seeking through command history, should the cursor be placed at the start or end of the command?",
 			"options":([0:"End of command (default)",1:"Start of command"]),
 		]),
-		"Dictionary":(["path":"window/dictionary", "type":"string","default":"", //TODO: "type":"file" and a file dialog
-			"desc":"Enable the spell-checker by selecting a dictionary. On Unix-like systems, you may be able to use /usr/share/dict/words "
-				"for this; otherwise, you will need to locate a valid dictionary and point Gypsum to it here. Blank to disable.",
-			"savefunc":update_dictionary,
-		]),
 		"Down arrow":(["path":"window/downarr","type":"int",
 			"desc":"When you press Down when you haven't been searching back through command history, what should be done?",
 			"options":([0:"Do nothing, leave the text there",1:"Clear the input field",2:"Save into history and clear input"]),
@@ -1237,6 +1232,47 @@ class colorsdlg
 		colors[idx]=GTK2.GdkColor(@val);
 		persist["colors/sixteen"]=mainwin->color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
 		redraw(current_subw());
+	}
+}
+
+constant options_dictcfg = "_Dictionary";
+class dictcfg
+{
+	inherit window;
+	void create() {::create();}
+
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Configure dictionaries"]))->add(GTK2.Vbox(0,20)
+			->add(GTK2.Frame("Select a file to use as a dictionary:")
+				//TODO: File dialog
+				->add(win->dictfile=GTK2.Entry()->set_text(persist["window/dictionary"]||""))
+			)
+			->add(GTK2.Label(
+#"Enable the spell-checker by selecting a dictionary. On Unix-like systems,
+you may be able to use /usr/share/dict/words for this; otherwise, you will
+need to locate a valid dictionary and point Gypsum to it here. Blank to
+disable; if a dictionary file is enabled, the local word list is also
+active, otherwise it is not."))
+			->add(GTK2.Frame("Additional words:")
+				->add(win->morewords=MultiLineEntryField()
+					->set_text(persist["window/dictionary/words"]||"")
+					->set_size_request(400,250)
+				)
+			)
+			->add(GTK2.HbuttonBox()
+				->add(win->pb_ok=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_OK])))
+				->add(stock_close())
+			)
+		);
+	}
+
+	void sig_pb_ok_clicked()
+	{
+		persist["window/dictionary"] = win->dictfile->get_text();
+		persist["window/dictionary/words"] = win->morewords->get_text();
+		update_dictionary();
+		closewindow();
 	}
 }
 
@@ -1663,7 +1699,9 @@ void update_dictionary()
 {
 	string dict = persist["window/dictionary"];
 	if (!dict || dict=="") {is_word=0; dictionary=0; return;} //Disable spell checking
-	dictionary = filter((Stdio.read_file(dict)||"") / "\n", lambda(string x) {return x!="" && x==lower_case(x);});
+	string all_words = Stdio.read_file(dict)||"";
+	all_words += "\n" + persist["window/dictionary/words"]||""; //Include local words
+	dictionary = filter(all_words / "\n", lambda(string x) {return x!="" && x==lower_case(x);});
 	is_word = (multiset)dictionary;
 }
 
