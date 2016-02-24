@@ -82,6 +82,7 @@ mapping(string:int) compat=([
 	#endif
 	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix
 	"msgdlg":([7.8:876])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
+	"nopasswd":0, //Password handling misbehaves (NEVER active by default)
 ]);
 
 void create(string|void name)
