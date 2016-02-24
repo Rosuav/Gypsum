@@ -177,7 +177,7 @@ class MultiLineEntryField
 	}
 	this_program set_visibility(int state)
 	{
-		#ifndef COMPAT_NOPASSWD
+		#if constant(COMPAT_NOPASSWD)
 		object buf=get_buffer();
 		(state?buf->remove_tag_by_name:buf->apply_tag_by_name)("password", buf->get_start_iter(), buf->get_end_iter());
 		#endif
