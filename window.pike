@@ -1706,7 +1706,9 @@ class configure_plugins
 //NOTE: This may fall foul of the boom2 crash bug due to accepting iterators as start/end.
 void subw_efbuf_apply_tag(object self,object tag,mixed start,mixed end,mapping subw)
 {
+	#if constant(GTK2.SourceView)
 	if (tag->get_property("name")=="") tag->set_property("background-set", 0);
+	#endif
 }
 #endif
 
