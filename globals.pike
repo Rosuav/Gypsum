@@ -142,7 +142,7 @@ class confirm
 
 //Exactly the same as a GTK2.TextView but with additional methods for GTK2.Entry compatibility.
 //Do not provide a buffer; create this with no args, and if you need access to the buffer, call
-//obj->get_buffer() separately. NOTE: This does not automatically scroll, as does an Entry. If
+//obj->get_buffer() separately. NOTE: This does not automatically scroll (as an Entry does). If
 //you need scrolling, place this inside a GTK2.ScrolledWindow.
 class MultiLineEntryField
 {
