@@ -1505,15 +1505,15 @@ void monochrome_mode()
 void subw_efbuf_modified_changed(object buf,mapping subw)
 {
 	buf->set_modified(0);
-	object self = subw->ef; //Really we want an event attached to the display field, not the buffer.
+	object ef = subw->ef; //We'll use this a lot
 	array(int) col=({255,255,255});
-	string txt = self->get_text();
-	if (subw->passwordmode) self->set_visibility(0); //No spell checking of passwords (but maintain the "invisible" state, which isn't automatic)
+	string txt = ef->get_text();
+	if (subw->passwordmode) ef->set_visibility(0); //No spell checking of passwords (but maintain the "invisible" state, which isn't automatic)
 	else if (is_word)
 	{
 		buf->remove_tag_by_name("misspelled", buf->get_start_iter(), buf->get_end_iter());
 		int pos = 0, nextpos = -1;
-		int cursor = self->get_position();
+		int cursor = ef->get_position();
 		subw->misspelled = ({ });
 		foreach (txt/" ", string word)
 		{
@@ -1530,8 +1530,8 @@ void subw_efbuf_modified_changed(object buf,mapping subw)
 	if (mapping c=channels[(txt/" ")[0]]) col=({c->r,c->g,c->b});
 	if (equal(subw->cur_fg,col)) return;
 	subw->cur_fg=col;
-	self->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
-	self->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
+	ef->modify_base(GTK2.STATE_NORMAL,GTK2.GdkColor(0,0,0));
+	ef->modify_text(GTK2.STATE_NORMAL,GTK2.GdkColor(@col));
 }
 
 //Compile one pike file and let it initialize itself, similar to bootstrap()
