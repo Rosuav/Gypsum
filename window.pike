@@ -1508,8 +1508,8 @@ void subw_efbuf_modified_changed(object buf,mapping subw)
 	object self = subw->ef; //Really we want an event attached to the display field, not the buffer.
 	array(int) col=({255,255,255});
 	string txt = self->get_text();
-	if (subw->passwordmode) self->set_visibility(0);
-	else if (is_word) //No spell checking of passwords
+	if (subw->passwordmode) self->set_visibility(0); //No spell checking of passwords (but maintain the "invisible" state, which isn't automatic)
+	else if (is_word)
 	{
 		buf->remove_tag_by_name("misspelled", buf->get_start_iter(), buf->get_end_iter());
 		int pos = 0, nextpos = -1;
