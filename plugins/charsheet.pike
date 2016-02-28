@@ -143,9 +143,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret->set_alignment(0.5);
 	}
 
-	MultiLineEntryField mle(string kwd,mapping|void props)
+	MultiLineEntryField mle(string kwd)
 	{
-		object ret=win[kwd]=MultiLineEntryField(props||([]))->set_text(data[kwd]||"");
+		object ret=win[kwd]=MultiLineEntryField()->set_text(data[kwd]||"");
 		ret->signal_connect("focus-out-event",checkchanged,kwd);
 		ret->signal_connect("focus-in-event",ensurevisible);
 		return ret;
