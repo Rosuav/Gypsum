@@ -492,6 +492,13 @@ class configdlg
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant labels=({ }); //Labels for the above
+	/* Proposal: Instead of using all of the above four, use a single list of
+	tokens which gets parsed out to provide keyword, label, and type. Something
+	like this:
+	constant elements=({"kwd:Keyword", "name:Name", "?state:State", "9value:Value","+descr:Description"});
+	And maybe, if the colon is omitted, the keyword can be the lowercased name:
+	constant elements=({"kwd:Keyword", "Name", "?State", "9Value", "+descr:Description"});
+	*/
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	//... end provide me.
