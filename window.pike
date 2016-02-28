@@ -1894,7 +1894,7 @@ class connect_menu
 	constant bools=({"use_ka"});
 	constant labels=({
 		"Keyword", "Name", "Host name",
-		"\nDescription", "\nText to output upon connect", "\nAuto-log", //Since these are multi-line fields, they go after the next two.
+		"\nDescription", "\nText to output upon connect", "\nAuto-log", //Since these are multi-line fields, they go after the next two. TODO: Auto-log doesn't need multiline.
 		"Port", "Use keep-alive",
 		"\nLogs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", " ",
 	});
