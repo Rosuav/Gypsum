@@ -1701,12 +1701,12 @@ class configure_plugins
 
 #if !defined(COMPAT_BOOM2) && constant(GTK2.SourceView)
 //SourceView has a few uglinesses, including bracket-matching that changes the background.
-//Neuter them somewhat by not setting the background. (They'll still be allowed to change
-//font weight etc, just not the background.)
+//Neuter them somewhat by not setting the colors. (They'll still be allowed to change
+//font weight etc, just not the colors.)
 //NOTE: This may fall foul of the boom2 crash bug due to accepting iterators as start/end.
 void subw_efbuf_apply_tag(object self,object tag,mixed start,mixed end,mapping subw)
 {
-	if (tag->get_property("name")=="") tag->set_property("background-set", 0);
+	if (tag->get_property("name")=="") tag->set_property("background-set", 0)->set_property("foreground-set", 0);
 }
 #endif
 
