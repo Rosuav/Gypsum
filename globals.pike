@@ -610,7 +610,7 @@ class configdlg
 		{
 			sscanf(element, "%1[?#+']%s", string type, element);
 			sscanf(element, "%s:%s", string name, string lbl);
-			if (!lbl) name = lower_case(lbl = element);
+			if (!lbl) sscanf(lower_case(lbl = element), "%s ", name);
 			switch (type)
 			{
 				case "?": //Boolean
