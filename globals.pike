@@ -600,29 +600,12 @@ class configdlg
 		::makewindow();
 	}
 
-	//Iterates over labels, applying them to controls in this order:
-	//1) win->kwd, if allow_rename is not zeroed
-	//2) strings, creating Entry()
-	//3) ints, ditto
-	//4) bools, creating CheckButton()
-	//5) strings, if marked to create MultiLineEntryField()
-	//6) Descriptive text underneath
-	//Not yet supported: Anything custom, eg insertion or reordering;
-	//any other widget types eg SelectBox.
-	//Hmm. Instead of this, would it be better to pass in an array alternating
-	//labels and field names, and adorning the field names to say whether they
-	//should be added to "'strings", "#ints", or "?bools", and build those from
-	//this? Then multi-line ones could be identified as "''fieldname", order
-	//could be completely custom, and something could be done for other types
-	//too. Worth doing or not?
-	array(string|GTK2.Widget) collect_widgets()
+	//Generate a widget collection from either the constant or migration mode
+	array(string|GTK2.Widget) collect_widgets(array|void elem)
 	{
-		//array strings=strings,bools=bools,ints=ints,labels=labels;
-		array elements=elements;
-		if (!sizeof(elements)) elements = migrate_elements();
 		array objects = ({ });
 		real_strings = real_ints = real_bools = ({ });
-		foreach (elements, string element)
+		foreach (elem || elements || migrate_elements(), string element)
 		{
 			sscanf(element, "%1[?#+']%s", string type, element);
 			sscanf(element, "%s:%s", string name, string lbl);
@@ -655,6 +638,15 @@ class configdlg
 		return objects;
 	}
 
+	//Iterates over labels, applying them to controls in this order:
+	//1) win->kwd, if allow_rename is not zeroed
+	//2) strings, creating Entry()
+	//3) ints, ditto
+	//4) bools, creating CheckButton()
+	//5) strings, if marked to create MultiLineEntryField()
+	//6) Descriptive text underneath
+	//Not yet supported: Anything custom, eg insertion or reordering;
+	//any other widget types eg SelectBox.
 	array(string) migrate_elements()
 	{
 		array stuff = ({ });
