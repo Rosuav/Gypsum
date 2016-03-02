@@ -94,7 +94,7 @@ class menu_clicked
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Tune Threshold RPG characters","modal":1]);
 	constant persist_key="tune/thresholdrpg";
-	constant elements=({"kwd:Character","muted:Muted on","'Tune out one or more characters\non Threshold RPG OOC channels.\nEveryone listed here will be muted."});
+	constant elements=({"kwd:Character","Muted on","'Tune out one or more characters\non Threshold RPG OOC channels.\nEveryone listed here will be muted."});
 
 	void save_content(mapping(string:mixed) info)
 	{
