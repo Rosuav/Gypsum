@@ -26,7 +26,7 @@ constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
 multiset(string) is_word=0; array(string) dictionary=0;
-mapping(string:array(string)) dict_suggestions = ([]);
+mapping(string:array(string)) dict_suggestions = ([]); //Cache of suggestions for a word, given the current dictionary. Wiped out when dict updated.
 
 //Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
 //It may be worth having some means of marking new worlds to be added. Or maybe have a way to recreate a lost world from the template??
