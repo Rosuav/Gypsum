@@ -635,6 +635,7 @@ class configdlg
 					break;
 			}
 		}
+		real_strings -= ({"kwd"});
 		return objects;
 	}
 
