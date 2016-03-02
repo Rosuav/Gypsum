@@ -494,9 +494,9 @@ class configdlg
 	constant labels=({ }); //Labels for the above
 	/* ADVISORY and under test: Instead of using all of the above four, use a single list of
 	tokens which gets parsed out to provide keyword, label, and type.
-	constant elements=({"kwd:Keyword", "name:Name", "?state:State", "#value:Value","+descr:Description"});
-	If the colon is omitted, the keyword will be the lowercased name, so this is equivalent:
-	constant elements=({"kwd:Keyword", "Name", "?State", "#Value", "+descr:Description"});
+	constant elements=({"kwd:Keyword", "name:Name", "?state:State of Being", "#value:Value","+descr:Description"});
+	If the colon is omitted, the keyword will be the first word of the lowercased name, so this is equivalent:
+	constant elements=({"kwd:Keyword", "Name", "?State of Being", "#Value", "+descr:Description"});
 	Advantage: Elements can be ordered arbitrarily, instead of being grouped by type. Would fix the Connect dialog UI issue where the "Auto-Log" field looks like it might mean "Auto-login".
 	*/
 	constant elements=({ });
