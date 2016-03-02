@@ -127,7 +127,7 @@ int process(string param,mapping(string:mixed) subw)
 	
 	if (err) {say(subw,"Error in compilation: %O\n",err); return 1;}
 	err=catch {G->G->last_x_result=tmp()->foo(subw,G->G->last_x_result);};
-	if (err) {say(subw,"Error in execution: %O\n",err); return 1;}
+	if (err) {say(subw,"Error in execution: "+describe_backtrace(err)); return 1;}
 	say(subw,"%O\n",G->G->last_x_result);
 	return 1;
 }
