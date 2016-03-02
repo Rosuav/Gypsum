@@ -53,7 +53,7 @@ class config
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
 	constant persist_key="timer/timers";
-	constant elements=({"kwd:Keyword", "Time", "?present:Present when done", "+trigger:Trigger text"});
+	constant elements=({"kwd:Keyword", "Time", "?Present when done", "+Trigger text"});
 
 	void load_content(mapping(string:mixed) info)
 	{
