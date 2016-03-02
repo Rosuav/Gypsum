@@ -102,10 +102,7 @@ class config
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Demo configuration"]);
 	constant persist_key="plugins/demo";
-	constant strings=({"meaning"});
-	constant ints=({"value"});
-	constant bools=({"useful"});
-	constant labels=({"Thing", "Meaning", "Value", "Is useful"});
+	constant elements=({"kwd:Thing", "Meaning", "#Value", "?useful:Is useful"});
 
 	void save_content(mapping(string:mixed) info)
 	{
