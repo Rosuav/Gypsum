@@ -663,7 +663,7 @@ class configdlg
 		foreach (strings+ints, string name)
 		{
 			string desc=lbl->value();
-			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end.
+			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end. Hack is not needed if elements[] is used instead - this is recommended.
 				atend += ({sprintf("+%s:%s",name,desc[1..])});
 			else
 				stuff += ({sprintf("%s:%s",name,desc)});
