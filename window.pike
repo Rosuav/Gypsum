@@ -1716,7 +1716,7 @@ void update_dictionary()
 	if (!dict || dict=="") {is_word=0; dictionary=0; return;} //Disable spell checking
 	string all_words = Stdio.read_file(dict)||"";
 	all_words += "\n" + persist["window/dictionary/words"]||""; //Include local words
-	dictionary = filter(all_words / "\n", lambda(string x) {return x!="" && x==lower_case(x) && x==filter(x, wordchar);});
+	dictionary = filter((all_words-"\r") / "\n", lambda(string x) {return x!="" && x==lower_case(x) && x==filter(x, wordchar);});
 	is_word = (multiset)dictionary;
 	foreach (win->tabs,mapping subw)
 		subw->efbuf->get_tag_table()->lookup("misspelled")->set_property("background",persist["window/dictionary/badcolor"]||"red");
