@@ -52,10 +52,8 @@ class config
 {
 	inherit configdlg;
 	mapping(string:mixed) windowprops=(["title":"Configure timers","modal":1]);
-	constant strings=({"time","trigger"});
-	constant bools=({"present"});
 	constant persist_key="timer/timers";
-	constant labels=({"Keyword", "Time", "\nTrigger text", "Present when done"});
+	constant elements=({"kwd:Keyword", "Time", "?present:Present when done", "+trigger:Trigger text"});
 
 	void load_content(mapping(string:mixed) info)
 	{
