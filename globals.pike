@@ -492,17 +492,18 @@ class configdlg
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant labels=({ }); //Labels for the above
-	/* Proposal: Instead of using all of the above four, use a single list of
-	tokens which gets parsed out to provide keyword, label, and type. Something
-	like this:
+	/* ADVISORY and under test: Instead of using all of the above four, use a single list of
+	tokens which gets parsed out to provide keyword, label, and type.
 	constant elements=({"kwd:Keyword", "name:Name", "?state:State", "#value:Value","+descr:Description"});
-	And maybe, if the colon is omitted, the keyword can be the lowercased name:
+	If the colon is omitted, the keyword will be the lowercased name, so this is equivalent:
 	constant elements=({"kwd:Keyword", "Name", "?State", "#Value", "+descr:Description"});
 	Advantage: Elements can be ordered arbitrarily, instead of being grouped by type. Would fix the Connect dialog UI issue where the "Auto-Log" field looks like it might mean "Auto-login".
 	*/
+	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	//... end provide me.
+	array real_strings, real_ints, real_bools; //Internal implementation detail: migration tool. Do not touch.
 
 	void create() {::create();} //Pass on no args to the window constructor - all configdlgs are independent
 
@@ -525,9 +526,9 @@ class configdlg
 		if (!info)
 			if (allow_new) info=([]); else return;
 		if (allow_rename) items[newkwd]=info;
-		foreach (strings,string key) info[key]=win[key]->get_text();
-		foreach (ints,string key) info[key]=(int)win[key]->get_text();
-		foreach (bools,string key) info[key]=(int)win[key]->get_active();
+		foreach (real_strings,string key) info[key]=win[key]->get_text();
+		foreach (real_ints,string key) info[key]=(int)win[key]->get_text();
+		foreach (real_bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
 		if (persist_key) persist->save();
 		[object iter,object store]=win->sel->get_selected();
@@ -546,8 +547,8 @@ class configdlg
 		string kwd=iter && store->get_value(iter,0);
 		if (!kwd) return;
 		store->remove(iter);
-		foreach (strings+ints,string key) win[key]->set_text("");
-		foreach (bools,string key) win[key]->set_active(0);
+		foreach (real_strings+real_ints,string key) win[key]->set_text("");
+		foreach (real_bools,string key) win[key]->set_active(0);
 		delete_content(kwd,m_delete(items,kwd));
 		if (persist_key) persist->save();
 	}
@@ -557,9 +558,9 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
-		foreach (strings,string key) win[key]->set_text((string)(info[key] || ""));
-		foreach (ints,string key) win[key]->set_text((string)info[key]);
-		foreach (bools,string key) win[key]->set_active((int)info[key]);
+		foreach (real_strings,string key) win[key]->set_text((string)(info[key] || ""));
+		foreach (real_ints,string key) win[key]->set_text((string)info[key]);
+		foreach (real_bools,string key) win[key]->set_active((int)info[key]);
 		load_content(info);
 	}
 
@@ -616,37 +617,74 @@ class configdlg
 	//too. Worth doing or not?
 	array(string|GTK2.Widget) collect_widgets()
 	{
+		//array strings=strings,bools=bools,ints=ints,labels=labels;
+		array elements=elements;
+		if (!sizeof(elements)) elements = migrate_elements();
+		array objects = ({ });
+		real_strings = real_ints = real_bools = ({ });
+		foreach (elements, string element)
+		{
+			sscanf(element, "%1[?#+']%s", string type, element);
+			sscanf(element, "%s:%s", string name, string lbl);
+			if (!lbl) name = lower_case(lbl = element);
+			switch (type)
+			{
+				case "?": //Boolean
+					real_bools += ({name});
+					objects += ({0,win[name]=noex(GTK2.CheckButton(lbl))});
+					break;
+				case "#": //Integer
+					real_ints += ({name});
+					objects += ({lbl, win[name]=noex(GTK2.Entry())});
+					break;
+				case 0: //String
+					real_strings += ({name});
+					objects += ({lbl, win[name]=noex(GTK2.Entry())});
+					break;
+				case "+": //Multi-line text
+					real_strings += ({name});
+					objects += ({GTK2.Frame(lbl)->add(
+						win[name]=MultiLineEntryField()->set_wrap_mode(GTK2.WRAP_WORD_CHAR)->set_size_request(225,70)
+					),0});
+					break;
+				case "'": //Descriptive text
+					objects += ({noex(GTK2.Label(lbl)->set_line_wrap(1)), 0});
+					break;
+			}
+		}
+		return objects;
+	}
+
+	array(string) migrate_elements()
+	{
 		array stuff = ({ });
 		array atend = ({ });
 		Iterator lbl = get_iterator(labels);
 		if (!lbl) return stuff;
 		if (allow_rename)
 		{
-			stuff += ({lbl->value(), win->kwd=noex(GTK2.Entry())});
+			stuff += ({"kwd:"+lbl->value()});
 			if (!lbl->next()) return stuff;
 		}
 		foreach (strings+ints, string name)
 		{
 			string desc=lbl->value();
 			if (desc[0]=='\n') //Hack: Multiline fields get shoved to the end.
-				atend += ({GTK2.Frame(desc)->add(
-					win[name]=MultiLineEntryField()->set_wrap_mode(GTK2.WRAP_WORD_CHAR)->set_size_request(225,70)
-				),0});
+				atend += ({sprintf("+%s:%s",name,desc[1..])});
 			else
-				stuff += ({desc, win[name]=noex(GTK2.Entry())});
+				stuff += ({sprintf("%s:%s",name,desc)});
 			if (!lbl->next()) return stuff+atend;
 		}
 		foreach (bools, string name)
 		{
-			stuff += ({0,win[name]=noex(GTK2.CheckButton(lbl->value()))});
+			stuff += ({sprintf("?%s:%s",name,lbl->value())});
 			if (!lbl->next()) return stuff+atend;
 		}
 		stuff += atend; //Now grab any multiline string fields
 		//Finally, consume the remaining entries making text. There'll most
 		//likely be zero or one of them.
 		foreach (lbl;;string text)
-			if (text[0]=='\n') stuff += ({noex(GTK2.Label(text)->set_line_wrap(1)), 0});
-			else stuff += ({text, 0});
+			stuff += ({"'"+text});
 		return stuff;
 	}
 
