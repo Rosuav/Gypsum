@@ -26,6 +26,7 @@ constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
 multiset(string) is_word=0; array(string) dictionary=0;
+mapping(string:array(string)) dict_suggestions = ([]);
 
 //Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
 //It may be worth having some means of marking new worlds to be added. Or maybe have a way to recreate a lost world from the template??
@@ -135,9 +136,14 @@ void subw_ef_populate_popup(object ef,object menu,mapping subw)
 	if (!is_word || !subw->misspelled) return;
 	foreach (subw->misspelled, string checkme)
 	{
-		array(string) words = dictionary + ({ });
-		sort(String.fuzzymatch(words[*], checkme), words);
-		foreach (words[<4..], string suggestion)
+		array(string) words = dict_suggestions[checkme];
+		if (!words)
+		{
+			words = dictionary + ({ });
+			sort(String.fuzzymatch(words[*], checkme), words);
+			dict_suggestions[checkme] = words = words[<4..];
+		}
+		foreach (words, string suggestion)
 		{
 			GTK2.MenuItem item=GTK2.MenuItem(sprintf("Spell: %s -> %s", checkme, suggestion));
 			item->show()->signal_connect("activate",spellcheck, ({subw, checkme, suggestion}));
@@ -1718,6 +1724,7 @@ void update_dictionary()
 	all_words += "\n" + persist["window/dictionary/words"]||""; //Include local words
 	dictionary = filter((all_words-"\r") / "\n", lambda(string x) {return x!="" && x==lower_case(x) && x==filter(x, wordchar);});
 	is_word = (multiset)dictionary;
+	dict_suggestions = ([]);
 	foreach (win->tabs,mapping subw)
 		subw->efbuf->get_tag_table()->lookup("misspelled")->set_property("background",persist["window/dictionary/badcolor"]||"red");
 }
