@@ -605,7 +605,8 @@ class configdlg
 	{
 		array objects = ({ });
 		real_strings = real_ints = real_bools = ({ });
-		foreach (elem || elements || migrate_elements(), string element)
+		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
+		foreach (elem, string element)
 		{
 			sscanf(element, "%1[?#+']%s", string type, element);
 			sscanf(element, "%s:%s", string name, string lbl);
