@@ -495,9 +495,9 @@ class configdlg
 	/* Proposal: Instead of using all of the above four, use a single list of
 	tokens which gets parsed out to provide keyword, label, and type. Something
 	like this:
-	constant elements=({"kwd:Keyword", "name:Name", "?state:State", "9value:Value","+descr:Description"});
+	constant elements=({"kwd:Keyword", "name:Name", "?state:State", "#value:Value","+descr:Description"});
 	And maybe, if the colon is omitted, the keyword can be the lowercased name:
-	constant elements=({"kwd:Keyword", "Name", "?State", "9Value", "+descr:Description"});
+	constant elements=({"kwd:Keyword", "Name", "?State", "#Value", "+descr:Description"});
 	Advantage: Elements can be ordered arbitrarily, instead of being grouped by type. Would fix the Connect dialog UI issue where the "Auto-Log" field looks like it might mean "Auto-login".
 	*/
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
