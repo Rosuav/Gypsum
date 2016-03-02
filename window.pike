@@ -1896,14 +1896,11 @@ constant file_connect_menu="_Connect";
 class connect_menu
 {
 	inherit configdlg;
-	constant strings=({"name","host","descr","writeme","logfile"});
-	constant ints=({"port"});
-	constant bools=({"use_ka"});
-	constant labels=({
-		"Keyword", "Name", "Host name",
-		"\nDescription", "\nText to output upon connect", "\nAuto-log", //Since these are multi-line fields, they go after the next two. TODO: Auto-log doesn't need multiline.
-		"Port", "Use keep-alive",
-		"\nLogs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", " ",
+	constant elements=({
+		"kwd:Keyword", "Name", "host:Host name",
+		"#Port", "?use_ka:Use keep-alive",
+		"+descr:Description", "+writeme:Text to output upon connect", "logfile:Auto-log",
+		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", "' ",
 	});
 	//TODO: Have a drop-down list of connection types - Plain, Telnet, and maybe later SSL; default to "Autodetect" which picks between Plain and Telnet (current behaviour)
 	//Might also be cool to have some protocol assistants - IRC, SMTP, POP, IMAP - any line-based protocol could have an easy plugin that ties in with it.
