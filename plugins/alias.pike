@@ -79,8 +79,7 @@ int input(mapping(string:mixed) subw,string line)
 class aliasdlg(string persist_key)
 {
 	inherit configdlg;
-	constant strings=({"expansion"});
-	constant labels=({"Alias","Expansion","Use %* to expand to everything typed\nafter the alias name."});
+	constant elements=({"kwd:Alias","Expansion","'Use %* to expand to everything typed\nafter the alias name."});
 	mapping(string:mixed) windowprops=(["modal":1]);
 	void create(string title) {windowprops->title=title; ::create();}
 }
