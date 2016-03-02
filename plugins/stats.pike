@@ -47,9 +47,7 @@ int process(string param,mapping(string:mixed) subw)
 class statusbar_double_click
 {
 	inherit configdlg;
-	constant ints=({"total","count","min","max"});
-	constant strings=({"sscanf"});
-	constant labels=({"Keyword","\nPattern (capture with %d)","Total","Count","Min","Max"});
+	constant elements=({"kwd:Keyword","+sscanf:Pattern (capture with %d)","#Total","#Count","#Min","#Max"});
 	constant persist_key="stats/monitors";
 	mapping(string:mixed) windowprops=(["title":"Configure stats","modal":1]);
 
