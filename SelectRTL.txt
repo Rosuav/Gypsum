@@ -1,0 +1,21 @@
+jreeder: That’s in GNU Emacs on OSX El Capitan
+rosuav: Interesting. I'm guessing parts of that are expanding because the text is being shown in two pieces, but when it's all unified, it compresses?
+jreeder: Right. The word كتبت is made up of the letters ك ت ب ت
+rosuav: How would that behave if the highlighting is being done by a mouse? Ideally, I don't want to create infinite flicker.
+jreeder: When I highlight each letter you briefly see their standalone form
+jreeder: Notice it’s the same, although when I double click it selects a word and triple click it selects a line, both without showing the individual characters
+rosuav: Got it. So, I think here's what I'm getting.
+rosuav: 1) The highlighted part and the unhighlighted part get drawn completely separately, as if they were divided by an actual character or something.
+rosuav: 2) You highlight from the end to the mouse cursor, just as you would with any other text - it's just the other end.
+rosuav: I think that's implementable.
+rosuav: In fact, it's pretty much what I already have - I just need to measure properly from the other end.
+rosuav: This would be the same on mixed LTR and RTL text, right?
+jreeder: Yes, I think that’s accurate
+rosuav: So if you have LTR text followed by RTL, and you click on the LTR and sweep across to the RTL, it should highlight from mouse-down to the directionality boundary, then from the beginning of the RTL text (the right-hand edge) to the current mouse position.
+rosuav: That should be implementable.
+rosuav: The one hard bit is that I have to paint (and measure) the unhighlighted bit to the left of the mouse cursor before painting the highlighted bit
+rosuav: Currently, the painting and measuring happens through the string in codepoint order, which is why there's that weird bit
+jreeder: Well to be perfectly honest my take is that the best approach would be to have selection be text-directionality agnostic. When I’m selecting text I’m thinking visually. It’s only in typing where its important that the cursor move RTL vs LTR
+jreeder: This is actually my biggest pet peeve about mixed directionality
+jreeder: And why I started used vim
+jreeder: Because it’s so damn hard to select anything with a mouse - the selection seems to jump all over the place
