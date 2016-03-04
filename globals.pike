@@ -497,7 +497,7 @@ class configdlg
 	constant elements=({"kwd:Keyword", "name:Name", "?state:State of Being", "#value:Value","+descr:Description"});
 	If the colon is omitted, the keyword will be the first word of the lowercased name, so this is equivalent:
 	constant elements=({"kwd:Keyword", "Name", "?State of Being", "#Value", "+descr:Description"});
-	Advantage: Elements can be ordered arbitrarily, instead of being grouped by type.
+	In most cases, this and persist_key will be all you need to set.
 	*/
 	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
