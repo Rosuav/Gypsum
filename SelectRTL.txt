@@ -19,3 +19,5 @@ jreeder: Well to be perfectly honest my take is that the best approach would be 
 jreeder: This is actually my biggest pet peeve about mixed directionality
 jreeder: And why I started used vim
 jreeder: Because it’s so damn hard to select anything with a mouse - the selection seems to jump all over the place
+
+-- animated GIFs were provided but without clear license --
