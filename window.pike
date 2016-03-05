@@ -1944,6 +1944,26 @@ class connect_menu
 constant file_disconnect_menu="_Disconnect";
 void disconnect_menu(object self) {connect(0,0);}
 
+constant file_send_file="_Send File";
+void send_file(object self)
+{
+	object dlg=GTK2.FileChooserDialog("Send text file to server",mainwindow,
+		GTK2.FILE_CHOOSER_ACTION_OPEN,({(["text":"Send","id":GTK2.RESPONSE_OK]),(["text":"Cancel","id":GTK2.RESPONSE_CANCEL])})
+	)->show_all();
+	dlg->signal_connect("response",send_file_response);
+	dlg->set_current_folder(".");
+}
+
+void send_file_response(object dlg,int btn)
+{
+	string fn=dlg->get_filename();
+	dlg->destroy();
+	if (btn!=GTK2.RESPONSE_OK) return;
+	string txt=replace(replace(Stdio.read_file(fn),"\r",""),"\n","\r\n");
+	if (!has_suffix(txt,"\r\n")) txt+="\r\n";
+	send(current_subw(),txt);
+}
+
 int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {
 	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and in
