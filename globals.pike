@@ -504,7 +504,7 @@ class configdlg
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	//... end provide me.
-	array real_strings, real_ints, real_bools; //Internal implementation detail: migration tool. Do not touch.
+	array real_strings=({}), real_ints=({}), real_bools=({}); //Internal implementation detail: migration tool. Do not touch.
 
 	void create() {::create();} //Pass on no args to the window constructor - all configdlgs are independent
 
@@ -605,7 +605,6 @@ class configdlg
 	array(string|GTK2.Widget) collect_widgets(array|void elem)
 	{
 		array objects = ({ });
-		real_strings = real_ints = real_bools = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
 		foreach (elem, string element)
 		{
