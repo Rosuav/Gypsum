@@ -648,7 +648,7 @@ int mkcolor(int fg,int bg)
 }
 
 //Paint one piece of text at (x,y), updates state with the x for the next text.
-void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
+void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg,int|void markup)
 {
 	if (txt=="") return;
 	//TODO maybe: Highlight any current search term as per the keywords
@@ -663,20 +663,29 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg)
 		//Otherwise, fracture the string and paint the three parts separately.
 		//If any part is empty, it'll be quickly ignored. Note that we can't
 		//paint out of order; text MUST always be drawn strictly left to right.
-		array pieces = txt/word;
-		painttext(state,pieces[0],fg,bg); //Normal text before the keyword
-		painttext(state,word,fg,colors[info->bgcol||13]); //Different background color for the keyword
-		painttext(state,pieces[1..]*word,fg,bg); //And normal text afterward.
-		return;
+		if (markup)
+		{
+			//If we're in markup mode, alter the markup rather than fracturing (which would break the markup).
+			txt = replace(txt, word, sprintf("<span background='#%02x%02x%02x'>%s</span>", @win->color_defs[info->bgcol||13], word));
+		}
+		else
+		{
+			array pieces = txt/word;
+			painttext(state,pieces[0],fg,bg); //Normal text before the keyword
+			painttext(state,word,fg,colors[info->bgcol||13]); //Different background color for the keyword
+			painttext(state,pieces[1..]*word,fg,bg); //And normal text afterward.
+			return;
+		}
 	}
 	[GTK2.DrawingArea display,GTK2.GdkGC gc,int x,int y,int tabpos]=state;
 	object layout=display->create_pango_layout(txt);
+	if (markup) layout->set_markup(txt, sizeof(txt)); //Magic for the beginning/end of highlight
 	if (has_value(txt,'\t'))
 	{
 		if (tabpos) layout->set_tabs(tabstops[tabpos]); //else the defaults will work fine
-		state[4]=sizeof((txt/"\t")[-1])%8;
+		state[4]=sizeof((txt/"\t")[-1])%8; //TODO: This breaks in markup mode
 	}
-	else state[4]=(tabpos+sizeof(txt))%8;
+	else state[4]=(tabpos+sizeof(txt))%8; //TODO: Ditto
 	mapping sz=layout->index_to_pos(sizeof(string_to_utf8(txt))); //Note that Pango's "index" is a byte index.
 	//TODO: "Know" what the background color is, rather than re-checking based on the monochrome flag
 	if (bg!=colors[monochrome && 15]) //Since draw_text doesn't have any concept of "background pixels", we block out with a rectangle first.
@@ -700,12 +709,25 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 		if (monochrome) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
 		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
-		if (hlend<0) hlstart=sizeof(txt); //No highlight left to do.
-		if (hlstart>0) painttext(state,txt[..hlstart-1],fg,bg); //Draw the leading unhighlighted part (which might be the whole string).
-		if (hlstart<sizeof(txt))
+		if (hlend<0 || hlstart>=sizeof(txt)) //No highlight in this section.
+			painttext(state,txt,fg,bg);
+		else if (hlstart<=0 && hlend>=sizeof(txt)) //This section is all highlighted
+			painttext(state,txt,bg,fg);
+		else
 		{
-			painttext(state,txt[hlstart..min(hlend,sizeof(txt))],bg,fg); //Draw the highlighted part (which might be the whole string).
-			if (hlend<sizeof(txt)) painttext(state,txt[hlend+1..],fg,bg); //Draw the trailing unhighlighted part.
+			//The highlight starts or ends in this section.
+			//Currently, I don't know of a way to access the underlying Pango attributes from Pike,
+			//other than using the markup interface. So we use that method - escape and add tags.
+			array(string) parts = ({txt[..hlstart-1], txt[hlstart..min(hlend,sizeof(txt))], txt[hlend+1..]});
+			parts = replace(parts[*], "&", "&amp;");
+			parts = replace(parts[*], "<", "&lt;");
+			painttext(state,sprintf("%s<span foreground='#%02x%02x%02x' background='#%02x%02x%02x'>%s</span>%s",
+				parts[0], //Leading unhighlighted part (may be empty)
+				@bg->rgb(), //Foreground color comes from the current background
+				@fg->rgb(), //And vice versa
+				parts[1], //Highlighted part
+				parts[2], //Unhighlighted part
+			),fg,bg,1);
 		}
 		hlstart-=sizeof(txt); hlend-=sizeof(txt);
 	}
