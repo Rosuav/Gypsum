@@ -1733,6 +1733,8 @@ class configure_plugins
 //SourceView has a few uglinesses, including the default bracket-matching style.
 //Neuter them somewhat by not setting the colors. (They'll still be allowed to change
 //font weight etc, just not the colors - the feature's fine, just not the appearance.)
+//For some reason the tags don't have names; all _my_ tags have names, so I use that as
+//the flag. But really, I'd much rather just tinker with specific tags by identity.
 //NOTE: This may fall foul of the boom2 crash bug due to accepting iterators as start/end.
 void subw_efbuf_apply_tag(object self,object tag,mixed start,mixed end,mapping subw)
 {
