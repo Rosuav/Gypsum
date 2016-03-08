@@ -97,7 +97,9 @@ mapping(string:mixed) subwindow(string txt)
 	subw->ef->get_settings()->set_property("gtk-error-bell",persist["window/errorbell"]);
 	values(G->G->tabstatuses)->install(subw);
 	//Note that a GTK2.TextView doesn't actually support password mode, the way GTK2.Entry does.
-	//So we hack it with white-on-white.
+	//So we hack it with white-on-white. Highlighting the text will reveal the password. I could
+	//probably call that a feature (esp since some servers engage password mode for things other
+	//than password entry).
 	subw->efbuf->create_tag("password",(["background":"white","foreground":"white"]));
 	subw->efbuf->create_tag("misspelled",(["background":persist["window/dictionary/badcolor"]||"red"]));
 	subw_efbuf_modified_changed(subw->efbuf,subw);
