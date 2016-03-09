@@ -89,6 +89,8 @@ string strftime(string format,int|mapping(string:int) tm)
 //that cuts out apostrophe, so "doesn't" would count as two separate
 //words. For the moment, I'm just hard-coding the ASCII apostophe as a
 //special case; it may be necessary to use some other detection method.
+//This is used for linguistic purposes (spell checking and such), and
+//could potentially be used for arrow key handling, but isn't currently.
 int wordchar(int ch)
 {
 	return ch=='\'' || Unicode.is_wordchar(ch);
