@@ -1788,7 +1788,7 @@ void create(string name)
 	if (G->G->window) monochrome=G->G->window->monochrome;
 	G->G->window=this;
 	statustxt->tooltip="Hover a line to see when it happened";
-	movablewindow::create(""); //This one MUST be called first, and it's convenient to put a different name in - prevents collisions, other code can reliably find this.
+	movablewindow::create(""); //This one MUST be called first, and it's convenient to pass a different name up the chain - prevents collisions, other code can reliably find this.
 	mainwindow=win->mainwindow; mainwin=win;
 	if (!sizeof(win->tabs)) {addtab(); call_out(redraw,0.5,win->tabs[0]);}
 	(::create-({movablewindow::create}))(name); //Call all other constructors, in any order.
