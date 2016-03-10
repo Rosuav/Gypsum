@@ -91,6 +91,9 @@ protected string bytes_to_string(bytes data)
 //core, which is a bad idea if only one plugin will ever use it. Leave this as a TODO
 //until such time as another plugin needs the same kind of facility. Third-party reports
 //welcomed on this point :)
+//Note that since plugins can hook the prompt change, permitting them to control the
+//prompt would introduce the possibility of an infinite loop. This might need a nexthook
+//effect, same as for part-processed input.
 void setprompt(mapping conn)
 {
 	if (G->G->window->runhooks("prompt",0,conn->display,conn->curline)) return;
