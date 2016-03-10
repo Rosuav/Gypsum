@@ -1985,7 +1985,7 @@ void send_file_response(object dlg,int btn)
 	string fn=dlg->get_filename();
 	dlg->destroy();
 	if (btn!=GTK2.RESPONSE_OK) return;
-	string txt=replace(replace(Stdio.read_file(fn),"\r",""),"\n","\r\n"); //Normalize newlines (is there a better way?)
+	string txt=replace(replace(utf8_to_string(Stdio.read_file(fn)),"\r",""),"\n","\r\n"); //Normalize newlines (is there a better way?)
 	if (!has_suffix(txt,"\r\n")) txt+="\r\n";
 	send(current_subw(),txt);
 }
