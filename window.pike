@@ -99,7 +99,7 @@ mapping(string:mixed) subwindow(string txt)
 	//Note that a GTK2.TextView doesn't actually support password mode, the way GTK2.Entry does.
 	//So we hack it with white-on-white. Highlighting the text will reveal the password. I could
 	//probably call that a feature (esp since some servers engage password mode for things other
-	//than password entry).
+	//than password entry - eg while resting on Threshold RPG).
 	subw->efbuf->create_tag("password",(["background":"white","foreground":"white"]));
 	subw->efbuf->create_tag("misspelled",(["background":persist["window/dictionary/badcolor"]||"red"]));
 	subw_efbuf_modified_changed(subw->efbuf,subw);
