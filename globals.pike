@@ -1059,7 +1059,6 @@ class DNS(string hostname,function callback)
 		//get asked again for something that failed, it's quite possibly
 		//because network settings have changed and there's a chance it
 		//will now succeed.
-		//TODO: Record the TTL somewhere, or add a call_out to remove it
 		//TODO: If we have a positive response for one protocol, should we
 		//use that rather than repeating the DNS lookups for the other?
 		//eg if we look up minstrelhall.com and get 203.214.67.43 and no
