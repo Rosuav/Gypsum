@@ -1059,12 +1059,13 @@ class DNS(string hostname,function callback)
 		//get asked again for something that failed, it's quite possibly
 		//because network settings have changed and there's a chance it
 		//will now succeed.
-		//TODO: If we have a positive response for one protocol, should we
-		//use that rather than repeating the DNS lookups for the other?
-		//eg if we look up minstrelhall.com and get 203.214.67.43 and no
-		//AAAA records, should we use the 3600 TTL from the A record as
+		//NOTE: If we have a positive response for one protocol, it will
+		//be used for future lookups, ignoring the other protocol. For
+		//example, if we look up minstrelhall.com and get 203.214.67.43
+		//and no AAAA records, we use the 3600 TTL from the A record as
 		//an indication that we shouldn't bother asking for AAAA records
-		//for the next hour?
+		//for the next hour. Forcing IPv6 will retry the query, but other
+		//than that, IPv6 will be ignored.
 		//Note that technically there can be multiple different TTLs on
 		//different records of the same type. In practice this will be a
 		//rarity, so we just take the lowest TTL from all answers and
@@ -1087,6 +1088,18 @@ class DNS(string hostname,function callback)
 		callback(this,@cbargs);
 	}
 
+	int attempt(mapping cache, int prot)
+	{
+		if (cache[hostname])
+		{
+			ips = cache[hostname];
+			call_out(callback,0,this,@cbargs); //As below, always queue it on the backend.
+			return 1;
+		}
+		++pending;
+		cli->do_query(hostname, Protocols.DNS.C_IN, prot, dnsresponse);
+	}
+
 	void create(mixed ... args)
 	{
 		cbargs=args; //See above, can't be done the clean way.
@@ -1103,8 +1116,8 @@ class DNS(string hostname,function callback)
 			call_out(callback,0,this,@cbargs); //The callback is always queued on the backend rather than being called synchronously.
 			return;
 		}
-		if (prot!="6") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_A,   dnsresponse);}
-		if (prot!="4") {++pending; cli->do_query(hostname,Protocols.DNS.C_IN,Protocols.DNS.T_AAAA,dnsresponse);}
+		if (prot!="6" && attempt(G->G->dns_a   , Protocols.DNS.T_A   )) return;
+		if (prot!="4" && attempt(G->G->dns_aaaa, Protocols.DNS.T_AAAA)) return;
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
 	}
 
