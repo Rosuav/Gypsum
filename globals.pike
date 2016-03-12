@@ -1119,6 +1119,7 @@ class DNS(string hostname,function callback)
 		if (prot!="6" && attempt(G->G->dns_a   , Protocols.DNS.T_A   )) return;
 		if (prot!="4" && attempt(G->G->dns_aaaa, Protocols.DNS.T_AAAA)) return;
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
+		//^^ This might be related to the bug that was fixed in 29f587. Check for it.
 	}
 
 	string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
