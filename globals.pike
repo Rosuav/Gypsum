@@ -1116,8 +1116,8 @@ class DNS(string hostname,function callback)
 			call_out(callback,0,this,@cbargs); //The callback is always queued on the backend rather than being called synchronously.
 			return;
 		}
-		if (prot!="6" && attempt(G->G->dns_a   , Protocols.DNS.T_A   )) return;
 		if (prot!="4" && attempt(G->G->dns_aaaa, Protocols.DNS.T_AAAA)) return;
+		if (prot!="6" && attempt(G->G->dns_a   , Protocols.DNS.T_A   )) return;
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
 		//^^ This might be related to the bug that was fixed in 29f587. Check for it.
 	}
