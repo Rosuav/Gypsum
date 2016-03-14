@@ -1109,8 +1109,6 @@ class DNS(string hostname,function callback)
 		if (cache4 || cache6) {ips = cache4 + (cache6||({ })); call_out(callback, 0, this, @cbargs); return;}
 		if (prot!="6") {++pending; cli->do_query(hostname, Protocols.DNS.C_IN, Protocols.DNS.T_A,    dnsresponse);}
 		if (prot!="4") {++pending; cli->do_query(hostname, Protocols.DNS.C_IN, Protocols.DNS.T_AAAA, dnsresponse);}
-		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
-		//^^ This might be related to the bug that was fixed in 29f587. Check for it.
 	}
 
 	string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
