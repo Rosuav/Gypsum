@@ -1088,18 +1088,6 @@ class DNS(string hostname,function callback)
 		callback(this,@cbargs);
 	}
 
-	int attempt(mapping cache, int prot)
-	{
-		if (cache[hostname])
-		{
-			ips = cache[hostname];
-			call_out(callback,0,this,@cbargs); //As below, always queue it on the backend.
-			return 1;
-		}
-		++pending;
-		cli->do_query(hostname, Protocols.DNS.C_IN, prot, dnsresponse);
-	}
-
 	void create(mixed ... args)
 	{
 		cbargs=args; //See above, can't be done the clean way.
@@ -1116,8 +1104,11 @@ class DNS(string hostname,function callback)
 			call_out(callback,0,this,@cbargs); //The callback is always queued on the backend rather than being called synchronously.
 			return;
 		}
-		if (prot!="4" && attempt(G->G->dns_aaaa, Protocols.DNS.T_AAAA)) return;
-		if (prot!="6" && attempt(G->G->dns_a   , Protocols.DNS.T_A   )) return;
+		array cache4 = G->G->dns_a[hostname];
+		array cache6 = G->G->dns_aaaa[hostname];
+		if (cache4 || cache6) {ips = cache4 + (cache6||({ })); call_out(callback, 0, this, @cbargs); return;}
+		if (prot!="6") {++pending; cli->do_query(hostname, Protocols.DNS.C_IN, Protocols.DNS.T_A,    dnsresponse);}
+		if (prot!="4") {++pending; cli->do_query(hostname, Protocols.DNS.C_IN, Protocols.DNS.T_AAAA, dnsresponse);}
 		//TODO: Should there be a timeout on these lookups? (Or is there one, and it's just way way long?)
 		//^^ This might be related to the bug that was fixed in 29f587. Check for it.
 	}
