@@ -77,8 +77,8 @@ protected string bytes_to_string(bytes data)
 	catch {return utf8_to_string(data);}; //Normal case: Decode the whole string as UTF-8
 	array(string) lines=data/"\n";
 	foreach (lines;int i;string line)
-		if (catch {lines[i]=utf8_to_string(line);})
-			lines[i]=cp1252->feed(line)->drain(); //Failure case: Decode as CP-1252, line by line.
+		if (catch {lines[i]=utf8_to_string(line);}) //Failure case: Decode as UTF-8
+			lines[i]=cp1252->feed(line)->drain(); //or CP-1252, line by line.
 	return lines*"\n";
 }
 
