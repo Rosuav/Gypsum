@@ -1104,6 +1104,12 @@ class DNS(string hostname,function callback)
 			call_out(callback,0,this,@cbargs); //The callback is always queued on the backend rather than being called synchronously.
 			return;
 		}
+		//Check for cached responses. Normally, this will find either neither or both, but it's
+		//possible it'll find just one, eg if there's a query currently in flight. This will
+		//result in a partial response being given as if it were the entire; this is expected
+		//to be rare (it'd happen if a DNS server is way slower responding to AAAA requests than
+		//to A requests, or something like that), and will clear itself up once the other cache
+		//gets populated (by the original request).
 		array cache4 = G->G->dns_a[hostname];
 		array cache6 = G->G->dns_aaaa[hostname];
 		if (cache4 || cache6) {ips = cache4 + (cache6||({ })); call_out(callback, 0, this, @cbargs); return;}
