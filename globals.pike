@@ -1053,7 +1053,7 @@ class DNS(string hostname,function callback)
 	object cli=Protocols.DNS.async_client();
 
 	array(string) ips=({ }); //May be mutated by the callback; will only ever be appended to, here.
-	int pending; //If this is nonzero, the callback will be called again - possibly with more IPs (but possibly not)
+	int pending; //If this is nonzero, the callback will be called again before destruction - possibly with more IPs (but possibly not)
 
 	void dnsresponse(string domain,mapping resp)
 	{
