@@ -1047,7 +1047,9 @@ class DNS(string hostname,function callback)
 	//not working. Until it's fixed _and_ the patch makes its way into all the Pikes I
 	//support, it's safer to just use the non-idiomatic explicit form.
 	array cbargs;
-	//Note that async_dual_client would probably be better, but only marginally, so since it isn't available on all Pikes, I'll stick with UDP-only.
+	//Note that async_dual_client would probably be better, but only marginally, so since
+	//it isn't available on all Pikes, I'll stick with UDP-only. TCP is only of value for
+	//large responses, and we aren't expecting any such here (though it is possible).
 	object cli=Protocols.DNS.async_client();
 
 	array(string) ips=({ }); //May be mutated by the callback; will only ever be appended to, here.
