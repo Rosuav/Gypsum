@@ -102,7 +102,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		//Scan upward until we find a GTK2.ScrolledWindow. Depends on self->allocation() returning
 		//coordinates relative to that parent, and not to the immediate parent (which might be a
 		//layout manager or a Frame or something). What is the rule about where that boundary is?
-		//Is ScrolledWindow (or the viewport it contains) just magical?
+		//Is ScrolledWindow (or the Viewport it contains) just magical?
 		for (GTK2.Widget par=self->get_parent();par;par=par->get_parent())
 		{
 			if (par->get_hscrollbar) //Only a GTK2.ScrolledWindow has this attribute :)
