@@ -483,8 +483,8 @@ however, as there is no protection against collisions; but if you make your key
 begin with "plugins/pluginname/" (where pluginname is your plugin's name), this
 will most likely be safe.
 
-ADVISORY: Save a reference to subw for use in callbacks, but be aware of the
-possibility that the tab has been closed before your callback occurs.
+ADVISORY: Save a reference to subw for use in callbacks (or use a closure), but
+be aware that the tab may have been closed before your callback occurs.
 
 BEST PRACTICE: Provide a constructor, which chains through to all parents'.
 If your plugin inherits only one mode (command, hook, window), a create()
