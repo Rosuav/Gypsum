@@ -1077,7 +1077,8 @@ class DNS(string hostname,function callback)
 		//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
 		//get the right address. TODO: Properly handle CNAMEs, including firing off other
 		//requests. Easiest to put all answers into the cache, then attempt to pull from
-		//the cache to get our actual response.
+		//the cache to get our actual response. Which means stuffing the cache based on
+		//resp->an[*]->name, not the provided domain.
 		//TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
 		if (resp && resp->an)
 		{
