@@ -101,7 +101,7 @@ int process(string param,mapping(string:mixed) subw)
 		//Very handy if it was a non-ASCII string and you want to see it as
 		//characters rather than codepoints (the default %O is designed so you
 		//can unambiguously identify codepoints, but it doesn't let you see
-		//what the characters themselves look like).
+		//what the characters themselves look like, nor usefully copy/paste).
 		if (stringp(G->G->last_x_result)) say(subw,G->G->last_x_result);
 		else say(subw,"%% Type '/x some_expression' to calculate something.");
 		return 1;
