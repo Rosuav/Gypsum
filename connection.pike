@@ -455,7 +455,7 @@ mapping connect(object display,mapping info)
 void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 {
 	if (stringp(status)) {say(conn->display, "%%% "+status); return;}
-	object est = m_delete(conn, "establish"); //De-floop
+	object est = m_delete(conn, "establish"); //De-floop. Whatever happens here, it's done and finished. No more resolving.
 	if (!status)
 	{
 		if (!est->errno) say(conn->display, "%%% Unable to resolve host name.");
