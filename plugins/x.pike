@@ -117,6 +117,8 @@ int process(string param,mapping(string:mixed) subw)
 	int say(mixed ... args) {if (sizeof(args)==1 || stringp(args[0])) window->say(0,@args); else window->say(@args);}
 	string nfc(string txt) {return Unicode.normalize(txt,\"NFC\");} function NFC=nfc;
 	string nfd(string txt) {return Unicode.normalize(txt,\"NFD\");} function NFD=nfd;
+	string nfkc(string txt) {return Unicode.normalize(txt,\"NFKC\");} function NFKC=nfkc;
+	string nfkd(string txt) {return Unicode.normalize(txt,\"NFKD\");} function NFKD=nfkd;
 	//Add any other 'convenience names' here
 
 	mixed foo(mapping(string:mixed) subw,mixed _)
