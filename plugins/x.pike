@@ -92,7 +92,7 @@ int input(mapping(string:mixed) subw,string line)
 
 int closetab(mapping(string:mixed) subw,int index) {m_delete(subw,"hilfe");} //Break the refloop
 
-//Direct compilation mode - the original. Convenient for single expressions.
+//Direct compilation mode - the normal usage. Convenient for single expressions.
 int process(string param,mapping(string:mixed) subw)
 {
 	if (param=="")
