@@ -40,7 +40,8 @@ int output(mapping(string:mixed) subw,string line)
 	foreach (monitors;string kwd;array fmt) if (sscanf(line,fmt[0],string cur) && cur)
 	{
 		//TODO: First migrate from "wealth/last_*" to "wealth/*/last_*"
-		//and then use the per-world ones
+		//and then use the per-world ones. So the first post-update usage
+		//will "claim" the current globals, and then they'll be per-world.
 		string last=persist["wealth/last_"+kwd] || "";
 		string first=persist["wealth/first_"+kwd];
 		if (first) last+=sprintf(" -> %d",diff(cur,last));
