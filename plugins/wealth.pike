@@ -10,6 +10,7 @@ a new day), and you'll see and reset stats.
 ";
 
 //TODO: Per-world stats (based on subw->world)
+//persist["wealth/%s/last_%s"] - helper needed??
 
 //A set of available monitors
 mapping(string:array) allmonitors=([
