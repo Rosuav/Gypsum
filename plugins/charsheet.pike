@@ -1174,6 +1174,9 @@ int output(mapping(string:mixed) subw,string line)
 		{
 			string raw = m_delete(subw,"charsheet_eax");
 			mixed data;
+			//Currently, "charsheet" emits B64+encode_value, and
+			//"charsheet json" emits JSON. Accept either. Later,
+			//the default will be JSON; eventually, *only* JSON.
 			catch {data=decode_value(MIME.decode_base64(raw));};
 			if (!data) catch {data=Standards.JSON.decode(raw);};
 			if (mappingp(data))
