@@ -1172,7 +1172,10 @@ int output(mapping(string:mixed) subw,string line)
 	{
 		if (line=="<=== Charsheet ===>")
 		{
-			mixed data; catch {data=decode_value(MIME.decode_base64(m_delete(subw,"charsheet_eax")));};
+			string raw = m_delete(subw,"charsheet_eax");
+			mixed data;
+			catch {data=decode_value(MIME.decode_base64(raw));};
+			if (!data) catch {data=Standards.JSON.decode(raw);};
 			if (mappingp(data))
 			{
 				program cs_type = this["charsheet_"+data->cs_type] || charsheet;
