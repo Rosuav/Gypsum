@@ -9,9 +9,6 @@ Type '/wealth reset' when your statistical period changes (eg at the start of
 a new day), and you'll see and reset stats.
 ";
 
-//TODO: Per-world stats (based on subw->world)
-//persist["wealth/%s/last_%s"] - helper needed??
-
 //A set of available monitors
 mapping(string:array) allmonitors=([
 	//Monitors for Threshold RPG
@@ -28,10 +25,16 @@ int diff(string cur,string last)
 	return (int)(cur-","-" ")-(int)(last-","-" ");
 }
 
+//Helpers to make sure I'm consistent with persist keys
+#define perfirst(kw) persist["wealth/"+subw->world+"/first_"+kw]
+#define perlast(kw) persist["wealth/"+subw->world+"/last_"+kw]
+#define perdiff(kw) persist["wealth/"+subw->world+"/diff_"+kw]
+
 void updstatus()
 {
+	string world = persist["wealth/lastworld"]; if (!world) return;
 	string status="";
-	foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/diff_"+kw]);
+	foreach (sort(indices(monitors)),string kw) status+=sprintf("%s %d, ",monitors[kw][2],persist["wealth/"+world+"/diff_"+kw]);
 	setstatus(status[..<2]);
 }
 
@@ -39,22 +42,31 @@ int output(mapping(string:mixed) subw,string line)
 {
 	foreach (monitors;string kwd;array fmt) if (sscanf(line,fmt[0],string cur) && cur)
 	{
-		//TODO: First migrate from "wealth/last_*" to "wealth/*/last_*"
-		//and then use the per-world ones. So the first post-update usage
-		//will "claim" the current globals, and then they'll be per-world.
-		string last=persist["wealth/last_"+kwd] || "";
-		string first=persist["wealth/first_"+kwd];
+		if (persist["wealth/first_"+kwd])
+		{
+			//Migrate from "wealth/last_*" to "wealth/*/last_*" only when a
+			//useful line comes through - but then migrate everything.
+			foreach (indices(monitors), string kw)
+			{
+				if (string f=m_delete(persist,"wealth/first_"+kw)) perfirst(kw)=f;
+				if (string l=m_delete(persist,"wealth/last_"+kw)) perlast(kw)=l;
+				if (string d=m_delete(persist,"wealth/diff_"+kw)) perdiff(kw)=d;
+			}
+		}
+		string last=perlast(kwd) || "";
+		string first=perfirst(kwd);
 		if (first) last+=sprintf(" -> %d",diff(cur,last));
-		else persist["wealth/first_"+kwd]=first=cur;
+		else perfirst(kwd)=first=cur;
 		say(subw,fmt[1],first,last); //TODO: Govern this with an option
-		persist["wealth/last_"+kwd]=cur;
-		persist["wealth/diff_"+kwd]=diff(cur,first);
-		if (!persist["wealth/stats_since"]) persist["wealth/stats_since"]=time();
+		perlast(kwd)=cur;
+		perdiff(kwd)=diff(cur,first);
+		if (!persist["wealth/"+subw->world+"/stats_since"]) persist["wealth/"+subw->world+"/stats_since"]=time();
+		persist["wealth/lastworld"] = subw->world;
 		updstatus();
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
 		if (sscanf(replace(line,({" ",","}),""),type+":%d%s",int val,string after)==2 && after=="")
-			persist["wealth/"+type]=val;
+			persist["wealth/"+subw->world+"/"+type]=val;
 }
 
 //TODO: Show docs somehow - there are a lot of subcommands now.
@@ -78,19 +90,20 @@ int process(string param,mapping(string:mixed) subw)
 		updstatus();
 		return 1;
 	}
-	if (persist["wealth/stats_since"]) say(subw,"%% Stats since "+ctime(persist["wealth/stats_since"]));
-	foreach (indices(monitors),string kwd) if (persist["wealth/first_"+kwd])
+	if (int t=persist["wealth/"+subw->world+"/stats_since"]) say(subw,"%% Stats since "+ctime(t));
+	foreach (indices(monitors),string kwd) if (perfirst(kwd))
 	{
-		say(subw,"%%%% %s: Initial %s, now %s -> %d",kwd,persist["wealth/first_"+kwd],persist["wealth/last_"+kwd],
-			(int)(persist["wealth/last_"+kwd]-","-" ")-(int)(persist["wealth/first_"+kwd]-","-" "));
-		if (param=="reset" || param=="reset "+kwd) persist["wealth/first_"+kwd]=persist["wealth/last_"+kwd];
+		say(subw,"%%%% %s: Initial %s, now %s -> %d",kwd,perfirst(kwd),perlast(kwd),
+			(int)(perlast(kwd)-","-" ")-(int)(perfirst(kwd)-","-" "));
+		if (param=="reset" || param=="reset "+kwd) perfirst(kwd)=perlast(kwd);
 	}
-	if (param=="reset") {m_delete(persist,"wealth/stats_since"); say(subw,"%% Stats reset to zero.");}
+	if (param=="reset") {m_delete(persist,"wealth/"+subw->world+"/stats_since"); say(subw,"%% Stats reset to zero.");}
 	return 1;
 }
 
 int party(string param,mapping(string:mixed) subw)
 {
+	//NOTE: Partying isn't currently per-world. Should it be?
 	if (param=="")
 	{
 		if (m_delete(persist,"wealth/party")) say(subw,"%% No longer partying.");
@@ -99,13 +112,13 @@ int party(string param,mapping(string:mixed) subw)
 	}
 	int members=sizeof(persist["wealth/party"]=param/" ")+1;
 	say(subw,"%% Partying with "+members+" members (self included).");
-	persist["wealth/party_split"]=persist["wealth/last_wealth"];
+	persist["wealth/party_split"]=perlast("wealth");
 	return 1;
 }
 
 int split(string param,mapping(string:mixed) subw)
 {
-	int tot=diff(persist["wealth/last_wealth"],persist["wealth/party_split"]);
+	int tot=diff(perlast("wealth"),persist["wealth/party_split"]);
 	int members=sizeof(persist["wealth/party"])+1;
 	int each=tot/members;
 	say(subw,"%% Splitting "+tot+" slag between "+members+" people - "+each+" each.");
