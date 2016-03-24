@@ -66,7 +66,7 @@ int output(mapping(string:mixed) subw,string line)
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
 		if (sscanf(replace(line,({" ",","}),""),type+":%d%s",int val,string after)==2 && after=="")
-			persist["wealth/"+subw->world+"/"+type]=val;
+			persist["wealth/"+type]=val;
 }
 
 //TODO: Show docs somehow - there are a lot of subcommands now.
