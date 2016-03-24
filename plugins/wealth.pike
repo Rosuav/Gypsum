@@ -104,6 +104,7 @@ int process(string param,mapping(string:mixed) subw)
 int party(string param,mapping(string:mixed) subw)
 {
 	//NOTE: Partying isn't currently per-world. Should it be?
+	//This is where the wealth/Orb, wealth/Danar, etc figures would go.
 	if (param=="")
 	{
 		if (m_delete(persist,"wealth/party")) say(subw,"%% No longer partying.");
