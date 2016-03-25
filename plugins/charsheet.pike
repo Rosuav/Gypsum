@@ -21,7 +21,8 @@ mapping(string:multiset(object)) charsheets;
 //May not be happening any more - not sure. At any rate, it's not so laggy, and I've had
 //Gypsum up for the past month-ish.
 //Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
-//problem actually comes from somewhere else in Gypsum, and this is just a symptom.
+//problem actually comes from somewhere else in Gypsum, and this is just a symptom. Or
+//maybe it's actually a GTK issue somewhere?
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
