@@ -191,7 +191,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 		textread(conn,data,0); conn->ansibuffer="\x1b"+ansi;
 		if (ansi[0]!='[') {textread(conn,"\\e",0); conn->ansibuffer=ansi; continue;} //Report an escape character as the literal string "\e" if it doesn't start an ANSI code
 		array(int|string) params=({ }); int|string curparam=UNDEFINED;
-		colorloop: for (int i=1;i<sizeof(ansi)+1;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, blow up back to socket-read
+		colorloop: for (int i=1;;++i) switch (ansi[i]) //Deliberately go past where we can index - if we don't have the whole ANSI sequence, blow up back to socket-read
 		{
 			case '0'..'9': curparam=curparam*10+ansi[i]-'0'; break;
 			case ';': params+=({curparam}); curparam=UNDEFINED; break;
