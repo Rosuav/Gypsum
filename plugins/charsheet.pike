@@ -979,7 +979,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			]),
 			//TODO: Add some non-PHB classes, but make them invisible unless
 			//already selected. Then you can put one in at level 1, and then
-			//level up in them with the assistant.
+			//level up in them with the assistant. (You already can't take
+			//level 1 with this, so the only cost is that you can't cross-class
+			//to a non-PHB class this way.)
 		]);
 		array recalc=({ });
 
