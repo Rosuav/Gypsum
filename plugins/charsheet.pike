@@ -977,6 +977,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				"fort": "Poor", "refl": "Poor", "will": "Good",
 				"dontforget": "Don't forget: Learn new spells",
 			]),
+			//TODO: Add some non-PHB classes, but make them invisible unless
+			//already selected. Then you can put one in at level 1, and then
+			//level up in them with the assistant.
 		]);
 		array recalc=({ });
 
