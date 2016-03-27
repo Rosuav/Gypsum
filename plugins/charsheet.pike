@@ -982,6 +982,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//level up in them with the assistant. (You already can't take
 			//level 1 with this, so the only cost is that you can't cross-class
 			//to a non-PHB class this way.)
+			//Even better would be to have these classes somehow exist in the
+			//charsheet itself. Not sure how that would be done, though.
 		]);
 		array recalc=({ });
 
