@@ -984,6 +984,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//to a non-PHB class this way.)
 			//Even better would be to have these classes somehow exist in the
 			//charsheet itself. Not sure how that would be done, though.
+			//Or alternatively, let DMs register new classes???
 		]);
 		array recalc=({ });
 
