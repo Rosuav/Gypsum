@@ -1551,7 +1551,7 @@ void subw_efbuf_modified_changed(object buf,mapping subw)
 			if (pos <= cursor && cursor <= nextpos) continue; //Ignore the word where the cursor is
 			word = filter(word, wordchar);
 			if (word == "") continue;
-			if (word != lower_case(word)) continue; //Or _should_ it be lower-cased?? Maybe make that configurable?
+			if (word != lower_case(word)) continue; //Or should it be lower-cased? Maybe make that configurable - lower-case them, or discard all with an ucase?
 			if (is_word[word]) continue; //Correctly spelled.
 			if (!has_value(subw->misspelled, word)) subw->misspelled += ({word});
 			buf->apply_tag_by_name("misspelled", buf->get_iter_at_offset(pos), buf->get_iter_at_offset(nextpos));
