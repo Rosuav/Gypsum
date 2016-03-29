@@ -985,6 +985,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//Even better would be to have these classes somehow exist in the
 			//charsheet itself. Not sure how that would be done, though.
 			//Or alternatively, let DMs register new classes???
+			//For this to be practical, it needs to encode as a single simple
+			//string, which people can copy/paste. That would improve the
+			//readability of this code, too. We can probably ignore the class
+			//skills list for now, and use a string somewhat thus:
+			//"Wizard": "4 hd, 2 skills, Poor BAB, Poor/Poor/Good saves, Don't forget: Learn new spells"
 		]);
 		array recalc=({ });
 
