@@ -1055,6 +1055,8 @@ class DNS(string hostname,function callback)
 	array(string) ips=({ }); //May be mutated by the callback; will only ever be appended to, here.
 	int pending; //If this is nonzero, the callback will be called again before destruction - possibly with more IPs (but possibly not)
 
+	//Possible bug sighted 20160330 - a DNS lookup that ought to have succeeded was failing.
+	//Cause uncertain. The cache expired and lookups began working again. Monitor.
 	void dnsresponse(string domain,mapping resp)
 	{
 		//For simplicity, don't bother caching negative responses. If we
