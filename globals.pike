@@ -1082,6 +1082,8 @@ class DNS(string hostname,function callback)
 		//the cache to get our actual response. Which means stuffing the cache based on
 		//resp->an[*]->name, not the provided domain.
 		//TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
+		//TODO: Report more useful information on failure, eg distinguish NXDOMAIN from
+		//an absence of records and from timeouts.
 		if (resp && resp->an)
 		{
 			array ans = (resp->an->a + resp->an->aaaa) - ({0});
