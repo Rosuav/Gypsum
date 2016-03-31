@@ -1,3 +1,5 @@
+inherit hook;
+
 constant docstring=#"
 Various functions to make IRC connections easier.
 
