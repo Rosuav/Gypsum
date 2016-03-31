@@ -506,9 +506,8 @@ class configdlg
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	//... end provide me.
-	array real_strings=({}), real_ints=({}), real_bools=({}); //Internal implementation detail - migration from the constants. Do not touch.
 
-	void create() {::create();} //Pass on no args to the window constructor - all configdlgs are independent
+	void create() {if (persist_key && !items) items=persist->setdefault(persist_key,([])); ::create();} //Pass on no args to the window constructor - all configdlgs are independent
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
 	string selecteditem()
@@ -529,9 +528,9 @@ class configdlg
 		if (!info)
 			if (allow_new) info=([]); else return;
 		if (allow_rename) items[newkwd]=info;
-		foreach (real_strings,string key) info[key]=win[key]->get_text();
-		foreach (real_ints,string key) info[key]=(int)win[key]->get_text();
-		foreach (real_bools,string key) info[key]=(int)win[key]->get_active();
+		foreach (win->real_strings,string key) info[key]=win[key]->get_text();
+		foreach (win->real_ints,string key) info[key]=(int)win[key]->get_text();
+		foreach (win->real_bools,string key) info[key]=(int)win[key]->get_active();
 		save_content(info);
 		if (persist_key) persist->save();
 		[object iter,object store]=win->sel->get_selected();
@@ -550,8 +549,8 @@ class configdlg
 		string kwd=iter && store->get_value(iter,0);
 		if (!kwd) return;
 		store->remove(iter);
-		foreach (real_strings+real_ints,string key) win[key]->set_text("");
-		foreach (real_bools,string key) win[key]->set_active(0);
+		foreach (win->real_strings+win->real_ints,string key) win[key]->set_text("");
+		foreach (win->real_bools,string key) win[key]->set_active(0);
 		delete_content(kwd,m_delete(items,kwd));
 		if (persist_key) persist->save();
 	}
@@ -561,16 +560,16 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
-		foreach (real_strings,string key) win[key]->set_text((string)(info[key] || ""));
-		foreach (real_ints,string key) win[key]->set_text((string)info[key]);
-		foreach (real_bools,string key) win[key]->set_active((int)info[key]);
+		foreach (win->real_strings,string key) win[key]->set_text((string)(info[key] || ""));
+		foreach (win->real_ints,string key) win[key]->set_text((string)info[key]);
+		foreach (win->real_bools,string key) win[key]->set_active((int)info[key]);
 		load_content(info);
 	}
 
 	void makewindow()
 	{
+		win->real_strings = win->real_ints = win->real_bools = ({ });
 		object ls=GTK2.ListStore(({"string","string"}));
-		if (persist_key && !items) items=persist->setdefault(persist_key,([]));
 		//TODO: Break out the list box code into a separate object - it'd be useful eg for zoneinfo.pike.
 		foreach (sort(indices(items)),string kwd)
 		{
@@ -616,19 +615,19 @@ class configdlg
 			switch (type)
 			{
 				case "?": //Boolean
-					real_bools += ({name});
+					win->real_bools += ({name});
 					objects += ({0,win[name]=noex(GTK2.CheckButton(lbl))});
 					break;
 				case "#": //Integer
-					real_ints += ({name});
+					win->real_ints += ({name});
 					objects += ({lbl, win[name]=noex(GTK2.Entry())});
 					break;
 				case 0: //String
-					real_strings += ({name});
+					win->real_strings += ({name});
 					objects += ({lbl, win[name]=noex(GTK2.Entry())});
 					break;
 				case "+": //Multi-line text
-					real_strings += ({name});
+					win->real_strings += ({name});
 					objects += ({GTK2.Frame(lbl)->add(
 						win[name]=MultiLineEntryField()->set_wrap_mode(GTK2.WRAP_WORD_CHAR)->set_size_request(225,70)
 					),0});
@@ -638,7 +637,7 @@ class configdlg
 					break;
 			}
 		}
-		real_strings -= ({"kwd"});
+		win->real_strings -= ({"kwd"});
 		return objects;
 	}
 
