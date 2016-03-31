@@ -1757,8 +1757,7 @@ void update_dictionary()
 
 void makewindow()
 {
-	win->mainwindow=mainwindow=GTK2.Window(GTK2.WindowToplevel);
-	mainwindow->set_title("Gypsum");
+	win->mainwindow=mainwindow=GTK2.Window((["title": "Gypsum"]));
 	mainwindow->set_default_size(800,500);
 	GTK2.AccelGroup accel=G->G->accel=GTK2.AccelGroup();
 	G->G->plugin_menu=([]); //Note that, as of 20141219, this no longer needs to be initialized here in makewindow(). Is there a better place for it? It doesn't hurt here, but it's illogical.
