@@ -90,6 +90,19 @@ object persist=class(string savefn)
 		return ret;
 	}
 
+	//Dig deep into persist[] according to a path
+	//Returns a regular mapping, *not* something that autosaves.
+	mapping path(string ... parts)
+	{
+		mapping ret = data;
+		foreach (parts, string idx)
+		{
+			if (undefinedp(ret[idx])) {ret[idx] = ([]); save();}
+			ret = ret[idx];
+		}
+		return ret;
+	}
+
 	void save() {if (!saving) {saving=1; call_out(dosave,0);}}
 	
 	void dosave()
