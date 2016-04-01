@@ -633,8 +633,18 @@ class configdlg
 					),0});
 					break;
 				case "'": //Descriptive text
-					objects += ({noex(GTK2.Label(lbl)->set_line_wrap(1)), 0});
+				{
+					//Names apply to labels only if they consist entirely of lower-case ASCII letters.
+					//Otherwise, the label has no name (even if it contains a colon).
+					sscanf(element, "%[a-z]:%s", string lblname, string lbltext);
+					//This looks a little odd, but it does work. If parsing is successful, we have
+					//a name to save under; otherwise, sscanf will have put the text into lblname,
+					//so we use that as the label *text*, and it has no name.
+					object obj = noex(GTK2.Label(lbltext || element)->set_line_wrap(1));
+					objects += ({obj, 0});
+					if (lbltext) win[lblname] = obj;
 					break;
+				}
 			}
 		}
 		win->real_strings -= ({"kwd"});
