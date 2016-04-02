@@ -45,16 +45,6 @@ class bouncer(string ... keys)
 	}
 }
 
-//Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
-//Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
-//When it expires, the signal is removed. obj should be a GTK2.G.Object or similar.
-class gtksignal(object obj)
-{
-	int signal_id;
-	void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
-	void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
-}
-
 //Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
 //Recognizes a subset of strftime(3)'s formatting codes - notably not the locale-based ones.
 //Month/day names are not localized. Unrecognized percent codes are copied through unchanged.
@@ -99,6 +89,17 @@ int wordchar(int ch)
 //TODO: Migrate some of these GTK utility functions/classes to something importable,
 //which can then be used elsewhere (eg in shed/translit.pike). And then propose them
 //for backporting into core, maybe?
+
+//Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
+//Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
+//When it expires, the signal is removed. obj should be a GTK2.G.Object or similar.
+class gtksignal(object obj)
+{
+	int signal_id;
+	void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
+	void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
+}
+
 class MessageBox
 {
 	inherit GTK2.MessageDialog;
