@@ -88,7 +88,9 @@ int wordchar(int ch)
 
 //TODO: Migrate some of these GTK utility functions/classes to something importable,
 //which can then be used elsewhere (eg in shed/translit.pike). And then propose them
-//for backporting into core, maybe?
+//for backporting into core, maybe? Or at least have them in a separate file, which
+//would make backporting from other projects easier. It'd still be a hassle to use
+//"just a few" bits from it.
 
 //Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
 //Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
