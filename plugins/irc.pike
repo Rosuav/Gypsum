@@ -3,11 +3,12 @@ inherit hook;
 constant docstring=#"
 Various functions to make IRC connections easier.
 
-TODO: Apply these only to a specially-marked world.
+Will generally apply only to port 6667 connections.
 ";
 
 int output(mapping(string:mixed) subw,string line)
 {
+	if (!has_suffix(subw->connection->sock->query_address(), " 6667")) return;
 	if (sscanf(line, "PING :%s", string pingpong))
 	{
 		send(subw, "PONG :"+pingpong+"\r\n");
