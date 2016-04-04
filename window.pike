@@ -812,6 +812,7 @@ int subw_b4_ef_key_press_event(object self,array|object ev,mapping subw)
 	if (arrayp(ev)) ev=ev[0];
 	switch (ev->keyval)
 	{
+		case 0xFFC1: //Hack: F4 == enter. Debugging help.
 		case 0xFF0D: case 0xFF8D: enterpressed(subw); return 1;
 		case 0xFF52: //Up arrow
 		{
