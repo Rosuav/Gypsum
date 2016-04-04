@@ -343,13 +343,8 @@ void sockwrite(mapping conn)
 	if (conn->sock && conn->writeme!="") conn->writeme=conn->writeme[conn->sock->write(conn->writeme)..];
 }
 
-/**
- * Buffered write to socket
- *
- * @param conn Current connection
- * @param text Text to be written to the socket - will be encoded UTF-8.
- * @return 1 if the text was successfully queued for sending.
- */
+//Buffered write to socket - text will be encoded UTF-8.
+//Returns 1 if the text was successfully queued for sending.
 int send(mapping conn,string text)
 {
 	if (!conn) return 0;
