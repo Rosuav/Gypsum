@@ -81,6 +81,7 @@ string strftime(string format,int|mapping(string:int) tm)
 //special case; it may be necessary to use some other detection method.
 //This is used for linguistic purposes (spell checking and such), and
 //could potentially be used for arrow key handling, but isn't currently.
+//TODO: How does this compare with \b handling in various regex engines?
 int wordchar(int ch)
 {
 	return ch=='\'' || Unicode.is_wordchar(ch);
