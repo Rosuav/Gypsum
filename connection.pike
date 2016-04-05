@@ -344,7 +344,7 @@ void sockwrite(mapping conn)
 }
 
 //Buffered write to socket - text will be encoded UTF-8.
-//Returns 1 if the text was successfully queued for sending.
+//Returns 1 if the text was successfully enqueued.
 int send(mapping conn,string text)
 {
 	if (!conn) return 0;
