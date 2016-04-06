@@ -1172,7 +1172,7 @@ class establish_connection(string hostname,int port,function callback)
 	void cancel() {callback=0;} //Prevent further calls to the callback (eg if the user requests cancellation)
 	void connected()
 	{
-		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn(); return;}
+		if (!sock->is_open() || !sock->query_address()) {sock=0; tryconn(); return;} //Actually a failure, not success.
 		callback(sock, @cbargs);
 		cancel();
 	}
