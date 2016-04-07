@@ -611,8 +611,22 @@ class configdlg
 	{
 		array objects = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
-		foreach (elem, string element)
+		foreach (elem, mixed element)
 		{
+			if (mappingp(element))
+			{
+				//EXPERIMENTAL: A mapping creates a notebook.
+				object nb = GTK2.Notebook();
+				foreach (sort(indices(element)), string tabtext)
+					nb->append_page(
+						//Tab contents: Recursively collect widgets from the given array.
+						two_column(collect_widgets(element[tabtext])),
+						//Tab text comes from the mapping key.
+						GTK2.Label(tabtext)
+					);
+				objects += ({nb, 0});
+				continue;
+			}
 			sscanf(element, "%1[?#+']%s", string type, element);
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
