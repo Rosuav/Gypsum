@@ -345,6 +345,9 @@ void sockwrite(mapping conn)
 
 //Buffered write to socket - text will be encoded UTF-8.
 //Returns 1 if the text was successfully enqueued.
+//Has been documented for plugin use but never encouraged. It may
+//in the future have its signature changed (eg to automatically add
+//a line ending), so do NOT depend on this externally.
 int send(mapping conn,string text)
 {
 	if (!conn) return 0;
