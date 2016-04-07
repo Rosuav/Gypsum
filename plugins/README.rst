@@ -470,12 +470,8 @@ ADVISORY: Commands can be synthesized directly to a subw::
 
 	send(subw,line+"\r\n");
 
-(Note that a disconnected subwindow will silently ignore sent data.)
-This should be considered abnormal for an input hook, however, as
-it bypasses other hooks - use nexthook() instead. Alternatively,
-call G->G->window->execcommand() to send past all current hooks,
-as though the user had just typed the command. None of this is
-supported, however.
+This is sneaking into the internals, however, and is not supported. In future,
+a fully-supported API may be provided; for now, this is available.
 
 ADVISORY: Additional information may be stored in subw, or in subw->connection
 if it should apply to the current connection only. This is not guaranteed,
