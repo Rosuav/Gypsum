@@ -1233,7 +1233,7 @@ class colorsdlg
 	inherit configdlg;
 	constant ints=({"r","g","b"});
 	constant allow_new=0,allow_delete=0,allow_rename=0;
-	mapping(string:mixed) windowprops=(["title":"Channel colors"]);
+	mapping(string:mixed) windowprops=(["title":"Color definitions"]);
 	void create()
 	{
 		items=([]);
