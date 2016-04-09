@@ -246,7 +246,6 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 	constant strings=({"descr"});
 	constant ints=({"bgcol"});
 
-	//Bury the argument, just in case. Not sure why this is important but it is. (Possibly it's because there's an implicit create() from the capture of selectme.)
 	void create() {::create();}
 
 	GTK2.Widget make_content()
