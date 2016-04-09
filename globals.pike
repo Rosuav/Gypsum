@@ -1084,6 +1084,7 @@ class DNS(string hostname,function callback)
 
 	//Possible bug sighted 20160330 - a DNS lookup that ought to have succeeded was failing.
 	//Cause uncertain. The cache expired and lookups began working again. Monitor.
+	//TODO: What should happen on SERVFAIL or other responses?
 	void dnsresponse(string domain,mapping resp)
 	{
 		//For simplicity, don't bother caching negative responses. If we
