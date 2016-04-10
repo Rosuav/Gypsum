@@ -994,6 +994,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//it's not flexible. "%d hd, %d skills, %s BAB, %s/%s/%s saves, %s"
 			//to get all the information exactly as per the above (apart from
 			//abbr).
+			//Leave this until it's needed by a DM. I don't personally need it
+			//(Lumina uses a different client), and this needs someone to use
+			//it live before it can be depended on.
 		]);
 		array recalc=({ });
 
