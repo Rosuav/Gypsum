@@ -1084,34 +1084,41 @@ class DNS(string hostname,function callback)
 
 	//Possible bug sighted 20160330 - a DNS lookup that ought to have succeeded was failing.
 	//Cause uncertain. The cache expired and lookups began working again. Monitor.
-	//TODO: What should happen on SERVFAIL or other responses?
 	void dnsresponse(string domain,mapping resp)
 	{
-		//For simplicity, don't bother caching negative responses. If we
-		//get asked again for something that failed, it's quite possibly
-		//because network settings have changed and there's a chance it
-		//will now succeed.
-		//NOTE: If we have a positive response for one protocol, it will
-		//be used for future lookups, ignoring the other protocol. For
-		//example, if we look up minstrelhall.com and get 203.214.67.43
-		//and no AAAA records, we use the 3600 TTL from the A record as
-		//an indication that we shouldn't bother asking for AAAA records
-		//for the next hour. Forcing IPv6 will retry the query, but other
-		//than that, IPv6 will be ignored.
-		//Note that technically there can be multiple different TTLs on
-		//different records of the same type. In practice this will be a
-		//rarity, so we just take the lowest TTL from all answers and
-		//apply that to all of them. Simpler that way :)
-		//Note that we depend on upstream DNS not sending us superfluous responses. But
-		//we'd depend on them to not send us outright forged responses anyway, so that's
-		//not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
-		//get the right address. TODO: Properly handle CNAMEs, including firing off other
-		//requests. Easiest to put all answers into the cache, then attempt to pull from
-		//the cache to get our actual response. Which means stuffing the cache based on
-		//resp->an[*]->name, not the provided domain.
-		//TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
-		//TODO: Report more useful information on failure, eg distinguish NXDOMAIN from
-		//an absence of records and from timeouts.
+		/* CACHING [one of the hardest problems in computing]
+
+		For simplicity, don't bother caching negative responses. If we
+		get asked again for something that failed, it's quite possibly
+		because network settings have changed and there's a chance it
+		will now succeed.
+
+		NOTE: If we have a positive response for one protocol, it will
+		be used for future lookups, ignoring the other protocol. For
+		example, if we look up minstrelhall.com and get 203.214.67.43
+		and no AAAA records, we use the 3600 TTL from the A record as
+		an indication that we shouldn't bother asking for AAAA records
+		for the next hour. Forcing IPv6 will retry the query, but other
+		than that, IPv6 will be ignored.
+
+		Note that technically there can be multiple different TTLs on
+		different records of the same type. In practice this will be a
+		rarity, so we just take the lowest TTL from all answers and
+		apply that to all of them. Simpler that way :)
+
+		Note that we depend on upstream DNS not sending us superfluous responses. But
+		we'd depend on them to not send us outright forged responses anyway, so that's
+		not a big deal. If a server sends back a CNAME and a corresponding A/AAAA, we'll
+		get the right address. TODO: Properly handle CNAMEs, including firing off other
+		requests. Easiest to put all answers into the cache, then attempt to pull from
+		the cache to get our actual response. Which means stuffing the cache based on
+		resp->an[*]->name, not the provided domain.
+
+		TODO: Is this getting incorrect results if additional records are sent? CHECK ME!
+		TODO: Report more useful information on failure, eg distinguish NXDOMAIN from
+		an absence of records and from timeouts.
+		TODO: What should happen on SERVFAIL or other responses?
+		*/
 		if (resp && resp->an)
 		{
 			array ans = (resp->an->a + resp->an->aaaa) - ({0});
