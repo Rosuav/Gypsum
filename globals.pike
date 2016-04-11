@@ -376,8 +376,7 @@ class window
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
-	//non-signals in the array; for future compatibility, ensure that everything is either
-	//a gtksignal object or the integer 0, though as of 20150103 nothing depends on this.
+	//nulls in the array, as exploited here.
 	void dosignals()
 	{
 		//NOTE: This does *not* use += here - this is where we (re)initialize the array.
