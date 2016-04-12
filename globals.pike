@@ -387,6 +387,7 @@ class window
 		collect_signals("sig_", win);
 	}
 
+	//NOTE: prefix *must* be a single 'word' followed by an underscore. Stuff breaks otherwise.
 	void collect_signals(string prefix, mapping(string:mixed) searchme,mixed|void arg)
 	{
 		foreach (indices(this),string key) if (has_prefix(key,prefix) && callablep(this[key]))
