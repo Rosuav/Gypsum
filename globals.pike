@@ -583,6 +583,8 @@ class configdlg
 			if (string descr=descr_key && items[kwd][descr_key]) ls->set_value(iter,1,descr);
 		}
 		if (allow_new) ls->set_value(win->new_iter=ls->append(),0,"-- New --");
+		//TODO: Have a way to customize this a little (eg a menu bar) without
+		//completely replacing this function.
 		win->mainwindow=GTK2.Window(windowprops)
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
