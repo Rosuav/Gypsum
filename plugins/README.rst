@@ -469,7 +469,7 @@ ADVISORY: Commands can be synthesized directly to a subw::
 
 	send(subw,line+"\r\n");
 
-This is sneaking into the internals, however, and is not supported. In future,
+This is reaching into the internals, however, and is not supported. In future,
 a fully-supported API may be provided; for now, this is available.
 
 ADVISORY: Additional information may be stored in subw, or in subw->connection
