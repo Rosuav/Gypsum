@@ -238,6 +238,11 @@ GTK2.Widget makestatus()
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label((["xalign":1.0])))->add(statustxt->paused);
 }
 
+//TODO: Make a more general way to pre-select something.
+//It'll be useful for anything that does per-world stuff; apart
+//from aliases, which would need two levels of selection, it
+//would be tidiest to have a configdlg for world names, and then
+//pre-select the current world.
 constant options_highlightwords="_Highlight words";
 class highlightwords(mixed|void selectme) //A double-click can invoke this with a string argument. This technically breaks the protocol of "ignore all args". Do what I say, not what I do.
 {
