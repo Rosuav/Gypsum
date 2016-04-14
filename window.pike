@@ -242,7 +242,7 @@ GTK2.Widget makestatus()
 //It'll be useful for anything that does per-world stuff; apart
 //from aliases, which would need two levels of selection, it
 //would be tidiest to have a configdlg for world names, and then
-//pre-select the current world.
+//pre-select the current world. Good for timer, hpgraph, and more.
 constant options_highlightwords="_Highlight words";
 class highlightwords(mixed|void selectme) //A double-click can invoke this with a string argument. This technically breaks the protocol of "ignore all args". Do what I say, not what I do.
 {
