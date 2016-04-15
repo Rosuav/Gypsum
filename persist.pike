@@ -109,6 +109,13 @@ object persist=class(string savefn)
 	{
 		if (mixed ex=catch
 		{
+			//NOTE: Since this uses encode_value() rather than JSON, the save file is opaque.
+			//This may make it worth having a command-line tool to export to JSON, although
+			//that's still utterly useless for anyone who no longer has Pike handy. See my
+			//mental rants about importing settings from Gmud into RosMud, and why I went for
+			//plain text everywhere in the latter. Contrast StilleBot, where everything gets
+			//saved in JSON; this is definitely the better way to do things. I've seen no
+			//performance problems with StilleBot's persist.
 			Stdio.write_file(savefn+".1",encode_value(data));
 			mv(savefn+".1",savefn); //Depends on atomic mv, otherwise this might run into issues.
 			saving=0;
