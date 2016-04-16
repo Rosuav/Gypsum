@@ -348,6 +348,8 @@ void sockwrite(mapping conn)
 //Has been documented for plugin use but never encouraged. It may
 //in the future have its signature changed (eg to automatically add
 //a line ending), so do NOT depend on this function externally.
+//Particularly, do NOT ever use this to send a partial line of text,
+//despite it being capable of this. It'll confuse people badly.
 int send(mapping conn,string text)
 {
 	if (!conn) return 0;
