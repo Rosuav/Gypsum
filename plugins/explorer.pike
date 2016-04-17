@@ -7,4 +7,6 @@ Preferably, don't actually load up the next level until it's needed.
 
 Simple types other than mappings and arrays can be rendered simply. (Maybe %O, maybe not.)
 Objects... ??? TODO.
+
+Will probably use test-expand-row signal.
 */
