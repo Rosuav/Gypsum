@@ -1027,6 +1027,9 @@ string fn(string param)
 	return param;
 }
 
+//TODO: These three belong in the /x plugin, really, not here.
+//Make sure they aren't used anywhere else, and then shift them.
+
 //Convenience function: convert a number to hex. Saves typing; intended for use in a /x or equivalent.
 string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 
