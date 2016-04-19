@@ -93,7 +93,7 @@ int process(string param,mapping(string:mixed) subw)
 	}
 	if (mixed ex=param!="" && catch
 	{
-		subw->logfile=Stdio.File(param,"wac");
+		subw->logfile=Stdio.File("Logs/"+param,"wac");
 		say(subw,"%% Logging to "+param+" - "+ctime(time()));
 	}) say(subw,"%% Error opening log file:\n%% "+describe_error(ex));
 	return 1;
