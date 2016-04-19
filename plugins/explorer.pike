@@ -10,3 +10,25 @@ Objects... ??? TODO.
 
 Will probably use test-expand-row signal.
 */
+
+inherit plugin_menu;
+
+constant menu_label = "Explore Gypsum's internals";
+class menu_clicked
+{
+	inherit movablewindow;
+	constant is_subwindow=0;
+	void create() {::create();}
+	void makewindow()
+	{
+		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes"]))->add(GTK2.Vbox(0,0)
+			->add(GTK2.Label(#"CAUTION: This will reveal a lot of deep internals
+which are of interest only to developers, and may be confusing even to
+ubernerds. Changing anything here may break Gypsum in ways which may not
+even be obvious at first. Click the button below when you have understood
+the consequences of this."))
+			->add(GTK2.HbuttonBox()->add(stock_close()))
+		);
+	}
+	//Yes, that's right. While it's a stub, you have to click Close when you understand. :)
+}
