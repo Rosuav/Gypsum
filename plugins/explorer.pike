@@ -6,7 +6,7 @@ GTK2.TreeView, add subentries for key in indices(cur). If it's a mapping/array, 
 Preferably, don't actually load up the next level until it's needed.
 
 Simple types other than mappings and arrays can be rendered simply. (Maybe %O, maybe not.)
-Objects... ??? TODO.
+Objects get %O by default, but maybe there should be a UI way to show "as if cast to mapping".
 
 Will probably use test-expand-row signal.
 */
