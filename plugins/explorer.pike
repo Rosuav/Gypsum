@@ -7,6 +7,8 @@ Preferably, don't actually load up the next level until it's needed.
 
 Simple types other than mappings and arrays can be rendered simply. (Maybe %O, maybe not.)
 Objects get %O by default, but maybe there should be a UI way to show "as if cast to mapping".
+(Note that this shouldn't *actually* cast the object to mapping, as that's not available in
+all supported Pikes. It should just use indices() and subscripting, as if it were a mapping.)
 
 Will probably use test-expand-row signal.
 */
