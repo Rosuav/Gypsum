@@ -23,7 +23,7 @@ class menu_clicked
 	void create() {::create();}
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Cluedo Detective Notes"]))->add(GTK2.Vbox(0,0)
+		win->mainwindow=GTK2.Window((["title":"Explore Gypsum internals"]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.Label(#"CAUTION: This will reveal a lot of deep internals
 which are of interest only to developers, and may be confusing even to
 ubernerds. Changing anything here may break Gypsum in ways which may not
