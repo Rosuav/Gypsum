@@ -11,7 +11,8 @@ Objects get %O by default, but maybe there should be a UI way to show "as if cas
 all supported Pikes. It should just use indices() and subscripting, as if it were a mapping.)
 
 Will probably use test-expand-row signal. Or maybe it wouldn't be a problem to just load
-everything right off the bat - try that first, and see if load time is abysmal.
+everything right off the bat - try that first, and see if load time is abysmal. It'd be better
+as a one-shot anyway; less chance of desynchronization caused by different times of probing.
 */
 
 inherit plugin_menu;
