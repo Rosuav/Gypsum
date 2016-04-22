@@ -465,7 +465,7 @@ class movablewindow
 
 	void savepos()
 	{
-		if (!pos_key) {werror("%% Assertion failed: Cannot save position without pos_key set!"); return;} //Shouldn't happen.
+		if (!pos_key) {werror("%% Assertion failed: Cannot save position without pos_key set!\n"); return;} //Shouldn't happen.
 		mapping sz=win->mainwindow->get_size();
 		persist[pos_key]=({m_delete(win,"x"),m_delete(win,"y"),sz->width,sz->height});
 	}
