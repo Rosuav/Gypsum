@@ -36,8 +36,6 @@ class menu_clicked
 		}
 		else if (mappingp(thing))
 		{
-			//TODO: Maybe support objectp too - might not be helpful (drilling
-			//into indices() of a Stdio.File is not particularly interesting).
 			win->store->set_value(row, 0, name + "mapping");
 			int count = 0;
 			foreach (sort(indices(thing)), mixed key)
