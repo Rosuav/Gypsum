@@ -1,38 +1,105 @@
-/* Stub for notes.
-
-Pop up a window to explore global state. Start with G or G->G, and drill down as far as you want.
-
-GTK2.TreeView, add subentries for key in indices(cur). If it's a mapping/array, let it be plussed out.
-Preferably, don't actually load up the next level until it's needed.
-
-Simple types other than mappings and arrays can be rendered simply. (Maybe %O, maybe not.)
-Objects get %O by default, but maybe there should be a UI way to show "as if cast to mapping".
-(Note that this shouldn't *actually* cast the object to mapping, as that's not available in
-all supported Pikes. It should just use indices() and subscripting, as if it were a mapping.)
-
-Will probably use test-expand-row signal. Or maybe it wouldn't be a problem to just load
-everything right off the bat - try that first, and see if load time is abysmal. It'd be better
-as a one-shot anyway; less chance of desynchronization caused by different times of probing.
-*/
-
+//Pop up a window to explore global state. Start with G or G->G, and drill down as far as you want.
 inherit plugin_menu;
 
 constant menu_label = "Explore Gypsum's internals";
 class menu_clicked
 {
-	inherit movablewindow;
+	inherit window;
 	constant is_subwindow=0;
 	void create() {::create();}
+
+	multiset(int) no_recursion = (<>);
+	void add_to_store(mixed thing, string name, GTK2.TreeIter parent)
+	{
+		GTK2.TreeIter row = win->store->append(parent);
+		if (name) name += ": "; else name = "";
+		//Figure out how to represent the 'thing'.
+		//Firstly, if we've already seen it, put a marker - don't
+		//infinitely recurse.
+		int hash = hash_value(thing); //Snapshot the hash - we may reassign 'thing' for convenience
+		if (no_recursion[hash])
+		{
+			win->store->set_value(row, 0, name + "[recursive]");
+			return;
+		}
+		no_recursion[hash] = 1;
+		//Next up: Recognized types of nested structures.
+		if (arrayp(thing) || multisetp(thing))
+		{
+			win->store->set_value(row, 0, sprintf("%s%t", name, thing));
+			thing = (array)thing;
+			foreach (thing[..99], mixed subthing)
+				add_to_store(subthing, 0, row);
+			if (sizeof(thing) > 100)
+				win->store->set_value(win->store->append(row), 0,
+					sprintf("... %d more entries...", sizeof(thing)-100));
+		}
+		else if (mappingp(thing))
+		{
+			//TODO: Maybe support objectp too - might not be helpful (drilling
+			//into indices() of a Stdio.File is not particularly interesting).
+			win->store->set_value(row, 0, name + "mapping");
+			int count = 0;
+			foreach (sort(indices(thing)), mixed key)
+			{
+				if (!stringp(key)) key = sprintf("%O", key);
+				add_to_store(thing[key], key, row);
+				if (++count >= 100) break;
+			}
+			if (sizeof(thing) > count)
+				win->store->set_value(win->store->append(row), 0,
+					sprintf("... %d more entries...", sizeof(thing)-count));
+		}
+		//Finally, non-nesting objects.
+		else
+		{
+			if (!stringp(thing)) thing = sprintf("%O", thing);
+			if (sizeof(thing) >= 256)
+			{
+				//Abbreviate it some
+				win->store->set_value(row, 0, name + thing[..250] + "...");
+				GTK2.TreeIter full = win->store->append(row);
+				win->store->set_value(full, 0, thing);
+			}
+			else win->store->set_value(row, 0, name + thing);
+		}
+		no_recursion[hash] = 0;
+	}
+
 	void makewindow()
 	{
-		win->mainwindow=GTK2.Window((["title":"Explore Gypsum internals"]))->add(GTK2.Vbox(0,0)
-			->add(GTK2.Label(#"CAUTION: This will reveal a lot of deep internals
+		if (!persist["explorer_active"])
+		{
+			win->mainwindow=GTK2.Window((["title":"Explore Gypsum internals"]))->add(GTK2.Vbox(0,0)
+				->add(GTK2.Label(#"CAUTION: This will reveal a lot of deep internals
 which are of interest only to developers, and may be confusing even to
 ubernerds. Changing anything here may break Gypsum in ways which may not
 even be obvious at first. Click the button below when you have understood
 the consequences of this."))
+				->add(GTK2.HbuttonBox()
+					->add(win->do_as_i_say=GTK2.Button("Yes, do as I say"))
+					->add(stock_close())
+				)
+			);
+			return;
+		}
+		win->store = GTK2.TreeStore(({"string"}));
+		add_to_store(G->G, "G", UNDEFINED);
+		win->mainwindow=GTK2.Window((["title":"Explore Gypsum internals"]))->add(GTK2.Vbox(0,0)
+			->add(GTK2.ScrolledWindow()
+				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
+				->add(win->treeview=GTK2.TreeView(win->store)->set_size_request(400,250)
+					->append_column(GTK2.TreeViewColumn("",GTK2.CellRendererText(),"text",0))
+				)
+			)
 			->add(GTK2.HbuttonBox()->add(stock_close()))
 		);
 	}
-	//Yes, that's right. While it's a stub, you have to click Close when you understand. :)
+
+	void sig_do_as_i_say_clicked()
+	{
+		persist["explorer_active"] = 1;
+		closewindow();
+		menu_clicked();
+	}
 }
