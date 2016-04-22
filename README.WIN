@@ -12,6 +12,9 @@ Gypsum and tell me about bugs :)
 Start with this installer for the Pike interpreter:
 http://pike.lysator.liu.se/pub/pike/all/7.8.866/Pike-v7.8.866-win32.msi
 
+Note that the current Pike 8.0 installers do not provide a sufficiently-recent
+GTK, and are not advised. Use the above installer for the time being.
+
 Then download a ZIP file of the latest Gypsum:
 https://github.com/Rosuav/Gypsum/archive/master.zip
 
