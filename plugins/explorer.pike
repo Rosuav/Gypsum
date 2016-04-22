@@ -85,6 +85,7 @@ the consequences of this."))
 		}
 		win->store = GTK2.TreeStore(({"string"}));
 		add_to_store(G->G, "G", UNDEFINED);
+		add_to_store(G->globals, "constants", UNDEFINED);
 		add_to_store(persist->data, "persist", UNDEFINED);
 		win->mainwindow=GTK2.Window((["title":"Explore Gypsum internals"]))->add(GTK2.Vbox(0,0)
 			->add(GTK2.ScrolledWindow()
