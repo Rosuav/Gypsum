@@ -15,7 +15,8 @@ class menu_clicked
 		if (name) name += ": "; else name = "";
 		//Figure out how to represent the 'thing'.
 		//Firstly, if we've already seen it, put a marker - don't
-		//infinitely recurse.
+		//infinitely recurse. (Multiple references to an object in
+		//different subtrees will be independently rendered.)
 		int hash = hash_value(thing); //Snapshot the hash - we may reassign 'thing' for convenience
 		if (no_recursion[hash])
 		{
