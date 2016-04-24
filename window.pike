@@ -248,26 +248,10 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 {
 	inherit configdlg;
 	constant persist_key="window/highlight";
-	constant strings=({"descr"});
-	constant ints=({"bgcol"}); //NOTE: This requires a SelectBox hacked to be an int, not a string.
-
+	constant elements = ({"kwd:Word", "@#bgcol:Bg color", enumcolors, "'lastchange:", "+descr:Description",
+		("'Any words listed here will be highlighted any time they occur"
+		" in the display. You can add notes to any word/phrase in this way.")});
 	void create() {::create();}
-
-	GTK2.Widget make_content()
-	{
-		return GTK2.Vbox(0,10)
-			->pack_start(two_column(({
-				"Word",win->kwd=GTK2.Entry(),
-				"Bg color",win->bgcol=SelectBox(enumcolors),
-				"Last change",win->lastchange=GTK2.Label(),
-			})),0,0,0)
-			->add(GTK2.Frame("Description")->add(
-				win->descr=MultiLineEntryField()->set_size_request(250,70)->set_wrap_mode(GTK2.WRAP_WORD)
-			))
-			->pack_start(GTK2.Label((["label":"Any words listed here will be highlighted any time they occur"
-				" in the display. You can add notes to any word/phrase in this way.","wrap":1])),0,0,0)
-		;
-	}
 	void makewindow()
 	{
 		::makewindow();

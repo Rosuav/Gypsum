@@ -614,8 +614,18 @@ class configdlg
 	{
 		array objects = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
+		string next_obj_name = 0;
 		foreach (elem, mixed element)
 		{
+			if (next_obj_name)
+			{
+				if (arrayp(element))
+					objects += ({win[next_obj_name] = SelectBox(element)});
+				else
+					werror("Assertion failed: SelectBox without element array\n");
+				next_obj_name = 0;
+				continue;
+			}
 			if (mappingp(element))
 			{
 				//EXPERIMENTAL: A mapping creates a notebook.
@@ -630,7 +640,7 @@ class configdlg
 				objects += ({nb, 0});
 				continue;
 			}
-			sscanf(element, "%1[?#+']%s", string type, element);
+			sscanf(element, "%1[?#+'@]%s", string type, element);
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
 			switch (type)
@@ -664,6 +674,14 @@ class configdlg
 					object obj = noex(GTK2.Label(lbltext || element)->set_line_wrap(1));
 					objects += ({obj, 0});
 					if (lbltext) win[lblname] = obj;
+					break;
+				}
+				case "@": //Drop-down
+				{
+					//Special case: Integer drop-downs are marked with "@#".
+					if (name[0] == '#') win->real_ints += ({name=name[1..]});
+					else win->real_strings += ({name});
+					objects += ({lbl}); next_obj_name = name; //Object creation happens next iteration
 					break;
 				}
 			}
