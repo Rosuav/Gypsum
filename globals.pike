@@ -510,6 +510,7 @@ class configdlg
 	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
+	string selectme; //If this contains a non-null string, it will be preselected.
 	//... end provide me.
 
 	void create() {if (persist_key && !items) items=persist->setdefault(persist_key,([])); ::create();} //Pass on no args to the window constructor - all configdlgs are independent
@@ -607,6 +608,7 @@ class configdlg
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(win->new_iter||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
+		if (stringp(selectme)) select_keyword(selectme) || (win->kwd && win->kwd->set_text(selectme));
 	}
 
 	//Generate a widget collection from either the constant or migration mode

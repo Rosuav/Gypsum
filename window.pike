@@ -238,11 +238,6 @@ GTK2.Widget makestatus()
 	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label((["xalign":1.0])))->add(statustxt->paused);
 }
 
-//TODO: Make a more general way to pre-select something.
-//It'll be useful for anything that does per-world stuff; apart
-//from aliases, which would need two levels of selection, it
-//would be tidiest to have a configdlg for world names, and then
-//pre-select the current world. Good for timer, hpgraph, and more.
 constant options_highlightwords="_Highlight words";
 class highlightwords(mixed|void selectme) //A double-click can invoke this with a string argument. This technically breaks the protocol of "ignore all args". Do what I say, not what I do.
 {
@@ -252,11 +247,6 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 		("'Any words listed here will be highlighted any time they occur"
 		" in the display. You can add notes to any word/phrase in this way.")});
 	void create() {::create();}
-	void makewindow()
-	{
-		::makewindow();
-		if (stringp(selectme)) select_keyword(selectme) || win->kwd->set_text(selectme);
-	}
 	void save_content(mapping(string:mixed) info)
 	{
 		win->lastchange->set_text(ctime(info->lastchange=time())[..<1]);
