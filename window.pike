@@ -249,7 +249,7 @@ class highlightwords(mixed|void selectme) //A double-click can invoke this with 
 	inherit configdlg;
 	constant persist_key="window/highlight";
 	constant strings=({"descr"});
-	constant ints=({"bgcol"});
+	constant ints=({"bgcol"}); //NOTE: This requires a SelectBox hacked to be an int, not a string.
 
 	void create() {::create();}
 
