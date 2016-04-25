@@ -92,6 +92,9 @@ int wordchar(int ch)
 //for backporting into core, maybe? Or at least have them in a separate file, which
 //would make backporting from other projects easier. It'd still be a hassle to use
 //"just a few" bits from it. Maybe this needs to have a driver file, like Hogan has??
+//-- If these were to be spun off to their own file, what would its deps be?
+//-- persist, G->G; anything else?
+
 
 //Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
 //Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
