@@ -469,11 +469,6 @@ class movablewindow
 		mapping sz=win->mainwindow->get_size();
 		persist[pos_key]=({m_delete(win,"x"),m_delete(win,"y"),sz->width,sz->height});
 	}
-
-	void dosignals()
-	{
-		::dosignals();
-	}
 }
 
 //Base class for a configuration dialog. Permits the setup of anything where you
