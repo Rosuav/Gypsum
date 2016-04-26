@@ -282,7 +282,7 @@ More importantly, this is something that would require two drastically different
 the winner. Maintaining both branches simultaneously would be a horrific mess. Switching to prompt-beside-input would allow
 a few cleanups (everything that says (line>=sizeof(subw->lines))?subw->prompt:subw->lines[line] could now ignore the prompt
 and just use subw->lines[line]), but it'd introduce a comparable level of mess elsewhere, and there is no way that I want
-both messes at once.
+both messes at once. This comment is like a rejected PEP - it exists to point people to if they ask.
 */
 
 //Convert (x,y) into (line,col) - yes, that switches their order.
