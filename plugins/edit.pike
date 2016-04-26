@@ -208,9 +208,9 @@ int output(mapping(string:mixed) subw,string line)
 	}
 	if (subw->editor_eax)
 	{
-		if (line=="<=== Editor ===>") {editor(subw,m_delete(subw,"editor_eax")); return 0;}
+		if (line=="<=== Editor ===>") {editor(subw,m_delete(subw,"editor_eax")); return 1;}
 		subw->editor_eax+=line+"\n";
-		return 0;
+		return 1;
 	}
 }
 
