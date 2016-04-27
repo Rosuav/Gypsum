@@ -1205,7 +1205,7 @@ int output(mapping(string:mixed) subw,string line)
 				program cs_type = this["charsheet_"+data->cs_type] || charsheet;
 				cs_type(subw,m_delete(subw,"charsheet_acct"),data);
 			}
-			return 0;
+			return 1;
 		}
 		subw->charsheet_eax+=line+"\n";
 		return 1;
