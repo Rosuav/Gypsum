@@ -17,6 +17,8 @@ After editing a file, use '/update filename' to apply the change.
 constant plugin_active_by_default = 1;
 int simulate; //For command-line usage, allow a "don't actually save anything" test usage. Note that a "download without applying" would implicitly apply on next restart, and is probably a bad idea.
 
+//TODO: Generalize this download-and-update code so StilleBot can use it too.
+
 //Unzip the specified data (should be exactly what could be read from/written to a .zip file)
 //and call the callback for each file, with the file name, contents, and the provided arg.
 //Note that content errors will be thrown, but previously-parsed content has already been
