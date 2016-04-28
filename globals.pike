@@ -94,6 +94,9 @@ int wordchar(int ch)
 //"just a few" bits from it. Maybe this needs to have a driver file, like Hogan has??
 //-- If these were to be spun off to their own file, what would its deps be?
 //-- persist, G->G; anything else?
+//Maybe this can become a framework, rather than a set of libraries. It'd have the
+//code reloader (including a "download from GitHub and update" feature), persist (the
+//JSON form that I'm pushing towards), and the GUI stuff.
 
 
 //Usage: gtksignal(some_object,"some_signal",handler,arg,arg,arg) --> save that object.
