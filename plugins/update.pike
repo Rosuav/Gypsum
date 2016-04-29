@@ -38,7 +38,7 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		int compsize,int uncompsize,int fnlen,int extralen,data))
 	{
 		string fn=data[..fnlen-1]; data=data[fnlen..]; //I can't use %-2H for these, because the two lengths come first and then the two strings. :(
-		string extra=data[..extralen-1]; data=data[extralen..]; //Not actually used, and I have no idea whether it'll ever be important to Gypsum update.
+		string extra=data[..extralen-1]; data=data[extralen..]; //Not actually used, and I have no idea whether it'll ever be important to GitHub update.
 		string zip=data[..compsize-1]; data=data[compsize..];
 		if (flags&8) {zip=data; data=0;} //compsize will be 0 in this case.
 		string result,eos;
@@ -111,7 +111,7 @@ void data_available(object q,mapping(string:mixed) subw)
 	if (sizeof(oldfiles)) say(subw,"%% Wiped out old files: "+oldfiles*", ");
 }
 void request_ok(object q,mapping(string:mixed) subw) {q->async_fetch(data_available,subw);}
-void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest Gypsum");}
+void request_fail(object q,mapping(string:mixed) subw) {say(subw,"%% Failed to download latest code");}
 
 #if constant(G)
 string install_mode = file_stat(".git") ? "git" : "zip";
@@ -279,7 +279,7 @@ int main(int argc,array(string) argv)
 	add_constant("G",this); add_constant("persist",this); add_constant("add_gypsum_constant",add_constant);
 	Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
 		Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,([])));
-	write("Downloading latest Gypsum...\n");
+	write("Downloading latest code...\n");
 	return -1;
 }
 #endif
