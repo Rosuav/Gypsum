@@ -239,7 +239,7 @@ GTK2.Widget makestatus()
 }
 
 constant options_highlightwords="_Highlight words";
-class highlightwords(mixed|void selectme) //A double-click can invoke this with a string argument. This technically breaks the protocol of "ignore all args". Do what I say, not what I do.
+class highlightwords(mixed|void selectme)
 {
 	inherit configdlg;
 	constant persist_key="window/highlight";
