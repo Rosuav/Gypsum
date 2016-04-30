@@ -12,9 +12,6 @@ in-game timepiece; without one, the clock can generally be correct to within
 an hour or two, but that's all. This is good enough for event planning, but
 not for predicting in-game events such as bank hours.
 ";
-//Note that when Stash is launched, it may have its own clock. Auto-sync may
-//be tricky, but we can at least provide "Stash" as another pseudo-timezone.
-
 //This can be invoked as a stand-alone application via timezone.pike (the
 //microkernel). Ideally, there should be as little as possible special code
 //to handle this case. So far that has not been attained, but it's close.
