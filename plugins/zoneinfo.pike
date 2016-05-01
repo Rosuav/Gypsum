@@ -33,8 +33,8 @@ constant show_errors = 0;
 //Threshold times are stored as integer minutes:
 //1 hour    ==  60 mins
 //1 day    == 1440 mins
-//1 month == 43200 mins (== 30 days, as only Thresh months are)
-//1 year == 518400 mins (== 360 days, as only Thresh years are)
+//1 month == 43200 mins (== 30 days, as only (and all) Thresh months are)
+//1 year == 518400 mins (== 360 days, as only/all Thresh years are)
 
 //One Thresh hour == five RL minutes.
 //So th 60 == rl 300 or a ratio of 1:5 (which is the combination of the 12:1 time ratio and a 1:60 ratio of the units, due to Thresh time being stored in minutes).
