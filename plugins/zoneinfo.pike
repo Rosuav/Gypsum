@@ -39,7 +39,7 @@ constant show_errors = 0;
 //One Thresh hour == five RL minutes.
 //So th 60 == rl 300 or a ratio of 1:5 (which is the combination of the 12:1 time ratio and a 1:60 ratio of the units, due to Thresh time being stored in minutes).
 
-int halfsync; //1 = Timepiece of Phzult (or equivalent portable chronometer), 2 = default 'time'. Both take two lines to display their info; the first is accurate, the second not.
+string halfsync; //Both Phzult and the 'time' command take two lines to display their info; the first is accurate, the second not.
 int halfsync_hour,halfsync_min;
 int halfsync_day,halfsync_year;
 int halfsync_rl=0;
@@ -51,23 +51,23 @@ int output(mapping(string:mixed) subw,string line)
 	int th_year,th_mon,th_day,th_hour,th_min;
 	int sync=0;
 	if (sscanf(line,"%*[ ]The Clock displays: %s %d, %d - %d:%d",th_monname,th_day,th_year,th_hour,th_min)==6) sync=1;
-	if (sscanf(line,"%*[ ]::%*[ ]%d:%d%*[ ]::=-",th_hour,th_min)==5) {halfsync=1; halfsync_hour=th_hour; halfsync_min=th_min; halfsync_rl=time(); return 0;}
+	if (sscanf(line,"%*[ ]::%*[ ]%d:%d%*[ ]::=-",th_hour,th_min)==5) {halfsync="phzult"; halfsync_hour=th_hour; halfsync_min=th_min; halfsync_rl=time(); return 0;}
 	if (sscanf(line,"%*[ ]It is the %d%*s of %s in the year %d.",th_day,halfsync_monname,th_year)==5)
 	{
 		halfsync_day=th_day; halfsync_year=th_year; halfsync_rl=time();
-		halfsync=2;
+		halfsync = "time";
 		return 0;
 	}
 	if (halfsync_rl)
 	{
 		if (halfsync_rl!=time())
 			; //If we're half way through syncing, require that time() not change before we finish - if it does, reject the sync (latency is bad, mm'kay?).
-		else if (halfsync==1 && sscanf(line,"%*[ ]%s %d, %d",th_monname,th_day,th_year)==4)
+		else if (halfsync == "phzult" && sscanf(line,"%*[ ]%s %d, %d",th_monname,th_day,th_year)==4)
 		{
 			th_hour=halfsync_hour; th_min=halfsync_min;
 			sync=1;
 		}
-		else if (halfsync==2 && sscanf(line,"%*[ ]It is the hour of the %d",th_hour)==2)
+		else if (halfsync == "time" && sscanf(line,"%*[ ]It is the hour of the %d",th_hour)==2)
 		{
 			th_day=halfsync_day; th_year=halfsync_year;
 			th_min=30; //Mid-way through the hour, for an estimate.
