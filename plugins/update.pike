@@ -66,7 +66,7 @@ void unzip(string data,function callback,mixed|void callback_arg)
 		#if __REAL__VERSION__<8.0
 		//There seems to be a weird bug with Pike 7.8.866 on Windows which means that a correctly-formed ZIP
 		//file will have end_of_stream() return 0 instead of "". No idea why. This is resulting in spurious
-		//errors, For the moment, I'm just suppressing this error in that case.
+		//errors, For the moment, I'm just suppressing this error in that case. TODO: Check 8.0 on Windows.
 		else if (!eos) ;
 		#endif
 		else if (eos!="") error("Malformed ZIP file (bad end-of-stream on %s)",fn);
