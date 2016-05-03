@@ -486,5 +486,7 @@ void create(string name)
 	G->G->connection=this;
 	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);
 	else G->G->sockets=(<>);
-	add_gypsum_constant("send",send); //Note that due to a Pike bug, having this reference higher in the file than the function definition will cause an undesirable self-retrieval from globals.
+	//Note that due to a (non-serious) Pike bug, having this reference higher in the file
+	//than the function definition will cause an undesirable self-retrieval from globals.
+	add_gypsum_constant("send", send);
 }
