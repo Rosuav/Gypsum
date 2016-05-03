@@ -115,8 +115,7 @@ object persist=class(string savefn)
 			//that's still utterly useless for anyone who no longer has Pike handy. See my
 			//mental rants about importing settings from Gmud into RosMud, and why I went for
 			//plain text everywhere in the latter. Contrast StilleBot, where everything gets
-			//saved in JSON; this is definitely the better way to do things. I've seen no
-			//performance problems with StilleBot's persist.
+			//saved in JSON; this is definitely the better way to do things.
 			Stdio.write_file(savefn+".1",encode_value(data));
 			mv(savefn+".1",savefn); //Depends on atomic mv, otherwise this might run into issues.
 			saving=0;
