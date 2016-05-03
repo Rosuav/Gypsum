@@ -506,7 +506,8 @@ class configdlg
 	If the colon is omitted, the keyword will be the first word of the lowercased name, so this is equivalent:
 	constant elements=({"kwd:Keyword", "Name", "?State of Being", "#Value", "+descr:Description"});
 	In most cases, this and persist_key will be all you need to set.
-	TODO: Figure out a way to allow a SelectBox. Or maybe some kind of marker "custom thing goes here"?
+	Still figuring out a good way to allow a SelectBox. Currently messing with "@name:lbl",({opt,opt,opt}) which
+	is far from ideal.
 	*/
 	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
