@@ -625,7 +625,7 @@ class configdlg
 				if (arrayp(element))
 					objects += ({win[next_obj_name] = SelectBox(element)});
 				else
-					werror("Assertion failed: SelectBox without element array\n");
+					error("Assertion failed: SelectBox without element array\n");
 				next_obj_name = 0;
 				continue;
 			}
