@@ -103,6 +103,7 @@ object persist=class(string savefn)
 		return ret;
 	}
 
+	//Call this after any "deep update" that doesn't directly mutate persist[]
 	void save() {if (!saving) {saving=1; call_out(dosave,0);}}
 	
 	void dosave()
