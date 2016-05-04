@@ -10,7 +10,7 @@ inherit plugin_menu;
 
 constant docstring=#"
 Triggers let you perform some action whenever a specified message comes
-from the server. The action is incredibly flexible.
+from the server. The action can be incredibly flexible.
 ";
 
 //Leaving room for a future triggers/worldname
