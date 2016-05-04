@@ -31,7 +31,7 @@ int output(mapping(string:mixed) subw,string line)
 		if (tr->message != "") say(subw, "%% "+tr->message);
 		if (tr->sound != "") Process.create_process(({"cvlc", tr->sound})); //Asynchronous
 		if (tr->response != "") send(subw, tr->response+"\r\n");
-		if (tr->counter != "") G->G["counter_" + tr->counter]++;
+		if (tr->counter != "") G->G["counter_" + tr->counter]++; //On par with HQ9++, there's no way to actually do anything with this.
 	}
 }
 
@@ -49,6 +49,11 @@ class menu_clicked
 		"response:Send command to server",
 		"counter:Increment counter [keyword]", //Experimental
 	});
+
+	void load_content(mapping(string:mixed) info)
+	{
+		if (!info->match || info->match == "") win->match->set_text("Substring");
+	}
 }
 
 void create(string name) {::create(name);}
