@@ -2,8 +2,6 @@ Suggestions in here may or may not ever end up being implemented. If you like th
 drop me a note, and I'll give the idea appropriate weight.
 
 * OOCBox? Poll Thresh users to find out if it's even being used.
-* Mark-and-copy of RTL text has some issues. May be v difficult (even impossible) to fully solve, but try to make
-  it behave at least reasonably well most of the time.
 * Mac support: can I put together a Homebrew recipe for Gypsum, which will pull in Pike?
 * Support/acknowledge /etc/nsswitch.conf?? Or at least parse /etc/hosts, which is more cross-platform. This could
   be in addition to checking for A and AAAA records, and could be done synchronously prior to the DNS queries.
