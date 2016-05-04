@@ -5,4 +5,50 @@
 //cares about would be unsupported, of course), send a string back to the
 //server, or anything else.
 
-//Stub to fill out later.
+inherit hook;
+inherit plugin_menu;
+
+constant docstring=#"
+Triggers let you perform some action whenever a specified message comes
+from the server. The action is incredibly flexible.
+";
+
+//Leaving room for a future triggers/worldname
+mapping(string:mapping(string:mixed)) triggers = persist->setdefault("triggers/global", ([]));
+
+int output(mapping(string:mixed) subw,string line)
+{
+	foreach (triggers;;mapping tr)
+	{
+		switch (tr->match)
+		{
+			case "Substring": if (!has_value(line, tr->text)) continue; break;
+			case "Entire": if (line != tr->text) continue; break;
+			case "Prefix": if (!has_prefix(line, tr->text)) continue; break;
+			default: continue;
+		}
+		//If we get here, the trigger matches. Do the actions.
+		if (tr->message != "") say(subw, "%% "+tr->message);
+		if (tr->sound != "") Process.create_process(({"cvlc", tr->sound})); //Asynchronous
+		if (tr->response != "") send(subw, tr->response+"\r\n");
+		if (tr->counter != "") G->G["counter_" + tr->counter]++;
+	}
+}
+
+constant menu_label = "Triggers";
+class menu_clicked
+{
+	inherit configdlg;
+	constant persist_key = "triggers/global";
+	constant elements = ({
+		"kwd:Name", "text:Trigger text",
+		"@Match style", ({"Substring", "Entire", "Prefix"}), //And maybe regex and others, as needed
+		"'Actions - leave blank if not applicable:",
+		"sound:Play sound file",
+		"message:Display message locally",
+		"response:Send command to server",
+		"counter:Increment counter [keyword]", //Experimental
+	});
+}
+
+void create(string name) {::create(name);}
