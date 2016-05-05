@@ -48,11 +48,14 @@ class menu_clicked
 		"message:Display message locally",
 		"response:Send command to server",
 		"counter:Increment counter [keyword]", //Experimental
+		"'counter_status:",
 	});
 
 	void load_content(mapping(string:mixed) info)
 	{
 		if (!info->match || info->match == "") win->match->set_text("Substring");
+		int val = G->G["counter_" + info->counter]; //Yes, even if it's 0 or "". They'll just be zero themselves.
+		win->counter_status->set_text(val ? (string)val : "");
 	}
 }
 
