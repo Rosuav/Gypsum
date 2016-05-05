@@ -10,12 +10,16 @@ Whenever there's any trigger on a stream, that stream's entry is _replaced_ with
 Normal usage would be all on the default stream. But you can set up other streams, eg one for background sound that loops.
 
 NOTE: Halt all sounds with: /x G->G->sounds_playing=([])
+
+Deprecated in favour of the more general triggers.pike.
 ";
 #else
 constant docstring=#"
 Play sounds in response to certain triggers.
 
 Requires SDL.Music support which is currently unavailable on your system.
+
+Deprecated in favour of the more general triggers.pike.
 ";
 #endif
 
@@ -32,6 +36,9 @@ Requires SDL.Music support which is currently unavailable on your system.
 //"halt current sound before playing" tickbox could cover quite a bit else. (And looping is possible with
 //VLC too, so we could still support that.) Also, have a way to forcibly disable SDL usage (ie force the
 //use of the VLC fallback), in case it isn't suitable.
+
+//Master TODO: See what this can do that triggers.pike can't, and improve the latter. This MAY include
+//SDL support (if that is providing anything actually useful). Check other platforms.
 
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
