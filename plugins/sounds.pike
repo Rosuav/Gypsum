@@ -23,21 +23,7 @@ Deprecated in favour of the more general triggers.pike.
 ";
 #endif
 
-//TODO: Replace sounds.ini with persist[] and a configdlg.
-//This whole thing needs a major rewrite, tbh. It's code from Gypsum's earliest days, and it shows its age.
-//Quite a lot of this is not in keeping with current best-practice, quite a lot of it could benefit from
-//knowledge gained elsewhere in the project. Trouble is, I don't actually use this feature, so it's not
-//going to get the natural and automatic testing of personal dev usage; it desperately needs a champion.
-
-//TODO: Simplify this massively, and then allow a fallback on Process.create_process(({"vlc","filename"}))
-//That might include completely eliminating the whole concept of streams and looping and noretrigger.
-//Hmm. Actually, maybe it'd be better to deprecate this plugin exactly as it is, and put audio trigger
-//functionality into the timers plugin instead - either "audio at start" or "audio at end". Optionally, a
-//"halt current sound before playing" tickbox could cover quite a bit else. (And looping is possible with
-//VLC too, so we could still support that.) Also, have a way to forcibly disable SDL usage (ie force the
-//use of the VLC fallback), in case it isn't suitable.
-
-//Master TODO: See what this can do that triggers.pike can't, and improve the latter. This MAY include
+//TODO: See what this can do that triggers.pike can't, and improve the latter. This MAY include
 //SDL support (if that is providing anything actually useful). Check other platforms.
 
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
