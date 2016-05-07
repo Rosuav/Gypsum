@@ -1,4 +1,4 @@
-This file configures Gypsum's sound triggers. Note that this is deprecated, and in desperate need of rewriting.
+This file configures Gypsum's sound triggers. Note that this is deprecated in favour of triggers.pike which has a much nicer UI.
 An entry begins with its trigger text, preceded by a colon.
 The next non-blank line is its audio file. Formats accepted depend on your SDL engine; most likely MP3, WAV, OGG, and MID will be supported.
 If the file name is "-", no sound will be played. (Unix folk: No, I will not play a file from stdin.)
