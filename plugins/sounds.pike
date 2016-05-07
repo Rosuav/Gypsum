@@ -24,7 +24,7 @@ Deprecated in favour of the more general triggers.pike.
 #endif
 
 //TODO: See what this can do that triggers.pike can't, and improve the latter. This MAY include
-//SDL support (if that is providing anything actually useful). Check other platforms.
+//SDL support (if that is providing anything actually useful). Check Windows and Mac - what's available?
 
 #if constant(SDL.Music) && !constant(COMPILE_ONLY)
 
