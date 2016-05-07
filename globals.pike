@@ -949,6 +949,16 @@ int invoke_browser(string url)
 	};
 }
 
+//Begin an audio file playing asynchronously.
+//TODO: Return some kind of object that can be used to halt it later.
+//The object needs to wrap up the details of exactly how it was invoked,
+//as there may be many different ways of doing the same thing.
+void play_sound(string file)
+{
+	//TODO: Handle cross-platform invocation methods.
+	Process.create_process(({"cvlc", file}));
+}
+
 /**
  * Attempt to beep, if the user hasn't disabled it
  * Currently ignores the 'times' parameter and just beeps once.
