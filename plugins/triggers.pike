@@ -29,7 +29,7 @@ int output(mapping(string:mixed) subw,string line)
 		}
 		//If we get here, the trigger matches. Do the actions.
 		if (tr->message != "") say(subw, "%% "+tr->message);
-		if (tr->sound != "") Process.create_process(({"cvlc", tr->sound})); //Asynchronous
+		if (tr->sound != "") Process.create_process(({"cvlc", tr->sound})); //Asynchronous. (Does this work on Windows??)
 		if (tr->response != "") send(subw, tr->response+"\r\n"); //Not officially supported by core - may have to change later.
 		if (tr->counter != "") G->G["counter_" + tr->counter]++; //On par with HQ9++, there's no way to actually do anything with this.
 	}
