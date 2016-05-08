@@ -1828,6 +1828,8 @@ void create(string name)
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
 	if (!win->plugin_mtime) win->plugin_mtime=([]);
+	#if 0
+	//EXPERIMENT: Nuking this code. Watch for consequences.
 	foreach (sort(indices(plugins)),string fn)
 	{
 		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
@@ -1842,6 +1844,7 @@ void create(string name)
 		}
 		else m_delete(win->plugin_mtime,fn);
 	}
+	#endif
 	settabs(win->tabs[0]->enwidth);
 	update_dictionary();
 }
