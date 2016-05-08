@@ -956,7 +956,11 @@ int invoke_browser(string url)
 void play_sound(string file)
 {
 	//TODO: Handle cross-platform invocation methods.
-	Process.create_process(({"cvlc", file}));
+	foreach (({"cvlc", "vlc"}),string cmd) catch
+	{
+		Process.create_process(({cmd, file}));
+		return; //If no exception is thrown, assume that it worked.
+	};
 }
 
 /**
