@@ -5,6 +5,8 @@ drop me a note, and I'll give the idea appropriate weight.
 * Mac support: can I put together a Homebrew recipe for Gypsum, which will pull in Pike?
 * Support/acknowledge /etc/nsswitch.conf?? Or at least parse /etc/hosts, which is more cross-platform. This could
   be in addition to checking for A and AAAA records, and could be done synchronously prior to the DNS queries.
+* Examine and debug block text selection in the face of (a) unequal width characters and (b) RTL text - the latter
+  is definitely buggy ATM, the former is untested.
 
 Eventually, drop support for Pike 7.8. This means:
 1) Feel free to use new features like ->?
