@@ -346,6 +346,7 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 	if (has_index(subw,"selstartline")) //There's a previous highlight. Clear it (by queuing draw for those lines).
 	{
 		//Note that the unhighlight sometimes isn't working when selstartline>selendline. Need to track down.
+		//CJA 20160511: Is this still happening? I don't remember seeing it in three parts of forever.
 		int y1= min(subw->selstartline,subw->selendline)   *subw->lineheight;
 		int y2=(max(subw->selstartline,subw->selendline)+1)*subw->lineheight;
 		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
