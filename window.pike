@@ -380,6 +380,39 @@ int subw_display_button_press_event(object self,object ev,mapping subw)
 	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
 	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
+	/* Disabling this code temporarily.
+	Box selection worked fine in the old "one byte is one character is X
+	pixels" model that RosMud followed, but it's inappropriate in Gypsum
+	for two reasons: firstly, not all characters have the same width, and
+	secondly, right-to-left text and left-to-right text behave differently.
+
+	The first problem is solvable. All we'd need to do is record the pixel
+	positions of the highlight-start and highlight-end mouse locations, and
+	do the full point_to_pos check for every line. (It might be worth
+	caching the results; as the mouse sweeps around, lots of lines will be
+	highlighted from the same starting column all the time.) This has quite
+	a significant cost in complexity and CPU time (though, measure the
+	latter before complaining too loudly about that), but it's doable. And
+	programs like SciTE get this part correct - or at least, as correct as
+	is reasonable (the edge might be a bit ragged, being quantized per line
+	rather than consistent, but that's a display concern that matters only
+	in the situations where this actually comes up).
+
+	The second is somewhat harder to define. How do you block select a
+	mixture of LTR and RTL text? What if the boundary of the selection box
+	spans a directionality change? My best template here is Open Office,
+	which appears to behave as if each line were selected individually from
+	the start column to the end column; this produces bizarre display in
+	the mixed-directionality case, but it's the least bizarre of all I've
+	seen - and it's perfectly implementable. (In fact, I think it'd "fall
+	out" of the above implementation. The inversion of start and end would
+	happen on a per-line basis after converting pixel to column position,
+	and all the rest would behave normally.)
+
+	For a completely general text editor, this may be a major issue. For a
+	MUD client, how important is it?
+	*/
+	subw->boxsel = 0;
 }
 
 void subw_display_button_release_event(object self,object ev,mapping subw)
