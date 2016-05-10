@@ -1047,13 +1047,15 @@ class zadvoptions
 				"99: Suppress the beep entirely"
 		]),
 
-		#define COMPAT(x) " Requires restart.\n\nCurrently " + (has_index(all_constants(),"COMPAT_"+upper_case(x))?"":"in") + "active.\n\nYou do NOT normally need to change this.", \
-			"type":"int","path":"compat/"+x,"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compatibility mode",2:"Disable compatibility mode"])
-		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault under certain circumstances."COMPAT("boom2")]),
-		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that can result in a segfault with message boxes."COMPAT("msgdlg")]),
-		"Compat: Pause key":(["desc":"On some systems, the Pause key generates the wrong key code. "
-			"If pressing Pause doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P exclusively."COMPAT("pausekey")]),
-		"Compat: Passwords":(["desc":"In some circumstances, password masking can cause problems. This disables it. YOUR PASSWORD WILL BE VISIBLE."COMPAT("nopasswd")]),
+		#define COMPAT(x) " Requires restart.\n\nCurrently " + (has_index(all_constants(), "COMPAT_"+upper_case(x))?"":"in") + \
+			"active.\n\nYou do NOT normally need to change this.", "type":"int","path":"compat/"+x, \
+			"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compat mode",2:"Disable compat mode"])
+		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault (crash)."COMPAT("boom2")]),
+		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that means message boxes can segfault."COMPAT("msgdlg")]),
+		"Compat: Pause key":(["desc":"On some Windowses, the Pause key generates the wrong key code. If pressing Pause"
+			"doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P exclusively."COMPAT("pausekey")]),
+		"Compat: Passwords":(["desc":"In some circumstances, password masking can cause problems. "
+			"This disables it. YOUR PASSWORD WILL BE VISIBLE."COMPAT("nopasswd")]),
 
 		"Confirm on Close":(["path":"window/confirmclose","type":"int",
 			"desc":"Normally, Gypsum will prompt before closing, in case you didn't mean to close.",
@@ -1079,7 +1081,8 @@ class zadvoptions
 			"options":([0:"Disabled (show commands)",1:"Enabled (hide commands)"]),
 		]),
 		"Input color":(["path":"window/inputcol","type":"int","default":6,
-			"desc":"If input is not hidden, commands will be echoed locally, following the prompt, in some color. The specific color can be configured here.",
+			"desc":"If input is not hidden, commands will be echoed locally, following the prompt, "
+			"in some color. The specific color can be configured here.",
 			"options":mkmapping(enumerate(16),enumcolors),
 		]),
 		"Internet protocols":(["path":"connection/protocol","default":"",
@@ -1097,30 +1100,36 @@ class zadvoptions
 			"options":([0:"Disabled",1:"Enabled"]),
 		]),
 		"Numpad empty only":(["path":"window/numpadempty","type":"int",
-			"desc":"If you have conflicts with numpad nav keys and regular typing, you can prevent numpad nav from happening when there's anything typed.",
+			"desc":"If you have conflicts with numpad nav keys and regular typing, you can prevent "
+			"numpad nav from happening when there's anything typed.",
 			"options":([0:"Always active",1:"Only when empty"]),
 		]),
 		"Present action":(["path":"notif/present","type":"int",
-			"desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour depends somewhat on your window manager.",
+			"desc":"Activity alerts can present the window in one of two ways. Note that the exact behaviour "
+			"depends somewhat on your window manager.",
 			"options":([0:"Mark the window as 'urgent'",1:"Request immediate presentation"]),
 		]),
 		"Reopen closed tabs":(["path":"reopentabs","type":"int",
-			"desc":"Bring back what once was yours... When Gypsum is invoked, you can have it reopen with whatever tabs were previously open. Or you can reopen some fixed set every time.",
-			"options":([0:"Do nothing",1:"Remember but don't retrieve",2:"Retrieve but don't remember",3:"Retrieve, and remember"]),
+			"desc":"Bring back what once was yours... When Gypsum is invoked, you can have it reopen with "
+				"whatever tabs were previously open. Or you can reopen some fixed set every time.",
+			"options": ([0:"Do nothing",1:"Remember but don't retrieve",
+				2:"Retrieve but don't remember",3:"Retrieve, and remember"]),
 		]),
 		"Tab status side":(["path":"window/tabstatus_left","type":"int",
-			"desc":"Per-tab status (eg HP graph) can go to the left or the right of the main window. Changes apply to new tabs only.",
+			"desc":"Per-tab status (eg HP graph) can go to the left or the right of the main window. "
+			"Changes apply to new tabs only.",
 			"options":([0:"Default (right)", 1:"Left"]),
 		]),
 		"Timestamp":(["path":"window/timestamp","default":default_ts_fmt,
-			"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers. TODO: Document this better.",
+			"desc":"Display format for line timestamps as shown when the mouse is hovered over them. Uses strftime markers.",
 		]),
 		"Timestamp localtime":(["path":"window/timestamp_local","type":"int",
 			"desc":"Line timestamps can be displayed in your local time rather than in UTC, if you wish.",
 			"options":([0:"Default (currently UTC)",1:"Use your local time",2:"Use UTC"]),
 		]),
 		"Up arrow":(["path":"window/uparr","type":"int",
-			"desc":"When you press Up to begin searching back through command history, should the current text be saved and recalled when you come back down to it?",
+			"desc":"When you press Up to begin searching back through command history, should the current "
+			"text be saved and recalled when you come back down to it?",
 			"options":([0:"No",1:"Yes"]),
 		]),
 		"Wrap":(["path":"window/wrap","type":"int",
@@ -1131,7 +1140,8 @@ class zadvoptions
 			"savefunc":numbers_to_spaces,
 		]),
 		"Wrap to chars":(["path":"window/wraptochar","type":"int",
-			"desc":"Normally it makes sense to wrap at word boundaries (spaces) where possible, but you can disable this if you wish.",
+			"desc":"Normally it makes sense to wrap at word boundaries (spaces) where possible, "
+			"but you can disable this if you wish.",
 			"options":([0:"Default - wrap to words",1:"Wrap to characters"]),
 		]),
 	]);
