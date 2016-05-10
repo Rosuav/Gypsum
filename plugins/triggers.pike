@@ -50,14 +50,14 @@ class menu_clicked
 		"response:Send command to server",
 		"?Present (grab focus)",
 		"counter:Increment counter [keyword]", //Experimental
-		"'counter_status:",
+		"'counterstatus:",
 	});
 
 	void load_content(mapping(string:mixed) info)
 	{
 		if (!info->match || info->match == "") win->match->set_text("Substring");
 		int val = G->G["counter_" + info->counter]; //Yes, even if it's 0 or "". They'll just be zero themselves.
-		win->counter_status->set_text(val ? (string)val : "");
+		win->counterstatus->set_text(val ? (string)val : "");
 	}
 }
 
