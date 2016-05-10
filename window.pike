@@ -366,7 +366,7 @@ void subw_display_popup_menu()
 int subw_display_button_press_event(object self,object ev,mapping subw)
 {
 	if (ev->type=="button_press" && ev->button==3) {subw_display_popup_menu(); return 1;}
-	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
+	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y); //The coords come in as floats - cast 'em to int.
 	if (ev->type=="2button_press")
 	{
 		//Double-click. Configure highlighting - if it's already a highlighted word, then
@@ -381,39 +381,7 @@ int subw_display_button_press_event(object self,object ev,mapping subw)
 	highlight(subw,line,col,line,col);
 	subw->mouse_down=1;
 	subw->boxsel = ev->state&GTK2.GDK_SHIFT_MASK; //Note that box-vs-stream is currently set based on shift key as mouse went down. This may change.
-	/* Disabling this code temporarily.
-	Box selection worked fine in the old "one byte is one character is X
-	pixels" model that RosMud followed, but it's inappropriate in Gypsum
-	for two reasons: firstly, not all characters have the same width, and
-	secondly, right-to-left text and left-to-right text behave differently.
-
-	The first problem is solvable. All we'd need to do is record the pixel
-	positions of the highlight-start and highlight-end mouse locations, and
-	do the full point_to_pos check for every line. (It might be worth
-	caching the results; as the mouse sweeps around, lots of lines will be
-	highlighted from the same starting column all the time.) This has quite
-	a significant cost in complexity and CPU time (though, measure the
-	latter before complaining too loudly about that), but it's doable. And
-	programs like SciTE get this part correct - or at least, as correct as
-	is reasonable (the edge might be a bit ragged, being quantized per line
-	rather than consistent, but that's a display concern that matters only
-	in the situations where this actually comes up).
-
-	The second is somewhat harder to define. How do you block select a
-	mixture of LTR and RTL text? What if the boundary of the selection box
-	spans a directionality change? My best template here is Open Office,
-	which appears to behave as if each line were selected individually from
-	the start column to the end column; this produces bizarre display in
-	the mixed-directionality case, but it's the least bizarre of all I've
-	seen - and it's perfectly implementable. (In fact, I think it'd "fall
-	out" of the above implementation. The inversion of start and end would
-	happen on a per-line basis after converting pixel to column position,
-	and all the rest would behave normally.)
-
-	For a completely general text editor, this may be a major issue. For a
-	MUD client, how important is it?
-	*/
-	subw->boxsel = 0;
+	subw->selstartx = subw->selendx = (int)ev->x; //Box selection requires the actual pixel position.
 }
 
 void subw_display_button_release_event(object self,object ev,mapping subw)
@@ -445,12 +413,20 @@ void subw_display_button_release_event(object self,object ev,mapping subw)
 	else
 	{
 		if (subw->selstartline>line) [line,col,subw->selstartline,subw->selstartcol]=({subw->selstartline,subw->selstartcol,line,col});
-		if (subw->boxsel && subw->selstartcol>col) [col,subw->selstartcol]=({subw->selstartcol,col});
+		int startx = subw->selstartx, endx = (int)ev->x;
+		if (startx > endx) [endx, startx] = ({startx, endx});
 		content="";
 		for (int l=subw->selstartline;l<=line;++l)
 		{
 			string curline=line_text((l>=sizeof(subw->lines))?subw->prompt:subw->lines[l]);
-			if (subw->boxsel) content+=curline[subw->selstartcol..col-1]+"\n";
+			if (subw->boxsel)
+			{
+				int start = point_to_pos(subw, line, startx);
+				int end = point_to_pos(subw, line, endx);
+				if (start > end) end++;
+				else end--;
+				content += curline[start..end-1]+"\n";
+			}
 			else if (l==line) content+=curline[..col-1];
 			else if (l==subw->selstartline) content+=curline[subw->selstartcol..]+"\n";
 			else content+=curline+"\n";
@@ -496,9 +472,11 @@ void subw_display_motion_notify_event(object self,object ev,mapping subw)
 	}
 	[int line,int col]=point_to_char(subw,(int)ev->x,(int)ev->y);
 	setstatus(hovertext(subw,line));
-	if (line!=subw->selendline || col!=subw->selendcol)
+	int x = (int)ev->x;
+	if (line!=subw->selendline || x!=subw->selendx)
 	{
 		subw->mouse_down=2; //Mouse has moved.
+		subw->selendx = x;
 		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
 	}
 	float low=subw->scr->get_value(),high=low+subw->scr->get_property("page size");
@@ -787,9 +765,10 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	//painttime+=tm->peek(); ++paintcount;
 	int y=(int)subw->scr->get_property("page size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
+	int ssx=subw->selstartx, sex=subw->selendx; //This variable name is inevitable.
 	if (undefinedp(ssl)) ssl=sel=-1;
 	else if (ssl>sel || (ssl==sel && ssc>sec)) [ssl,ssc,sel,sec]=({sel,sec,ssl,ssc}); //Get the numbers forward rather than backward
-	if (subw->boxsel && ssc>sec) [ssc,sec]=({sec,ssc}); //With box selection, row and column are independent.
+	if (ssx>sex) [ssx,sex] = ({sex,ssx});
 	if (ssl==sel && ssc==sec) ssl=sel=-1;
 	int endl=min((end-y)/subw->lineheight,sizeof(subw->lines));
 	for (int l=max(0,(start-y)/subw->lineheight);l<=endl;++l)
@@ -798,7 +777,15 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 		int hlstart=-1,hlend=-1;
 		if (l>=ssl && l<=sel)
 		{
-			if (subw->boxsel) {hlstart=ssc; hlend=sec-1;}
+			//TODO: Be able to pass pixel positions around, rather than
+			//converting to columns and back everywhere.
+			if (subw->boxsel)
+			{
+				hlstart = point_to_pos(subw, line, ssx);
+				hlend = point_to_pos(subw, line, sex);
+				if (hlstart > hlend) [hlend, hlstart] = ({hlstart, hlend + 1});
+				else hlend--;
+			}
 			else
 			{
 				if (l==ssl) hlstart=ssc;
