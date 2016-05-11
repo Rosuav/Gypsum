@@ -421,11 +421,11 @@ void subw_display_button_release_event(object self,object ev,mapping subw)
 			string curline=line_text((l>=sizeof(subw->lines))?subw->prompt:subw->lines[l]);
 			if (subw->boxsel)
 			{
-				int start = point_to_pos(subw, line, startx);
-				int end = point_to_pos(subw, line, endx);
-				if (start > end) end++;
+				int start = point_to_pos(subw, curline, startx);
+				int end = point_to_pos(subw, curline, endx);
+				if (start > end) [start, end] = ({end+1, start});
 				else end--;
-				content += curline[start..end-1]+"\n";
+				content += curline[start..end]+"\n";
 			}
 			else if (l==line) content+=curline[..col-1];
 			else if (l==subw->selstartline) content+=curline[subw->selstartcol..]+"\n";
