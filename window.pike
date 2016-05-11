@@ -1883,29 +1883,8 @@ void create(string name)
 	foreach (plugins;string fn;) if (!file_stat(fn)) m_delete(plugins,fn);
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
-	if (!win->plugin_mtime) win->plugin_mtime=([]);
-	#if 1
-	//EXPERIMENT: Nuking this code. Watch for consequences.
-	//The most obvious consequence would be something not getting updated when it should,
-	//which isn't exactly obvious. But maybe it doesn't even matter; most people will be
-	//updating all of Gypsum at once (eg with git/zip update), so this is immaterial.
-	//CJA 20160512: Uhh.... this breaks a lot of stuff, actually. Notably, it stops the
-	//normal loading of active plugins on startup. Yeah, that's bad.
 	foreach (sort(indices(plugins)),string fn)
-	{
-		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
-		//Or should plugin_mtime be completely dropped? I'm not sure what we really gain here.
-		//In fact, we possibly lose a bit, in that some plugins trigger updates and others
-		//get bootstrapped, so the messages are split. Maybe they should just all be put into
-		//G->needupdate, which will work on startup too.
-		if (plugins[fn]->active)
-		{
-			int mtime=file_stat(fn)->mtime;
-			if (mtime!=win->plugin_mtime[fn] && !catch {G->bootstrap(fn);}) win->plugin_mtime[fn]=mtime;
-		}
-		else m_delete(win->plugin_mtime,fn);
-	}
-	#endif
+		if (plugins[fn]->active && !has_value(G->needupdate, fn)) catch {G->bootstrap(fn);};
 	settabs(win->tabs[0]->enwidth);
 	update_dictionary();
 }
