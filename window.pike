@@ -1884,11 +1884,13 @@ void create(string name)
 	discover_plugins("plugins");
 	persist->save(); //Autosave (even if nothing's changed, currently)
 	if (!win->plugin_mtime) win->plugin_mtime=([]);
-	#if 0
+	#if 1
 	//EXPERIMENT: Nuking this code. Watch for consequences.
 	//The most obvious consequence would be something not getting updated when it should,
 	//which isn't exactly obvious. But maybe it doesn't even matter; most people will be
 	//updating all of Gypsum at once (eg with git/zip update), so this is immaterial.
+	//CJA 20160512: Uhh.... this breaks a lot of stuff, actually. Notably, it stops the
+	//normal loading of active plugins on startup. Yeah, that's bad.
 	foreach (sort(indices(plugins)),string fn)
 	{
 		//TODO: Should the configure_plugins dlg also manipulate plugin_mtime?
