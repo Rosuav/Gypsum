@@ -510,7 +510,10 @@ void rtl_check(array line)
 		if (text[pos] != ' ' && text[pos] != '\t')
 		{
 			if (Unicode.is_rtlchar(text[pos]))
+			{
+				m_delete(line[0], "text");
 				line[2] = "\u200e" + text;
+			}
 			break;
 		}
 	#endif
