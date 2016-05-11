@@ -494,6 +494,29 @@ void autoscroll(mapping subw)
 	//Optional: Trigger a mousemove with the mouse at its current location, to update highlight. Not a big deal if not (just a display oddity).
 }
 
+//Check a line for indented RTL text (which consists of a number of spaces and/or tabs,
+//followed by an RTL character). If it does, prepend a directionality marker U+200E;
+//otherwise, do nothing. Note that a future change MAY expand the definition of
+//indentation to cover all Unicode whitespace.
+void rtl_check(array line)
+{
+	//Pike 7.8 doesn't have this function. Rather than code it ourselves,
+	//we just permit RTL text to lose its indentation on such systems.
+	#if constant(Unicode.is_rtlchar)
+	if (sizeof(line) == 1) return; //Empty line - can't have indentation.
+	string text = line[2]; //We care only about the very first display block. We know it won't be empty.
+	if (text[0] != ' ' && text[0] != '\t') return; //Not indented.
+	for (int pos = 0; pos < sizeof(text); ++pos)
+		if (text[pos] != ' ' && text[pos] != '\t')
+		{
+			if (Unicode.is_rtlchar(text[pos]))
+				line[2] = "\u200e" + text;
+			break;
+		}
+	#endif
+	return;
+}
+
 /**
  * Add a line of output (anything other than a prompt)
  * If msg is an array, it is assumed to be alternating colors and text.
@@ -543,9 +566,11 @@ void say(mapping subw,string|array msg,mixed ... args)
 			msg=({msg[0]-(<"text">),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
 			wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 		}
+		rtl_check(cur);
 		m_delete(cur[0], "text"); lines+=({cur});
 		i=pos=0;
 	}
+	rtl_check(msg);
 	subw->lines+=lines+({msg});
 	subw->activity=1;
 	if (!mainwindow->is_active()) switch (persist["notif/activity"])
