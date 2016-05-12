@@ -8,6 +8,8 @@
 inherit hook;
 inherit plugin_menu;
 
+constant plugin_active_by_default = 1;
+
 constant docstring=#"
 Triggers let you perform some action whenever a specified message comes
 from the server. The action can be incredibly flexible.
