@@ -14,7 +14,7 @@ not for predicting in-game events such as bank hours.
 ";
 //This can be invoked as a stand-alone application via timezone.pike (the
 //microkernel). Ideally, there should be as little as possible special code
-//to handle this case. So far that has not been attained, but it's close.
+//here to handle this. So far that has not been attained, but it's close.
 inherit hook;
 inherit plugin_menu;
 inherit statusevent; constant fixedwidth = 1;
