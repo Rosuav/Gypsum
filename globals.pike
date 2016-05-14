@@ -956,6 +956,10 @@ int invoke_browser(string url)
 void play_sound(string file)
 {
 	//TODO: Handle cross-platform invocation methods.
+	//Note: This is NOT the place to call on SDL. If that is desired, it
+	//should be called up from a non-default plugin, as it is a hefty
+	//dependency; that plugin might then replace this global, although
+	//that could make for awkward build ordering. (Maybe call it 0SDL?)
 	foreach (({"cvlc", "vlc"}),string cmd) catch
 	{
 		Process.create_process(({cmd, file}));
