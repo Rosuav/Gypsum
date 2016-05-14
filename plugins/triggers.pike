@@ -35,6 +35,7 @@ int output(mapping(string:mixed) subw,string line)
 		if (tr->response != "") send(subw, tr->response+"\r\n"); //Not officially supported by core - may have to change later.
 		if (tr->counter != "") G->G["counter_" + tr->counter]++; //On par with HQ9++, there's no way to actually do anything with this.
 		if (tr->present) G->G->window->mainwindow->present();
+		if (tr->beep) beep(1);
 	}
 }
 
@@ -51,6 +52,7 @@ class menu_clicked
 		"message:Display message locally",
 		"response:Send command to server",
 		"?Present (grab focus)",
+		"?Beep",
 		"counter:Increment counter [keyword]", //Experimental
 		"'counterstatus:",
 	});
