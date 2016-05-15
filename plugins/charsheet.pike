@@ -932,47 +932,47 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Poor": enumerate(21)[*]/3
 		]);
 		mapping classes=([
-			"Barbarian": (["abbr": "Bbn",
+			"Barbarian": (["clsskills": "Bbn",
 				"hd": 12, "skills": 4, "bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 				"dontforget": "",
-			]),"Bard": (["abbr": "Brd",
+			]),"Bard": (["clsskills": "Brd",
 				"hd": 6,  "skills": 6, "bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Good",
 				"dontforget": "",
-			]),"Cleric": (["abbr": "Clr",
+			]),"Cleric": (["clsskills": "Clr",
 				"hd": 8,  "skills": 2, "bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
 				"dontforget": "",
-			]),"Druid": (["abbr": "Drd",
+			]),"Druid": (["clsskills": "Drd",
 				"hd": 8,  "skills": 4, "bab": "Avg",
 				"fort": "Good", "refl": "Poor", "will": "Good",
 				"dontforget": "",
-			]),"Fighter": (["abbr": "Ftr",
+			]),"Fighter": (["clsskills": "Ftr",
 				"hd": 10, "skills": 2, "bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 				"dontforget": "Don't forget: Fighter bonus feat",
-			]),"Monk": (["abbr": "Mnk",
+			]),"Monk": (["clsskills": "Mnk",
 				"hd": 8,  "skills": 4, "bab": "Avg",
 				"fort": "Good", "refl": "Good", "will": "Good",
 				"dontforget": "",
-			]),"Paladin": (["abbr": "Pal",
+			]),"Paladin": (["clsskills": "Pal",
 				"hd": 10, "skills": 2, "bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 				"dontforget": "",
-			]),"Ranger": (["abbr": "Rgr",
+			]),"Ranger": (["clsskills": "Rgr",
 				"hd": 8,  "skills": 6, "bab": "Good",
 				"fort": "Good", "refl": "Good", "will": "Poor",
 				"dontforget": "",
-			]),"Rogue": (["abbr": "Rog",
+			]),"Rogue": (["clsskills": "Rog",
 				"hd": 6,  "skills": 8, "bab": "Avg",
 				"fort": "Poor", "refl": "Good", "will": "Poor",
 				"dontforget": "",
-			]),"Sorcerer": (["abbr": "Sor",
+			]),"Sorcerer": (["clsskills": "Sor",
 				"hd": 4,  "skills": 2, "bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
 				"dontforget": "Don't forget: Learn new spells",
-			]),"Wizard": (["abbr": "Wiz",
+			]),"Wizard": (["clsskills": "Wiz",
 				"hd": 4,  "skills": 2, "bab": "Poor",
 				"fort": "Poor", "refl": "Poor", "will": "Good",
 				"dontforget": "Don't forget: Learn new spells",
@@ -993,7 +993,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//This would be a very strict format. It looks human readable, but
 			//it's not flexible. "%d hd, %d skills, %s BAB, %s/%s/%s saves, %s"
 			//to get all the information exactly as per the above (apart from
-			//abbr).
+			//clsskills - or just describe it as 'use this for skill checks').
 			//Leave this until it's needed by a DM. I don't personally need it
 			//(Lumina uses a different client), and this needs someone to use
 			//it live before it can be depended on.
@@ -1018,7 +1018,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			string cls=win->ddcb_class->get_text();
 			mapping classinfo=classes[cls] || ([]);
-			array sk=class_skills[classinfo->abbr] || ({ });
+			array sk=class_skills[classinfo->clsskills] || ({ });
 			int spent=0;
 			foreach (skillnames;string n;) spent += (2-has_value(sk,n)) * (int)win["skill_"+n]->get_text();
 			win->skillpoints->set_text(sprintf("%d/%d",spent,classinfo->skills));
@@ -1037,7 +1037,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				obj->set_text(sprintf(fmt,@clsargs));
 			}
 			if (win->sk1->get_child()) {win->sk1->remove(win->sk1->get_child()); win->sk2->remove(win->sk2->get_child());}
-			array sk=class_skills[classinfo->abbr] || ({ });
+			array sk=class_skills[classinfo->clsskills] || ({ });
 			array tb=({({ }),({ })});
 			foreach (sort(indices(skillnames)),string s)
 			{
