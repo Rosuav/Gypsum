@@ -989,11 +989,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			//string, which people can copy/paste. That would improve the
 			//readability of this code, too. We can probably ignore the class
 			//skills list for now, and use a string somewhat thus:
-			//"Wizard": "4 hd, 2 skills, Poor BAB, Poor/Poor/Good saves, Don't forget: Learn new spells"
+			//"Wizard": "Wiz, 4 hd, 2 skills, Poor BAB, Poor/Poor/Good saves, Don't forget: Learn new spells"
 			//This would be a very strict format. It looks human readable, but
-			//it's not flexible. "%d hd, %d skills, %s BAB, %s/%s/%s saves, %s"
-			//to get all the information exactly as per the above (apart from
-			//clsskills - or just describe it as 'use this for skill checks').
+			//it's not flexible. "%s, %d hd, %d skills, %s BAB, %s/%s/%s saves, %s"
+			//to get all the information exactly as per the above.
 			//Leave this until it's needed by a DM. I don't personally need it
 			//(Lumina uses a different client), and this needs someone to use
 			//it live before it can be depended on.
