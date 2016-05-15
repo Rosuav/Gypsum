@@ -932,7 +932,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			"Poor": enumerate(21)[*]/3
 		]);
 		mapping classes=([
-			"Barbarian": (["abbr": "Brb",
+			"Barbarian": (["abbr": "Bbn",
 				"hd": 12, "skills": 4, "bab": "Good",
 				"fort": "Good", "refl": "Poor", "will": "Poor",
 				"dontforget": "",
