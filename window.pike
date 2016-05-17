@@ -1972,7 +1972,10 @@ class connect_menu
 		if (info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text(info->logfile = "Logs/" + info->logfile);
 		//Maybe TODO: Obscure the contents of writeme so it's not instantly obvious what people's passwords are.
 		//It's just a maybe since they have to be decryptable without any sort of password, and they get sent
-		//across the internet in clear text anyway.
+		//across the internet in clear text anyway - unless, of course, there's server-side SSL support, which
+		//not many MUDs have. I could add it to Minstrel Hall, but it'd be a pain to do that pre-8.0. Maybe when
+		//Gideon moves to the cloud, I'll also update to a much newer Pike, and be able to do that; if so, it
+		//might then be worth having a dedicated 'password' field here, which would then be somewhat obscured.
 	}
 
 	void sig_pb_connect_clicked()
