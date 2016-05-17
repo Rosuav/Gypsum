@@ -1947,12 +1947,13 @@ class connect_menu
 	inherit configdlg;
 	constant elements=({
 		"kwd:Keyword", "Name", "host:Host name", "#Port",
-		"?use_ka:Use keep-alive", "+descr:Description",
+		"?use_ka:Use keep-alive", "?use_ssl:Use SSL/TLS",
+		"+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
 		"logfile:Auto-log",
 		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", "' ",
 	});
-	//TODO: Have a drop-down list of connection types - Plain, Telnet, SSL; default to "Autodetect" which picks between Plain and Telnet (current behaviour)
+	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others; default to "Autodetect" which picks between Raw and Telnet (current behaviour)
 	//Might also be cool to have some protocol assistants - IRC, SMTP, POP, IMAP - any line-based protocol could have an easy plugin that ties in with it.
 	constant persist_key="worlds";
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);

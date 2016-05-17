@@ -446,6 +446,7 @@ mapping connect(object display,mapping info)
 		else say(conn->display,"%%%% Logging to %O",fn);
 	}
 	say(conn->display,"%%% Resolving "+info->host+"...");
+	if (info->use_ssl) conn->ssl_hostname = info->host;
 	conn->establish = establish_connection(info->host, (int)info->port, complete_connection, conn);
 	return conn;
 }
@@ -475,11 +476,10 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	//Not that that'll be likely - you'd have to "/update connection" while in the middle of establishing one -
 	//but it's pretty cheap to do these lookups, and it'd be a nightmare to debug if it were ever wrong.
-	if (conn->display->use_ssl) //HACK
+	if (conn->ssl_hostname)
 	{
-		object ssl = SSL.File(conn->sock, SSL.Context());
-		ssl->connect();
-		conn->sock = ssl;
+		conn->sock = SSL.File(conn->sock, SSL.Context());
+		conn->sock->connect(conn->ssl_hostname);
 	}
 	conn->sock->set_id(conn); //Refloop
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
