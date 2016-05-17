@@ -1946,8 +1946,8 @@ class connect_menu
 {
 	inherit configdlg;
 	constant elements=({
-		"kwd:Keyword", "Name", "host:Host name",
-		"#Port", "?use_ka:Use keep-alive", "+descr:Description",
+		"kwd:Keyword", "Name", "host:Host name", "#Port",
+		"?use_ka:Use keep-alive", "+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
 		"logfile:Auto-log",
 		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", "' ",
