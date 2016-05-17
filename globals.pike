@@ -961,7 +961,11 @@ void play_sound(string file)
 	//dependency; that plugin might then replace this global, although
 	//that could make for awkward build ordering. (Maybe call it 0SDL?)
 	//I don't know of a reliable way to *un*load SDL completely, so this
-	//would definitely need to be nondefault and easy to reset-to-wipe.
+	//would definitely need to be nondefault and easy to reset - if a
+	//user has an issue, the solution will be "deselect the plugin, then
+	//restart Gypsum", which is a lot less efficient than "unload", but
+	//would have to do. I really don't want to have to implement a hook
+	//for plugin unloading...
 	foreach (({"cvlc", "vlc"}),string cmd) catch
 	{
 		Process.create_process(({cmd, file}));
