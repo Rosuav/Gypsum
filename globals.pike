@@ -960,6 +960,8 @@ void play_sound(string file)
 	//should be called up from a non-default plugin, as it is a hefty
 	//dependency; that plugin might then replace this global, although
 	//that could make for awkward build ordering. (Maybe call it 0SDL?)
+	//I don't know of a reliable way to *un*load SDL completely, so this
+	//would definitely need to be nondefault and easy to reset-to-wipe.
 	foreach (({"cvlc", "vlc"}),string cmd) catch
 	{
 		Process.create_process(({cmd, file}));
