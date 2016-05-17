@@ -462,7 +462,6 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 		return;
 	}
 	conn->sock = status;
-	conn->sock->set_id(conn); //Refloop
 	//Disable Nagling, if possible (requires Pike branch rosuav/naglingcontrol
 	//which is not in trunk 8.0) - can improve latency, not critical
 	if (conn->sock->nodelay) conn->sock->nodelay();
@@ -476,6 +475,13 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	//Not that that'll be likely - you'd have to "/update connection" while in the middle of establishing one -
 	//but it's pretty cheap to do these lookups, and it'd be a nightmare to debug if it were ever wrong.
+	if (conn->display->use_ssl) //HACK
+	{
+		object ssl = SSL.File(conn->sock, SSL.Context());
+		ssl->connect();
+		conn->sock = ssl;
+	}
+	conn->sock->set_id(conn); //Refloop
 	conn->sock->set_nonblocking(G->G->connection->sockread,G->G->connection->sockwrite,G->G->connection->sockclosed);
 	G->G->connection->sockread(conn, est->data_rcvd);
 	G->G->sockets[conn->sock]=1;
