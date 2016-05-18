@@ -1948,6 +1948,7 @@ class connect_menu
 	constant elements=({
 		"kwd:Keyword", "Name", "host:Host name", "#Port",
 		"?use_ka:Use keep-alive", "?use_ssl:Use SSL/TLS",
+		"'Encrypting your connection works only if the server supports this.",
 		"+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
 		"logfile:Auto-log",
