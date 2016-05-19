@@ -1954,8 +1954,10 @@ class connect_menu
 		"logfile:Auto-log",
 		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", "' ",
 	});
-	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others; default to "Autodetect" which picks between Raw and Telnet (current behaviour)
-	//Might also be cool to have some protocol assistants - IRC, SMTP, POP, IMAP - any line-based protocol could have an easy plugin that ties in with it.
+	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others;
+	//default to "Autodetect" which picks between Raw and Telnet (current behaviour)
+	//Might also be cool to have some protocol assistants - IRC, SMTP, POP, IMAP -
+	//any line-based protocol could have an easy plugin that ties in with it.
 	constant persist_key="worlds";
 	mapping(string:mixed) windowprops=(["title":"Connect to a world"]);
 
