@@ -1947,8 +1947,11 @@ class connect_menu
 	inherit configdlg;
 	constant elements=({
 		"kwd:Keyword", "Name", "host:Host name", "#Port",
-		"?use_ka:Use keep-alive", "?use_ssl:Use SSL/TLS",
+		"?use_ka:Use keep-alive",
+		#if constant(SSL.File)
+		"?use_ssl:Use SSL/TLS",
 		"'Encrypting your connection works only if the server supports this.",
+		#endif
 		"+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
 		"logfile:Auto-log",

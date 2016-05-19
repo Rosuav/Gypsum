@@ -473,11 +473,13 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	conn->sock->setsockopt(Stdio.IPPROTO_IP,Stdio.IP_TOS,Stdio.IPTOS_LOWDELAY|Stdio.IPTOS_RELIABILITY);
 	#endif
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
+	#if constant(SSL.File)
 	if (conn->ssl_hostname)
 	{
 		conn->sock = SSL.File(conn->sock, SSL.Context());
 		conn->sock->connect(conn->ssl_hostname);
 	}
+	#endif
 	conn->sock->set_id(conn); //Refloop
 	//Note: In setting the callbacks, use G->G->connection->x instead of just x, in case this is the old callback.
 	//Not that that'll be likely - you'd have to "/update connection" while in the middle of establishing one -
