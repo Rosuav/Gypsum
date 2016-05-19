@@ -1952,7 +1952,8 @@ class connect_menu
 		"+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
 		"logfile:Auto-log",
-		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.", "' ",
+		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.",
+		"' ", //Add a bit more vertical space before the "Save and Connect" button
 	});
 	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others;
 	//default to "Autodetect" which picks between Raw and Telnet (current behaviour)
