@@ -1950,7 +1950,7 @@ class connect_menu
 		"?use_ka:Use keep-alive",
 		#if constant(SSL.File)
 		"?use_ssl:Use SSL/TLS",
-		"'Encrypting your connection works only if the server supports this.",
+		"'Encrypting your connection works only if the server supports this.", //... and if we're on Pike 8.0+
 		#endif
 		"+descr:Description",
 		"+writeme:Text to output upon connect", "'Use this to automatically log in, but be aware that passwords are visible.",
