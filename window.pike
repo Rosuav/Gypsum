@@ -1983,6 +1983,9 @@ class connect_menu
 		//not many MUDs have. I could add it to Minstrel Hall, but it'd be a pain to do that pre-8.0. Maybe when
 		//Gideon moves to the cloud, I'll also update to a much newer Pike, and be able to do that; if so, it
 		//might then be worth having a dedicated 'password' field here, which would then be somewhat obscured.
+		//Not securely encrypted, of course - we have to be able to decrypt it - but it could be hidden from
+		//casual notice, which would be of value to people who use the connect dialogue and might have people
+		//looking over their shoulders.
 	}
 
 	void sig_pb_connect_clicked()
