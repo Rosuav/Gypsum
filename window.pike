@@ -1985,7 +1985,9 @@ class connect_menu
 		//might then be worth having a dedicated 'password' field here, which would then be somewhat obscured.
 		//Not securely encrypted, of course - we have to be able to decrypt it - but it could be hidden from
 		//casual notice, which would be of value to people who use the connect dialogue and might have people
-		//looking over their shoulders.
+		//looking over their shoulders. Of course, that would require knowing the target login format, so this
+		//depends on knowing that the far end is a MUD. Alternatively, just have a tickbox to obscure or not
+		//obscure the entire writeme field.
 	}
 
 	void sig_pb_connect_clicked()
