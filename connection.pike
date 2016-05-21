@@ -472,6 +472,8 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	#if constant(Stdio.IPTOS_LOWDELAY)
 	conn->sock->setsockopt(Stdio.IPPROTO_IP,Stdio.IP_TOS,Stdio.IPTOS_LOWDELAY|Stdio.IPTOS_RELIABILITY);
 	#endif
+	//Note that neither of the above experiments has been proven to give any
+	//overly-significant benefit, so they're not being pushed for.
 	say(conn->display,"%%% Connected to "+conn->worldname+".");
 	#if constant(SSL.File)
 	if (conn->ssl_hostname)
