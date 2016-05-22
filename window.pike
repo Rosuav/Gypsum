@@ -272,7 +272,7 @@ Some people may want to show the prompt actually to the left of the input box, i
 This will have a number of consequences, including:
 * Possible visual space utilization problems, if the prompt gets too long
 * Horizontal scrolling - should it hide the prompt?? Would be hard.
-* RTL text??? Nigh impossible to do perfectly.
+* RTL text??? Nigh impossible to do perfectly. (Though left-justified RTL wouldn't be too bad.)
 * Mark-and-copy concerns - can you sweep across from text to prompt?
 * Flicker as prompts come and go, and the input box thus shifts left and right
 * Other concerns?
