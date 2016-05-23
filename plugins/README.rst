@@ -306,6 +306,7 @@ For more advanced usage, define these::
 	void load_content(mapping(string:mixed) info) { } //Store information from info into the window
 	void delete_content(string kwd,mapping(string:mixed) info) { } //Delete the thing with the given keyword.
 	constant descr_key="title"; //Set this to a key inside the info mapping to populate with descriptions.
+	string selectme="keyword"; //Preselect this item. Otherwise, -- New -- is preselected, or the first.
 
 The layout of your window is governed by the broad structure of a configdlg,
 with a "content block" incorporated in the right hand panel. The simplest way
