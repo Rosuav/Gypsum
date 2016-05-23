@@ -53,7 +53,7 @@ Command - 'inherit command'
 Commands are invoked explicitly by the user typing "/foo", where foo is
 the plugin's name. The plugin should define a function thus::
 
-    int process(string param,mapping(string:mixed) subw)
+    int process(string param, mapping(string:mixed) subw)
 
 The 'param' parameter is the parameters to the command. (Yo dawg?) It
 may be "", but it will never be 0. The subw mapping identifies the
@@ -85,7 +85,7 @@ specific hook. If a hook function returns 1, the event is deemed "consumed"; no
 other hooks will be called, and (generally) the default behaviour will not be
 performed.
 
-- int input(mapping(string:mixed) subw,string line)
+- int input(mapping(string:mixed) subw, string line)
 
   An input hook looks very similar to a command processor, but take note of
   the following distinctions:
@@ -128,20 +128,20 @@ performed.
   that wasn't in response to an inputhook call. The purpose of this is to modify,
   not create, input. This behaviour may change in the future.
 
-- int output(mapping(string:mixed) subw,string line)
+- int output(mapping(string:mixed) subw, string line)
 
   An output hook is similar to an input hook, but works on a different type of
   line: a line of text from the server. Consuming the line means it will not be
   shown to the user.
 
-- int prompt(mapping(string:mixed) subw,string prompt)
+- int prompt(mapping(string:mixed) subw, string prompt)
 
   A line of text is about to be treated as a prompt. With some servers, this may
   include useful information such as hitpoint status. Note that "consuming" a
   prompt pretends that the server did not send it - any previous prompt will be
   kept. There's currently no way to say "this isn't a prompt, keep it as text".
 
-- int closetab(mapping(string:mixed) subw,int index)
+- int closetab(mapping(string:mixed) subw, int index)
 
   A tab (subwindow) is about to be closed. This is a good opportunity to dispose
   of any per-tab memory, break refloops, or do any other final cleanup. Return 1
@@ -159,8 +159,8 @@ performed.
   different signatures. The old signatures are still valid, but new code should
   not use them::
 
-	int inputhook(string line,mapping(string:mixed) subw)
-	int outputhook(string line,mapping(string:mixed) conn)
+	int inputhook(string line, mapping(string:mixed) subw)
+	int outputhook(string line, mapping(string:mixed) conn)
 
   Note that the outputhook receives a connection, *not* a subwindow. See below
   for details of the two separate mappings. Or just use output() instead :)
@@ -202,9 +202,9 @@ override this function::
 	void dosignals()
 	{
 		::dosignals();
-		win->signals+=({
-			gtksignal(win->someobj,"some_event",callback,"arg"),
-			gtksignal(win->otherobj,"blah",b4_callback,"arg",UNDEFINED,1),
+		win->signals += ({
+			gtksignal(win->someobj, "some_event", callback, "arg"),
+			gtksignal(win->otherobj, "blah", b4_callback, "arg", UNDEFINED, 1),
 			//... as many as needed
 		});
 	}
@@ -220,7 +220,7 @@ manager control; Gypsum simply sets the appropriate hints). Disable this by
 marking that your window is not a subwindow, preferably only for ephemeral
 windows rather than windows which will stay around permanently::
 
-	constant is_subwindow=0;
+	constant is_subwindow = 0;
 
 Any time a user requests that your window be closed, closewindow() will be
 called. Override this to alter what happens, eg to add a confirmation, or to
@@ -258,12 +258,12 @@ Movable window - 'inherit movablewindow'
 The same as 'inherit window' in usage, but gives automatic saving
 and loading of the window position. Provide one additional constant::
 
-	constant pos_key="plugins/plugin_name/winpos";
+	constant pos_key = "plugins/plugin_name/winpos";
 
 This will be used as the persist[] key in which the window position
 is stored. Optionally also set::
 
-	constant load_size=1; //To resize on startup to the last saved size
+	constant load_size = 1; //To resize on startup to the last saved size
 
 Without this (or with load_size set to 0), only the position will be saved and
 restored - good for windows where the size is set by the contained widgets.
@@ -281,8 +281,8 @@ and do everything directly.)
 The most common usage requires only that you provide::
 
 	//Set any window properties desired - see GTK docs for details
-	mapping(string:mixed) windowprops=(["title":"Configure"]);
-	constant persist_key="pluginname/whatever"; //Set this to the persist[] key where your data is stored
+	mapping(string:mixed) windowprops = (["title":"Configure"]);
+	constant persist_key = "pluginname/whatever"; //Set this to the persist[] key where your data is stored
 	//Name all the fields that you care about, identifying them by type
 	constant strings=({"key1","key2","key3"}); //One or more of these three
 	constant ints=({"key4","key5","key6"});
@@ -386,10 +386,10 @@ Plugin menu item - 'inherit plugin_menu'
 
 Creates an entry on the 'Plugins' pull-down menu. Provide some or all of::
 
-	constant menu_label=0; //(string) The initial label for your menu.
-	constant menu_accel_key=0; //(int) Accelerator key. Provide if you want an accelerator.
-	constant menu_accel_mods=0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
-	constant menu_parent="plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
+	constant menu_label = 0; //(string) The initial label for your menu.
+	constant menu_accel_key = 0; //(int) Accelerator key. Provide if you want an accelerator.
+	constant menu_accel_mods = 0; //(int) Modifier keys, eg GTK2.GDK_CONTROL_MASK. Ignored if !menu_accel_key.
+	constant menu_parent = "plugins"; //Which menu (file/options/plugins/help) this item belongs in - don't change without good reason
 	void menu_clicked() { }
 
 ADVISORY: Note that menu_clicked can be any callable, eg a class, not just
@@ -428,7 +428,7 @@ the return value is ignored, and the function can be declared void.
 
 Local output can be produced on any subw::
 
-	say(subw,"message");
+	say(subw, "message");
 
 A subw of 0 means "whichever is current" and is appropriate when no
 subw reference is available. If additional arguments (after the message)
@@ -444,7 +444,7 @@ you are absolutely sure you know what you're doing.
 
 Documentation (for Plugins|Configure) can be provided by a string constant::
 
-	constant docstring=#"
+	constant docstring = #"
 	blah blah blah
 	";
 
@@ -457,8 +457,8 @@ If your plugin needs a lot of configuration, the best way is to craft your own
 window and save into persist[]. But if all you need is one simple string, you
 can tie in with the main plugin config dialog by creating two constants::
 
-	constant config_persist_key="pluginname/what_to_configure";
-	constant config_description="Human-readable descriptive text";
+	constant config_persist_key = "pluginname/what_to_configure";
+	constant config_description = "Human-readable descriptive text";
 
 Explore other plugins for usage examples. Regardless of the style of config,
 you must restrict persist usage to JSON-safe values: strings, integers,
@@ -467,7 +467,7 @@ values.
 
 ADVISORY: Commands can be synthesized directly to a subw::
 
-	send(subw,line+"\r\n");
+	send(subw, line+"\r\n");
 
 This is reaching into the internals, however, and is not supported. In future,
 a fully-supported API may be provided; for now, this is available.
