@@ -271,6 +271,7 @@ void sockread(mapping conn,bytes data)
 						//Should we explicitly reject (respond negatively to) unrecognized DO/WILL requests?
 						//Might need to keep track of them and make sure we don't get into a loop.
 						//Currently Gypsum doesn't seem to play nicely with some non-MUD servers (eg Debian telnetd).
+						conn["unknown_telnet_" + iac[1]] = 1; //Track it for curiosity's sake.
 						break;
 				}
 				iac=iac[2..];
