@@ -508,6 +508,7 @@ class configdlg
 	In most cases, this and persist_key will be all you need to set.
 	Still figuring out a good way to allow a SelectBox. Currently messing with "@name:lbl",({opt,opt,opt}) which
 	is far from ideal.
+	This is eventually going to be the primary way to do things, but it's currently unpledged to permit changes.
 	*/
 	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
