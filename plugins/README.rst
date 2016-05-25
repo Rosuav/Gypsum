@@ -316,6 +316,10 @@ for strings and ints (including the keyword, if allow_rename isn't zeroed),
 GTK2.CheckButton for bools, and MultiLineEntryField for multi-line strings
 (mark these by starting the label with "\n").
 
+NOTE: An alternative (and far superior) system is in development. It is not yet
+documented here and may be subject to tweaks, although major changes are highly
+unlikely. Search the source (mainly globals.pike) for 'elements'.
+
 More advanced usage can incorporate all of the above, and then make small
 tweaks to handle what doesn't work the easy way. It's code. Have at it!
 
