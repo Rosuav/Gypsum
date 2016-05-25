@@ -1253,7 +1253,8 @@ class establish_connection(string hostname,int port,function callback)
 	}
 
 	//Having *something*, anything, as a socket-read callback seems to make the socket-disconnect
-	//callback functional. HUH?!? So we have to snapshot the text for the caller, just in case.
+	//callback functional. HUH?!? So we have to snapshot the text for the caller, making this a
+	//bit like the way TCP fast-start works.
 	void readable(mixed id,bytes data) {data_rcvd += data;}
 	void connfailed() {errno = sock->errno(); sock = 0; tryconn();}
 
