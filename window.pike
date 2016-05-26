@@ -1961,7 +1961,8 @@ class connect_menu
 	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others;
 	//default to "Autodetect" which picks between Raw and Telnet (current behaviour).
 	//A raw socket would have no handling of prompts, just pseudoprompts; and it
-	//would have to display an unterminated line of text at end of connection.
+	//would have to display an unterminated line of text at end of connection. (But
+	//that should already be happening. This may be a bug somewhere.)
 	//Might also be cool to have some protocol assistants - IRC, SMTP, POP, IMAP -
 	//any line-based protocol could have an easy plugin that ties in with it.
 	constant persist_key="worlds";
