@@ -452,7 +452,7 @@ mapping connect(object display,mapping info)
 	return conn;
 }
 
-//Follow on from connect(), either immediately or after a DNS lookup
+//Follow on from connect() and establish_connection(), either immediately or after a DNS lookup
 void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 {
 	if (stringp(status)) {say(conn->display, "%%% "+status); return;}
