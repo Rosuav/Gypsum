@@ -328,6 +328,9 @@ void sockread(mapping conn,bytes data)
 //Clean up the socket connection; it's assumed to have already been closed.
 int sockclosed(mapping conn)
 {
+	if (conn->readbuffer != "") say(conn->display, "%%% readbuffer: "+conn->readbuffer);
+	if (conn->ansibuffer != "") say(conn->display, "%%% ansibuffer: "+conn->ansibuffer);
+	if (conn->curline != "") say(conn->display, "%%% curline: "+conn->curline);
 	values(G->G->tabstatuses)->connected(conn->display,0); //Note that subw->world is not currently cleared, but if it ever is, it must be AFTER this call.
 	say(conn->display,"%%% Disconnected from server.");
 	G->G->window->unpassword(conn->display);
