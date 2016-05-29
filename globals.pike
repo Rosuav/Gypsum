@@ -500,7 +500,7 @@ class configdlg
 	constant ints=({ }); //Simple integer bindings, ditto
 	constant bools=({ }); //Simple boolean bindings (to CheckButtons), ditto
 	constant labels=({ }); //Labels for the above
-	/* ADVISORY and under test: Instead of using all of the above four, use a single list of
+	/* PROVISIONAL: Instead of using all of the above four, use a single list of
 	tokens which gets parsed out to provide keyword, label, and type.
 	constant elements=({"kwd:Keyword", "name:Name", "?state:State of Being", "#value:Value","+descr:Description"});
 	If the colon is omitted, the keyword will be the first word of the lowercased name, so this is equivalent:
