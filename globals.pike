@@ -569,8 +569,9 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
-		foreach (win->real_strings,string key) win[key]->set_text((string)(info[key] || ""));
-		foreach (win->real_ints,string key) win[key]->set_text((string)info[key]);
+		mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
+		foreach (win->real_strings,string key) win[key]->set_text((string)(info[key] || defaults[key] || ""));
+		foreach (win->real_ints,string key) win[key]->set_text((string)(info[key] || defaults[key]));
 		foreach (win->real_bools,string key) win[key]->set_active((int)info[key]);
 		load_content(info);
 	}
