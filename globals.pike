@@ -515,6 +515,7 @@ class configdlg
 	constant descr_key=0; //(string) Set this to a key inside the info mapping to populate with descriptions.
 	string selectme; //If this contains a non-null string, it will be preselected.
 	//... end provide me.
+	mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
 
 	void create() {if (persist_key && !items) items=persist->setdefault(persist_key,([])); ::create();} //Pass on no args to the window constructor - all configdlgs are independent
 
@@ -569,7 +570,6 @@ class configdlg
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
-		mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
 		foreach (win->real_strings,string key) win[key]->set_text((string)(info[key] || defaults[key] || ""));
 		foreach (win->real_ints,string key) win[key]->set_text((string)(info[key] || defaults[key]));
 		foreach (win->real_bools,string key) win[key]->set_active((int)info[key]);
