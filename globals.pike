@@ -647,6 +647,7 @@ class configdlg
 				continue;
 			}
 			sscanf(element, "%1[?#+'@]%s", string type, element);
+			//TODO: Populate defaults[] if there's an = in the label
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
 			switch (type)
