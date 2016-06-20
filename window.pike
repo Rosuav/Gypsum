@@ -1946,7 +1946,7 @@ class connect_menu
 {
 	inherit configdlg;
 	constant elements=({
-		"kwd:Keyword", "Name", "host:Host name", "#Port",
+		"kwd:Keyword", "Name", "host:Host name", "#Port=23",
 		"?use_ka:Use keep-alive",
 		#if constant(SSL.File)
 		"?use_ssl:Use SSL/TLS",
@@ -1970,7 +1970,6 @@ class connect_menu
 
 	void load_content(mapping(string:mixed) info)
 	{
-		if (!info->port) {info->port=23; win->port->set_text("23");} //Is it worth promoting default values to core? "#Port=23" (and this should go before the colon, if there is one)
 		if (undefinedp(info->use_ka)) win->use_ka->set_active(1);
 		//For compatibility, anything without a slash gets explicitly dot-slashed (which is nothing like being slash-dotted)
 		if (info->logfile && info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text("./" + info->logfile);
