@@ -647,7 +647,7 @@ class configdlg
 				continue;
 			}
 			sscanf(element, "%1[?#+'@]%s", string type, element);
-			sscanf(element, "%s=%s", element, string dflt); //NOTE: I'm dubious about collisions here. This is definitely PROVISIONAL.
+			sscanf(element, "%s=%s", element, string dflt); //NOTE: I'm rather worried about collisions here. This is definitely PROVISIONAL.
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
 			if (dflt) defaults[name] = dflt;
