@@ -1968,8 +1968,7 @@ class connect_menu
 	void load_content(mapping(string:mixed) info)
 	{
 		if (undefinedp(info->use_ka)) win->use_ka->set_active(1);
-		//For compatibility, anything without a slash gets explicitly dot-slashed (which is nothing like being slash-dotted)
-		if (info->logfile && info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text("./" + info->logfile);
+		if (info->logfile && info->logfile!="" && !has_value(info->logfile,'/')) win->logfile->set_text("Logs/" + info->logfile);
 	}
 
 	void save_content(mapping(string:mixed) info)
