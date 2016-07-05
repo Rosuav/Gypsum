@@ -45,7 +45,7 @@ class menu_clicked
 	inherit configdlg;
 	constant persist_key = "triggers/global";
 	constant elements = ({
-		"kwd:Name", "text:Trigger text",
+		"kwd:Name/mnemonic", "text:Trigger text",
 		"@Match style=Substring", ({"Substring", "Entire", "Prefix"}), //And maybe regex and others, as needed
 		"'Actions - leave blank if not applicable:",
 		"sound:Play sound file",
