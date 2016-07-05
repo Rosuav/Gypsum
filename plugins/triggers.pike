@@ -46,7 +46,7 @@ class menu_clicked
 	constant persist_key = "triggers/global";
 	constant elements = ({
 		"kwd:Name", "text:Trigger text",
-		"@Match style", ({"Substring", "Entire", "Prefix"}), //And maybe regex and others, as needed
+		"@Match style=Substring", ({"Substring", "Entire", "Prefix"}), //And maybe regex and others, as needed
 		"'Actions - leave blank if not applicable:",
 		"sound:Play sound file",
 		"message:Display message locally",
@@ -59,7 +59,6 @@ class menu_clicked
 
 	void load_content(mapping(string:mixed) info)
 	{
-		if (!info->match || info->match == "") win->match->set_text("Substring");
 		int val = G->G["counter_" + info->counter]; //Yes, even if it's 0 or "". They'll just be zero themselves.
 		win->counterstatus->set_text(val ? (string)val : "");
 	}
