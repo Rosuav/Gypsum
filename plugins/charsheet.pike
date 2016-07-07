@@ -615,17 +615,14 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			closewindow();
 		}
 
-		class tokenimage(string name)
+		void tokenimage(string data, string name)
 		{
-			void `()(string data)
-			{
-				if (!data) return; //Just leave it blank if we can't retrieve it
-				//I kinda want to assert that the content-type is "text/png" here
-				Image.Image img = Image.PNG.decode(data);
-				Image.Image mask = Image.PNG.decode_alpha(data);
-				//TODO: What happens if the decode fails?
-				win->images[name]->set_from_image(GTK2.GdkImage(0, img), GTK2.GdkBitmap(mask));
-			}
+			if (!data) return; //Just leave it blank if we can't retrieve it
+			//I kinda want to assert that the content-type is "text/png" here
+			Image.Image img = Image.PNG.decode(data);
+			Image.Image mask = Image.PNG.decode_alpha(data);
+			//TODO: What happens if the decode fails?
+			win->images[name]->set_from_image(GTK2.GdkImage(0, img), GTK2.GdkBitmap(mask));
 		}
 
 		void tokenlist(string info)
@@ -658,7 +655,7 @@ wizardstaff
 				object btn = GTK2.Button(line);
 				btn->signal_connect("clicked", select_image);
 				table += ({btn, win->images[line] = GTK2.Image(([]))});
-				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage(line));
+				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage, line);
 			}
 			win->box->add(two_column(table)->show_all());
 		}
