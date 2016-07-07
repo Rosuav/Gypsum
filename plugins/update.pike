@@ -139,6 +139,10 @@ int process(string param,mapping(string:mixed) subw)
 	}
 	if (param=="zip")
 	{
+		//NOTE: This cannot use the async_download convenience function, as command-line usage
+		//requires absolute minimal dependencies (and thus does not, and should not, load any
+		//code from globals.pike). We do things manually there, and to keep as much code as
+		//possible common between that and this, we do things manually here too.
 		#if constant(Protocols.HTTP.do_async_method)
 		//Note that the canonical URL is the one in the message, but Pike 7.8 doesn't follow redirects.
 		Protocols.HTTP.do_async_method("GET","https://codeload.github.com/Rosuav/Gypsum/zip/master",0,0,
