@@ -1279,6 +1279,7 @@ class establish_connection(string hostname,int port,function callback)
 	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set.
 }
 
+#if constant(Protocols.HTTP.do_async_method)
 void _data_available(object q, function cb) {cb(q->data());}
 void _request_ok(object q, function cb) {q->async_fetch(_data_available, cb);}
 void _request_fail(object q, function cb) {cb(0);}
@@ -1287,3 +1288,6 @@ void async_download(string url, function cb)
 	Protocols.HTTP.do_async_method("GET", url, 0, 0,
 		Protocols.HTTP.Query()->set_callbacks(_request_ok, _request_fail, cb));
 }
+#else
+void async_download(string url, function cb) {cb(0);}
+#endif

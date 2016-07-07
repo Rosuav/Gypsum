@@ -599,7 +599,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}),(["xalign":1.0])),0,0,0);
 	}
 
-	#if 1 || constant(Protocols.HTTP.do_async_method)
 	class sig_pick_token_clicked
 	{
 		inherit window;
@@ -676,16 +675,6 @@ wizardstaff
 			async_download("http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1", tokenlist);
 		}
 	}
-	#else
-	class sig_pick_token_clicked
-	{
-		inherit MessageBox;
-		void create()
-		{
-			::create(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Pike lacks HTTP engine, cannot select tokens",win->mainwindow);
-		}
-	}
-	#endif
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
 
 	//Subclasses can override this (or mutate it) to quickly change the spells-per-day info.
