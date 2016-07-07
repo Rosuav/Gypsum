@@ -610,11 +610,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			::create();
 		}
 
-		//TODO: Does this stuff want to be packaged up and put into globals.pike?
-		void data_available(object q, function cb) {cb(q->data());}
-		void request_ok(object q, function cb) {q->async_fetch(data_available, cb);}
-		void request_fail(object q, function cb) {cb(0);}
-
 		void select_image(object btn)
 		{
 			set_value("token" + "_large"*large, btn->get_label());
@@ -664,8 +659,7 @@ wizardstaff
 				object btn = GTK2.Button(line);
 				btn->signal_connect("clicked", select_image);
 				table += ({btn, win->images[line] = GTK2.Image(([]))});
-				Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/"+line,0,0,
-					Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,tokenimage(line)));
+				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage(line));
 			}
 			win->box->add(two_column(table)->show_all());
 		}
@@ -678,9 +672,8 @@ wizardstaff
 			);
 			//Server support for listing tokens doesn't exist yet, so we just grab something else
 			//and hack in a hard-coded list above.
-			//Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/token_list/friendly"+large,0,0,
-			Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1",0,0,
-				Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,tokenlist));
+			//async_download("http://gideon.rosuav.com:8000/token_list/friendly"+large, tokenlist);
+			async_download("http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1", tokenlist);
 		}
 	}
 	#else
