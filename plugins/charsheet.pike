@@ -676,6 +676,8 @@ wizardstaff
 			win->mainwindow=GTK2.Window((["title":"Select " + "enlarged "*large + "token"]))->add(win->box=GTK2.Vbox(0,0)
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
+			//Server support for listing tokens doesn't exist yet, so we just grab something else
+			//and hack in a hard-coded list above.
 			//Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/token_list/friendly"+large,0,0,
 			Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1",0,0,
 				Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,tokenlist));
