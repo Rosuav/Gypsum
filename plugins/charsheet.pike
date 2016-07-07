@@ -272,7 +272,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 	//To make an alternate character sheet, start by subclassing this. Then you can override a function to
 	//change the page layout, or add/remove/reorder pages in this array.
-	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Administrivia", "Help"});
+	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Feats", "Spells", "Token", "Administrivia", "Help"});
 
 	GTK2.Widget Page_Vital_Stats()
 	{
@@ -590,6 +590,108 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					+map(enumerate(15),lambda(int i) {return ({ef("ability_"+i,15),ef("ability_benefit_"+i,25)});})
 				)));
 	}
+
+	GTK2.Widget Page_Token()
+	{
+		return GTK2.Vbox(0,0)->pack_start(GTK2Table(({
+			({"Regular token", ef("token"), win->pick_token=GTK2.Button("Select")}),
+			({"Large token [beta]", ef("token_large"), win->pick_large_token=GTK2.Button("Select")}),
+		}),(["xalign":1.0])),0,0,0);
+	}
+
+	#if 1 || constant(Protocols.HTTP.do_async_method)
+	class sig_pick_token_clicked
+	{
+		inherit window;
+		int large; //0 if regular token, 1 if large
+		void create(object btn)
+		{
+			large = (btn == charsheet::win->pick_large_token);
+			::create();
+		}
+
+		//TODO: Does this stuff want to be packaged up and put into globals.pike?
+		void data_available(object q, function cb) {cb(q->data());}
+		void request_ok(object q, function cb) {q->async_fetch(data_available, cb);}
+		void request_fail(object q, function cb) {cb(0);}
+
+		void select_image(object btn)
+		{
+			set_value("token" + "_large"*large, btn->get_label());
+			closewindow();
+		}
+
+		class tokenimage(string name)
+		{
+			void `()(string data)
+			{
+				if (!data) return; //Just leave it blank if we can't retrieve it
+				//I kinda want to assert that the content-type is "text/png" here
+				Image.Image img = Image.PNG.decode(data);
+				Image.Image mask = Image.PNG.decode_alpha(data);
+				//TODO: What happens if the decode fails?
+				win->images[name]->set_from_image(GTK2.GdkImage(0, img), GTK2.GdkBitmap(mask));
+			}
+		}
+
+		void tokenlist(string info)
+		{
+			if (!info)
+			{
+				win->box->add(GTK2.Label("Unable to contact Minstrel Hall for token list.")->show());
+				return;
+			}
+			//HACK: The real URL isn't implemented yet, so we use a hard-coded list.
+			info = #"Queen_elsa
+archer_elf
+barbarian_axe
+bucklerfighter
+dwarf_cleric
+fighter2weapon_elf
+fighter_greatsword
+gnome_head
+guard_2hsword
+paladin
+ranger_2weapon
+ranger_bow
+spellcaster_bluerobe
+wizardstaff
+";
+			array table = ({ });
+			win->images = ([]);
+			foreach (info/"\n", string line) if (line != "")
+			{
+				object btn = GTK2.Button(line);
+				btn->signal_connect("clicked", select_image);
+				table += ({btn, win->images[line] = GTK2.Image(([]))});
+				Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/"+line,0,0,
+					Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,tokenimage(line)));
+			}
+			win->box->add(two_column(table)->show_all());
+		}
+
+		void makewindow()
+		{
+			win->_parentwindow = charsheet::win->mainwindow;
+			win->mainwindow=GTK2.Window((["title":"Select " + "enlarged "*large + "token"]))->add(win->box=GTK2.Vbox(0,0)
+				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
+			);
+			//Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/token_list/friendly"+large,0,0,
+			Protocols.HTTP.do_async_method("GET","http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1",0,0,
+				Protocols.HTTP.Query()->set_callbacks(request_ok,request_fail,tokenlist));
+		}
+	}
+	#else
+	class sig_pick_token_clicked
+	{
+		inherit MessageBox;
+		void create()
+		{
+			::create(0,GTK2.MESSAGE_ERROR,GTK2.BUTTONS_OK,"Pike lacks HTTP engine, cannot select tokens",win->mainwindow);
+		}
+	}
+	#endif
+	program sig_pick_large_token_clicked = sig_pick_token_clicked;
 
 	//Subclasses can override this (or mutate it) to quickly change the spells-per-day info.
 	//Keep the class names to lowercase ASCII.
