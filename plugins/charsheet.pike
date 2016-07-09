@@ -656,6 +656,8 @@ wizardstaff
 				btn->signal_connect("clicked", select_image);
 				table += ({btn, win->images[line] = GTK2.Image(([]))});
 				//TODO: Cache the images locally in case people click, pick, then click again.
+				//Though this does bring us into the realm of hard problems. Purge cache when
+				//charsheet closed and reopened maybe?
 				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage, line);
 			}
 			win->box->add(two_column(table)->show_all());
