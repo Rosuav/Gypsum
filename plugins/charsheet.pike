@@ -650,6 +650,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			cols->add(GTK2Table((table/per_column)[*])[*]);
 			array excess = table % per_column;
 			if (sizeof(excess)) cols->add(GTK2.Vbox(0, 0)->pack_start(GTK2Table(excess), 0,0,0));
+			win->box->remove(win->box->get_children()[0]); //Remove the loading message
 			win->box->add(cols->show_all());
 		}
 
@@ -657,6 +658,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			win->_parentwindow = charsheet::win->mainwindow;
 			win->mainwindow=GTK2.Window((["title":"Select " + "enlarged "*large + "token"]))->add(win->box=GTK2.Vbox(0,0)
+				->add(GTK2.Label("Loading, please wait..."))
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
 			async_download("http://gideon.rosuav.com:8000/similar/greencircle" + "_large"*large, tokenlist);
