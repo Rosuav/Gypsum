@@ -1289,9 +1289,9 @@ void _chkqueue()
 		async_download(@info);
 	}
 }
-void _data_available(object q, function cb, mixed cbarg) {if (cb) cb(q->data(), cbarg); _chkqueue();}
+void _data_available(object q, function cb, mixed cbarg) {_chkqueue(); if (cb) cb(q->data(), cbarg);}
 void _request_ok(object q, function cb, mixed cbarg) {q->async_fetch(_data_available, cb, cbarg);}
-void _request_fail(object q, function cb, mixed cbarg) {cb(0, cbarg); _chkqueue();}
+void _request_fail(object q, function cb, mixed cbarg) {_chkqueue(); cb(0, cbarg);}
 void async_download(string url, function cb, mixed|void cbarg)
 {
 	if (!G->G->async_download_queue) G->G->async_download_queue = ({ });
