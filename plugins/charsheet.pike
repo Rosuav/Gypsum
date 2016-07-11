@@ -603,6 +603,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	{
 		inherit window;
 		int large; //0 if regular token, 1 if large
+		string minstrelhall; //IP address of Minstrel Hall's server - looked up once instead of per-image
 		void create(object btn)
 		{
 			large = (btn == charsheet::win->pick_large_token);
@@ -613,6 +614,11 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			set_value("token" + "_large"*large, btn->get_label());
 			closewindow();
+		}
+
+		void report_error(string err)
+		{
+			win->box->get_children()[0]->set_text(err);
 		}
 
 		void tokenimage(string data, string name)
@@ -630,7 +636,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			if (!info)
 			{
-				win->box->add(GTK2.Label("Unable to contact Minstrel Hall for token list.")->show());
+				report_error("Unable to contact Minstrel Hall for token list.");
 				return;
 			}
 			array table = ({ });
@@ -645,7 +651,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				//TODO: Cache the images locally in case people click, pick, then click again.
 				//Though this does bring us into the realm of hard problems. Purge cache when
 				//charsheet closed and reopened maybe?
-				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage, line);
+				async_download("http://"+minstrelhall+":8000/"+line, tokenimage, line);
 			}
 			GTK2.Hbox cols = GTK2.Hbox(0, 10);
 			int per_column = (sizeof(table)+2)/3;
@@ -659,6 +665,18 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			);
 		}
 
+		void start_download(object dns)
+		{
+			if (dns->pending) return;
+			if (!sizeof(dns->ips))
+			{
+				report_error("Unable to locate Minstrel Hall.");
+				return;
+			}
+			minstrelhall = dns->ips[0];
+			async_download("http://"+minstrelhall+":8000/similar/greencircle" + "_large"*large, tokenlist);
+		}
+
 		void makewindow()
 		{
 			win->_parentwindow = charsheet::win->mainwindow;
@@ -666,7 +684,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				->add(GTK2.Label("Loading, please wait..."))
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
-			async_download("http://gideon.rosuav.com:8000/similar/greencircle" + "_large"*large, tokenlist);
+			DNS("gideon.rosuav.com", start_download);
 		}
 	}
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
