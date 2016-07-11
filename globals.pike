@@ -1280,7 +1280,7 @@ class establish_connection(string hostname,int port,function callback)
 }
 
 #if constant(Protocols.HTTP.do_async_method)
-void _data_available(object q, function cb, mixed cbarg) {cb(q->data(), cbarg);}
+void _data_available(object q, function cb, mixed cbarg) {if (cb) cb(q->data(), cbarg);}
 void _request_ok(object q, function cb, mixed cbarg) {q->async_fetch(_data_available, cb, cbarg);}
 void _request_fail(object q, function cb, mixed cbarg) {cb(0, cbarg);}
 void async_download(string url, function cb, mixed|void cbarg)
