@@ -618,6 +618,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		void tokenimage(string data, string name)
 		{
 			if (!data) return; //Just leave it blank if we can't retrieve it
+			if (!win || !win->images || !win->images[name]) return; //Window's gone.
 			//I kinda want to assert that the content-type is "text/png" here
 			Image.Image img = Image.PNG.decode(data);
 			Image.Image mask = Image.PNG.decode_alpha(data);
