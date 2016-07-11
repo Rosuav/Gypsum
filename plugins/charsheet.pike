@@ -635,11 +635,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			}
 			array table = ({ });
 			win->images = ([]);
+			int sz = large ? 52 : 25; //Pre-size as much as possible. If these numbers are wrong, the server will correct us, but the ScrolledWindow might be wrong.
+			GTK2.GdkImage blank = GTK2.GdkImage(0, Image.Image(sz, sz));
 			foreach (info/"\n", string line) if (line != "")
 			{
 				object btn = GTK2.Button(line);
 				btn->signal_connect("clicked", select_image);
-				table += ({({btn, win->images[line] = GTK2.Image(([]))})});
+				table += ({({btn, win->images[line] = GTK2.Image(blank)})});
 				//TODO: Cache the images locally in case people click, pick, then click again.
 				//Though this does bring us into the realm of hard problems. Purge cache when
 				//charsheet closed and reopened maybe?
