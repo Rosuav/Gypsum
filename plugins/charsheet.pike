@@ -642,7 +642,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			array table = ({ });
 			win->images = ([]);
 			int sz = large ? 52 : 25; //Pre-size as much as possible. If these numbers are wrong, the server will correct us, but the ScrolledWindow might be wrong.
-			GTK2.GdkImage blank = GTK2.GdkImage(0, Image.Image(sz, sz));
+			GTK2.GdkImage blank = GTK2.GdkImage(0, Image.Image(sz, sz, 240, 240, 240));
 			foreach (info/"\n", string line) if (line != "")
 			{
 				object btn = GTK2.Button(line);
