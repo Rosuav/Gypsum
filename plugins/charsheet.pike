@@ -632,22 +632,6 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				win->box->add(GTK2.Label("Unable to contact Minstrel Hall for token list.")->show());
 				return;
 			}
-			//HACK: The real URL isn't implemented yet, so we use a hard-coded list.
-			info = #"Queen_elsa
-archer_elf
-barbarian_axe
-bucklerfighter
-dwarf_cleric
-fighter2weapon_elf
-fighter_greatsword
-gnome_head
-guard_2hsword
-paladin
-ranger_2weapon
-ranger_bow
-spellcaster_bluerobe
-wizardstaff
-";
 			array table = ({ });
 			win->images = ([]);
 			foreach (info/"\n", string line) if (line != "")
@@ -669,10 +653,7 @@ wizardstaff
 			win->mainwindow=GTK2.Window((["title":"Select " + "enlarged "*large + "token"]))->add(win->box=GTK2.Vbox(0,0)
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
-			//Server support for listing tokens doesn't exist yet, so we just grab something else
-			//and hack in a hard-coded list above.
-			//async_download("http://gideon.rosuav.com:8000/token_list/friendly"+large, tokenlist);
-			async_download("http://gideon.rosuav.com:8000/mpn/sundaymusic.1.1", tokenlist);
+			async_download("http://gideon.rosuav.com:8000/similar/greencircle" + "_large"*large, tokenlist);
 		}
 	}
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
