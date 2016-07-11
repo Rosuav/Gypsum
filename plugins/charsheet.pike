@@ -648,12 +648,15 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage, line);
 			}
 			GTK2.Hbox cols = GTK2.Hbox(0, 10);
-			int per_column = large ? 10 : 35;
+			int per_column = (sizeof(table)+2)/3;
 			cols->add(GTK2Table((table/per_column)[*])[*]);
 			array excess = table % per_column;
 			if (sizeof(excess)) cols->add(GTK2.Vbox(0, 0)->pack_start(GTK2Table(excess), 0,0,0));
 			win->box->remove(win->box->get_children()[0]); //Remove the loading message
-			win->box->add(cols->show_all());
+			win->box->add(GTK2.ScrolledWindow((["hscrollbar-policy": GTK2.POLICY_NEVER]))
+				->set_size_request(-1, 400)
+				->add(cols)->show_all()
+			);
 		}
 
 		void makewindow()
