@@ -638,13 +638,18 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			{
 				object btn = GTK2.Button(line);
 				btn->signal_connect("clicked", select_image);
-				table += ({btn, win->images[line] = GTK2.Image(([]))});
+				table += ({({btn, win->images[line] = GTK2.Image(([]))})});
 				//TODO: Cache the images locally in case people click, pick, then click again.
 				//Though this does bring us into the realm of hard problems. Purge cache when
 				//charsheet closed and reopened maybe?
 				async_download("http://gideon.rosuav.com:8000/"+line, tokenimage, line);
 			}
-			win->box->add(two_column(table)->show_all());
+			GTK2.Hbox cols = GTK2.Hbox(0, 10);
+			int per_column = large ? 10 : 35;
+			cols->add(GTK2Table((table/per_column)[*])[*]);
+			array excess = table % per_column;
+			if (sizeof(excess)) cols->add(GTK2.Vbox(0, 0)->pack_start(GTK2Table(excess), 0,0,0));
+			win->box->add(cols->show_all());
 		}
 
 		void makewindow()
