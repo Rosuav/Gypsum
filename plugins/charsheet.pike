@@ -596,7 +596,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return GTK2.Vbox(0,0)->pack_start(GTK2Table(({
 			({"Regular token", ef("token"), win->pick_token=GTK2.Button("Select")}),
 			({"Large token [beta]", ef("token_large"), win->pick_large_token=GTK2.Button("Select")}),
-		}),(["xalign":1.0])),0,0,0);
+			({"If your normal size is neither Small nor Medium, you may "
+			"need to select a token manually rather than using the pickers.", 0}),
+		}),(["xalign":1.0, "wrap":1])),0,0,0);
 	}
 
 	class sig_pick_token_clicked
