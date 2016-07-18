@@ -23,6 +23,12 @@ mapping(string:multiset(object)) charsheets;
 //Happening again. It seems to take about a month of real-world usage. Hmmmmm. Maybe the
 //problem actually comes from somewhere else in Gypsum, and this is just a symptom. Or
 //maybe it's actually a GTK issue somewhere?
+
+//TODO: Add a stat buying option somewhere. Where, I'm not sure; the actual stats display
+//doesn't need that kind of clutter, and there isn't really a "setup" place. Adding an
+//entire new tab just for one-off creation stuff seems cluttery too. But it would be nice
+//to have a way to use any of several stat-buying methods (including sending "roll stats"
+//to the server), to simplify char creation some, particularly if this is used for NPCs.
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
