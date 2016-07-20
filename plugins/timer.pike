@@ -131,7 +131,16 @@ void showtimes()
 void makelabels()
 {
 	win->display->resize(sizeof(timers)||1,2,0);
-	if (win->labels) ({win->labels,win->timers})->destroy(); //Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
+	if (win->labels)
+	{
+		//Clean out the trash - not sure if necessary (they shouldn't refleak AFAIK)
+		//CJA 20160720: Maybe they do? I'm seeing progressively-increasing numbers of
+		//leaked GTK2.Label objects, resulting in crazy memory usage. Explicitly
+		//destroying and destructing the objects doesn't seem to stop this though.
+		array objects = win->labels + win->timers;
+		objects->destroy();
+		destruct(objects[*]);
+	}
 	win->labels=GTK2.Label(sort(indices(timers))[*])->set_alignment(0.0,0.0); win->timers=allocate(sizeof(timers));
 	foreach (win->labels;int i;object lbl)
 		win->display->attach_defaults(lbl,0,1,i,i+1)
