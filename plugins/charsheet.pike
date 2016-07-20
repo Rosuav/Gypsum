@@ -637,7 +637,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			Image.Image img = Image.PNG.decode(data);
 			Image.Image mask = Image.PNG.decode_alpha(data);
 			//TODO: What happens if the decode fails?
-			win->images[name]->set_from_image(GTK2.GdkImage(0, img), GTK2.GdkBitmap(mask));
+			win->images[name]->set_from_image(win->img[name]=GTK2.GdkImage(0, img), win->bmp[name]=GTK2.GdkBitmap(mask));
+			destruct(img); destruct(mask);
 		}
 
 		void tokenlist(string info)
@@ -648,14 +649,14 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				return;
 			}
 			array table = ({ });
-			win->images = ([]);
+			win->images = ([]); win->img = ([]); win->bmp = ([]);
 			int sz = large ? 52 : 25; //Pre-size as much as possible. If these numbers are wrong, the server will correct us, but the ScrolledWindow might be wrong.
-			GTK2.GdkImage blank = GTK2.GdkImage(0, Image.Image(sz, sz, 240, 240, 240));
+			win->blank = GTK2.GdkImage(0, Image.Image(sz, sz, 240, 240, 240));
 			foreach (info/"\n", string line) if (line != "")
 			{
 				object btn = GTK2.Button(line);
 				btn->signal_connect("clicked", select_image);
-				table += ({({btn, win->images[line] = GTK2.Image(blank)})});
+				table += ({({btn, win->images[line] = GTK2.Image(win->blank)})});
 				//TODO: Cache the images locally in case people click, pick, then click again.
 				//Though this does bring us into the realm of hard problems. Purge cache when
 				//charsheet closed and reopened maybe?
@@ -693,6 +694,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				->pack_end(GTK2.HbuttonBox()->add(stock_close()),0,0,0)
 			);
 			DNS("gideon.rosuav.com", start_download);
+		}
+
+		//Force everything to be cleaned up on window close
+		void closewindow() {::closewindow(); destruct();}
+		void destroy()
+		{
+			destruct(win->blank);
+			if (win->images)
+			{
+				destruct(values(win->images)[*]);
+				destruct(values(win->img)[*]);
+				destruct(values(win->bmp)[*]);
+			}
 		}
 	}
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
