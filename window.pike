@@ -787,6 +787,11 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 
 	CJA 20160120: Haven't seen this in quite a while now, and I'm pretty sure I've had Gypsum running for
 	multiple months. But I'm not throwing the notes away just yet.
+
+	CJA 20160720: Turns out this might be part of the massive memory leaks I've been seeing. Explicitly
+	//destroying and destructing the GC at the end of this function cures the obvious part of that (the
+	//number of GdkGC objects ever increasing); see whether the entire above is no longer an issue after
+	//this change.
 	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
@@ -826,6 +831,8 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	//redraw(subw);
 	//call_out(G->G->hooks->zoneinfo->menu_clicked()->closewindow,0.01);
 	//call_out(G->G->hooks->charsheet->charsheet(subw->connection,"nobody",([]))->sig_mainwindow_destroy,0.01);
+	gc->destroy();
+	destruct(gc);
 }
 
 void settext(mapping subw,string text)
