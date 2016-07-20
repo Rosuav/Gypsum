@@ -807,7 +807,13 @@ class statustext
 	{
 		statustxt->lbl->set_text(txt);
 		//TODO: Have a 'reset width' operation that reshrinks?
-		if (fixedwidth) statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,GTK2.Label(txt)->size_request()->width),-1);
+		if (fixedwidth)
+		{
+			object measure = GTK2.Label(txt);
+			statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,measure->size_request()->width),-1);
+			measure->destroy();
+			destruct(measure);
+		}
 	}
 }
 
