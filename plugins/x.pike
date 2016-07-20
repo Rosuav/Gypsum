@@ -119,7 +119,15 @@ int process(string param,mapping(string:mixed) subw)
 	string nfd(string txt) {return Unicode.normalize(txt,\"NFD\");} function NFD=nfd;
 	string nfkc(string txt) {return Unicode.normalize(txt,\"NFKC\");} function NFKC=nfkc;
 	string nfkd(string txt) {return Unicode.normalize(txt,\"NFKD\");} function NFKD=nfkd;
-	int wipe(string pgmname) {int ret=0; Debug.map_all_objects(lambda (object obj) {if (sprintf(\"%O\",object_program(obj)) == pgmname) {obj->destroy(); destruct(obj); ret++;}}); return ret;}
+	int wipe(string|program|object pgm)
+	{
+		int ret = 0;
+		if (objectp(pgm)) pgm = object_program(pgm);
+		if (programp(pgm)) pgm = sprintf(\"%O\", pgm);
+		if (!stringp(pgm)) error(\"Need to use something usable, check the source\");
+		Debug.map_all_objects(lambda (object obj) {if (sprintf(\"%O\",object_program(obj)) == pgm) {obj->destroy(); destruct(obj); ret++;}});
+		return ret;
+	}
 	//Add any other 'convenience names' here
 
 	mixed foo(mapping(string:mixed) subw,mixed _)
