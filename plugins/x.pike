@@ -69,7 +69,11 @@ int input(mapping(string:mixed) subw,string line)
 			//a fully-general expression evaluator. Use "/x" or "pike" for that.)
 			if (sscanf(line,"calc %s",string expr)) {say(subw,"%% "+calculate(subw,expr)); return 1;}
 			string newcmd="";
-			while (sscanf(line,"%s$[%s]%s",string before,string expr,string after)) {newcmd+=before+calculate(subw,expr); line=after||"";}
+			while (sscanf(line, "%s$[%s]%s", string before, string expr, string after) && expr)
+			{
+				newcmd += before + calculate(subw,expr);
+				line=after||"";
+			}
 			if (newcmd!="") {nexthook(subw,newcmd+line); return 1;}
 			return 0;
 		}
