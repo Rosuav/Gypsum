@@ -1,8 +1,38 @@
-The best way to install Gypsum on OS X is to use Homebrew. Start by opening a Terminal and typing:
-$ brew install pike
-You may need to additionally install XQuartz:
-http://xquartz.macosforge.org/
-Once Pike is installed, you should be able to download Gypsum from this link,
-or clone the repository using git:
-https://github.com/Rosuav/Gypsum/archive/master.zip
-Extract this to a convenient directory, then run gypsum.pike using Pike.
+The best way to install Gypsum on OS X is to use Homebrew (http://brew.sh/).
+First, install XQuartz from https://www.xquartz.org/ and Homebrew (if you don't
+already have it). Due to differences in license terms, you have to explicitly
+install each of these. Then install Pike.
+
+Option 1: Open a Terminal and type:
+
+    $ brew install pike
+    $ pike -e GTK2.setup_gtk
+
+The second command should produce no output. If it says that setup_gtk is not
+present in module GTK, try other installation options.
+
+Option 2: In the terminal, type:
+
+    $ brew uninstall pike
+    $ brew install --build-from-source pike
+    $ pike -e GTK2.setup_gtk
+
+Again, if this produces an error, try option 3:
+
+    $ curl -O http://rosuav.com/Pike_OSXMavericks/pike.tgz
+    $ sudo tar xf pike.tgz -C /
+    $ pike -e GTK2.setup_gtk
+
+The tar command may spew error messages. I still haven't pinned down exactly
+why, but El Capitan seems to be different from Mavericks in this. It may or may
+not have succeeded.
+
+Finally, install and run Gypsum:
+
+    $ curl -OL https://github.com/Rosuav/Gypsum/archive/master.zip
+    $ unzip master.zip
+    $ cd gypsum-master
+    $ pike gypsum
+
+Creating a shortcut/program/application to do the "pike gypsum" at the end is
+left as an exercise for the reader :)
