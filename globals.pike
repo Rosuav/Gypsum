@@ -1294,7 +1294,7 @@ void _chkqueue()
 	if (sizeof(G->G->async_download_queue))
 	{
 		[array info, G->G->async_download_queue] = Array.shift(G->G->async_download_queue);
-		async_download(@info);
+		this->async_download(@info);
 	}
 }
 void _data_available(object q, function cb, mixed cbarg) {_chkqueue(); if (cb) cb(q->data(), cbarg);}
