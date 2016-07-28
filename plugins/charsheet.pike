@@ -29,6 +29,7 @@ mapping(string:multiset(object)) charsheets;
 //entire new tab just for one-off creation stuff seems cluttery too. But it would be nice
 //to have a way to use any of several stat-buying methods (including sending "roll stats"
 //to the server), to simplify char creation some, particularly if this is used for NPCs.
+//Maybe the tab with tokens can become a "one-off setup" option???
 class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) data)
 {
 	inherit movablewindow;
