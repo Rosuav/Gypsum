@@ -1253,7 +1253,6 @@ class channelsdlg
 
 	GTK2.Widget make_content()
 	{
-		win->real_ints = ints; //Unmigrated code
 		return two_column(({
 			"Channel name",win->kwd=GTK2.Entry(),
 			"Color (0-255)",GTK2.Hbox(0,10)

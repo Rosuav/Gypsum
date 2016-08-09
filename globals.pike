@@ -579,7 +579,7 @@ class configdlg
 
 	void makewindow()
 	{
-		win->real_strings = win->real_ints = win->real_bools = ({ });
+		win->real_strings = strings; win->real_ints = ints; win->real_bools = bools; //Migrate the constants
 		object ls=GTK2.ListStore(({"string","string"}));
 		//TODO: Break out the list box code into a separate object - it'd be useful eg for zoneinfo.pike.
 		foreach (sort(indices(items)),string kwd)
@@ -620,6 +620,7 @@ class configdlg
 	array(string|GTK2.Widget) collect_widgets(array|void elem)
 	{
 		array objects = ({ });
+		win->real_strings = win->real_ints = win->real_bools = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
 		string next_obj_name = 0;
 		foreach (elem, mixed element)
