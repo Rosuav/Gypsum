@@ -510,6 +510,9 @@ class configdlg
 	Still figuring out a good way to allow a SelectBox. Currently messing with "@name:lbl",({opt,opt,opt}) which
 	is far from ideal.
 	This is eventually going to be the primary way to do things, but it's currently unpledged to permit changes.
+	In fact, I'd say that it's _now_ (20160809) the primary way to do things, but I haven't yet deprovisionalized
+	it in case I want to make changes (esp to the SelectBox and Notebook APIs). There's already way too much
+	cruft in this class to risk letting even more in.
 	*/
 	constant elements=({ });
 	constant persist_key=0; //(string) Set this to the persist[] key to load items[] from; if set, persist will be saved after edits.
