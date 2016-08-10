@@ -483,6 +483,10 @@ class movablewindow
 //It may be worth breaking out some of this code into a dedicated ListBox class
 //for future reuse. Currently I don't actually need that for Gypsum, but it'd
 //make a nice utility class for other programs.
+//NOTE: This class may end up becoming the legacy compatibility class, with a new
+//and simpler one (under a new name) being created, thus freeing current code from
+//the baggage of backward compatibility - which this has a lot of. I could then
+//deprecate this class (with no intention of removal) and start fresh.
 class configdlg
 {
 	inherit window;
