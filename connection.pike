@@ -55,8 +55,9 @@ function say=G->globals->say;
  * encodings will be received simultaneously. Currently the failure case is to
  * split the line on "\n" and re-attempt decoding of each line, falling back on
  * CP-1252; this allows adjacent lines to be encoded differently, as long as
- * each line has one single encoding. This also means that occasional CP-1252
- * can potentially have a marked impact on performance.
+ * each line has one single encoding. (This also means that occasional CP-1252
+ * could potentially have a marked impact on performance, but I have yet to
+ * measure any appreciable difference.)
  *
  * Of course, a naive byte-based server might receive other encodings from its
  * clients (usually ASCII-compatible eight-bit encodings). There's no way for
