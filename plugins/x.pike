@@ -123,6 +123,7 @@ int process(string param,mapping(string:mixed) subw)
 	string nfd(string txt) {return Unicode.normalize(txt,\"NFD\");} function NFD=nfd;
 	string nfkc(string txt) {return Unicode.normalize(txt,\"NFKC\");} function NFKC=nfkc;
 	string nfkd(string txt) {return Unicode.normalize(txt,\"NFKD\");} function NFKD=nfkd;
+	array(int) factors(int n) {array ret=({}); for (int i=2;i<n;++i) if (!(n%i)) {ret+=({i}); n/=i;} return ret+({n});}
 	int wipe(string|program|object pgm)
 	{
 		int ret = 0;
