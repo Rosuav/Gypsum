@@ -28,7 +28,7 @@ Hmm. Can I make a Notebook with three configdlg tabs? No, probably not worth it.
 this will most likely end up copying and pasting some code from configdlg. Per Rule
 of Three, this is permitted; but anything that I recognize as existing elsewhere,
 it's time to break out into a separate place.
-20160419: There's now facilities for notebookks inside configdlgs, but not the other
+20160419: There's now facilities for notebooks inside configdlgs, but not the other
 way around. Not sure if that helps.
 
 20140214 [a good day to be datestamping, btw]: I'm really not happy with how this is
