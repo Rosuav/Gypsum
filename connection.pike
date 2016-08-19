@@ -69,7 +69,7 @@ function say=G->globals->say;
  * to raise an issue with the one broken client. I reckon we're pretty safe :)
  * TODO: Permit the user to choose which encoding is used as the fallback. That
  * would allow, say, a Greek-language MUD to use 1253, which would have the
- * same effect as the 1252 default for typical US-English usage.
+ * same effect as the 1252 default has for typical US-English usage.
  */
 #if constant(Charset)
 object cp1252=Charset.decoder("1252"); //Pike 8.1 has Charset at top-level. (8.0 has both this and the 7.8 one, as aliases.)
