@@ -794,7 +794,7 @@ class statustext
 {
 	constant provides="status bar entry";
 	mapping(string:mixed) statustxt=([]);
-	constant fixedwidth = 0; //Set to 1 to ensure that the width never shrinks.
+	constant fixedwidth = 0; //Set to 1 to ensure that the width never shrinks. (Requires the default makestatus to be called.)
 	void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
@@ -810,17 +810,21 @@ class statustext
 			G->G->tooltips->set_tip(frm,statustxt->tooltip || name);
 		}
 	}
-	GTK2.Widget makestatus() {return statustxt->lbl=GTK2.Label((["xalign":0.0]));}
+	GTK2.Widget makestatus()
+	{
+		statustxt->lbl = GTK2.Label((["xalign":0.0]));
+		if (fixedwidth) return statustxt->measure = GTK2.Hbox(0, 0)->add(statustxt->lbl);
+		else return statustxt->lbl;
+	}
 	void setstatus(string txt)
 	{
 		statustxt->lbl->set_text(txt);
 		//TODO: Have a 'reset width' operation that reshrinks?
 		if (fixedwidth)
 		{
-			object measure = GTK2.Label(txt);
-			statustxt->lbl->set_size_request(statustxt->width=max(statustxt->width,measure->size_request()->width),-1);
-			measure->destroy();
-			destruct(measure);
+			statustxt->measure->set_size_request(
+				statustxt->width = max(statustxt->width, statustxt->lbl->size_request()->width)
+			,-1);
 		}
 	}
 }

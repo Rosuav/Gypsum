@@ -235,7 +235,9 @@ GTK2.Widget makestatus()
 {
 	statustxt->paused=GTK2.Label(pausedmsg);
 	statustxt->paused->set_size_request(statustxt->paused->size_request()->width,-1)->set_text(""); //Have it consume space for the PAUSED message even without having it
-	return GTK2.Hbox(0,10)->add(statustxt->lbl=GTK2.Label((["xalign":1.0])))->add(statustxt->paused);
+	object measurer = ::makestatus();
+	statustxt->lbl->set_alignment(1.0, 0.5);
+	return GTK2.Hbox(0,10)->add(measurer)->add(statustxt->paused);
 }
 
 constant options_highlightwords="_Highlight words";
