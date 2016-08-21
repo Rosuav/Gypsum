@@ -309,7 +309,7 @@ void sockread(mapping conn,bytes data)
 				}
 				break;
 			}
-			case SE: break; //Shouldn't happen - it'll normally be consumed by IAC SB handling. An unmatched IAC SE is a server-side problem.
+			case SE: break; //Shouldn't happen - it'll normally be consumed by IAC SB handling. An unmatched IAC SE is a server-side problem. (The loose 0xF0 will be left in the stream.)
 			case GA:
 			{
 				//Prompt! Woot!
