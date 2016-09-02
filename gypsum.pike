@@ -85,10 +85,26 @@ mapping(string:int) compat=([
 	"nopasswd":0, //Password handling misbehaves (NEVER active by default)
 ]);
 
+/* Increment breaker any time a breaking change is made - that is, one that
+requires a restart. If it's increased since program start, "/update gypsum"
+will pop up a message and not actually mark anything for rebuild. Note that
+advanced users are welcome to "/update globals" to attempt a full update in
+spite of this flag, but there's no warranty. */
+int breaker = 1;
 void create(string|void name)
 {
 	if (name!="gypsum.pike") return; //Normal startup - do nothing. Do these checks only if we're '/update'd.
 	object G=all_constants()["G"]; //Retrieve the original global object. Note that we can't actually replace it, but we can inject replacement attributes.
+	if (G->breaker < breaker)
+	{
+		GTK2.MessageDialog(0, GTK2.MESSAGE_WARNING, GTK2.BUTTONS_OK,
+			"Updates will be applied next time you restart Gypsum.",
+			G->G->window->mainwindow)
+			->show()
+			->signal_connect("response", lambda(object self) {self->destroy();});
+		return;
+	}
+
 	//Update everything else (except persist). Note that the rules about what gets
 	//updated are here in this file, and not in update.pike itself; this means that
 	//it's the new version, not the old version, that defines it. Downloading (via
