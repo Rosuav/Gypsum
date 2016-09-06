@@ -36,6 +36,12 @@ int output(mapping(string:mixed) subw,string line)
 		if (tr->counter != "") G->G["counter_" + tr->counter]++; //On par with HQ9++, there's no way to actually do anything with this.
 		if (tr->present) G->G->window->mainwindow->present();
 		if (tr->beep) beep(1); //No point parameterizing this - the underlying beep call currently ignores its arg anyway.
+		if (tr->fgcol || tr->bgcol)
+		{
+			//HACK
+			//TODO: Handle "unspecified" as distinct from "black"
+			subw->connection->curmsg[1] = G->G->window->mkcolor(tr->fgcol, tr->bgcol);
+		}
 	}
 }
 
@@ -55,6 +61,8 @@ class menu_clicked
 		"?Beep",
 		"counter:Increment counter [keyword]", //Experimental
 		"'counterstatus:",
+		"#fgcol:Foreground color",
+		"#bgcol:Background color",
 	});
 
 	void load_content(mapping(string:mixed) info)
