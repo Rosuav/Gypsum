@@ -38,7 +38,7 @@ int output(mapping(string:mixed) subw,string line)
 		if (tr->beep) beep(1); //No point parameterizing this - the underlying beep call currently ignores its arg anyway.
 		if (tr->fgcol || tr->bgcol)
 		{
-			//HACK
+			//HACK - reaches into internals.
 			//TODO: Handle "unspecified" as distinct from "black"
 			subw->connection->curmsg[1] = G->G->window->mkcolor(tr->fgcol, tr->bgcol);
 		}
