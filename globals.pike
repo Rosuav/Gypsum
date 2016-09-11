@@ -625,10 +625,11 @@ class configdlg
 	}
 
 	//Generate a widget collection from either the constant or migration mode
-	array(string|GTK2.Widget) collect_widgets(array|void elem)
+	array(string|GTK2.Widget) collect_widgets(array|void elem, int|void noreset)
 	{
 		array objects = ({ });
-		win->real_strings = win->real_ints = win->real_bools = ({ });
+		//Clear the arrays only if we're not recursing.
+		if (!noreset) win->real_strings = win->real_ints = win->real_bools = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
 		string next_obj_name = 0;
 		foreach (elem, mixed element)
@@ -649,7 +650,7 @@ class configdlg
 				foreach (sort(indices(element)), string tabtext)
 					nb->append_page(
 						//Tab contents: Recursively collect widgets from the given array.
-						two_column(collect_widgets(element[tabtext])),
+						two_column(collect_widgets(element[tabtext], 1)),
 						//Tab text comes from the mapping key.
 						GTK2.Label(tabtext)
 					);
