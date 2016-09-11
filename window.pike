@@ -1963,6 +1963,7 @@ class connect_menu
 		"logfile:Auto-log",
 		"'Logs will be stored in the Logs directory if not otherwise specified. To store the log in the main Gypsum directory, begin with ./ explicitly.",
 		"' ", //Add a bit more vertical space before the "Save and Connect" button
+		"!pb_connect:Save and C_onnect",
 	});
 	//TODO: Have a drop-down list of connection types - Raw, Telnet, maybe others;
 	//default to "Autodetect" which picks between Raw and Telnet (current behaviour).
@@ -2004,13 +2005,6 @@ class connect_menu
 		if (!kwd) return;
 		connect(kwd,0);
 		win->mainwindow->destroy();
-	}
-
-	GTK2.Widget make_content()
-	{
-		return two_column(collect_widgets() +
-			({GTK2.HbuttonBox()->add(win->pb_connect=GTK2.Button((["label":"Save and C_onnect","use-underline":1]))),0})
-		);
 	}
 }
 

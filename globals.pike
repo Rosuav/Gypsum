@@ -656,7 +656,7 @@ class configdlg
 				objects += ({nb, 0});
 				continue;
 			}
-			sscanf(element, "%1[?#+'@]%s", string type, element);
+			sscanf(element, "%1[?#+'@!]%s", string type, element);
 			sscanf(element, "%s=%s", element, string dflt); //NOTE: I'm rather worried about collisions here. This is definitely PROVISIONAL.
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
@@ -700,6 +700,14 @@ class configdlg
 					if (name[0] == '#') win->real_ints += ({name=name[1..]});
 					else win->real_strings += ({name});
 					objects += ({lbl}); next_obj_name = name; //Object creation happens next iteration
+					break;
+				}
+				case "!": //Button
+				{
+					//Buttons don't get any special load/save action.
+					//Normally you'll attach a clicked event to them.
+					//TODO: Put consecutive button elements into the same button box
+					objects += ({GTK2.HbuttonBox()->add(win[name] = GTK2.Button((["label": lbl, "use-underline": 1]))), 0});
 					break;
 				}
 			}
