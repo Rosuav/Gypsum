@@ -526,7 +526,11 @@ class configdlg
 	//... end provide me.
 	mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
 
-	void create() {if (persist_key && !items) items=persist->setdefault(persist_key,([])); ::create();} //Pass on no args to the window constructor - all configdlgs are independent
+	void create(string|void name)
+	{
+		if (persist_key && !items) items=persist->setdefault(persist_key,([]));
+		::create(!is_subwindow && name); //Unless we're a main window, pass on no args to the window constructor - all configdlgs are independent
+	}
 
 	//Return the keyword of the selected item, or 0 if none (or new) is selected
 	string selecteditem()
