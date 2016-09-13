@@ -563,6 +563,7 @@ class configdlg
 			store->set_value(iter,0,newkwd);
 		}
 		if (descr_key && info[descr_key]) store->set_value(iter,1,info[descr_key]);
+		sig_sel_changed();
 	}
 
 	void sig_pb_delete_clicked()
