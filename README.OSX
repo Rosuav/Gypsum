@@ -20,7 +20,7 @@ Option 2: In the terminal, type:
 Again, if this produces an error, try option 3:
 
     $ brew uninstall pike
-    $ curl -O http://rosuav.com/Pike_OSXMavericks/pike.tgz
+    $ curl -O https://dl.dropboxusercontent.com/s/a0xun5ygg6zavqa/pike.tgz
     $ sudo tar xf pike.tgz -C /
     $ pike -e GTK2.setup_gtk
 
