@@ -153,7 +153,7 @@ void makelabels()
 
 void makewindow()
 {
-	win->mainwindow=GTK2.Window((["title":"Timers","no-show-all":!sizeof(timers)]))
+	win->mainwindow = GTK2.Window((["title":" Timers", "no-show-all": !sizeof(timers), "accept-focus": 0]))
 		->add(win->display=GTK2.Table((["row-spacing":2,"col-spacing":8])))
 		->add_events(GTK2.GDK_BUTTON_PRESS_MASK);
 	makelabels();
