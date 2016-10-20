@@ -662,7 +662,7 @@ class configdlg
 				objects += ({nb, 0});
 				continue;
 			}
-			sscanf(element, "%1[?#+'@!]%s", string type, element);
+			sscanf(element, "%1[?#+'@!*]%s", string type, element);
 			sscanf(element, "%s=%s", element, string dflt); //NOTE: I'm rather worried about collisions here. This is definitely PROVISIONAL.
 			sscanf(element, "%s:%s", string name, string lbl);
 			if (!lbl) sscanf(lower_case(lbl = element)+" ", "%s ", name);
@@ -678,8 +678,10 @@ class configdlg
 					objects += ({lbl, win[name]=noex(GTK2.Entry())});
 					break;
 				case 0: //String
+				case "*": //Password
 					win->real_strings += ({name});
 					objects += ({lbl, win[name]=noex(GTK2.Entry())});
+					if (type == "*") win[name]->set_visibility(0);
 					break;
 				case "+": //Multi-line text
 					win->real_strings += ({name});
