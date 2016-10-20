@@ -331,7 +331,7 @@ void sockread(mapping conn,bytes data)
 }
 
 //Clean up the socket connection; it's assumed to have already been closed.
-int sockclosed(mapping conn)
+void sockclosed(mapping conn)
 {
 	if (conn->readbuffer != "") say(conn->display, "%%% readbuffer: "+conn->readbuffer);
 	if (conn->ansibuffer != "") say(conn->display, "%%% ansibuffer: "+conn->ansibuffer);
