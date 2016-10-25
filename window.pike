@@ -1812,6 +1812,7 @@ void makewindow()
 		1a) Figure out whether it should be G->G->accel or win->accel
 		2) A way to do the Ctrl-P hack
 		3) A clean way to do plugin menu items
+		4) Pike 7.8 support check (see: Win 10 VM TODO)
 		*/
 		->pack_start(GTK2.MenuBar()
 			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
