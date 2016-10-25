@@ -381,17 +381,46 @@ class window
 			->add_accelerator("clicked",win->accelgroup,0xFF1B,0,0); //Esc as a shortcut for Close
 	}
 
+	//Stock item creation: Menu bar. Normally will want to be packed_start(,0,0,0) into a Vbox.
+	GTK2.MenuBar stock_menu_bar(string ... menus)
+	{
+		win->stock_menu_bar = GTK2.MenuBar();
+		win->menus = ([]); win->menuitems = ([]);
+		foreach (menus, string menu)
+		{
+			string key = lower_case(menu) - "_"; //Callables to be placed in this menu start with this key.
+			win->stock_menu_bar->add(GTK2.MenuItem(menu)->set_submenu(win->menus[key] = (object)GTK2.Menu()));
+		}
+		return win->stock_menu_bar;
+	}
+
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
 	//nulls in the array, as exploited here.
 	void dosignals()
 	{
 		//NOTE: This does *not* use += here - this is where we (re)initialize the array.
-		win->signals=({
+		win->signals = ({
 			gtksignal(win->mainwindow,"delete_event",closewindow),
 			win->stock_close && gtksignal(win->stock_close,"clicked",closewindow),
 		});
 		collect_signals("sig_", win);
+		if (win->stock_menu_bar)
+		{
+			foreach (sort(indices(this_program)), string attr)
+			{
+				if (sscanf(attr, "menu_%s_%s", string menu, string item) && this[menu + "_" + item])
+				{
+					object m = win->menus[menu];
+					if (!m) error("%s does not have a corresponding menu [options are%{ %s%}]\n", attr, indices(win->menus));
+					if (object old = win->menuitems[attr]) old->destroy();
+					object mi = GTK2.MenuItem(this[attr]);
+					m->add(mi->show());
+					win->signals += ({gtksignal(mi, "activate", this[menu + "_" + item])});
+					win->menuitems[attr] = mi;
+				}
+			}
+		}
 	}
 
 	//NOTE: prefix *must* be a single 'word' followed by an underscore. Stuff breaks otherwise.
