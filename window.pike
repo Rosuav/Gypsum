@@ -1805,6 +1805,14 @@ void makewindow()
 	mainwindow->set_default_size(800,500);
 	G->G->plugin_menu=([]); //Note that, as of 20141219, this no longer needs to be initialized here in makewindow(). Is there a better place for it? It doesn't hurt here, but it's illogical.
 	mainwindow->add_accel_group(G->G->accel=GTK2.AccelGroup())->add(GTK2.Vbox(0,0)
+		/* TODO: Replace this with:
+		->pack_start(stock_menu_bar("_File", "_Options", "_Plugins", "_Help"), 0, 0, 0)
+		This requires:
+		1) Support in globals.pike for accelerators
+		1a) Figure out whether it should be G->G->accel or win->accel
+		2) A way to do the Ctrl-P hack
+		3) A clean way to do plugin menu items
+		*/
 		->pack_start(GTK2.MenuBar()
 			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
 			//reason won't accept a GTK2.Menu, which is a subclass of Widget. This is
