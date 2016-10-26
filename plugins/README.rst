@@ -240,6 +240,11 @@ stock objects are available, and more may be added in the future:
 Note that constructing more than one of a stock object on a given window is not
 guaranteed to work, and may result in signals not being connected correctly.
 
+Call stock_menu_bar with any number of menu title strings. It will locate all
+constants of the form "menu_foo_bar" and attach menu items to the Foo menu.
+(On update, new items will be added, but expired ones currently won't be
+removed. This may change in the future.)
+
 In addition to the regular GTK2 objects, Gypsum provides a few of its own
 widgets for use on windows and configdlgs. These are mostly thin wrappers
 around existing widgets, designed to play more nicely with the rest of Gypsum.
