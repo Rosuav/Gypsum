@@ -231,9 +231,11 @@ turn closing into hiding::
 Certain stock objects with obvious events can be created with simple
 function calls. Use of these functions guarantees a consistent look, and
 also automatically connects the appropriate signal handler. The following
-stock object is available, and more may be added in the future:
+stock objects are available, and more may be added in the future:
 
 * stock_close() - a Close button, which will call closewindow().
+* stock_menu_bar() - a menu bar, designed to be packed into the top of a Vbox,
+  which will automatically seek out menu items based on constants.
 
 Note that constructing more than one of a stock object on a given window is not
 guaranteed to work, and may result in signals not being connected correctly.
