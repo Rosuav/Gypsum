@@ -412,7 +412,7 @@ class window
 				if (sscanf(attr, "menu_%s_%s", string menu, string item) && this[menu + "_" + item])
 				{
 					object m = win->menus[menu];
-					if (!m) error("%s does not have a corresponding menu [options are%{ %s%}]\n", attr, indices(win->menus));
+					if (!m) error("%s has no corresponding menu [try%{ %s%}]\n", attr, indices(win->menus));
 					if (object old = win->menuitems[attr]) old->destroy();
 					object mi = GTK2.MenuItem(this[attr]);
 					m->add(mi->show());
