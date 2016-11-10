@@ -1810,7 +1810,9 @@ void makewindow()
 		This requires:
 		1) Support in globals.pike for accelerators - DONE
 		1a) Figure out whether it should be G->G->accel or win->accel - DONE
-		2) A way to do the Ctrl-P hack
+		2) A way to do the Ctrl-P hack - DOABLE
+			In dosignals():
+			win->menuitems->menu_options_pause->add_accelerator("activate",G->G->accel,'p',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE);
 		3) A clean way to do plugin menu items
 		4) Pike 7.8 support check (see: Win 10 VM TODO)
 		*/
