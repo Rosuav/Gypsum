@@ -1808,8 +1808,8 @@ void makewindow()
 		/* TODO: Replace this with:
 		->pack_start(stock_menu_bar("_File", "_Options", "_Plugins", "_Help"), 0, 0, 0)
 		This requires:
-		1) Support in globals.pike for accelerators
-		1a) Figure out whether it should be G->G->accel or win->accel
+		1) Support in globals.pike for accelerators - DONE
+		1a) Figure out whether it should be G->G->accel or win->accel - DONE
 		2) A way to do the Ctrl-P hack
 		3) A clean way to do plugin menu items
 		4) Pike 7.8 support check (see: Win 10 VM TODO)

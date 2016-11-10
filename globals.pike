@@ -394,6 +394,13 @@ class window
 		return win->stock_menu_bar;
 	}
 
+	//Stock "item" creation: AccelGroup. The value of this is that it will only ever create one.
+	GTK2.AccelGroup stock_accel_group()
+	{
+		if (!win->stock_accel_group) win->stock_accel_group = GTK2.AccelGroup();
+		return win->stock_accel_group;
+	}
+
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
 	//only place where win->signals is reset. Note that it's perfectly legitimate to have
 	//nulls in the array, as exploited here.
@@ -414,7 +421,10 @@ class window
 					object m = win->menus[menu];
 					if (!m) error("%s has no corresponding menu [try%{ %s%}]\n", attr, indices(win->menus));
 					if (object old = win->menuitems[attr]) old->destroy();
-					object mi = GTK2.MenuItem(this[attr]);
+					array|string info = this[attr];
+					GTK2.MenuItem mi = arrayp(info)
+						? GTK2.MenuItem(info[0])->add_accelerator("activate", stock_accel_group(), info[1], info[2], GTK2.ACCEL_VISIBLE)
+						: GTK2.MenuItem(info); //String constants are just labels; arrays have accelerator key and modifiers.
 					m->add(mi->show());
 					win->signals += ({gtksignal(mi, "activate", this[menu + "_" + item])});
 					win->menuitems[attr] = mi;
