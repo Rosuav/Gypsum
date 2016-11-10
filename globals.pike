@@ -376,9 +376,8 @@ class window
 	//Stock item creation: Close button. Calls closewindow(), same as clicking the cross does.
 	GTK2.Button stock_close()
 	{
-		if (!win->accelgroup) win->accelgroup=GTK2.AccelGroup();
 		return win->stock_close=GTK2.Button((["use-stock":1,"label":GTK2.STOCK_CLOSE]))
-			->add_accelerator("clicked",win->accelgroup,0xFF1B,0,0); //Esc as a shortcut for Close
+			->add_accelerator("clicked",stock_accel_group(),0xFF1B,0,0); //Esc as a shortcut for Close
 	}
 
 	//Stock item creation: Menu bar. Normally will want to be packed_start(,0,0,0) into a Vbox.
@@ -397,8 +396,12 @@ class window
 	//Stock "item" creation: AccelGroup. The value of this is that it will only ever create one.
 	GTK2.AccelGroup stock_accel_group()
 	{
-		if (!win->stock_accel_group) win->stock_accel_group = GTK2.AccelGroup();
-		return win->stock_accel_group;
+		if (!win->accelgroup)
+		{
+			win->accelgroup = GTK2.AccelGroup();
+			if (win->mainwindow) win->mainwindow->add_accel_group(win->accelgroup);
+		}
+		return win->accelgroup;
 	}
 
 	//Subclasses should call ::dosignals() and then append to to win->signals. This is the
