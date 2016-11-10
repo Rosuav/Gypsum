@@ -1814,6 +1814,9 @@ void makewindow()
 			In dosignals():
 			win->menuitems->menu_options_pause->add_accelerator("activate",G->G->accel,'p',GTK2.GDK_CONTROL_MASK,GTK2.ACCEL_VISIBLE);
 		3) A clean way to do plugin menu items
+			Probably they can be done the exact same way. Since dosignals will
+			wipe out all unknown items from win->menuitems, we could stick them
+			into that, and then use make_menuitem just the same.
 		4) Pike 7.8 support check (see: Win 10 VM TODO)
 		*/
 		->pack_start(GTK2.MenuBar()
