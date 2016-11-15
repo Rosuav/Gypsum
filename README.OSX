@@ -5,6 +5,8 @@ install each of these. Then install Pike.
 
 Option 1: Open a Terminal and type:
 
+    $ echo 'WAIT! Did you read the paragraph at the top of this file?'
+    $ echo 'Go back and read that first. And do it. Thanks!'
     $ brew install pike
     $ pike -e GTK2.setup_gtk
 
