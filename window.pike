@@ -1109,6 +1109,7 @@ class zadvoptions
 			"active.\n\nYou do NOT normally need to change this.", "type":"int","path":"compat/"+x, \
 			"options":([0:"Autodetect"+({" (disable)"," (enable)"})[G->compat[x]],1:"Enable compat mode",2:"Disable compat mode"])
 		"Compat: Boom2":(["desc":"Older versions of Pike have a bug that can result in a segfault (crash)."COMPAT("boom2")]),
+		"Compat: Boom3":(["desc":"Similar to boom2 and the distinction isn't certain."COMPAT("boom2")]),
 		"Compat: Msg Dlg":(["desc":"Older versions of Pike have a bug that means message boxes can segfault."COMPAT("msgdlg")]),
 		"Compat: Pause key":(["desc":"On some Windowses, the Pause key generates the wrong key code. If pressing Pause"
 			"doesn't pause scrolling (or if other keys do), enable this to use Ctrl-P exclusively."COMPAT("pausekey")]),
@@ -2045,6 +2046,7 @@ void send_file_response(object dlg,int btn)
 	send(current_subw(),txt);
 }
 
+#if !constant(COMPAT_BOOM3)
 int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 {
 	//CAUTION: The first GTK-supplied parameter is a pointer to a GtkNotebookPage, and in
@@ -2073,6 +2075,7 @@ int sig_notebook_switch_page(object self,mixed segfault,int page,mixed otherarg)
 	},0,page,subw);
 	#endif
 }
+#endif
 
 //Reset the urgency hint when focus arrives.
 //Ideally I want to do this at the exact moment when mainwindow->is_active()
