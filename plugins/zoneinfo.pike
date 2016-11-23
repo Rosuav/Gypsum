@@ -114,7 +114,7 @@ void showtime()
 	mapping t=tm->datetime();
 	int tzhr=-t->timezone/3600,tzmin=abs(t->timezone/60%60);
 	if (tzmin && tzhr<0) ++tzhr; //Modulo arithmetic produces odd results here. What I want is a four-digit number, but with the last two digits capped at 60 not 100.
-	setstatus(sprintf("%s %d, %d at %02d:%02d %+03d%02d",terramonth[t->month-1],t->day,t->year,t->hour,t->minute,tzhr,tzmin));
+	setstatus(sprintf("%s %d, %d at %02d:%02d %+03d%02d",terramonth[t->month-1][..2],t->day,t->year,t->hour,t->minute,tzhr,tzmin));
 }
 
 constant menu_label="Time zone converter";
