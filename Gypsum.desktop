@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gypsum
+Comment=MUD client "Gypsum"
+Exec=pike gypsum
+Icon=
+Path=Gypsum
+Terminal=false
+StartupNotify=false
