@@ -14,4 +14,5 @@ plugins\update.pike
 
 rem Create a shortcut. In theory, WindowStyle=7 should give a minimized window.
 rem TODO: Find the desktop directory even if it isn't obvious.
+rem TODO: Put a shortcut also into the Start menu? Does that require elevation?
 powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('%userprofile%\Desktop\Gypsum.lnk');$s.TargetPath='c:\Gypsum\gypsum.pike';$s.WorkingDirectory='c:\Gypsum';$s.WindowStyle=7;$s.Save()"
