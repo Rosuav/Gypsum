@@ -236,7 +236,20 @@ void create(string name)
 //Suitable for remote execution eg via SSH
 mapping persist=decode_value(Stdio.read_file(combine_path(__FILE__,"..","..",".gypsumrc"))) || ([]);
 mapping(string:mapping(string:mixed)) timers=persist["timer/timers"] || ([]);
-int main() {write("%s\n",save());}
+int main(int argc, array(string) argv)
+{
+	if (has_value(argv, "show"))
+	{
+		//Like save() but more human-readable.
+		foreach (timers;string kwd;mapping info) if (info->next && info->next>time())
+		{
+			int t = info->next - time();
+			write("%s: %d:%02d:%02d\n", kwd, t/3600, t/60%60, t%60);
+		}
+		return 0;
+	}
+	write("%s\n",save());
+}
 #endif
 
 //Used by both normal and outside-execution modes; renders current timers to text.
