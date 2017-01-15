@@ -507,6 +507,7 @@ void rtl_check(array line)
 	#if constant(Unicode.is_rtlchar)
 	if (sizeof(line) == 1) return; //Empty line - can't have indentation.
 	string text = line[2]; //We care only about the very first display block. We know it won't be empty.
+	if (text == "") return; //Or maybe we don't know it won't. Hmmm.
 	if (text[0] != ' ' && text[0] != '\t') return; //Not indented.
 	for (int pos = 0; pos < sizeof(text); ++pos)
 		if (text[pos] != ' ' && text[pos] != '\t')
