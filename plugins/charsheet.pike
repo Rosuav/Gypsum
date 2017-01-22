@@ -60,7 +60,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	multiset(string) writepending=(<>);
 	void write_change(string kwd)
 	{
-		if (!send(subw,sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd])))
+		//Some Pikes render spaces as "\\u0020", and the server doesn't read that correctly.
+		if (!send(subw,replace(sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]),"\\u0020"," ")))
 			//Can't do much :( But at least warn the user.
 			win->mainwindow->set_title("UNSAVED CHARACTER SHEET");
 		writepending[kwd]=0;
