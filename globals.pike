@@ -121,7 +121,7 @@ class MessageBox
 		callback=cb;
 		#if constant(COMPAT_MSGDLG)
 		//There's some sort of issue in older Pikes (7.8 only) regarding the parent.
-		//TODO: Hunt down what it was and put a better note here.
+		//I'm no longer majorly supporting 7.8 though so I can't be bothered checking details.
 		::create(flags,type,buttons,message);
 		#else
 		::create(flags,type,buttons,message,parent);
