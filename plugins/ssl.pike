@@ -19,6 +19,7 @@ int process(string param, mapping(string:mixed) subw)
 	ssl->set_nonblocking(G->G->connection->sockread, G->G->connection->sockwrite, G->G->connection->sockclosed);
 	ssl->connect();
 	subw->connection->sock = ssl;
+	say(subw, "%% Connection is now encrypted.");
 	#else
 	say(subw, "%% SSL not available");
 	#endif
