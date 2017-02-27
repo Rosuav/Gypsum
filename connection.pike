@@ -275,7 +275,11 @@ void sockread(mapping conn,bytes data)
 						//Should we explicitly reject (respond negatively to) unrecognized DO/WILL requests?
 						//Might need to keep track of them and make sure we don't get into a loop.
 						//Currently Gypsum doesn't seem to play nicely with some non-MUD servers (eg Debian telnetd).
-						conn["unknown_telnet_" + iac[1]] = 1; //Track it for curiosity's sake.
+						conn["unknown_telnet_" + iac[1]] = 1; //Prevent repeated spam (not that it's likely).
+						if (conn->debug_telnet)
+							say(conn->display, "%%%% Unknown IAC %s %d",
+								([DO: "DO", DONT: "DONT", WILL: "WILL", WONT: "WONT"])[iac[0]],
+								iac[1]);
 						break;
 				}
 				iac=iac[2..];
@@ -313,6 +317,7 @@ void sockread(mapping conn,bytes data)
 			case GA:
 			{
 				//Prompt! Woot!
+				if (conn->hack_ignore_prompts) ansiread(conn,"\n",0);
 				setprompt(conn);
 				iac=iac[1..];
 				break;
@@ -427,7 +432,7 @@ void ka(mapping conn)
 mapping connect(object display,mapping info)
 {
 	mapping(string:mixed) conn=makeconn(display,info);
-	if (display->conn_debug) conn->debug_textread=conn->debug_ansiread=conn->debug_sockread=1;
+	if (display->conn_debug) conn->debug_textread = conn->debug_ansiread = conn->debug_sockread = conn->debug_telnet = 1;
 	if ((<"0.0.0.0","::">)[info->host])
 	{
 		//Passive mode. (Currently hacked in by the specific IPs; may
