@@ -4,7 +4,7 @@ get_brew() {
 	echo "not found, downloading."
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 }
-#echo -n "Detecting homebrew... "; which brew || get_brew
+echo -n "Detecting homebrew... "; which brew || get_brew
 
 get_xquartz() {
 	# URL detection derived from https://github.com/tjluoma/di/blob/master/di-xquartz.sh
@@ -19,7 +19,7 @@ get_xquartz() {
 	PKG=`find "$MNTPNT" -maxdepth 1 -iname \*.pkg`
 	sudo installer -verbose -pkg "$PKG" -target / -lang en
 }
-#defaults read "/Applications/Utilities/XQuartz.app/Contents/Info.plist" "CFBundleVersion" 2>/dev/null || get_xquartz
+defaults read "/Applications/Utilities/XQuartz.app/Contents/Info.plist" "CFBundleVersion" 2>/dev/null || get_xquartz
 
 get_pike() {
 	echo "not found, downloading."
