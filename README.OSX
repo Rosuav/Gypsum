@@ -1,3 +1,7 @@
+Option 0: The new, under-development installer script:
+
+    $ curl http://rosuav.github.io/Gypsum/get_gypsum_osx.sh | /bin/bash
+
 The best way to install Gypsum on OS X is to use Homebrew (http://brew.sh/).
 First, install XQuartz from https://www.xquartz.org/ and Homebrew (if you don't
 already have it). Due to differences in license terms, you have to explicitly
