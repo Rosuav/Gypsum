@@ -30,7 +30,7 @@ echo -n "Detecting Pike... "; which pike || get_pike
 
 mkdir -p ~/Gypsum/plugins
 cd ~/Gypsum
-curl -O plugins/update.pike http://rosuav.github.io/Gypsum/plugins/update.pike
+curl -o plugins/update.pike http://rosuav.github.io/Gypsum/plugins/update.pike
 pike plugins/update.pike
 echo "Gypsum should now be installed."
 echo "No desktop icon as yet, sorry; to invoke:"
