@@ -10,7 +10,7 @@ get_xquartz() {
 	# URL detection derived from https://github.com/tjluoma/di/blob/master/di-xquartz.sh
 	echo "XQuartz not found, downloading."
 	XML_FEED="https://www.xquartz.org/releases/sparkle/release.xml"
-	URL=`curl -sfL "$XML_FEED" | tr -s ' ' '\012' | sed -n -e '/url=/{s/^url="\(.*\)"$/\1/p;q}'`
+	URL=`curl -sfL "$XML_FEED" | tr -s ' ' '\012' | grep 'url=' | head -1 | awk -F'"' '/^/{print $2}'`
 	FILENAME=/tmp/XQuartz.dmg
 	curl -L#o $FILENAME $URL
 	# Mount point detection taken from the above script also. Couldn't this be done more simply
