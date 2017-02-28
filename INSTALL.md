@@ -10,8 +10,9 @@ which should leave you with an icon on your desktop.
 
 Mac OS
 ------
-Installation on a Mac depends somewhat on your exact version of Mac OS. See the
-[OSX installation instructions](README.OSX) for details.
+Paste this into Terminal:
+
+    curl http://rosuav.github.io/Gypsum/get_gypsum_osx.sh | /bin/bash
 
 Linux
 -----
