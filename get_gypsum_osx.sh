@@ -18,6 +18,7 @@ get_xquartz() {
 	MNTPNT=$(echo -n "Y" | hdid -plist "$FILENAME" 2>/dev/null | fgrep -A 1 '<key>mount-point</key>' | tail -1 | sed 's#</string>.*##g ; s#.*<string>##g')
 	PKG=`find "$MNTPNT" -maxdepth 1 -iname \*.pkg`
 	sudo installer -verbose -pkg "$PKG" -target / -lang en
+	diskutil eject "$MNTPNT" || echo Unmounting failed
 }
 defaults read "/Applications/Utilities/XQuartz.app/Contents/Info.plist" "CFBundleVersion" 2>/dev/null || get_xquartz
 
