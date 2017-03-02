@@ -124,6 +124,7 @@ int process(string param,mapping(string:mixed) subw)
 	string nfkc(string txt) {return Unicode.normalize(txt,\"NFKC\");} function NFKC=nfkc;
 	string nfkd(string txt) {return Unicode.normalize(txt,\"NFKD\");} function NFKD=nfkd;
 	array(int) factors(int n) {array ret=({}); for (int i=2;i<n;++i) if (!(n%i)) {ret+=({i}); n/=i;} return ret+({n});}
+	#if constant(Debug.map_all_objects)
 	int wipe(string|program|object pgm)
 	{
 		int ret = 0;
@@ -133,6 +134,7 @@ int process(string param,mapping(string:mixed) subw)
 		Debug.map_all_objects(lambda (object obj) {if (sprintf(\"%O\",object_program(obj)) == pgm) {obj->destroy(); destruct(obj); ret++;}});
 		return ret;
 	}
+	#endif
 	//Add any other 'convenience names' here
 
 	mixed foo(mapping(string:mixed) subw,mixed _)
