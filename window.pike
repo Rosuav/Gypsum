@@ -973,7 +973,10 @@ void enterpressed(mapping subw,string|void cmd)
 	{
 		if (!subw->passwordmode)
 		{
-			if (cmd!="" && (!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1])) subw->cmdhist+=({cmd});
+			//Undocumented feature. TODO: Add an advanced option.
+			if (sizeof(cmd) > persist["window/histignoreshort"] &&
+				(!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1]))
+					subw->cmdhist+=({cmd});
 			int inputcol=persist["window/inputcol"]; if (undefinedp(inputcol)) inputcol=6;
 			say(subw,subw->prompt+({inputcol,cmd}));
 		}
