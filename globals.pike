@@ -1343,7 +1343,7 @@ class establish_connection(string hostname,int port,function callback)
 	//callback functional. HUH?!? So we have to snapshot the text for the caller, making this a
 	//bit like the way TCP fast-open works.
 	void readable(mixed id,bytes data) {data_rcvd += data;}
-	void connfailed() {errno = sock->errno(); sock = 0; tryconn();}
+	void connfailed() {if (sock) errno = sock->errno(); sock = 0; tryconn();}
 
 	void tryconn()
 	{
