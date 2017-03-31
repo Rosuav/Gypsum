@@ -31,7 +31,7 @@ mapping(string:array(string)) dict_suggestions = ([]); //Cache of suggestions fo
 //Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
 //It may be worth having some means of marking new worlds to be added. Or maybe have a way to recreate a lost world from the template??
 mapping(string:mapping(string:mixed)) worlds=persist->setdefault("worlds",([
-	"threshold":(["host":"thresholdrpg.com","port":23,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
+	"threshold":(["host":"thresholdrpg.com","port":3333,"name":"Threshold RPG","descr":"Threshold RPG by Frogdice, a high-fantasy game with roleplaying required."]),
 	"minstrelhall":(["host":"gideon.rosuav.com","port":221,"name":"Minstrel Hall","descr":"A virtual gaming shop where players gather to play Dungeons & Dragons online."]),
 ]));
 
