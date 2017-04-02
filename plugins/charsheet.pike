@@ -60,8 +60,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	multiset(string) writepending=(<>);
 	void write_change(string kwd)
 	{
-		//Some Pikes render spaces as "\\u0020", and the server doesn't read that correctly.
-		if (!send(subw,replace(sprintf("charsheet @%s qset %s %q\r\n",owner,kwd,data[kwd]),"\\u0020"," ")))
+		if (!send(subw,sprintf("charsheet @%s qset %s %s\r\n",owner,kwd,Standards.JSON.encode(data[kwd]))))
 			//Can't do much :( But at least warn the user.
 			win->mainwindow->set_title("UNSAVED CHARACTER SHEET");
 		writepending[kwd]=0;
@@ -1305,8 +1304,9 @@ int output(mapping(string:mixed) subw,string line)
 		subw->charsheet_eax=""; subw->charsheet_acct=acct;
 		return 0;
 	}
-	if (sscanf(line,"===> Charsheet @%s qset %s %O",string acct,string what,string|int towhat))
+	if (sscanf(line,"===> Charsheet @%s qset %s %s",string acct,string what,string|int towhat))
 	{
+		towhat = Standards.JSON.decode(towhat);
 		if (multiset sheets=charsheets[acct]) indices(sheets)->set(what,towhat||"");
 		return 1; //Suppress the spam
 	}
