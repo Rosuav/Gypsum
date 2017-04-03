@@ -628,6 +628,10 @@ class configdlg
 
 	void sig_sel_changed()
 	{
+		//TODO: If there are unsaved changes, flip the selection back to what was previously
+		//selected, and pop up a "Save/Discard/Cancel" prompt. Save will call on pb_save;
+		//Discard will reselect what the user asked for, bypassing the prompt; Cancel does
+		//nothing, as we're already on that.
 		string kwd=selecteditem();
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
