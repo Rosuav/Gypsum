@@ -1302,6 +1302,7 @@ class colorsdlg
 			"Green",noex(win->g=GTK2.Entry()->set_size_request(40,-1)),
 			"Blue",noex(win->b=GTK2.Entry()->set_size_request(40,-1)),
 			"Colors range from 0 to 255.\nNote that all colors set\nhere are ignored in\nmonochrome mode.",0,
+			GTK2.Frame("Selected color:")->add(win->swatch=GTK2.EventBox()),0,
 		}));
 	}
 
@@ -1315,6 +1316,19 @@ class colorsdlg
 		persist["colors/sixteen"]=mainwin->color_defs; //This may be an unnecessary mutation, but it's simpler to leave this out of persist[] until it's actually changed.
 		redraw(current_subw());
 	}
+
+	void update_swatch()
+	{
+		win->swatch->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(
+			(int)win->r->get_text(),
+			(int)win->g->get_text(),
+			(int)win->b->get_text(),
+		));
+	}
+	function sig_r_changed = update_swatch;
+	function sig_g_changed = update_swatch;
+	function sig_b_changed = update_swatch;
+	void load_content(mapping info) {update_swatch();}
 }
 
 constant options_dictcfg = "_Dictionary";
