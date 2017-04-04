@@ -572,6 +572,7 @@ class configdlg
 	string selectme; //If this contains a non-null string, it will be preselected.
 	//... end provide me.
 	mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
+	string last_selected; //Set when something is loaded. Unless the user renames the thing, will be equal to win->kwd->get_text().
 
 	void create(string|void name)
 	{
@@ -626,13 +627,48 @@ class configdlg
 		if (persist_key) persist->save();
 	}
 
+	int ischanged()
+	{
+		string kwd = last_selected; //NOT using selecteditem() here - compare against the last loaded state.
+		if (!kwd) return 0; //For now, assume that moving off "-- New --" doesn't need to prompt. TODO.
+		if (allow_rename && win->kwd->get_text() != kwd) return 1;
+		mapping info = items[kwd] || ([]);
+		foreach (win->real_strings, string key)
+			if (info[key] != win[key]->get_text()) return 1;
+		foreach (win->real_ints, string key)
+			if (info[key] != (int)win[key]->get_text()) return 1;
+		foreach (win->real_bools, string key)
+			if (info[key] != (int)win[key]->get_active()) return 1;
+		return 0;
+	}
+
+	void selchange_response(int btn, string kwd)
+	{
+		string btnname = ([GTK2.RESPONSE_APPLY: "Save", GTK2.RESPONSE_REJECT: "Discard", GTK2.RESPONSE_CANCEL: "Cancel"])[btn] || (string)btn;
+		m_delete(win, "save_prompt");
+		if (btn == GTK2.RESPONSE_APPLY) sig_pb_save_clicked();
+		else if (btn != GTK2.RESPONSE_REJECT) return; //Cancel or closing the window leaves us where we were.
+		win->save_prompt = "DISCARD";
+		select_keyword(kwd);
+		m_delete(win, "save_prompt");
+	}
+
 	void sig_sel_changed()
 	{
-		//TODO: If there are unsaved changes, flip the selection back to what was previously
-		//selected, and pop up a "Save/Discard/Cancel" prompt. Save will call on pb_save;
-		//Discard will reselect what the user asked for, bypassing the prompt; Cancel does
-		//nothing, as we're already on that.
-		string kwd=selecteditem();
+		if (win->save_prompt && win->save_prompt != "DISCARD") return;
+		string kwd = selecteditem();
+		if (win->save_prompt != "DISCARD" && ischanged())
+		{
+			win->save_prompt = "PENDING";
+			object dlg = MessageBox(0, GTK2.MESSAGE_WARNING, 0, "Unsaved changes will be lost.",
+				win->mainwindow, selchange_response, kwd);
+			dlg->add_button("_Save", GTK2.RESPONSE_APPLY);
+			dlg->add_button("_Discard", GTK2.RESPONSE_REJECT);
+			dlg->add_button("_Cancel", GTK2.RESPONSE_CANCEL);
+			select_keyword(last_selected);
+			return;
+		}
+		last_selected = kwd;
 		mapping info=items[kwd] || ([]);
 		if (win->kwd) win->kwd->set_text(kwd || "");
 		foreach (win->real_strings,string key) win[key]->set_text((string)(info[key] || defaults[key] || ""));
