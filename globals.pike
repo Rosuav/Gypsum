@@ -634,11 +634,11 @@ class configdlg
 		if (allow_rename && win->kwd->get_text() != kwd) return 1;
 		mapping info = items[kwd] || ([]);
 		foreach (win->real_strings, string key)
-			if (info[key] != win[key]->get_text()) return 1;
+			if ((info[key] || defaults[key] || "") != win[key]->get_text()) return 1;
 		foreach (win->real_ints, string key)
-			if (info[key] != (int)win[key]->get_text()) return 1;
+			if ((int)(info[key] || defaults[key]) != (int)win[key]->get_text()) return 1;
 		foreach (win->real_bools, string key)
-			if (info[key] != (int)win[key]->get_active()) return 1;
+			if ((int)info[key] != (int)win[key]->get_active()) return 1;
 		return 0;
 	}
 
