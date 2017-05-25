@@ -32,6 +32,7 @@ int output(mapping(string:mixed) subw,string line)
 		//If we get here, the trigger matches. Do the actions.
 		if (tr->message != "") say(subw, "%% "+tr->message);
 		if (tr->sound != "") play_sound(tr->sound);
+		if (tr->invoke != "") invoke_browser(tr->invoke);
 		if (tr->response != "") send(subw, tr->response+"\r\n"); //Not officially supported by core - may have to change later.
 		if (tr->counter != "") G->G["counter_" + tr->counter]++; //On par with HQ9++, there's no way to actually do anything with this.
 		if (tr->present) G->G->window->mainwindow->present();
@@ -55,6 +56,7 @@ class menu_clicked
 		"@Match style=Substring", ({"Substring", "Entire", "Prefix"}), //And maybe regex and others, as needed
 		"'Actions - leave blank if not applicable:",
 		"sound:Play sound file",
+		"invoke:Open file or URL",
 		"message:Display message locally",
 		"response:Send command to server",
 		"?Present (grab focus)",
