@@ -1984,8 +1984,8 @@ int closewindow()
 	int confirmclose=persist["window/confirmclose"];
 	if (confirmclose==-1) exit(0);
 	int conns=sizeof((win->tabs->connection-({0}))->sock-({0})); //Number of active connections (would look tidier with ->? but I need to support 7.8).
-	if (!conns && !confirmclose) exit(0);
-	confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
+	if (!conns && !confirmclose) call_out(exit, 0, 0);
+	else confirm(0,"You have "+conns+" active connection(s), really quit?",mainwindow,exit,0);
 	return 1; //Used as the delete-event, so it should return 1 for that.
 }
 
