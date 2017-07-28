@@ -1073,6 +1073,11 @@ void set_error_bell(int state)
 	win->tabs->ef->get_settings()->set_property("gtk-error-bell",state);
 }
 
+void update_title(string value)
+{
+	mainwindow->set_title(value);
+}
+
 //Wrap indent is normally going to want to be a number of spaces. For convenience, allow the user to
 //specify an integer, which will become that many spaces. (The likelihood that someone will want to
 //indent by the string "4" is so low as to be ignored. This is a string to allow things like "-> ",
@@ -1194,6 +1199,10 @@ class zadvoptions
 			"desc":"When you press Up to begin searching back through command history, should the current "
 			"text be saved and recalled when you come back down to it?",
 			"options":([0:"No",1:"Yes"]),
+		]),
+		"Window title": (["path": "window/title", "default": "Gypsum",
+			"desc": "Adjust the window title according to your needs. Replaces the normal name 'Gypsum'.",
+			"savefunc": update_title,
 		]),
 		"Wrap":(["path":"window/wrap","type":"int",
 			"desc":"Wrap text to the specified width (in characters - measured by an 'n'). 0 to disable.",
@@ -1820,7 +1829,7 @@ void update_dictionary()
 
 void makewindow()
 {
-	win->mainwindow=mainwindow=GTK2.Window((["title": "Gypsum"]));
+	win->mainwindow = mainwindow = GTK2.Window((["title": persist["window/title"] || "Gypsum"]));
 	mainwindow->set_default_size(800,500);
 	G->G->plugin_menu=([]); //Note that, as of 20141219, this no longer needs to be initialized here in makewindow(). Is there a better place for it? It doesn't hurt here, but it's illogical.
 	mainwindow->add_accel_group(G->G->accel=GTK2.AccelGroup())->add(GTK2.Vbox(0,0)
