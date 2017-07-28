@@ -204,6 +204,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 			{
 				//We have a complete sequence now.
 				if (!undefinedp(curparam)) params+=({curparam});
+				if (!sizeof(params)) params = ({0}); //"\e[m" is equivalent to "\e[0m"
 				switch (ansi[i]) //See if we understand the command.
 				{
 					case 'm': foreach (params,int|string param) if (intp(param)) switch (param)
