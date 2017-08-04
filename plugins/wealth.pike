@@ -57,7 +57,9 @@ int output(mapping(string:mixed) subw,string line)
 		string first=perfirst(kwd);
 		if (first) last+=sprintf(" -> %d",diff(cur,last));
 		else perfirst(kwd)=first=cur;
-		say(subw,fmt[1],first,last); //TODO: Govern this with an option
+		//HACK: If wealth gets too long, flip to a different format. TODO: Do without hackery.
+		if (kwd == "wealth" && sizeof(first) > 9) say(subw, "%13s: %s", first, last);
+		else say(subw,fmt[1],first,last); //TODO: Govern this with an option
 		perlast(kwd)=cur;
 		perdiff(kwd)=diff(cur,first);
 		if (!persist["wealth/"+subw->world+"/stats_since"]) persist["wealth/"+subw->world+"/stats_since"]=time();
