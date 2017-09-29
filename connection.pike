@@ -424,9 +424,9 @@ void sockaccept(mapping conn)
 //Periodic call_out for keep-alive - invoked separately for each connection
 void ka(mapping conn)
 {
-	if (!conn->sock) return;
-	send_telnet(conn,(string(0..255))({GA})); //(can't use the typedef 'bytes' here due to a Pike parser limitation)
-	conn->ka=conn->use_ka && call_out(ka,persist["ka/delay"] || 240,conn);
+	if (!conn->sock || !conn->use_ka) return;
+	send_telnet(conn, (string(0..255))({GA})); //(can't use the typedef 'bytes' here due to a Pike parser limitation)
+	conn->ka = call_out(ka, persist["ka/delay"] || 240, conn);
 }
 
 //Establish a connection - the sole constructor for conn mappings.
