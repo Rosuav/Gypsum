@@ -439,6 +439,8 @@ mapping connect(object display,mapping info)
 		//Passive mode. (Currently hacked in by the specific IPs; may
 		//later make a flag but that means people need to know about it.)
 		//Note: Does not currently respect autolog. Should it? It would have to interleave all connections.
+		//Note: Does not currently respect use_ssl. Proper support for secured server sockets would require
+		//certificate management and/or generation.
 		conn->passive=1;
 		if (mixed ex=catch
 		{
