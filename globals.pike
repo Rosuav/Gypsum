@@ -1256,8 +1256,6 @@ class DNS(string hostname,function callback)
 	//Note that async_dual_client would probably be better, but only marginally, so since
 	//it isn't available on all Pikes, I'll stick with UDP-only. TCP is only of value for
 	//large responses, and we aren't expecting any such here (though it is possible).
-	//TODO: Investigate the load of udp6 sockets left open. Possibly need to explicitly
-	//close this client somewhere?
 	object cli=Protocols.DNS.async_client();
 
 	array(string) ips=({ }); //May be mutated by the callback; will only ever be appended to, here.
@@ -1342,6 +1340,12 @@ class DNS(string hostname,function callback)
 	}
 
 	string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
+
+	//Pike 8.1 doesn't seem to automatically close the DNS client when it runs out
+	//of references - probably has a circular ref with a callback or something. So
+	//we explicitly close it once this wrapper isn't needed any more, thus purging
+	//the UDP sockets that would otherwise accumulate.
+	void destroy() {cli->close();}
 }
 
 //Establish a socket connection to a specified host/port
