@@ -709,6 +709,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				destruct(values(win->bmp)[*]);
 			}
 		}
+		void _destruct() {destroy();}
 	}
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
 

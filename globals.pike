@@ -108,6 +108,7 @@ class gtksignal(object obj)
 	int signal_id;
 	void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
 	void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
+	void _destruct() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
 }
 
 class MessageBox
@@ -487,7 +488,8 @@ class window
 	}
 	int closewindow()
 	{
-		win->mainwindow->destroy();
+		if (win->mainwindow->destroy) win->mainwindow->destroy(); //Seems to fail on newer Pikes, but prevents resource leak on older ones
+		if (win->mainwindow->_destruct) win->mainwindow->_destruct(); //Newer way of spelling the above
 		destruct(win->mainwindow);
 		return 1;
 	}
@@ -1346,6 +1348,7 @@ class DNS(string hostname,function callback)
 	//we explicitly close it once this wrapper isn't needed any more, thus purging
 	//the UDP sockets that would otherwise accumulate.
 	void destroy() {cli->close();}
+	void _destruct() {cli->close();}
 }
 
 //Establish a socket connection to a specified host/port
