@@ -145,6 +145,7 @@ class confirm
 	inherit MessageBox;
 	void create(int flags,string message,GTK2.Window parent,function cb,mixed|void cb_arg)
 	{
+		if (!parent) {cb(cb_arg); return;}
 		::create(flags,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,message,parent,cb,cb_arg);
 	}
 	void response(object self,int button,mixed cb_arg)
