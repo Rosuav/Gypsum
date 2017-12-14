@@ -149,8 +149,9 @@ class confirm
 	}
 	void response(object self,int button,mixed cb_arg)
 	{
-		self->destroy();
+		if (self->destroy) self->destroy();
 		if (callback && button==GTK2.RESPONSE_OK) callback(cb_arg);
+		destruct();
 	}
 }
 
