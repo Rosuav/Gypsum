@@ -135,6 +135,7 @@ class MessageBox
 	{
 		self->destroy();
 		if (callback) callback(button,cb_arg);
+		destruct();
 	}
 }
 
@@ -152,7 +153,6 @@ class confirm
 	{
 		if (self->destroy) self->destroy();
 		if (callback && button==GTK2.RESPONSE_OK) callback(cb_arg);
-		destruct();
 	}
 }
 
@@ -490,8 +490,7 @@ class window
 	}
 	int closewindow()
 	{
-		if (win->mainwindow->destroy) win->mainwindow->destroy(); //Seems to fail on newer Pikes, but prevents resource leak on older ones
-		if (win->mainwindow->_destruct) win->mainwindow->_destruct(); //Newer way of spelling the above
+		if (win->mainwindow->destroy) win->mainwindow->destroy();
 		destruct(win->mainwindow);
 		return 1;
 	}

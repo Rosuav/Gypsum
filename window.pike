@@ -792,11 +792,12 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	multiple months. But I'm not throwing the notes away just yet.
 
 	CJA 20160720: Turns out this might be part of the massive memory leaks I've been seeing. Explicitly
-	//destroying and destructing the GC at the end of this function cures the obvious part of that (the
-	//number of GdkGC objects ever increasing); see whether the entire above is no longer an issue after
-	//this change.
+	destroying and destructing the GC at the end of this function cures the obvious part of that (the
+	number of GdkGC objects ever increasing); see whether the entire above is no longer an issue after
+	this change.
 
-	CJA 20171129: The latest Pike is crashing out when I try to destroy the GC before destructing it. Hmm.
+	CJA 20171222: Pike has renamed destroy() to _destruct(), making it private. Check to see if the
+	resource leak is still happening now that we're not calling that. (Still calling it on older Pikes.)
 	*/
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
@@ -836,8 +837,7 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	//redraw(subw);
 	//call_out(G->G->hooks->zoneinfo->menu_clicked()->closewindow,0.01);
 	//call_out(G->G->hooks->charsheet->charsheet(subw->connection,"nobody",([]))->sig_mainwindow_destroy,0.01);
-	if (gc->destroy) gc->destroy(); //Some Pikes don't have this function. Others seem to require it or there's a resource leak. Hmm.
-	if (gc->_destruct) gc->_destruct(); //Newer way of spelling the above.
+	if (gc->destroy) gc->destroy(); //Newer Pikes don't have this method.
 	destruct(gc);
 }
 
@@ -1910,7 +1910,7 @@ void create(string name)
 	//Note that this code depends on there being four menus: File, Options, Plugins, Help.
 	//If that changes, compatibility code will be needed.
 	array(GTK2.Menu) submenus=mainwindow->get_child()->get_children()[0]->get_children()->get_submenu();
-	foreach (submenus,GTK2.Menu submenu) foreach (submenu->get_children(),GTK2.MenuItem w) {({w->destroy,w->_destruct})(); destruct(w);}
+	foreach (submenus,GTK2.Menu submenu) foreach (submenu->get_children(),GTK2.MenuItem w) destruct(w);
 	//Neat hack: Build up a mapping from a prefix like "options" (the part before the underscore
 	//in the constant name) to the submenu object it should be appended to.
 	[menus->file,menus->options,menus->plugins,menus->help] = submenus;
