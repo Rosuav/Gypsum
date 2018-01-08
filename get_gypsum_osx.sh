@@ -20,7 +20,8 @@ get_xquartz() {
 	sudo installer -verbose -pkg "$PKG" -target / -lang en
 	diskutil eject "$MNTPNT" || echo Unmounting failed
 }
-defaults read "/Applications/Utilities/XQuartz.app/Contents/Info.plist" "CFBundleVersion" 2>/dev/null || get_xquartz
+# defaults read "/Applications/Utilities/XQuartz.app/Contents/Info.plist" "CFBundleVersion" 2>/dev/null || get_xquartz
+get_xquartz # force installation - detection seems to be failing
 
 get_pike() {
 	echo "not found, downloading."
