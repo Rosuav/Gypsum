@@ -553,7 +553,7 @@ void say(mapping subw,string|array msg,mixed ... args)
 	int wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 	string wrapindent = persist["window/wrapindent"] || "";
 	int pos=0;
-	if (wrap) for (int i=2;i<sizeof(msg);i+=2)
+	if (persist["window/wrap "]) for (int i=2;i<sizeof(msg);i+=2)
 	{
 		int end=pos+sizeof(msg[i]);
 		if (end<=wrap) {pos=end; continue;}
