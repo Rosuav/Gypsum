@@ -1413,6 +1413,26 @@ class establish_connection(string hostname,int port,function callback)
 	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set.
 }
 
+int monitorid;
+void monitorthread(object thrd)
+{
+	int self = Thread.this_thread()->id_number();
+	monitorid = self;
+	while (monitorid == self)
+	{
+		sleep(1);
+		array bt = thrd->backtrace();
+		object frm = bt[-1];
+		werror("Monitor: %s:%d -> %O\n", frm[0], frm[1], frm[2]);
+	}
+}
+
+int monitor()
+{
+	Thread.Thread(monitorthread, Thread.this_thread());
+	werror("Monitoring\n");
+}
+
 #if constant(Protocols.HTTP.do_async_method)
 void _chkqueue()
 {
