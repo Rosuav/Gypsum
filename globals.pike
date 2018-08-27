@@ -713,7 +713,7 @@ class configdlg
 						,0,0,0)
 					)
 				)
-				->add(win->buttonbox=GTK2.HbuttonBox()->pack_end(stock_close(),0,0,0))
+				->pack_end(win->buttonbox=GTK2.HbuttonBox()->pack_end(stock_close(), 0, 0, 0), 0, 0, 0)
 			);
 		win->sel=win->list->get_selection(); win->sel->select_iter(win->new_iter||ls->get_iter_first()); sig_sel_changed();
 		::makewindow();
