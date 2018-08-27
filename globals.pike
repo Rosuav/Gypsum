@@ -697,10 +697,11 @@ class configdlg
 		win->mainwindow=GTK2.Window(windowprops)
 			->add(GTK2.Vbox(0,10)
 				->add(GTK2.Hbox(0,5)
-					->add(win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.
-						->append_column(GTK2.TreeViewColumn("Item",GTK2.CellRendererText(),"text",0))
-						->append_column(GTK2.TreeViewColumn("",GTK2.CellRendererText(),"text",1))
-					)
+					->add(GTK2.ScrolledWindow()->add(
+						win->list=GTK2.TreeView(ls) //All I want is a listbox. This feels like *such* overkill. Oh well.
+							->append_column(GTK2.TreeViewColumn("Item",GTK2.CellRendererText(),"text",0))
+							->append_column(GTK2.TreeViewColumn("",GTK2.CellRendererText(),"text",1))
+					)->set_policy(GTK2.POLICY_NEVER, GTK2.POLICY_AUTOMATIC))
 					->add(GTK2.Vbox(0,0)
 						->add(make_content())
 						->pack_end(
