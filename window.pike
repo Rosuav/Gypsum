@@ -977,14 +977,18 @@ void enterpressed(mapping subw,string|void cmd)
 		if (!subw->passwordmode)
 		{
 			//Undocumented feature. TODO: Add an advanced option.
-			if (sizeof(cmd) > persist["window/histignoreshort"] &&
-				(!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1]))
-					subw->cmdhist+=({cmd});
 			int inputcol=persist["window/inputcol"]; if (undefinedp(inputcol)) inputcol=6;
 			say(subw,subw->prompt+({inputcol,cmd}));
 		}
 		else subw->lines+=({subw->prompt});
 	}
+	// Moved this outside of disable/password block to save input while keeping the hide input option viable.
+	if (!sub->passwordmode)
+		{
+			if (sizeof(cmd) > persist["window/histignoreshort"] &&
+				(!sizeof(subw->cmdhist) || cmd!=subw->cmdhist[-1]))
+					subw->cmdhist+=({cmd});
+		}
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself; it's execcommand's job to remove it.
 	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page size");
 	if (has_prefix(cmd,"//")) cmd=cmd[1..];
