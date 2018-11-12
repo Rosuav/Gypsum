@@ -1300,6 +1300,12 @@ class charsheet_npc
 
 int output(mapping(string:mixed) subw,string line)
 {
+	if (sscanf(line,"===> URL: %s", string url))
+	{
+		//Used for the battle grid
+		invoke_browser(url);
+		return 0;
+	}
 	if (sscanf(line,"===> Charsheet @%s <===",string acct))
 	{
 		subw->charsheet_eax=""; subw->charsheet_acct=acct;
