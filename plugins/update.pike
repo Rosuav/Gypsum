@@ -273,6 +273,8 @@ void create(string name)
 #else
 //Stand-alone usage: '/update zip' but with minimal dependencies
 //Ideally, this will work even if startup is failing.
+//Is there any way to fetch this without HTTPS? Windows systems seem to have some trouble with
+//downloads, and I have no idea what the cause is.
 mapping G=([]);
 void say(mapping subw,mixed ... args) {write(@args); write("\n");}
 void process(string all,mapping subw) {exit(0,"Update complete [%d].\n",simulate);}
