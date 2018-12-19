@@ -67,7 +67,7 @@ int output(mapping(string:mixed) subw,string line)
 		updstatus();
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
-		if (sscanf(replace(line,({" ",","}),""),type+":%d%s",int val,string after)==2 && after=="")
+		if (sscanf(replace(line, ",", ""), "%*[ ]" + type + ": %d", int val) == 2)
 			persist["wealth/"+type]=val;
 }
 
