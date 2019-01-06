@@ -20,6 +20,7 @@ int process(string param, mapping(string:mixed) subw)
 	ssl->connect();
 	subw->connection->sock = ssl;
 	say(subw, "%% Connection is now encrypted.");
+	//To see certs: /x subw->connection->sock->get_peer_certificates()
 	#else
 	say(subw, "%% SSL not available");
 	#endif
