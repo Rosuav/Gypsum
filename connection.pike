@@ -215,6 +215,19 @@ void ansiread(mapping conn,string data,int end_of_block)
 						case 3..9: break; //Unsupported but recognized codes eg blink
 						case 30..37: conn->fg=params[p]-30; break;
 						case 40..47: conn->bg=params[p]-40; break;
+						case 38: {string dest = "fg"; //fall-through
+						case 48: switch (params[++p]) //256-color and 24-bit color codes
+						{
+							case 5: //256-color
+								conn[dest || "bg"] = params[++p];
+								break;
+							case 2: //24-bit color (unsupported)
+								int r = params[++p];
+								int g = params[++p];
+								int b = params[++p];
+								break;
+						}}
+						break;
 						default: if (!conn["unknown_ansi_"+params[p]+"m"]) //Report unrecognized ANSI codes (once)
 						{
 							conn["unknown_ansi_"+params[p]+"m"]=1;

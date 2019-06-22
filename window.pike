@@ -680,7 +680,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg,int|void
 		if (txt==word)
 		{
 			//If the highlight is the whole string, change background color and fall through.
-			bg = colors[info->bgcol||13];
+			bg = colorval(info->bgcol || 13);
 			break;
 		}
 		//Otherwise, fracture the string and paint the three parts separately.
@@ -695,7 +695,7 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg,int|void
 		{
 			array pieces = txt/word;
 			painttext(state,pieces[0],fg,bg); //Normal text before the keyword
-			painttext(state,word,fg,colors[info->bgcol||13]); //Different background color for the keyword
+			painttext(state,word,fg,colorval(info->bgcol||13)); //Different background color for the keyword
 			painttext(state,pieces[1..]*word,fg,bg); //And normal text afterward.
 			return;
 		}
@@ -724,7 +724,25 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg,int|void
 
 GTK2.GdkColor colorval(int colorcode)
 {
-	return colors[colorcode & 15];
+	if (colorcode >= sizeof(colors)) return colors[7]; //Shouldn't happen
+	if (!colors[colorcode])
+	{
+		//assert colorcode >= 16; //The first sixteen will already be entered
+		if (colorcode < 232)
+		{
+			int r = (colorcode - 16) / 36;
+			int g = ((colorcode - 16) / 6) % 6;
+			int b = (colorcode - 16) % 6;
+			array(int) intensity = ({0x00, 0x66, 0x88, 0xBB, 0xDD, 0xFF});
+			colors[colorcode] = GTK2.GdkColor(intensity[r], intensity[g], intensity[b]);
+		}
+		else
+		{
+			int grey = (colorcode - 232) * 256 / 24;
+			colors[colorcode] = GTK2.GdkColor(grey, grey, grey);
+		}
+	}
+	return colors[colorcode];
 }
 
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
@@ -1901,6 +1919,7 @@ void create(string name)
 		}
 	}
 	if (!win->colors) win->colors = Function.splice_call(win->color_defs[*],GTK2.GdkColor); //Note that the @ short form can't replace splice_call here.
+	if (sizeof(win->colors) < 256) win->colors += ({0}) * (256 - sizeof(win->colors)); //Pad it out; the empty slots will be filled in as needed.
 	colors=win->colors;
 
 	/* Not quite doing what I want, but it's a start...
@@ -1972,7 +1991,7 @@ void save_html_response(object dlg,int btn)
 	Stdio.File f=Stdio.File(fn,"wct");
 	f->write("<!doctype html><html><head><meta charset=\"UTF-8\"><title>Gypsum session - Save as HTML</title><style type=\"text/css\">\n");
 	//Write out styles, foreground and background
-	foreach (colors;int i;object col) f->write(sprintf("%%{.%%sg%d {%%scolor: #%02X%02X%02X}\n%%}",i,@col->rgb()),({({"f",""}),({"b","background-"})}));
+	foreach (colors[..16];int i;object col) f->write(sprintf("%%{.%%sg%d {%%scolor: #%02X%02X%02X}\n%%}",i,@col->rgb()),({({"f",""}),({"b","background-"})}));
 	f->write("</style></head><body class=bg0><hr><pre><code>\n");
 	foreach (subw->lines;int lineno;array line)
 	{
