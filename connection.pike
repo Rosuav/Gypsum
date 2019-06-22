@@ -207,18 +207,18 @@ void ansiread(mapping conn,string data,int end_of_block)
 				if (!sizeof(params)) params = ({0}); //"\e[m" is equivalent to "\e[0m"
 				switch (ansi[i]) //See if we understand the command.
 				{
-					case 'm': foreach (params,int|string param) if (intp(param)) switch (param)
+					case 'm': for (int p = 0; p < sizeof(params); ++p) if (intp(params[p])) switch (params[p])
 					{
 						case 0: conn->bold=0; conn->bg=0; conn->fg=7; break;
 						case 1: conn->bold=8; break;
 						case 2: conn->bold=0; break;
 						case 3..9: break; //Unsupported but recognized codes eg blink
-						case 30..37: conn->fg=param-30; break;
-						case 40..47: conn->bg=param-40; break;
-						default: if (!conn["unknown_ansi_"+param+"m"]) //Report unrecognized ANSI codes (once)
+						case 30..37: conn->fg=params[p]-30; break;
+						case 40..47: conn->bg=params[p]-40; break;
+						default: if (!conn["unknown_ansi_"+params[p]+"m"]) //Report unrecognized ANSI codes (once)
 						{
-							conn["unknown_ansi_"+param+"m"]=1;
-							say(conn->display,"%%%% %O produced unknown ANSI code \\e[%dm\n",conn->worldname,param);
+							conn["unknown_ansi_"+params[p]+"m"]=1;
+							say(conn->display,"%%%% %O produced unknown ANSI code \\e[%dm\n",conn->worldname,params[p]);
 						}
 					}
 					conn->curmsg[-1]=conn->curmsg[-1];
