@@ -722,6 +722,11 @@ void painttext(array state,string txt,GTK2.GdkColor fg,GTK2.GdkColor bg,int|void
 	state[2]+=(sz->x+sz->width)/1024;
 }
 
+GTK2.GdkColor colorval(int colorcode)
+{
+	return colors[colorcode & 15];
+}
+
 //Paint one line of text at the given 'y'. Will highlight from hlstart to hlend with inverted fg/bg colors.
 void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) line,int y,int hlstart,int hlend)
 {
@@ -730,7 +735,7 @@ void paintline(GTK2.DrawingArea display,GTK2.GdkGC gc,array(mapping|int|string) 
 	{
 		GTK2.GdkColor fg,bg;
 		if (monochrome) {fg=colors[0]; bg=colors[15];} //Override black on white for pure readability
-		else {fg=colors[line[i]&15]; bg=colors[(line[i]>>16)&15];} //Normal
+		else {fg = colorval(line[i] & 65535); bg = colorval(line[i] >> 16);} //Normal
 		string txt=replace(line[i+1],"\n","\\n");
 		if (hlend<0 || hlstart>=sizeof(txt)) //No highlight in this section.
 			painttext(state,txt,fg,bg);
