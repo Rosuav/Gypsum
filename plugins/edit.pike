@@ -35,7 +35,7 @@ class editor(mapping(string:mixed) subw,string initial)
 	mapping(string:string) params;
 	constant flags=({"Show line numbers", "Auto indent", "Smart Home/End"});
 
-	void create()
+	protected void create()
 	{
 		//Parameters, not part of the editable.
 		//Currently-recognized parameters:
@@ -232,4 +232,4 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-void create(string name) {::create(name);}
+protected void create(string name) {::create(name);}

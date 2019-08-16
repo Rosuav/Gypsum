@@ -14,7 +14,7 @@ array(string) needupdate=({});
 class mymaster /* Oh, my master! */
 {
 	inherit "/master";
-	void create()
+	protected void create()
 	{
 		//Copy from normal master
 		object old_master=master();
@@ -92,7 +92,7 @@ will pop up a message and not actually mark anything for rebuild. Note that
 advanced users are welcome to "/update globals" to attempt a full update in
 spite of this flag, but there's no warranty. */
 int breaker = 1;
-void create(string|void name)
+protected void create(string|void name)
 {
 	if (name!="gypsum.pike") return; //Normal startup - do nothing. Do these checks only if we're '/update'd.
 	object G=all_constants()["G"]; //Retrieve the original global object. Note that we can't actually replace it, but we can inject replacement attributes.

@@ -66,7 +66,7 @@ constant menu_accel_key='f';
 constant menu_accel_mods=GTK2.GDK_CONTROL_MASK;
 void menu_clicked() {statustxt->ef->grab_focus();}
 
-void create(string name)
+protected void create(string name)
 {
 	statustxt->tooltip="Ctrl-F to search";
 	::create(name);

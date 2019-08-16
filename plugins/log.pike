@@ -109,4 +109,4 @@ void menu_clicked()
 	say(0,"%% (TODO: Have a file dialog on this menu item.)");
 }
 
-void create(string name) {::create(name);}
+protected void create(string name) {::create(name);}

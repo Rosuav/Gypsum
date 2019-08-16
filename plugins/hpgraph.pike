@@ -80,7 +80,7 @@ void tick()
 class config
 {
 	inherit window;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	array(GTK2.Widget) color(array(string) names)
 	{
@@ -154,7 +154,7 @@ void mousedown(object self,object ev)
 	if (ev->type=="2button_press") config();
 }
 
-void create(string name)
+protected void create(string name)
 {
 	::create(name);
 	//statustxt->tooltip="Graphical HP display - double-click to configure";

@@ -6,7 +6,7 @@ class menu_clicked
 {
 	inherit window;
 	constant is_subwindow=0;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	multiset(int) no_recursion = (<>);
 	void add_to_store(mixed thing, string name, GTK2.TreeIter parent)

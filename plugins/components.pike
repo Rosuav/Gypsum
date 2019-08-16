@@ -83,4 +83,4 @@ void sig_mainwindow_button_press_event(object self,object ev)
 
 int closewindow() {return hidewindow();}
 
-void create(string name) {::create(name); showcounts();}
+protected void create(string name) {::create(name); showcounts();}

@@ -81,7 +81,7 @@ class aliasdlg(string persist_key)
 	inherit configdlg;
 	constant elements=({"kwd:Alias","Expansion","'Use %* to expand to everything typed\nafter the alias name."});
 	mapping(string:mixed) windowprops=(["modal":1]);
-	void create(string title) {windowprops->title=title; ::create();}
+	protected void create(string title) {windowprops->title=title; ::create();}
 }
 
 constant menu_label="Aliases - global";
@@ -96,4 +96,4 @@ object hack=class {inherit plugin_menu; constant menu_label="Aliases - this worl
 	aliasdlg("aliases/simple/"+subw->world,"Configure aliases for "+subw->world);
 }}("alias_more");
 
-void create(string name) {::create(name);}
+protected void create(string name) {::create(name);}

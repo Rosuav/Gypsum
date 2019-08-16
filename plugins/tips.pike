@@ -71,7 +71,7 @@ constant menu_label="_Tips";
 class menu_clicked
 {
 	inherit window;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	void makewindow()
 	{

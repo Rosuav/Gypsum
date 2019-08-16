@@ -225,7 +225,7 @@ int process(string param,mapping(string:mixed) subw)
 	return 1;
 }
 
-void create(string name)
+protected void create(string name)
 {
 	::create(name);
 	showtimes();

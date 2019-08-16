@@ -5,7 +5,7 @@
  * an underscore, however, is deemed private. It can still be referenced externally,
  * but will not be added as a constant.
  */
-void create(string n)
+protected void create(string n)
 {
 	foreach (indices(this),string f) if (f!="create" && f[0]!='_') add_gypsum_constant(f,this[f]);
 	//TODO: Have some way to 'declare' these down below, rather than
@@ -38,7 +38,7 @@ typedef string(0..127) ascii;
 //callable that can be passed around pretty much like a function.
 class bouncer(string ... keys)
 {
-	mixed `()(mixed ... args)
+	protected mixed `()(mixed ... args)
 	{
 		mixed func=G->G; foreach (keys,string k) func=func[k];
 		return func(@args);
@@ -106,9 +106,9 @@ int wordchar(int ch)
 class gtksignal(object obj)
 {
 	int signal_id;
-	void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
-	void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
-	void _destruct() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
+	protected void create(mixed ... args) {if (obj) signal_id=obj->signal_connect(@args);}
+	protected void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
+	protected void _destruct() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
 }
 
 class MessageBox
@@ -117,7 +117,7 @@ class MessageBox
 	function callback;
 
 	//flags: Normally 0. type: 0 for info, else GTK2.MESSAGE_ERROR or similar. buttons: GTK2.BUTTONS_OK etc.
-	void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb,mixed|void cb_arg)
+	protected void create(int flags,int type,int buttons,string message,GTK2.Window parent,function|void cb,mixed|void cb_arg)
 	{
 		callback=cb;
 		#if constant(COMPAT_MSGDLG)
@@ -144,7 +144,7 @@ class MessageBox
 class confirm
 {
 	inherit MessageBox;
-	void create(int flags,string message,GTK2.Window parent,function cb,mixed|void cb_arg)
+	protected void create(int flags,string message,GTK2.Window parent,function cb,mixed|void cb_arg)
 	{
 		if (!parent) {cb(cb_arg); return;}
 		::create(flags,GTK2.MESSAGE_WARNING,GTK2.BUTTONS_OK_CANCEL,message,parent,cb,cb_arg);
@@ -206,7 +206,7 @@ class MultiLineEntryField
 class SelectBox(array(string) strings)
 {
 	inherit GTK2.ComboBox;
-	void create() {::create(""); foreach (strings,string str) append_text(str);}
+	protected void create() {::create(""); foreach (strings,string str) append_text(str);}
 	this_program set_text(string txt)
 	{
 		set_active(search(strings,txt));
@@ -272,7 +272,7 @@ class command
 {
 	constant provides="slash command";
 	int process(string param,mapping(string:mixed) subw) {}
-	void create(string name)
+	protected void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) G->G->commands[name]=process;
@@ -300,7 +300,7 @@ class hook
 	int switchtabs(mapping(string:mixed) subw) { }
 
 	string hookname;
-	void create(string name)
+	protected void create(string name)
 	{
 		//Slightly different from the others in that it needs to retain its hookname
 		//There's a lot of similarity in these base inheritables. Is it worth trying
@@ -332,7 +332,7 @@ class plugin_menu
 	//End provide.
 
 	mapping(string:mixed) mi=([]);
-	void create(string|void name)
+	protected void create(string|void name)
 	{
 		if (!name) return;
 		sscanf(explode_path(name)[-1],"%s.pike",name);
@@ -468,7 +468,7 @@ class window
 			}
 		}
 	}
-	void create(string|void name)
+	protected void create(string|void name)
 	{
 		if (name) sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) {if (G->G->windows[name]) win=G->G->windows[name]; else G->G->windows[name]=win;}
@@ -577,7 +577,7 @@ class configdlg
 	mapping defaults = ([]); //TODO: Figure out if any usage of defaults needs the value to be 'put back', or not be a string, or anything.
 	string last_selected; //Set when something is loaded. Unless the user renames the thing, will be equal to win->kwd->get_text().
 
-	void create(string|void name)
+	protected void create(string|void name)
 	{
 		if (persist_key && !items) items=persist->setdefault(persist_key,([]));
 		::create(!is_subwindow && name); //Unless we're a main window, pass on no args to the window constructor - all configdlgs are independent
@@ -903,7 +903,7 @@ class statustext
 	constant provides="status bar entry";
 	mapping(string:mixed) statustxt=([]);
 	constant fixedwidth = 0; //Set to 1 to ensure that the width never shrinks. (Requires the default makestatus to be called.)
-	void create(string name)
+	protected void create(string name)
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (name) {if (G->G->statustexts[name]) statustxt=G->G->statustexts[name]; else G->G->statustexts[name]=statustxt;}
@@ -944,7 +944,7 @@ class statusevent
 {
 	inherit statustext;
 	constant provides=0;
-	void create(string name)
+	protected void create(string name)
 	{
 		::create(name);
 		statustxt->signals=({gtksignal(statustxt->evbox,"button_press_event",mousedown)});
@@ -978,7 +978,7 @@ class tabstatus(string name)
 	constant provides="per-tab status";
 	//Set a tooltip globally or per-subw.
 	string tooltip="";
-	void create()
+	protected void create()
 	{
 		sscanf(explode_path(name)[-1],"%s.pike",name);
 		if (!name) return; //Must have a name.
@@ -1218,7 +1218,7 @@ string hex(int x,int|void digits) {return sprintf("%0*x",digits,x);}
 class Hex
 {
 	inherit Gmp.mpz;
-	string _sprintf(int type,mapping|void params) {return sprintf(type=='O'?"0x%*x":(string)({'%','*',type}),params||([]),(int)mpz::this);}
+	protected string _sprintf(int type,mapping|void params) {return sprintf(type=='O'?"0x%*x":(string)({'%','*',type}),params||([]),(int)mpz::this);}
 }
 
 //Similarly, show a time value.
@@ -1226,7 +1226,7 @@ class Time
 {
 	inherit Gmp.mpz;
 	//Note that there's something odd about calling format_time(val) here, so I've simplified and inlined it.
-	string _sprintf(int type,mapping|void params) {int val=(int)mpz::this; return type=='O' ? sprintf("%02d:%02d:%02d",val/3600,(val/60)%60,val%60) : ::_sprintf(type,params);}
+	protected string _sprintf(int type,mapping|void params) {int val=(int)mpz::this; return type=='O' ? sprintf("%02d:%02d:%02d",val/3600,(val/60)%60,val%60) : ::_sprintf(type,params);}
 }
 
 //Probe a plugin and return a program usable for retrieving constants, but not
@@ -1314,7 +1314,7 @@ class DNS(string hostname,function callback)
 		callback(this,@cbargs);
 	}
 
-	void create(mixed ... args)
+	protected void create(mixed ... args)
 	{
 		cbargs=args; //See above, can't be done the clean way.
 		//TODO: What should be done if connection/protocol changes and we
@@ -1343,14 +1343,14 @@ class DNS(string hostname,function callback)
 		if (prot!="4") {++pending; cli->do_query(hostname, Protocols.DNS.C_IN, Protocols.DNS.T_AAAA, dnsresponse);}
 	}
 
-	string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
+	protected string _sprintf(int type) {return type=='O' && sprintf("DNS(%O -> %d/({%{%O,%}}))",hostname,pending,ips);}
 
 	//Pike 8.1 doesn't seem to automatically close the DNS client when it runs out
 	//of references - probably has a circular ref with a callback or something. So
 	//we explicitly close it once this wrapper isn't needed any more, thus purging
 	//the UDP sockets that would otherwise accumulate.
-	void destroy() {cli->close();}
-	void _destruct() {cli->close();}
+	protected void destroy() {cli->close();}
+	protected void _destruct() {cli->close();}
 }
 
 //Establish a socket connection to a specified host/port
@@ -1411,7 +1411,7 @@ class establish_connection(string hostname,int port,function callback)
 		}
 	}
 
-	void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set.
+	protected void create(mixed ... args) {cbargs=args; dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set.
 }
 
 int monitorid;

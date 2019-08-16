@@ -264,7 +264,7 @@ int unload(string param,mapping(string:mixed) subw,object|void keepme)
 constant menu_label="Update Gypsum";
 void menu_clicked() {process("",G->G->window->current_subw());}
 
-void create(string name)
+protected void create(string name)
 {
 	::create(name);
 	set_menu_text(menu_label+" ("+install_mode+")");

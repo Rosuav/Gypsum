@@ -47,7 +47,7 @@ int output(mapping(string:mixed) subw,string line)
 	};
 }
 
-void create(string name)
+protected void create(string name)
 {
 	catch //If errors, no triggers, no problem.
 	{

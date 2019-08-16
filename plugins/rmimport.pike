@@ -35,7 +35,7 @@ class menu_clicked
 {
 	inherit window;
 
-	void create() {::create("rmimport");}
+	protected void create() {::create("rmimport");}
 
 	void makewindow()
 	{

@@ -79,8 +79,8 @@ class menu_clicked
 {
 	inherit movablewindow;
 	constant is_subwindow=0;
-	void create() {::create();}
-	void destroy() {lastchals[win->lastchal]=0;}
+	protected void create() {::create();}
+	protected void destroy() {lastchals[win->lastchal]=0;}
 
 	int currow=0,curcol=0;
 	array(array(GTK2.Widget)) rows=({({ })}),cols=({({ })});
@@ -160,7 +160,7 @@ class menu_clicked
 	}
 }
 
-void create(string name)
+protected void create(string name)
 {
 	if (!G->G->cluedolastchals) G->G->cluedolastchals=lastchals=(<>);
 	::create(name);

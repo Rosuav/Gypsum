@@ -521,7 +521,7 @@ void complete_connection(string|Stdio.File|int(0..0) status, mapping conn)
 	G->G->sockets[conn->sock]=1;
 }
 
-void create(string name)
+protected void create(string name)
 {
 	G->G->connection=this;
 	if (G->G->sockets) indices(G->G->sockets)->set_callbacks(sockread,sockwrite,sockclosed);

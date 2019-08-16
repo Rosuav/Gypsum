@@ -248,7 +248,7 @@ class highlightwords(mixed|void selectme)
 	constant elements = ({"kwd:Word", "@#bgcol:Bg color", enumcolors, "'lastchange:", "+descr:Description",
 		("'Any words listed here will be highlighted any time they occur"
 		" in the display. You can add notes to any word/phrase in this way.")});
-	void create() {::create();}
+	protected void create() {::create();}
 	void save_content(mapping(string:mixed) info)
 	{
 		win->lastchange->set_text(ctime(info->lastchange=time())[..<1]);
@@ -1323,7 +1323,7 @@ class colorsdlg
 	constant ints=({"r","g","b"});
 	constant allow_new=0,allow_delete=0,allow_rename=0;
 	mapping(string:mixed) windowprops=(["title":"Color definitions"]);
-	void create()
+	protected void create()
 	{
 		items=([]);
 		foreach (mainwin->color_defs;int i;[int r,int g,int b]) items[enumcolors[i]]=(["r":r,"g":g,"b":b]);
@@ -1373,7 +1373,7 @@ constant options_dictcfg = "_Dictionary";
 class dictcfg
 {
 	inherit window;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	void makewindow()
 	{
@@ -1520,7 +1520,7 @@ constant help_aboutdlg="_About";
 class aboutdlg
 {
 	inherit window;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	void makewindow()
 	{
@@ -1550,7 +1550,7 @@ constant options_promptsdlg="_Prompts"; //Should this be buried away behind Adva
 class promptsdlg
 {
 	inherit window;
-	void create() {::create();}
+	protected void create() {::create();}
 
 	string wrap(string txt)
 	{
@@ -1755,7 +1755,7 @@ class configure_plugins
 	constant persist_key="plugins/status";
 	constant bools=({"active"});
 
-	void create() {discover_plugins("plugins"); ::create();}
+	protected void create() {discover_plugins("plugins"); ::create();}
 
 	GTK2.Widget make_content()
 	{
@@ -1892,7 +1892,7 @@ void makewindow()
 	::makewindow();
 }
 
-void create(string name)
+protected void create(string name)
 {
 	add_gypsum_constant("say",say);
 	add_gypsum_constant("build",build);

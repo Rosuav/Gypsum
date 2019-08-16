@@ -40,7 +40,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	mapping(string:array(string)) class_skills=([]); //Parsed from the primary skill table - which skills are class skills for each class?
 
 	int errors=0;
-	void create()
+	protected void create()
 	{
 		if (!charsheets[owner]) charsheets[owner]=(<>);
 		charsheets[owner][this]=1;
@@ -613,7 +613,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		inherit window;
 		int large; //0 if regular token, 1 if large
 		string minstrelhall; //IP address of Minstrel Hall's server - looked up once instead of per-image
-		void create(object btn)
+		protected void create(object btn)
 		{
 			large = (btn == charsheet::win->pick_large_token);
 			::create();
@@ -699,7 +699,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 		//Force everything to be cleaned up on window close
 		void closewindow() {::closewindow(); destruct();}
-		void destroy()
+		protected void destroy()
 		{
 			destruct(win->blank);
 			if (win->images)
@@ -709,7 +709,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				destruct(values(win->bmp)[*]);
 			}
 		}
-		void _destruct() {destroy();}
+		protected void _destruct() {destroy();}
 	}
 	program sig_pick_large_token_clicked = sig_pick_token_clicked;
 
@@ -1005,7 +1005,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	{
 		inherit window;
 		string kwd;
-		void create()
+		protected void create()
 		{
 			kwd = ef_kwd[ef];
 			if (!kwd) {MessageBox(0,0,GTK2.BUTTONS_OK,"Unable to store notes there",charsheet::win->mainwindow); return;}
@@ -1040,7 +1040,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	class sig_tnl_clicked
 	{
 		inherit window;
-		void create() {::create();}
+		protected void create() {::create();}
 
 		//Note that the BAB and save arrays start with a 0 entry for having zero levels in that class.
 		//This allows notations involving the difference between the current level and the previous.
@@ -1146,7 +1146,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		}
 
 		//Magic object that can sprintf as anything
-		object unknown=class{string _sprintf(int c) {return "??";}}();
+		object unknown=class{protected string _sprintf(int c) {return "??";}}();
 		void sig_ddcb_class_changed()
 		{
 			string cls=win->ddcb_class->get_text();
@@ -1340,7 +1340,7 @@ int output(mapping(string:mixed) subw,string line)
 	}
 }
 
-void create(string name)
+protected void create(string name)
 {
 	::create(name);
 	if (!G->G->charsheets) G->G->charsheets=([]);

@@ -240,7 +240,7 @@ constant menu_label="URL shortener";
 class menu_clicked
 {
 	inherit window;
-	void create() {::create();} //No args passed on
+	protected void create() {::create();} //No args passed on
 	void makewindow()
 	{
 		win->mainwindow=GTK2.Window((["title":"Configure URL shortener"]))
@@ -263,4 +263,4 @@ class menu_clicked
 	}
 }
 
-void create(string name) {::create(name);}
+protected void create(string name) {::create(name);}

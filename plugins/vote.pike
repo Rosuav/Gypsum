@@ -60,7 +60,7 @@ constant menu_label="Vote for Threshold RPG";
 void menu_clicked() {vote();}
 void statusbar_double_click() {vote();}
 
-void create(string name)
+protected void create(string name)
 {
 	statustxt->tooltip="Threshold RPG vote assistant";
 	::create(name);

@@ -123,7 +123,7 @@ class menu_clicked
 	inherit window;
 	//Previously the zones were separated by spaces, but now they're separated by newlines. Accept either.
 	array(string) zones=replace(persist["threshtime/zones"]||"local America/New_York UTC Thresh","\n"," ")/" "-({""});
-	void create() {::create();}
+	protected void create() {::create();}
 
 	GTK2.Entry ef(string name,int|void width)
 	{
@@ -190,7 +190,7 @@ class menu_clicked
 	class sig_config_clicked()
 	{
 		inherit window;
-		void create() {::create();}
+		protected void create() {::create();}
 
 		void makewindow()
 		{
@@ -271,7 +271,7 @@ class menu_clicked
 	{
 		inherit window;
 		string zone;
-		void create() {::create();}
+		protected void create() {::create();}
 		void makewindow()
 		{
 			array z = zones - ({"thresh"}); //The picker uses the first non-Thresh time you have selected ("local", by default)
@@ -337,7 +337,7 @@ class menu_clicked
 
 void statusbar_double_click() {menu_clicked();} //Double-click on status bar to show the conversion window
 
-void create(string name)
+protected void create(string name)
 {
 	if (!persist["threshtime/sync_rl"]) {persist["threshtime/sync_rl"]=1399531774; persist["threshtime/sync_th"]=205512058;}
 	statustxt->tooltip="Current date/time - double-click for converter";

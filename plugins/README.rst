@@ -500,7 +500,7 @@ Your create() function is called whenever the plugin is initially loaded
 or updated; it must call ::create to ensure that its parents are called.
 A minimal create function is::
 
-	void create(string name) {::create(name);}
+	protected void create(string name) {::create(name);}
 
 Having this for a single-mode plugin is not a problem, so simply placing it in
 every plugin you create is safe. Note that additional initialization code in

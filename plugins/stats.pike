@@ -72,4 +72,4 @@ class statusbar_double_click
 }
 
 
-void create(string name) {::create(name);}
+protected void create(string name) {::create(name);}

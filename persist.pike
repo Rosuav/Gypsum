@@ -66,7 +66,7 @@ object persist=class(string savefn)
 	mapping(string:mixed) data=([]);
 	int saving;
 
-	void create()
+	protected void create()
 	{
 		catch //Ignore any errors, just have no saved data.
 		{
@@ -76,9 +76,9 @@ object persist=class(string savefn)
 	}
 
 	//Retrievals and mutations work as normal; mutations trigger a save().
-	mixed `[](string idx) {return data[idx];}
-	mixed `[]=(string idx,mixed val) {save(); if (catch {Standards.JSON.encode(val);}) werror("** WARNING ** Non-JSONable data stored in persist[%O]!\n",idx); return data[idx]=val;}
-	mixed _m_delete(string idx) {save(); return m_delete(data,idx);}
+	protected mixed `[](string idx) {return data[idx];}
+	protected mixed `[]=(string idx,mixed val) {save(); if (catch {Standards.JSON.encode(val);}) werror("** WARNING ** Non-JSONable data stored in persist[%O]!\n",idx); return data[idx]=val;}
+	protected mixed _m_delete(string idx) {save(); return m_delete(data,idx);}
 
 	//Like the Python dict method of the same name, will save a default back in if it wasn't defined.
 	//Best used with simple defaults such as an empty mapping/array, or a string. Ensures that the
@@ -128,7 +128,7 @@ object persist=class(string savefn)
 	}
 }(".gypsumrc"); //Save file name. May be worth making this configurable somehow. See notes above.
 
-void create()
+protected void create()
 {
 	add_gypsum_constant("persist",persist);
 }

@@ -130,7 +130,7 @@ void menu_clicked()
 }
 
 //Always provide this function if you inherit more than one mode.
-void create(string name)
+protected void create(string name)
 {
 	statustxt->tooltip = "See demo.pike for more information";
 	::create(name);
