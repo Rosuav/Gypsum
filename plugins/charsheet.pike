@@ -372,10 +372,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				)
 				->pack_start(GTK2.Vbox(0,10)
 					->pack_start(GTK2.Frame("Body armor")->add(GTK2.Vbox(0,10)
-						->add(GTK2.Hbox(0,0)
-							->add(GTK2.Label("Name"))->add(ef("bodyarmor"))
-							->add(GTK2.Label("Type"))->add(select("bodyarmor_type",({"Light","Medium","Heavy"})))
-						)
+						->add(two_column(({
+							"Name", ef("bodyarmor"),
+							"Type", select("bodyarmor_type",({"Light","Medium","Heavy"})),
+						})))
 						->add(GTK2.Hbox(0,0)
 							->add(GTK2.Label("AC"))->add(num("bodyarmor_ac"))
 							->add(GTK2.Label("Max DEX"))->add(ef("DEX_max"))
