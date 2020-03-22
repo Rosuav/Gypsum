@@ -216,7 +216,7 @@ void subw_scr_changed(object self,mapping subw)
 {
 	if (paused) return;
 	float upper=self->get_property("upper");
-	self->set_value(upper-self->get_property("page size"));
+	self->set_value(upper-self->get_property("page-size"));
 }
 
 void subw_b4_ef_paste_clipboard(object self,mapping subw)
@@ -265,7 +265,7 @@ class highlightwords(mixed|void selectme)
 //Convert a y coordinate into a line number - the first (and easiest) step of point_to_char()
 int point_to_line(mapping subw,int y)
 {
-	return limit(0,(y-(int)subw->scr->get_property("page size"))/subw->lineheight,sizeof(subw->lines)+1);
+	return limit(0,(y-(int)subw->scr->get_property("page-size"))/subw->lineheight,sizeof(subw->lines)+1);
 }
 
 /* To consider:
@@ -351,13 +351,13 @@ void highlight(mapping subw,int line1,int col1,int line2,int col2)
 		//CJA 20160511: Is this still happening? I don't remember seeing it in three parts of forever.
 		int y1= min(subw->selstartline,subw->selendline)   *subw->lineheight;
 		int y2=(max(subw->selstartline,subw->selendline)+1)*subw->lineheight;
-		subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+		subw->display->queue_draw_area(0,subw->scr->get_property("page-size")+y1,1<<30,y2-y1);
 	}
 	if (line1==-1) {m_delete(subw,"selstartline"); subw->display->queue_draw(); return;} //Unhighlight (with a full redraw for safety)
 	subw->selstartline=line1; subw->selstartcol=col1; subw->selendline=line2; subw->selendcol=col2;
 	int y1= min(line1,line2)   *subw->lineheight;
 	int y2=(max(line1,line2)+1)*subw->lineheight;
-	subw->display->queue_draw_area(0,subw->scr->get_property("page size")+y1,1<<30,y2-y1);
+	subw->display->queue_draw_area(0,subw->scr->get_property("page-size")+y1,1<<30,y2-y1);
 }
 
 void subw_display_popup_menu()
@@ -481,7 +481,7 @@ void subw_display_motion_notify_event(object self,object ev,mapping subw)
 		subw->selendx = x;
 		highlight(subw,subw->selstartline,subw->selstartcol,line,col);
 	}
-	float low=subw->scr->get_value(),high=low+subw->scr->get_property("page size");
+	float low=subw->scr->get_value(),high=low+subw->scr->get_property("page-size");
 	if (ev->y<low) subw->autoscroll=low-ev->y;
 	else if (ev->y>high) subw->autoscroll=high-ev->y;
 	else subw->autoscroll=0;
@@ -492,7 +492,7 @@ void autoscroll(mapping subw)
 {
 	if (!subw->autoscroll || !subw->mouse_down) {m_delete(subw,"autoscroll_callout"); return;}
 	subw->autoscroll_callout=call_out(autoscroll,0.1,subw);
-	subw->scr->set_value(limit(0.0,subw->scr->get_value()-subw->autoscroll,subw->scr->get_property("upper")-subw->scr->get_property("page size")));
+	subw->scr->set_value(limit(0.0,subw->scr->get_value()-subw->autoscroll,subw->scr->get_property("upper")-subw->scr->get_property("page-size")));
 	//Optional: Trigger a mousemove with the mouse at its current location, to update highlight. Not a big deal if not (just a display oddity).
 }
 
@@ -645,7 +645,7 @@ void subw_display_configure_event(object self,object ev,mapping subw)
 
 void redraw(mapping subw)
 {
-	int height=(int)subw->scr->get_property("page size")+subw->lineheight*(sizeof(subw->lines)+1);
+	int height=(int)subw->scr->get_property("page-size")+subw->lineheight*(sizeof(subw->lines)+1);
 	if (height!=subw->totheight) subw->display->set_size_request(-1,subw->totheight=height);
 	if (subw==current_subw()) subw->activity=0;
 	//Check the current tab text before overwriting, to minimize flicker
@@ -825,7 +825,7 @@ int subw_display_expose_event(object self,object ev,mapping subw)
 	//System.Timer tm=System.Timer();
 	GTK2.GdkGC gc=GTK2.GdkGC(display);
 	//painttime+=tm->peek(); ++paintcount;
-	int y=(int)subw->scr->get_property("page size");
+	int y=(int)subw->scr->get_property("page-size");
 	int ssl=subw->selstartline,ssc=subw->selstartcol,sel=subw->selendline,sec=subw->selendcol;
 	int ssx=subw->selstartx, sex=subw->selendx; //This variable name is inevitable.
 	if (undefinedp(ssl)) ssl=sel=-1;
@@ -947,13 +947,13 @@ int subw_b4_ef_key_press_event(object self,array|object ev,mapping subw)
 				paused=1; statustxt->paused->set_text(pausedmsg);
 				return 1;
 			}
-			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page size"));
+			object scr=subw->scr; scr->set_value(scr->get_value()-scr->get_property("page-size"));
 			return 1;
 		}
 		case 0xFF56: //PgDn
 		{
 			object scr=subw->scr;
-			float pg=scr->get_property("page size");
+			float pg=scr->get_property("page-size");
 			if (ev->state&GTK2.GDK_CONTROL_MASK)
 			{
 				//Snap down to the bottom and unpause.
@@ -1012,7 +1012,7 @@ void enterpressed(mapping subw,string|void cmd)
 				subw->cmdhist+=({cmd});
 	}
 	subw->prompt[0]=([]); //Reset the info mapping (which gets timestamp and such) but keep the prompt itself; it's execcommand's job to remove it.
-	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page size");
+	subw->last_activity=subw->scr->get_property("upper")-subw->scr->get_property("page-size");
 	if (has_prefix(cmd,"//")) cmd=cmd[1..];
 	else if (has_prefix(cmd,"/"))
 	{

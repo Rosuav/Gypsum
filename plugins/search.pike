@@ -29,7 +29,7 @@ void find_string(string findme,mapping(string:mixed) subw,int from_scroll)
 		{
 			//Found!
 			object scr=subw->scr;
-			scr->set_value(scr->get_property("upper")-scr->get_property("page size")-subw->lineheight*(sizeof(subw->lines)-1-pos));
+			scr->set_value(scr->get_property("upper")-scr->get_property("page-size")-subw->lineheight*(sizeof(subw->lines)-1-pos));
 			subw->search_last=findme;
 			subw->search_pos=pos;
 			G->G->window->highlight(subw,pos,col,pos,col+sizeof(findme));
