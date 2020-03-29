@@ -73,7 +73,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		//recalculated in the order they were added, which may not always be perfect.
 		//Consider using C3 linearization on the graph of deps - if it fails, error out.
 		//Or use Kahn 1962: https://en.wikipedia.org/wiki/Topological_sorting
-		if (val=="0") val="";
+		if (val == "0" && !(<"DEX_max">)[kwd]) val = ""; //Hard-coded list of things that distinguish 0 from blank
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
@@ -341,8 +341,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
 							({
 								"10", num("natural_ac"), calc("bodyarmor_ac"), calc("shield_ac"),
-								//TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former.
-								//Not currently possible as DEX_max of 0 is transformed into blank.
+								//Distinguishes DEX_max=="" from DEX_max=="0", and doesn't cap the former.
 								calc("DEX_max == \"\" ? DEX_mod : min(DEX_mod, DEX_max)", "DEX_ac", "string"),
 								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
 								calc(#"(string)([
