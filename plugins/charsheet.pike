@@ -312,8 +312,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						//For each stat (eg "str"): ({"STR",ef("str"),ef("str_eq"),ef("str_tmp"),calc("(str+str_eq+str_tmp-10)/2")})
 						map(({"STR","DEX","CON","INT","WIS","CHA"}),lambda(string stat) {return ({
 							stat,num(stat),num(stat+"_eq"),rare(num(stat+"_tmp")),
-							//TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former. Not currently possible as DEX_max is just an integer.
-							calc(sprintf("min((%s+%<s_eq+%<s_tmp-10)/2,%<s_max||1000)",stat),stat+"_mod")
+							calc(sprintf("(%s+%<s_eq+%<s_tmp-10)/2",stat),stat+"_mod")
 						});})
 					)))
 					->add(GTK2.Vbox(0,10)
@@ -341,7 +340,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						->add(GTK2Table(({
 							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
 							({
-								"10",num("natural_ac"),calc("bodyarmor_ac"),calc("shield_ac"),calc("DEX_mod"),
+								"10", num("natural_ac"), calc("bodyarmor_ac"), calc("shield_ac"),
+								//TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former. Not currently possible as DEX_max is just an integer.
+								calc("min(DEX_mod, DEX_max)", "DEX_ac"),
 								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
 								calc(#"(string)([
 									\"Fine\":8,\"Diminutive\":4,\"Tiny\":2,\"Small\":1,
@@ -350,8 +351,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 							}),
 						}))->set_col_spacings(5))
 						->add(GTK2.Hbox(0,20)
-							->add(readme("Melee",calc("10+DEX_mod+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac")))
-							->add(readme("Touch",calc("10+DEX_mod+size_ac+misc_ac","ac_touch")))
+							->add(readme("Melee",calc("10+DEX_ac+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac")))
+							->add(readme("Touch",calc("10+DEX_ac+size_ac+misc_ac","ac_touch")))
 							->add(readme("Flat",calc("10+bodyarmor_ac+shield_ac+natural_ac+deflection_ac+size_ac+misc_ac","ac_flat")))
 						)
 					))
