@@ -341,8 +341,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 							({"Base","Nat","Suit","Shield","DEX","Deflec","Size","Misc"}),
 							({
 								"10", num("natural_ac"), calc("bodyarmor_ac"), calc("shield_ac"),
-								//TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former. Not currently possible as DEX_max is just an integer.
-								calc("min(DEX_mod, DEX_max)", "DEX_ac"),
+								//TODO: Distinguish DEX_max=="" from DEX_max=="0", and don't cap the former.
+								//Not currently possible as DEX_max of 0 is transformed into blank.
+								calc("DEX_max == \"\" ? DEX_mod : min(DEX_mod, DEX_max)", "DEX_ac", "string"),
 								calc("magicarmor_1_ac+magicarmor_2_ac+magicarmor_3_ac","deflection_ac"),
 								calc(#"(string)([
 									\"Fine\":8,\"Diminutive\":4,\"Tiny\":2,\"Small\":1,
