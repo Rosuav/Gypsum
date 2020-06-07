@@ -401,6 +401,8 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						->add(ef("gear_2_name",15))
 						->add(ef("gear_3_name",15))
 						->add(ef("gear_4_name",15))
+						->add(ef("gear_5_name",15))
+						->add(ef("gear_6_name",15))
 					),0,0,0)
 				,0,0,0);
 	}
