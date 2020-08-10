@@ -200,6 +200,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//Perform magic and return something that has a calculated value.
 	//The formula is Pike syntax. Any unexpected variable references in it become lookups
 	//into data[] and will be cast to the specified type (default 'int').
+	//Note that exotic usage of external references can be done by directly referencing the
+	//data mapping, eg data->foo or even data[data->statname + "_mod"]. These will not
+	//trigger automatic dependency handling. TODO: Allow manual dep addition?
 	/* Notes formerly in the docstring:
 	Formulas can be entered. They reference the underlying data mapping, NOT the
 	coordinates of the cell on some spreadsheet layout, so it's as simple as
@@ -216,7 +219,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (!type) type="int";
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols=(<>);
-			program p=compile("mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
+			program p=compile("mapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
@@ -1317,7 +1320,7 @@ class charsheet_exalted
 {
 	inherit charsheet;
 	constant desc = "Exalted";
-	constant pages = ({"Vital Stats", /*"Gear",*/ "Inven", "Description", "Skills", "Token", "Administrivia", "Help"});
+	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Token", "Administrivia", "Help"});
 
 	GTK2.Widget Page_Vital_Stats()
 	{
@@ -1341,7 +1344,7 @@ class charsheet_exalted
 					}))))
 				,0,0,0)
 				->add(GTK2.Hbox(0,20)
-					->add(GTK2.Frame("Stats")->add(GTK2Table(
+					->add(GTK2.Frame("Attributes")->add(GTK2Table(
 						map("STR DEX STA CHA MAN APP PER INT WIT" / " ", lambda(string stat) {return ({
 							stat, num(stat + "_mod"),
 						});})
@@ -1366,16 +1369,53 @@ class charsheet_exalted
 				->add(GTK2.Hbox(0,20)
 					->add(GTK2.Frame("Soak")->add(GTK2Table(({
 						({"Nat", "Armor", "Total"}),
-						({calc("STA_mod"), calc("bodyarmor_soak"), calc("STA_mod + bodyarmor_soak", "soak")}),
+						({calc("STA_mod"), calc("armor_soak"), calc("STA_mod + armor_soak", "soak")}),
 					}))))
 					->add(GTK2.Frame("Hardness")->add(GTK2Table(({
 						({"Nat","Armor","Total"}),
-						({num("hardness_intrinsic"), calc("bodyarmor_hard"), calc("hardness_intrinsic + bodyarmor_hard", "hardness")}),
+						({num("hardness_intrinsic"), calc("armor_hard"), calc("hardness_intrinsic + armor_hard", "hardness")}),
 					}))))
 				);
 	}
 
-	//TODO: Gear
+	GTK2.Widget Page_Gear()
+	{
+		array armor = ({({"Name", "Soak", "Hard", "MP", "Tags"})});
+		array weapons = ({({"Name", "Acc", "Dmg", "Def", "Ovw", "Skill", "Tags", "Pool"})});
+		string total = "";
+		for (int i = 1; i <= 3; ++i)
+		{
+			armor += ({({
+				ef("armor_" + i, 10),
+				noex(num("armor_" + i + "_soak")),
+				noex(num("armor_" + i + "_hard")),
+				noex(num("armor_" + i + "_mp")),
+				ef("armor_" + i + "_tags", 15),
+			})});
+			total += "+ armor_" + i + "_%[0]s";
+			weapons += ({({
+				ef("weapon_" + i, 10),
+				noex(num("weapon_" + i + "_acc")),
+				noex(num("weapon_" + i + "_dmg")),
+				noex(num("weapon_" + i + "_def")),
+				noex(num("weapon_" + i + "_ovw")),
+				select("weapon_" + i + "_skill", ({"Archery", "Brawl", "Melee", "Thrown", "MartialArts"})),
+				ef("weapon_" + i + "_tags", 15),
+				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_pool"),
+			})});
+		}
+		armor += ({({
+			"Total",
+			calc(sprintf(total[2..], "soak"), "armor_soak"),
+			calc(sprintf(total[2..], "hard"), "armor_hard"),
+			calc(sprintf(total[2..], "mp"), "armor_mp"),
+			"",
+		})});
+		return GTK2.Vbox(0,20)
+				->pack_start(GTK2.Frame("Weapons")->add(GTK2Table(weapons)), 0, 0, 0)
+				->pack_start(GTK2.Frame("Armor")->add(GTK2Table(armor)), 0, 0, 0)
+		;
+	}
 
 	GTK2.Widget Page_Skills()
 	{
