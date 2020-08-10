@@ -1310,8 +1310,63 @@ class charsheet_exalted
 {
 	inherit charsheet;
 	constant desc = "Exalted";
-	constant pages = ({"Inven", "Description", "Token", "Administrivia", "Help"});
-	//TODO: Vital Stats (incl essences)
+	constant pages = ({"Vital Stats", "Inven", "Description", "Token", "Administrivia", "Help"});
+
+	GTK2.Widget Page_Vital_Stats()
+	{
+		return GTK2.Vbox(0,20)
+				->pack_start(GTK2.Hbox(0,10)
+					->add(GTK2Table(({
+						({"Name", ef("name", 8), 0}),
+						({"Caste", ef("caste", 8), 0}),
+						({"Anima", ef("anima", 8), 0}),
+						({"XP", num("xp"), num("xp_tot")}),
+					})))
+					->add(GTK2Table(({
+						({"Essence", "Cur", "Max"}),
+						({"Personal", num("snc_pers_cur"), num("snc_pers_max")}),
+						({"Peripheral", num("snc_peri_cur"), num("snc_peri_max")}),
+						({"Committed", num("snc_commit"), 0}),
+					})))
+					->add(GTK2.Frame("Willpower")->add(GTK2Table(({
+						({"Normal","Current"}),
+						({num("willpower"),num("willpower_cur")}),
+					}))))
+				,0,0,0)
+				->add(GTK2.Hbox(0,20)
+					->add(GTK2.Frame("Stats")->add(GTK2Table(
+						map("STR DEX STA CHA MAN APP PER INT WIT" / " ", lambda(string stat) {return ({
+							stat, num(stat + "_mod"),
+						});})
+					)))
+					->add(GTK2.Vbox(0,10)
+						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
+							({"Normal","Current"}),
+							({num("hp"),num("cur_hp")}),
+						}))), 0, 0, 0)
+					)
+					->add(GTK2.Frame("Statics")->add(two_column(({
+						"Parry", num("parry"),
+						"Evasion", num("evasion"),
+						"Defense", calc("parry > evasion ? parry : evasion"),
+						"Rush", num("rush"),
+						"Resolve", num("resolve"),
+						"Guile", num("guile"),
+						"Disengage", calc("DEX_mod + dodge", "disengage"),
+						"Join Battle", calc("WIT_mod + awareness", "init"),
+					}))))
+				)
+				->add(GTK2.Hbox(0,20)
+					->add(GTK2.Frame("Soak")->add(GTK2Table(({
+						({"Nat", "Armor", "Total"}),
+						({calc("STA_mod"), calc("bodyarmor_soak"), calc("STA_mod + bodyarmor_soak", "soak")}),
+					}))))
+					->add(GTK2.Frame("Hardness")->add(GTK2Table(({
+						({"Nat","Armor","Total"}),
+						({num("hardness_intrinsic"), calc("bodyarmor_hard"), calc("hardness_intrinsic + bodyarmor_hard", "hardness")}),
+					}))))
+				);
+	}
 	//TODO: Skills
 	//TODO: Gear
 	//TODO later: Specializations, merits, limit break/limit trigger
