@@ -186,9 +186,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//instance). It will be accompanied by the specified label.
 	GTK2.Widget readme(string lbl,GTK2.Widget main)
 	{
+		if (lbl) main = GTK2.Hbox(0,3)->add(GTK2.Label(lbl))->add(main);
 		return GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))
 			->modify_bg(GTK2.STATE_NORMAL,GTK2.GdkColor(192,192,255))
-			->add(GTK2.Hbox(0,3)->add(GTK2.Label(lbl))->add(main))
+			->add(main)
 		;
 	}
 
@@ -1336,7 +1337,7 @@ class charsheet_exalted
 						({"Essence", "Cur", "Max"}),
 						({"Personal", num("snc_pers_cur"), num("snc_pers_max")}),
 						({"Peripheral", num("snc_peri_cur"), num("snc_peri_max")}),
-						({"Committed", num("snc_commit"), 0}),
+						({"Committed", rare(num("snc_commit")), 0}),
 					})))
 					->add(GTK2.Frame("Willpower")->add(GTK2Table(({
 						({"Normal","Current"}),
@@ -1358,12 +1359,12 @@ class charsheet_exalted
 					->add(GTK2.Frame("Statics")->add(two_column(({
 						"Parry", num("parry"),
 						"Evasion", num("evasion"),
-						"Defense", calc("parry > evasion ? parry : evasion"),
+						"Defense", readme(0, calc("parry > evasion ? parry : evasion")),
 						"Rush", num("rush"),
 						"Resolve", num("resolve"),
 						"Guile", num("guile"),
 						"Disengage", calc("DEX_mod + dodge", "disengage"),
-						"Join Battle", calc("WIT_mod + awareness", "init"),
+						"Join Battle", readme(0, calc("WIT_mod + awareness", "init")),
 					}))))
 				)
 				->add(GTK2.Hbox(0,20)
