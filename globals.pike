@@ -224,6 +224,21 @@ class SelectBox(array(string) strings)
 	}
 }
 
+//GTK2.ToggleButton with set_text and get_text. Can be used like an Entry.
+class ToggleButton
+{
+	inherit GTK2.ToggleButton; //TODO: Make a CheckButton equivalent for this. Mixin??
+	this_program set_text(string txt)
+	{
+		set_active((<"1", "t", "true", "on">)[lower_case(txt)]);
+		return this;
+	}
+	string get_text()
+	{
+		return ({"", "1"})[get_active()];
+	}
+}
+
 //Advisory note that this widget should be packed without the GTK2.Expand|GTK2.Fill options
 //As of Pike 8.0.2, this could safely be done with wid->set_data(), but it's not
 //safe to call get_data() with a keyword that hasn't been set (it'll segfault older Pikes).

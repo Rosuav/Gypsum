@@ -168,6 +168,13 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
+	ToggleButton cb(string kwd, string label)
+	{
+		ToggleButton ret = win[kwd] = ToggleButton(label)->set_text(data[kwd] || "");
+		ret->signal_connect("toggled", checkchanged, kwd);
+		return ret;
+	}
+
 	//Mark that an entry field or MLE is rarely used. Currently done with bg color.
 	GTK2.Widget rare(GTK2.Widget wid)
 	{
@@ -1381,7 +1388,7 @@ class charsheet_exalted
 					"Sail Socialize Stealth Survival Thrown War"
 				) / " ", lambda(string name) {
 					string id = replace(lower_case(name), "-", "");
-					return ({ef(id + "_exc"), replace(name, "-", " "), num(id)});
+					return ({cb(id + "_exc", ""), replace(name, "-", " "), num(id)});
 				})
 		), 0, 0, 0));
 	}
