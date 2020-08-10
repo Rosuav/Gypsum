@@ -1310,7 +1310,7 @@ class charsheet_exalted
 {
 	inherit charsheet;
 	constant desc = "Exalted";
-	constant pages = ({"Vital Stats", "Inven", "Description", "Token", "Administrivia", "Help"});
+	constant pages = ({"Vital Stats", /*"Gear",*/ "Inven", "Description", "Skills", "Token", "Administrivia", "Help"});
 
 	GTK2.Widget Page_Vital_Stats()
 	{
@@ -1367,8 +1367,25 @@ class charsheet_exalted
 					}))))
 				);
 	}
-	//TODO: Skills
+
 	//TODO: Gear
+
+	GTK2.Widget Page_Skills()
+	{
+		return GTK2.ScrolledWindow()->add(GTK2.Hbox(0, 0)->pack_start(GTK2Table(
+				({({"Exc", "Name", "Skill"})})
+				+map((
+					"Archery Athletics Awareness Brawl Bureaucracy Craft Dodge "
+					"Integrity Investigation Larceny Linguistics Lore Martial-Arts "
+					"Medicine Melee Occult Performance Presence Resistance Ride "
+					"Sail Socialize Stealth Survival Thrown War"
+				) / " ", lambda(string name) {
+					string id = replace(lower_case(name), "-", "");
+					return ({ef(id + "_exc"), replace(name, "-", " "), num(id)});
+				})
+		), 0, 0, 0));
+	}
+
 	//TODO later: Specializations, merits, limit break/limit trigger
 }
 
