@@ -1306,6 +1306,17 @@ class charsheet_npc
 	//TODO: Also simplify some of the pages themselves (by overriding)
 }
 
+class charsheet_exalted
+{
+	inherit charsheet;
+	constant desc = "Exalted";
+	constant pages = ({"Inven", "Description", "Token", "Administrivia", "Help"});
+	//TODO: Vital Stats (incl essences)
+	//TODO: Skills
+	//TODO: Gear
+	//TODO later: Specializations, merits, limit break/limit trigger
+}
+
 int output(mapping(string:mixed) subw,string line)
 {
 	if (sscanf(line,"===> URL: %s", string url))
