@@ -14,6 +14,12 @@ mapping(string:string) cs_descr = (mapping)lambda(string s) {return ({s,this["ch
 
 mapping(string:multiset(object)) charsheets;
 
+//Exponentiation but guaranteed to return an integer. Avoids typing issues when Pike is
+//unsure whether the exponent will always be positive.
+constant UTILS = #"
+int intpow(int base, int exponent) {if (exponent < 0) return 1; return base ** exponent;}
+";
+
 //TODO: Figure out why this is sometimes disgustingly laggy on Sikorsky. Is it because
 //I update code so much? Are old versions of the code getting left around? Worse, is it
 //that the window isn't getting properly disposed of when it closes? I've never managed
@@ -220,12 +226,12 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			if (!type) type="int";
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols=(<>);
-			program p=compile("mapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
+			program p=compile(UTILS + "\nmapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
-				"%s _(mapping data) {%{"+type+" %s=("+type+")data->%<s;%}return %s;}",
-				type,(array)symbols,formula
+				"%s\n%s _(mapping data) {%{"+type+" %s=("+type+")data->%<s;%}return %s;}",
+				UTILS, type, (array)symbols, formula
 			))()->_;
 			//Phase two: Snapshot a few extra bits of info via a closure.
 			void f2(mapping data,multiset beenthere)
@@ -432,7 +438,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 						->add(GTK2.Label("")),
 					"Light load",calc("inven_hvy_load/3"),"Med load",calc("inven_hvy_load*2/3"),"Heavy load",calc("(STR<0 ? 0 :" //Negative STR shouldn't happen
 						"STR<20 ? ({0,10,20,30,40,50,60,70,80,90,100,115,130,150,175,200,230,260,300,350})[STR] :" //Normal range strengths
-						"({400,460,520,600,700,800,920,1040,1200,1400})[STR_mod%10] * pow(4,STR/10-2)" //Tremendous strength
+						"({400,460,520,600,700,800,920,1040,1200,1400})[STR_mod%10] * intpow(4,STR/10-2)" //Tremendous strength
 					") * (size_mul||1) / (size_div||1)","inven_hvy_load")})
 				})),0,0}),
 				({"Item",noex(GTK2.Label("Qty")),noex(GTK2.Label("Wght"))})
