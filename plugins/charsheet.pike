@@ -46,6 +46,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	mapping(string:array(function)) depends=([]); //Whenever something changes, recalculate all its depends.
 	mapping(string:string) skillnames=([]); //For the convenience of the level-up assistant, map skill keywords to their names.
 	mapping(string:array(string)) class_skills=([]); //Parsed from the primary skill table - which skills are class skills for each class?
+	constant roll_default = ""; //Subclasses can override this to control the Administrivia button
 
 	int errors=0;
 	protected void create()
@@ -976,9 +977,15 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					->pack_start(win->ddcb_cs_type=select("cs_type",cs_types),0,0,0)
 					->add(win->lbl_cs_type=GTK2.Label(""))
 				,0,0,0)
+				->pack_start(GTK2Table(({
+					({"Default dice roll", noex(ef("roll_default", 8)), win->set_roll_default = noex(GTK2.Button("Use " + roll_default))}),
+					({"Used with abbreviated dice roll notation\n'roll 10d' will become 'roll 10" + roll_default + "'.", 0, 0}),
+				})),0,0,0)
 				->pack_start(win->lbl_cs_type_changed=GTK2.Label(""),0,0,0)
 				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))));
 	}
+
+	void sig_set_roll_default_clicked() {set_value("roll_default", roll_default);}
 
 	GTK2.Widget Page_Help()
 	{
@@ -1313,6 +1320,7 @@ class charsheet_35ed
 {
 	inherit charsheet;
 	constant desc="3.5th Ed";
+	constant roll_default = "d20";
 }
 
 class charsheet_npc
@@ -1328,6 +1336,7 @@ class charsheet_exalted
 	inherit charsheet;
 	constant desc = "Exalted";
 	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Token", "Administrivia", "Help"});
+	constant roll_default = "d7/10/10";
 
 	GTK2.Widget Page_Vital_Stats()
 	{
