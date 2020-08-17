@@ -1345,7 +1345,6 @@ class charsheet_exalted
 					->add(GTK2Table(({
 						({"Name", ef("name", 8), 0}),
 						({"Caste", ef("caste", 8), 0}),
-						({"Anima", ef("anima", 8), 0}),
 						({"XP", num("xp"), num("xp_tot")}),
 					})))
 					->add(GTK2Table(({
@@ -1354,10 +1353,10 @@ class charsheet_exalted
 						({"Peripheral", num("snc_peri_cur"), num("snc_peri_max")}),
 						({"Committed", rare(num("snc_commit")), 0}),
 					})))
-					->add(GTK2.Frame("Willpower")->add(GTK2Table(({
-						({"Normal","Current"}),
-						({num("willpower"),num("willpower_cur")}),
-					}))))
+					->add(GTK2Table(({
+						({"Anima", ef("anima", 8)}),
+						({"Supernal", ef("supernal", 8)}),
+					})))
 				,0,0,0)
 				->add(GTK2.Hbox(0,20)
 					->add(GTK2.Frame("Attributes")->add(GTK2Table(
@@ -1369,6 +1368,10 @@ class charsheet_exalted
 						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
 							({"Normal","Current"}),
 							({num("hp"),num("cur_hp")}),
+						}))), 0, 0, 0)
+						->pack_start(GTK2.Frame("Willpower")->add(GTK2Table(({
+							({"Normal","Current"}),
+							({num("willpower"),num("willpower_cur")}),
 						}))), 0, 0, 0)
 					)
 					->add(GTK2.Frame("Combat")->add(two_column(({
