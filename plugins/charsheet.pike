@@ -1371,14 +1371,14 @@ class charsheet_exalted
 							({num("hp"),num("cur_hp")}),
 						}))), 0, 0, 0)
 					)
-					->add(GTK2.Frame("Statics")->add(two_column(({
-						"Parry", num("parry"),
-						"Evasion", num("evasion"),
+					->add(GTK2.Frame("Combat")->add(two_column(({
+						"Parry", calc("(DEX_mod + melee + 1) / 2", "parry"), //TODO: Pick your "current weapon" and use its skill, and its defence value
+						"Evasion", calc("(DEX_mod + dodge + 1) / 2 + armor_mp", "evasion"),
 						"Defense", readme(0, calc("parry > evasion ? parry : evasion")),
-						"Rush", num("rush"),
-						"Resolve", num("resolve"),
-						"Guile", num("guile"),
-						"Disengage", calc("DEX_mod + dodge", "disengage"),
+						"Rush", calc("DEX_mod + athletics + armor_mp", "rush"),
+						"Resolve", calc("(WIT_mod + integrity + 1) / 2", "resolve"),
+						"Guile", calc("(MAN_mod + socialize + 1) / 2", "guile"),
+						"Disengage", calc("DEX_mod + dodge + armor_mp", "disengage"),
 						"Join Battle", readme(0, calc("WIT_mod + awareness", "init")),
 					}))))
 				)
