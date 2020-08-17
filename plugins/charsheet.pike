@@ -227,6 +227,9 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			if (!type) type="int";
 			if (debug) werror("CALC DEBUG:\nFormula %O\nName %O\nType %O\n", formula, name, type);
+			//TODO: Have a way to get dynamic deps. If the formula looks up something
+			//in data, it should add that key to the deps (if not already there). If
+			//something gets removed, maybe don't bother removing the dep.
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols = deps ? (multiset)deps : (<>);
 			program p=compile(UTILS + "\nmapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
