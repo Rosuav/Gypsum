@@ -266,29 +266,47 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		{
 			if (!type) type="int";
 			if (debug) werror("CALC DEBUG:\nFormula %O\nName %O\nType %O\n", formula, name, type);
-			//TODO: Have a way to get dynamic deps. If the formula looks up something
+			//Use raw/val/deref for dynamic deps. If the formula looks up something
 			//in data, it should add that key to the deps (if not already there). If
-			//something gets removed, maybe don't bother removing the dep.
+			//something gets removed, don't bother removing the dep.
+			if (has_value(formula, "data->") || has_value(formula, "data["))
+				werror("Consider using a lookup function for the definition of %O\n%O\n", name, formula);
+
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols = deps ? (multiset)deps : (<>);
-			program p=compile(UTILS + "\nmapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
+			program p=compile(UTILS + "\nstring raw(string key) {}string val(string key) {}string deref(string key) {}\n"
+						"mapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
-				"%s\n%s _(mapping data) {%{"+type+" %s=("+type+")data->%<s;%}return %s;}",
+				"%s\n%s _(mapping data, multiset deps) {"
+					"%{" + type + " %s=(" + type + ")data->%<s;%}"
+					"string raw(string key) {deps[key] = 1; return data[key];}"
+					"%[1]s val(string key) {return (%[1]s)raw(key);}"
+					"%[1]s deref(string key) {return val(lower_case(raw(key)));}" //deref("use_this_skill") ==> data[data->use_this_skill]
+					"deref;" //Prevent warning if it isn't used (which is the common case)
+				"return %s;}",
 				UTILS, type, (array)symbols, formula
 			))()->_;
 			//Phase two: Snapshot a few extra bits of info via a closure.
+			deps = symbols + (<>);
 			void f2(mapping data,multiset beenthere)
 			{
-				string val=(string)f1(data);
+				multiset newdeps = (<>);
+				string val=(string)f1(data, newdeps);
+				foreach ((array)newdeps, string dep) if (!deps[dep])
+				{
+					if (debug) werror("NEW DEP FOR %O: %O\n", name, dep);
+					deps[dep] = 1;
+					depends[dep] += ({f2});
+				}
 				if (debug) werror("Updating calc (%O) to %O\n%O\n", name, val, beenthere);
 				if (name) set_value(name,val,beenthere, debug);
 				lbl->set_text(val);
 			};
 			if (debug) werror("Deps for %O:%{ %O%}\n", name, sort((array)symbols));
-			foreach ((array)symbols,string dep)
-				depends[dep]+=({f2});
+			foreach ((array)deps, string dep)
+				depends[dep] += ({f2});
 			f2(data,(<name>));
 		}) {++errors; werror("Error compiling %O\n%s\n",formula,describe_backtrace(ex));} //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
 		return lbl;
@@ -1430,7 +1448,7 @@ class charsheet_exalted
 						}))), 0, 0, 0)
 					)
 					->add(GTK2.Frame("Combat")->add(two_column(({
-						"Parry", calc("(DEX_mod + (int)data[lower_case(data->weapon_skill)] + 1) / 2 + weapon_def", "parry", "int", (<"weapon_skill">)),
+						"Parry", calc("(DEX_mod + deref(\"weapon_skill\") + 1) / 2 + weapon_def", "parry"),
 						"Evasion", calc("(DEX_mod + dodge + 1) / 2 + armor_mp", "evasion"),
 						"Defense", readme(0, calc("parry > evasion ? parry : evasion")),
 						"Rush", calc("DEX_mod + athletics + armor_mp", "rush"),
@@ -1476,8 +1494,8 @@ class charsheet_exalted
 				noex(num("weapon_" + i + "_ovw")),
 				select("weapon_" + i + "_skill", ({"Archery", "Brawl", "Melee", "Thrown", "MartialArts"})),
 				ef("weapon_" + i + "_tags", 15),
-				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_wth", "int", (<"weapon_" + i + "_skill">)),
-				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)]", "weapon_" + i + "_dcs", "int", (<"weapon_" + i + "_skill">)),
+				calc("DEX_mod + deref(\"weapon_" + i + "_skill\") + weapon_" + i + "_acc", "weapon_" + i + "_wth"),
+				calc("DEX_mod + deref(\"weapon_" + i + "_skill\")", "weapon_" + i + "_dcs"),
 			})});
 			weaponfields += ({"weapon_" + i}); weapondefaults += ({"Weapon " + i});
 		}
@@ -1490,7 +1508,7 @@ class charsheet_exalted
 		})});
 		array active = ({picker("weapon_active", weaponfields, weapondefaults)});
 		foreach ("acc dmg def ovw skill tags wth dcs" / " ", string attr)
-			active += ({calc("data[\"weapon_\" + weapon_active + \"_" + attr + "\"]", "weapon_" + attr, "int", weaponfields[*] + ("_" + attr))});
+			active += ({calc("val(\"weapon_\" + weapon_active + \"_" + attr + "\")", "weapon_" + attr, "string")});
 		weapons += ({active});
 		return GTK2.Vbox(0,20)
 				->pack_start(GTK2.Frame("Weapons")->add(GTK2Table(weapons)), 0, 0, 0)
