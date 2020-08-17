@@ -1366,12 +1366,12 @@ class charsheet_exalted
 					)))
 					->add(GTK2.Vbox(0,10)
 						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
-							({"Normal","Current"}),
-							({num("hp"),num("cur_hp")}),
+							({"Cur", "Max"}),
+							({num("cur_hp"), num("hp")}),
 						}))), 0, 0, 0)
 						->pack_start(GTK2.Frame("Willpower")->add(GTK2Table(({
-							({"Normal","Current"}),
-							({num("willpower"),num("willpower_cur")}),
+							({"Cur", "Max"}),
+							({num("willpower_cur"), num("willpower")}),
 						}))), 0, 0, 0)
 					)
 					->add(GTK2.Frame("Combat")->add(two_column(({
