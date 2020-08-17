@@ -1367,7 +1367,13 @@ class charsheet_exalted
 					->add(GTK2.Vbox(0,10)
 						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
 							({"Cur", "Max"}),
-							({num("cur_hp"), num("hp")}),
+							({num("cur_hp"), num("hp")}), //I think this is wrong, actually
+							({"Wound", calc(#"cur_hp >= 0 ? 0 /* Healthy */
+									: cur_hp < -6 - 3 * oxbody ? -100 /* Incapacitated */
+									: (({0}) + ({-1}) * (2 + oxbody) + ({-2}) * (2 + oxbody * 2) + ({-4}))[-1 - cur_hp]",
+								"wound"),
+							}),
+							({"Ox Body", num("oxbody")}), //Is there a better way to do this?
 						}))), 0, 0, 0)
 						->pack_start(GTK2.Frame("Willpower")->add(GTK2Table(({
 							({"Cur", "Max"}),
