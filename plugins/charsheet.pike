@@ -1430,7 +1430,7 @@ class charsheet_exalted
 						}))), 0, 0, 0)
 					)
 					->add(GTK2.Frame("Combat")->add(two_column(({
-						"Parry", calc("(DEX_mod + melee + 1) / 2", "parry"), //TODO: Pick your "current weapon" and use its skill, and its defence value
+						"Parry", calc("(DEX_mod + (int)data[lower_case(data->weapon_skill)] + 1) / 2 + weapon_def", "parry", "int", (<"weapon_skill">)),
 						"Evasion", calc("(DEX_mod + dodge + 1) / 2 + armor_mp", "evasion"),
 						"Defense", readme(0, calc("parry > evasion ? parry : evasion")),
 						"Rush", calc("DEX_mod + athletics + armor_mp", "rush"),
