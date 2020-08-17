@@ -179,20 +179,16 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//A select box that gives an index within its set of options
 	//Each option is data[fields[n]] || defaults[n], and will result in
 	//n+1 being the value at this keyword. If none selected, value is 0.
-	//TODO: Automatically update the strings (including the current) if
-	//any of the fields changes
 	class picker(string kwd, array(string) fields, array(string) defaults)
 	{
 		inherit GTK2.ComboBox;
-		array(string) strings;
 		protected void create()
 		{
 			::create("");
 			foreach (fields; int i; string fld)
 			{
-				string s = (data[fld] != "" && data[fld]) || defaults[i];
-				append_text(s);
-				strings += ({s});
+				append_text((data[fld] != "" && data[fld]) || defaults[i]);
+				depends[fld] += ({reset_strings});
 			}
 			set_text(data[kwd] || "");
 			signal_connect("changed", checkchanged, kwd);
@@ -205,7 +201,17 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		string get_text()
 		{
 			int idx = get_active();
-			return (idx >= 0 && idx < sizeof(strings)) && (string)(idx + 1);
+			return (idx >= 0 && idx < sizeof(fields)) && (string)(idx + 1);
+		}
+		void reset_strings(mapping data, multiset beenthere)
+		{
+			int ac = get_active();
+			foreach (fields; int i; string fld)
+			{
+				remove_text(0);
+				append_text((data[fld] != "" && data[fld]) || defaults[i]);
+			}
+			set_active(ac);
 		}
 	}
 
