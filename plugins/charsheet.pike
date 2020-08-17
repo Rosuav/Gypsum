@@ -176,6 +176,39 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret;
 	}
 
+	//A select box that gives an index within its set of options
+	//Each option is data[fields[n]] || defaults[n], and will result in
+	//n+1 being the value at this keyword. If none selected, value is 0.
+	//TODO: Automatically update the strings (including the current) if
+	//any of the fields changes
+	class picker(string kwd, array(string) fields, array(string) defaults)
+	{
+		inherit GTK2.ComboBox;
+		array(string) strings;
+		protected void create()
+		{
+			::create("");
+			foreach (fields; int i; string fld)
+			{
+				string s = (data[fld] != "" && data[fld]) || defaults[i];
+				append_text(s);
+				strings += ({s});
+			}
+			set_text(data[kwd] || "");
+			signal_connect("changed", checkchanged, kwd);
+		}
+		this_program set_text(string txt)
+		{
+			set_active((int)txt - 1);
+			return this;
+		}
+		string get_text()
+		{
+			int idx = get_active();
+			return (idx >= 0 && idx < sizeof(strings)) && (string)(idx + 1);
+		}
+	}
+
 	ToggleButton cb(string kwd, string label)
 	{
 		ToggleButton ret = win[kwd] = ToggleButton(label)->set_text(data[kwd] || "");
@@ -1418,6 +1451,7 @@ class charsheet_exalted
 		array armor = ({({"Name", "Soak", "Hard", "MP", "Tags"})});
 		array weapons = ({({"Name", "Acc", "Dmg", "Def", "Ovw", "Skill", "Tags", "Wth", "Dcs"})});
 		string total = "";
+		array(string) weaponfields = ({ }), weapondefaults = ({ });
 		for (int i = 1; i <= 3; ++i)
 		{
 			armor += ({({
@@ -1436,9 +1470,10 @@ class charsheet_exalted
 				noex(num("weapon_" + i + "_ovw")),
 				select("weapon_" + i + "_skill", ({"Archery", "Brawl", "Melee", "Thrown", "MartialArts"})),
 				ef("weapon_" + i + "_tags", 15),
-				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_wth"),
-				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)]", "weapon_" + i + "_dcs"),
+				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_wth", "int", (<"weapon_" + i + "_skill">)),
+				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)]", "weapon_" + i + "_dcs", "int", (<"weapon_" + i + "_skill">)),
 			})});
+			weaponfields += ({"weapon_" + i}); weapondefaults += ({"Weapon " + i});
 		}
 		armor += ({({
 			"Total",
@@ -1447,6 +1482,10 @@ class charsheet_exalted
 			calc(sprintf(total[2..], "mp"), "armor_mp"),
 			"(MP should be a negative number)",
 		})});
+		array active = ({picker("weapon_active", weaponfields, weapondefaults)});
+		foreach ("acc dmg def ovw skill tags wth dcs" / " ", string attr)
+			active += ({calc("data[\"weapon_\" + weapon_active + \"_" + attr + "\"]", "weapon_" + attr, "int", weaponfields[*] + ("_" + attr))});
+		weapons += ({active});
 		return GTK2.Vbox(0,20)
 				->pack_start(GTK2.Frame("Weapons")->add(GTK2Table(weapons)), 0, 0, 0)
 				->pack_start(GTK2.Frame("Armor")->add(GTK2Table(armor)), 0, 0, 0)
