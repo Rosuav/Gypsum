@@ -1425,7 +1425,7 @@ class charsheet_exalted
 			calc(sprintf(total[2..], "soak"), "armor_soak"),
 			calc(sprintf(total[2..], "hard"), "armor_hard"),
 			calc(sprintf(total[2..], "mp"), "armor_mp"),
-			"",
+			"(MP should be a negative number)",
 		})});
 		return GTK2.Vbox(0,20)
 				->pack_start(GTK2.Frame("Weapons")->add(GTK2Table(weapons)), 0, 0, 0)
