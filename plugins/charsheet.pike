@@ -75,7 +75,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		writepending[kwd]=0;
 	}
 
-	void set_value(string kwd,string val,multiset|void beenthere)
+	void set_value(string kwd,string val,multiset|void beenthere, int|void debug)
 	{
 		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
 		//but without succumbing to refloops (eg x: "y+1", y: "x+1"). Currently, depends are
@@ -83,6 +83,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		//Consider using C3 linearization on the graph of deps - if it fails, error out.
 		//Or use Kahn 1962: https://en.wikipedia.org/wiki/Topological_sorting
 		if (val == "0" && !(<"DEX_max">)[kwd]) val = ""; //Hard-coded list of things that distinguish 0 from blank
+		if (debug) werror("set_value(%O, %O, %O)\n", kwd, val, beenthere);
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
 		if (beenthere[kwd]) return; //Recursion trap: don't recalculate anything twice.
@@ -219,14 +220,15 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	what s/he is doing. It is entirely possible to break things by mucking that
 	up. So take a bit of care, and don't deploy without knowing that it's right. :)
 	*/
-	GTK2.Widget calc(string formula,string|void name,string|void type,multiset|void dep_collector)
+	GTK2.Widget calc(string formula,string|void name,string|void type, array|multiset|void deps, int|void debug)
 	{
 		object lbl=GTK2.Label();
 		if (mixed ex=catch
 		{
 			if (!type) type="int";
+			if (debug) werror("CALC DEBUG:\nFormula %O\nName %O\nType %O\n", formula, name, type);
 			//Phase zero: Precompile, to get a list of used symbols
-			symbols=(<>);
+			symbols = deps ? (multiset)deps : (<>);
 			program p=compile(UTILS + "\nmapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
 
 			//Phase one: Compile the formula calculator itself.
@@ -238,16 +240,21 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			void f2(mapping data,multiset beenthere)
 			{
 				string val=(string)f1(data);
-				if (name) set_value(name,val,beenthere);
+				if (debug) werror("Updating calc (%O) to %O\n%O\n", name, val, beenthere);
+				if (name) set_value(name,val,beenthere, debug);
 				lbl->set_text(val);
 			};
-			if (dep_collector) {dep_collector[f2]=1; return lbl;}
-			//if (name) say(0,"%%%% %O: %{%O %}",name,sort((array)symbols)); //Note that nameless calc() blocks don't need to be slotted into the evaluation order.
+			if (debug) werror("Deps for %O:%{ %O%}\n", name, sort((array)symbols));
 			foreach ((array)symbols,string dep)
 				depends[dep]+=({f2});
 			f2(data,(<name>));
 		}) {++errors; werror("Error compiling %O\n%s\n",formula,describe_backtrace(ex));} //Only someone who's editing charsheet.pike should trigger these errors, so the console should be fine.
 		return lbl;
+	}
+
+	GTK2.Widget debugcalc(string formula,string|void name, string|void type, array|multiset|void deps)
+	{
+		return calc(formula, name, type, deps, 1);
 	}
 
 	//Add a weapon block - type "ranged" is special
