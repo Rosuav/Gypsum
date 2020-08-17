@@ -1368,8 +1368,8 @@ class charsheet_exalted
 						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
 							({"Cur", "Max"}),
 							({num("cur_hp"), num("hp")}), //I think this is wrong, actually
-							({"Wound", calc(#"cur_hp >= 0 ? 0 /* Healthy */
-									: cur_hp < -6 - 3 * oxbody ? -100 /* Incapacitated */
+							({"Wound", calc(#"cur_hp >= 0 ? 0
+									: cur_hp < -6 - 3 * oxbody ? -100
 									: (({0}) + ({-1}) * (2 + oxbody) + ({-2}) * (2 + oxbody * 2) + ({-4}))[-1 - cur_hp]",
 								"wound"),
 							}),
