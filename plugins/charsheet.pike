@@ -1400,7 +1400,7 @@ class charsheet_exalted
 	GTK2.Widget Page_Gear()
 	{
 		array armor = ({({"Name", "Soak", "Hard", "MP", "Tags"})});
-		array weapons = ({({"Name", "Acc", "Dmg", "Def", "Ovw", "Skill", "Tags", "Pool"})});
+		array weapons = ({({"Name", "Acc", "Dmg", "Def", "Ovw", "Skill", "Tags", "Wth", "Dcs"})});
 		string total = "";
 		for (int i = 1; i <= 3; ++i)
 		{
@@ -1420,7 +1420,8 @@ class charsheet_exalted
 				noex(num("weapon_" + i + "_ovw")),
 				select("weapon_" + i + "_skill", ({"Archery", "Brawl", "Melee", "Thrown", "MartialArts"})),
 				ef("weapon_" + i + "_tags", 15),
-				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_pool"),
+				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)] + weapon_" + i + "_acc", "weapon_" + i + "_wth"),
+				calc("DEX_mod + (int)data[lower_case(data->weapon_" + i + "_skill)]", "weapon_" + i + "_dcs"),
 			})});
 		}
 		armor += ({({
