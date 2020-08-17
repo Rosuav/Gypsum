@@ -1440,7 +1440,7 @@ class charsheet_exalted
 	GTK2.Widget Page_Skills()
 	{
 		return GTK2.ScrolledWindow()->add(GTK2.Hbox(0, 0)->pack_start(GTK2Table(
-				({({"Exc", "Fav", "Name", "Skill"})})
+				({({"Exc", "Fav", "Name", "Skill", "Specialties"})})
 				+map((
 					"Archery Athletics Awareness Brawl Bureaucracy Craft Dodge "
 					"Integrity Investigation Larceny Linguistics Lore Martial-Arts "
@@ -1448,7 +1448,7 @@ class charsheet_exalted
 					"Sail Socialize Stealth Survival Thrown War"
 				) / " ", lambda(string name) {
 					string id = replace(lower_case(name), "-", "");
-					return ({cb(id + "_exc", ""), cb(id + "_fav", ""), replace(name, "-", " "), num(id)});
+					return ({cb(id + "_exc", ""), cb(id + "_fav", ""), replace(name, "-", " "), num(id), ef(id + "_spec", 30)});
 				})
 		), 0, 0, 0));
 	}
