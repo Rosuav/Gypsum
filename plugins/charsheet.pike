@@ -161,6 +161,19 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		return ret->set_alignment(0.5);
 	}
 
+	//Like num() but has increment and decrement buttons
+	GTK2.SpinButton spinner(string kwd, float ... minmaxstep)
+	{
+		object ret = win[kwd] = GTK2.SpinButton(@minmaxstep)->set_value((float)(data[kwd] || "0.0"));
+		//NOTE: You can get immediate notification on change by hooking
+		//the value-changed signal, but this makes it easy to get into
+		//a loop with the server where you're arguing over which value
+		//is the correct one. Safer to stick to the default focus event.
+		ret->signal_connect("focus-out-event", checkchanged, kwd);
+		ret->signal_connect("focus-in-event", ensurevisible);
+		return ret;
+	}
+
 	MultiLineEntryField mle(string kwd)
 	{
 		object ret=win[kwd]=MultiLineEntryField()->set_text(data[kwd]||"");
@@ -1432,15 +1445,18 @@ class charsheet_exalted
 						});})
 					)))
 					->add(GTK2.Vbox(0,10)
-						->pack_start(GTK2.Frame("HP")->add(GTK2Table(({
-							({"Cur", "Max"}),
-							({num("cur_hp"), num("hp")}), //I think this is wrong, actually
+						->pack_start(GTK2.Frame("Health")->add(GTK2Table(({
+							({"Bashing", spinner("dmg_bashing", 0.0, 100.0, 1.0)}),
+							({"Lethal", spinner("dmg_lethal", 0.0, 100.0, 1.0)}),
+							({"Aggravated", spinner("dmg_aggravated", 0.0, 100.0, 1.0)}),
+							({"Total", calc("dmg_bashing + dmg_lethal + dmg_aggravated")}),
+							/*({num("cur_hp"), num("hp")}), //I think this is wrong, actually
 							({"Wound", calc(#"cur_hp >= 0 ? 0
 									: cur_hp < -6 - 3 * oxbody ? -100
 									: (({0}) + ({-1}) * (2 + oxbody) + ({-2}) * (2 + oxbody * 2) + ({-4}))[-1 - cur_hp]",
 								"wound"),
-							}),
-							({"Ox Body", num("oxbody")}), //Is there a better way to do this?
+							}),*/
+							//({"Ox Body", num("oxbody")}), //Is there a better way to do this?
 						}))), 0, 0, 0)
 						->pack_start(GTK2.Frame("Willpower")->add(GTK2Table(({
 							({"Cur", "Max"}),
