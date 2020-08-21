@@ -14,11 +14,26 @@ mapping(string:string) cs_descr = (mapping)lambda(string s) {return ({s,this["ch
 
 mapping(string:multiset(object)) charsheets;
 
+//This class is inherited by all calc() blocks. Functions here are available to all calc expressions.
 class UTILS
 {
 	//Exponentiation but guaranteed to return an integer. Avoids typing issues when Pike is
 	//unsure whether the exponent will always be positive.
 	int intpow(int base, int exponent) {if (exponent < 0) return 1; return base ** exponent;}
+
+	int exalted_damage(int oxbody, int dmg_bashing, int dmg_lethal, int dmg_aggravated)
+	{
+		array health = ({0}) + ({-1}) * (2 + oxbody) + ({-2}) * (2 + oxbody * 2) + ({-4, -100});
+		int hp = sizeof(health);
+		//Spare damage "wraps around" and gets upgraded
+		if (dmg_bashing > hp) dmg_lethal += dmg_bashing - hp;
+		if (dmg_lethal > hp) dmg_aggravated += dmg_lethal - hp;
+		//TODO: Depict damage levels somewhere
+		int dmg = dmg_bashing + dmg_lethal + dmg_aggravated;
+		if (!dmg) return 0;
+		if (dmg >= hp) return -100;
+		return health[dmg - 1];
+	}
 }
 
 //TODO: Figure out why this is sometimes disgustingly laggy on Sikorsky. Is it because
@@ -1447,17 +1462,11 @@ class charsheet_exalted
 					)))
 					->add(GTK2.Vbox(0,10)
 						->pack_start(GTK2.Frame("Health")->add(GTK2Table(({
+							({"Ox Body", rare(num("oxbody"))}),
 							({"Bashing", spinner("dmg_bashing", 0.0, 100.0, 1.0)}),
 							({"Lethal", spinner("dmg_lethal", 0.0, 100.0, 1.0)}),
 							({"Aggravated", spinner("dmg_aggravated", 0.0, 100.0, 1.0)}),
-							({"Total", calc("dmg_bashing + dmg_lethal + dmg_aggravated")}),
-							/*({num("cur_hp"), num("hp")}), //I think this is wrong, actually
-							({"Wound", calc(#"cur_hp >= 0 ? 0
-									: cur_hp < -6 - 3 * oxbody ? -100
-									: (({0}) + ({-1}) * (2 + oxbody) + ({-2}) * (2 + oxbody * 2) + ({-4}))[-1 - cur_hp]",
-								"wound"),
-							}),*/
-							//({"Ox Body", num("oxbody")}), //Is there a better way to do this?
+							({"Penalty", readme(0, calc("exalted_damage(oxbody, dmg_bashing, dmg_lethal, dmg_aggravated)", "wound"))}),
 						}))), 0, 0, 0)
 						->pack_start(GTK2.Frame("Willpower")->add(GTK2Table(({
 							({"Cur", "Max"}),
