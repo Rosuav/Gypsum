@@ -92,6 +92,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		writepending[kwd]=0;
 	}
 
+	multiset(string) meaningful_zero = (<"DEX_max">);
 	void set_value(string kwd,string val,multiset|void beenthere, int|void debug)
 	{
 		//TODO: Calculate things more than once if necessary, in order to resolve refchains,
@@ -99,7 +100,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 		//recalculated in the order they were added, which may not always be perfect.
 		//Consider using C3 linearization on the graph of deps - if it fails, error out.
 		//Or use Kahn 1962: https://en.wikipedia.org/wiki/Topological_sorting
-		if (val == "0" && !(<"DEX_max">)[kwd]) val = ""; //Hard-coded list of things that distinguish 0 from blank
+		if (val == "0" && !meaningful_zero[kwd]) val = ""; //List of things that distinguish 0 from blank
 		if (debug) werror("set_value(%O, %O, %O)\n", kwd, val, beenthere);
 		if (val==data[kwd] || (!data[kwd] && val=="")) return; //Nothing changed, nothing to do.
 		if (!beenthere) beenthere=(<>);
@@ -182,6 +183,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	GTK2.SpinButton spinner(string kwd, float ... minmaxstep)
 	{
 		object ret = win[kwd] = GTK2.SpinButton(@minmaxstep)->set_value((float)(data[kwd] || "0.0"));
+		meaningful_zero[kwd] = 1;
 		//NOTE: You can get immediate notification on change by hooking
 		//the value-changed signal, but this makes it easy to get into
 		//a loop with the server where you're arguing over which value
