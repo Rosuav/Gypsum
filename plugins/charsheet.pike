@@ -14,11 +14,12 @@ mapping(string:string) cs_descr = (mapping)lambda(string s) {return ({s,this["ch
 
 mapping(string:multiset(object)) charsheets;
 
-//Exponentiation but guaranteed to return an integer. Avoids typing issues when Pike is
-//unsure whether the exponent will always be positive.
-constant UTILS = #"
-int intpow(int base, int exponent) {if (exponent < 0) return 1; return base ** exponent;}
-";
+class UTILS
+{
+	//Exponentiation but guaranteed to return an integer. Avoids typing issues when Pike is
+	//unsure whether the exponent will always be positive.
+	int intpow(int base, int exponent) {if (exponent < 0) return 1; return base ** exponent;}
+}
 
 //TODO: Figure out why this is sometimes disgustingly laggy on Sikorsky. Is it because
 //I update code so much? Are old versions of the code getting left around? Worse, is it
@@ -256,7 +257,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//Magic resolver. Any symbol at all can be resolved; it'll come through as 0, but the name
 	//will be retained. Used in the precompilation stage to capture external references.
 	multiset(string) symbols;
-	mixed resolv(string symbol,string fn,object handler) {symbols[symbol]=1;}
+	mixed resolv(string symbol,string fn,object handler) {if (symbol == "UTILS") return UTILS; symbols[symbol]=1;}
 
 	//Perform magic and return something that has a calculated value.
 	//The formula is Pike syntax. Any unexpected variable references in it become lookups
@@ -287,20 +288,20 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 
 			//Phase zero: Precompile, to get a list of used symbols
 			symbols = deps ? (multiset)deps : (<>);
-			program p=compile(UTILS + "\nstring raw(string key) {}string val(string key) {}string deref(string key) {}\n"
+			program p=compile("inherit UTILS;\nstring raw(string key) {}string val(string key) {}string deref(string key) {}\n"
 						"mapping data = ([]); mixed _="+formula+";",this); //Note: As of Pike 8.1, p must be retained or the compile() call will be optimized out.
 
 			//Phase one: Compile the formula calculator itself.
 			function f1=compile(sprintf(
-				"%s\n%s _(mapping data, multiset deps) {"
+				"inherit UTILS;\n%s _(mapping data, multiset deps) {"
 					"%{" + type + " %s=(" + type + ")data->%<s;%}"
 					"string raw(string key) {deps[key] = 1; return data[key];}"
-					"%[1]s val(string key) {return (%[1]s)raw(key);}"
-					"%[1]s deref(string key) {return val(lower_case(raw(key)));}" //deref("use_this_skill") ==> data[data->use_this_skill]
+					"%[0]s val(string key) {return (%[0]s)raw(key);}"
+					"%[0]s deref(string key) {return val(lower_case(raw(key)));}" //deref("use_this_skill") ==> data[data->use_this_skill]
 					"deref;" //Prevent warning if it isn't used (which is the common case)
 				"return %s;}",
-				UTILS, type, (array)symbols, formula
-			))()->_;
+				type, (array)symbols, formula
+			), this)()->_;
 			//Phase two: Snapshot a few extra bits of info via a closure.
 			deps = symbols + (<>);
 			void f2(mapping data,multiset beenthere)
