@@ -19,7 +19,8 @@ class UTILS
 {
 	//Exponentiation but guaranteed to return an integer. Avoids typing issues when Pike is
 	//unsure whether the exponent will always be positive.
-	int intpow(int base, int exponent) {if (exponent < 0) return 1; return base ** exponent;}
+	//(Does Pike 7.8 not support "base ** exponent"?)
+	int intpow(int base, int exponent) {if (exponent < 0) return 1; return pow(base, exponent);}
 
 	int exalted_damage(int oxbody, int dmg_bashing, int dmg_lethal, int dmg_aggravated)
 	{
