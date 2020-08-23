@@ -314,9 +314,10 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 			function f1=compile(sprintf(
 				"inherit UTILS;\n%s _(mapping data, multiset deps) {"
 					"%{" + type + " %s=(" + type + ")data->%<s;%}"
-					"string raw(string key) {deps[key] = 1; return data[key];}"
-					"%[0]s val(string key) {return (%[0]s)raw(key);}"
-					"%[0]s deref(string key) {return val(lower_case(raw(key)));}" //deref("use_this_skill") ==> data[data->use_this_skill]
+					//Using this syntax for nested functions rather than simple declarative b/c Pike 7.8 doesn't support declarative
+					"function raw = lambda(string key) {deps[key] = 1; return data[key];};"
+					"function val = lambda(string key) {return (%[0]s)raw(key);};"
+					"function deref = lambda(string key) {return val(lower_case(raw(key)));};" //deref("use_this_skill") ==> data[data->use_this_skill]
 					"deref;" //Prevent warning if it isn't used (which is the common case)
 				"return %s;}",
 				type, (array)symbols, formula
