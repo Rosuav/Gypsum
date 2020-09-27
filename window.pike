@@ -2076,7 +2076,7 @@ class connect_menu
 		string kwd=selecteditem();
 		if (!kwd) return;
 		connect(kwd,0);
-		win->mainwindow->destroy();
+		closewindow();
 	}
 }
 
