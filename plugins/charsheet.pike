@@ -1450,7 +1450,7 @@ class charsheet_exalted
 	inherit charsheet;
 	constant desc = "Exalted";
 	constant pages = ({"Vital Stats", "Gear", "Inven", "Description", "Skills", "Token", "Administrivia", "Help"});
-	constant roll_default = "d7/10/10";
+	constant roll_default = "d7/10";
 	constant roll_attribute = "#d";
 
 	GTK2.Widget Page_Vital_Stats()
