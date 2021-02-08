@@ -1086,7 +1086,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					->add(GTK2.Frame("Attribute roll")->add(GTK2Table(({
 						({noex(ef("roll_attribute", 8)), win->set_roll_attribute = noex(GTK2.Button("Use " + roll_attribute))}),
 						({
-							"Used for char sheet attribute rolls\n"
+							"Not currently used. It's on my fixme list.\n"
 							"'roll init' will become 'roll " + roll_attribute + "'\n"
 							"where # is your init value.",
 							0,
