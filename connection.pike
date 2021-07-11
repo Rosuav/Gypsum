@@ -249,7 +249,8 @@ void ansiread(mapping conn,string data,int end_of_block)
 	textread(conn,conn->ansibuffer,end_of_block); conn->ansibuffer="";
 }
 
-enum {IS=0x00,ECHO=0x01,SEND=0x01,SUPPRESSGA=0x03,TERMTYPE=0x18,NAWS=0x1F,SE=0xF0,NOP=0xF1,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
+enum {IS=0x00,SEND=0x01,SE=0xF0,NOP=0xF1,GA=0xF9,SB,WILL,WONT,DO=0xFD,DONT,IAC=0xFF};
+enum {ECHO=1,SUPPRESSGA=3,TERMTYPE=24,NAWS=31,NEWENVIRON=39,MSSP=70,COMPRESS2=86,GMCP=201};
 
 /**
  * Socket read callback. Handles TELNET protocol and character encodings, passing resultant socket text to ansiread().
@@ -286,14 +287,14 @@ void sockread(mapping conn,bytes data)
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
 					default:
-						//Should we explicitly reject (respond negatively to) unrecognized DO/WILL requests?
-						//Might need to keep track of them and make sure we don't get into a loop.
-						//Currently Gypsum doesn't seem to play nicely with some non-MUD servers (eg Debian telnetd).
+						//Reject unrecognized DO/WILL requests, but not any DONT/WONT. Assume we start out DONT/WONT.
 						conn["unknown_telnet_" + iac[1]] = 1; //Prevent repeated spam (not that it's likely).
 						if (conn->debug_telnet)
 							say(conn->display, "%%%% Unknown IAC %s %d",
 								([DO: "DO", DONT: "DONT", WILL: "WILL", WONT: "WONT"])[iac[0]],
 								iac[1]);
+						if (iac[0] == DO) send_telnet(conn, (string(0..255))({WONT, iac[1]}));
+						if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DONT, iac[1]}));
 						break;
 				}
 				iac=iac[2..];
