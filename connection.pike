@@ -290,7 +290,7 @@ void sockread(mapping conn,bytes data)
 					}
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
-					//case COMPRESS2: if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DO, COMPRESS2})); break;
+					case COMPRESS2: if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DO, COMPRESS2})); break;
 					default:
 						//Reject unrecognized DO/WILL requests, but not any DONT/WONT. Assume we start out DONT/WONT.
 						conn["unknown_telnet_" + iac[1]] = 1; //Prevent repeated spam (not that it's likely).
@@ -331,10 +331,9 @@ void sockread(mapping conn,bytes data)
 						break;
 					case COMPRESS2:
 						//Activate compression
-						say(conn->display, "%%%% Enabling compression: %O", iac);
 						conn->incoming_gzip = Gz.inflate();
-						conn->read_buffer = "";
-						sockread(conn, iac);
+						conn->readbuffer = "";
+						if (iac != "") sockread(conn, iac); //Reparse residual data so it gets properly decompressed
 						return;
 					default: break;
 				}
