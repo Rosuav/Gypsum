@@ -260,6 +260,7 @@ enum {ECHO=1,SUPPRESSGA=3,TERMTYPE=24,NAWS=31,NEWENVIRON=39,MSSP=70,COMPRESS2=86
  */
 void sockread(mapping conn,bytes data)
 {
+	if (conn->incoming_gzip) data = conn->incoming_gzip->inflate(data);
 	if (conn->debug_sockread) say(conn->display,"sockread: %O\n",data);
 	conn->readbuffer+=data;
 	while (sscanf(conn->readbuffer,"%s\xff%s",string data,string iac)) if (mixed ex=catch
@@ -289,6 +290,7 @@ void sockread(mapping conn,bytes data)
 					}
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
+					//case COMPRESS2: if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DO, COMPRESS2})); break;
 					default:
 						//Reject unrecognized DO/WILL requests, but not any DONT/WONT. Assume we start out DONT/WONT.
 						conn["unknown_telnet_" + iac[1]] = 1; //Prevent repeated spam (not that it's likely).
@@ -327,6 +329,13 @@ void sockread(mapping conn,bytes data)
 							+[string(0..127)]sprintf("Gypsum %s (Pike %s)",gypsum_version(),pike_version())
 						);
 						break;
+					case COMPRESS2:
+						//Activate compression
+						say(conn->display, "%%%% Enabling compression: %O", iac);
+						conn->incoming_gzip = Gz.inflate();
+						conn->read_buffer = "";
+						sockread(conn, iac);
+						return;
 					default: break;
 				}
 				break;
