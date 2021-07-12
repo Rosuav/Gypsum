@@ -92,6 +92,11 @@ int output(mapping(string:mixed) subw,string line)
 		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
 		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
 		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+		#ifdef DEBUG_REGEN_TIMER
+		string last = subw->lastvitals ? sprintf(" (%ds)", t - subw->lastvitals) : "";
+		subw->lastvitals = t;
+		say(subw, "%%%% SP %d/%d -> %d (+%d)%s", csp, msp, sp->next, sp->next - t, last);
+		#endif
 		showtimes();
 		return 0;
 	}
@@ -118,14 +123,20 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 			int csp = data->sp, msp = data->maxsp;
 			int cep = data->ep, mep = data->maxep;
 			int t = time(1);
-			int ofs = (subw->regenclick - t) % 22; //Although it should possibly be 20, not 22. Not sure how/why this is different.
-			if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
-			if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
-			if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+			int tick = subw->regentick || 22; //Old Threshold has it every 22 seconds; new Threshold announces it (and it's currently 20).
+			int ofs = (subw->regenclick - t) % tick;
+			if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*tick+ofs);
+			if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*tick+ofs);
+			if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*tick+ofs);
+			#ifdef DEBUG_REGEN_TIMER
+			string last = subw->lastvitals ? sprintf(" (%ds)", t - subw->lastvitals) : "";
+			subw->lastvitals = t;
+			say(subw, "%%%% SP %d/%d -> %d (+%d)%s", csp, msp, sp->next, sp->next - t, last);
+			#endif
 			showtimes();
 			break;
 		}
-		case "Char._Tick": subw->regenclick = time(1); break; //The data will be the time till next one.
+		case "Char._Tick": subw->regenclick = time(1); subw->regentick = (int)data; break;
 		default: break;
 	}
 }
