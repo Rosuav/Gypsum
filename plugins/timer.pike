@@ -109,6 +109,25 @@ int output(mapping(string:mixed) subw,string line)
 	}
 }
 
+int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
+	switch (cmd) {
+		case "Char.Vitals": {
+			mapping hp=timers[" HP"], sp=timers[" SP"], ep=timers[".EP"];
+			int chp = data->hp, mhp = data->maxhp;
+			int csp = data->sp, msp = data->maxsp;
+			int cep = data->ep, mep = data->maxep;
+			int t = time(1);
+			int ofs = (subw->regenclick - t) % 22; //Although it should possibly be 20, not 22. Not sure how/why this is different.
+			if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
+			if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
+			if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+			showtimes();
+		}
+		case "Char._Tick": subw->regenclick = time(1); break; //The data will be the time till next one.
+		default: break;
+	}
+}
+
 /**
  * Update display of countdowns
  */

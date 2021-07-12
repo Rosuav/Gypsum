@@ -313,6 +313,7 @@ class hook
 	int prompt(mapping(string:mixed) subw,string prompt) { }
 	int closetab(mapping(string:mixed) subw,int index) { }
 	int switchtabs(mapping(string:mixed) subw) { }
+	int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) { }
 
 	string hookname;
 	protected void create(string name)

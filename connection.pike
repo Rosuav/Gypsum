@@ -291,6 +291,12 @@ void sockread(mapping conn,bytes data)
 					break;
 					case TERMTYPE: if (iac[0]==DO) send_telnet(conn,(string(0..255))({WILL,TERMTYPE})); break;
 					case COMPRESS2: if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DO, COMPRESS2})); break;
+					case GMCP: if (iac[0] == WILL) {
+						send_telnet(conn, (string(0..255))({DO, GMCP}));
+						send_gmcp(conn, "Core.Hello", (["client": "Gypsum", "version": gypsum_version()]));
+						send_gmcp(conn, "Core.Supports.Set", ({"Char 1", "Char.Skills 1", "Char.Items 1"}));
+					}
+					break;
 					default:
 						//Reject unrecognized DO/WILL requests, but not any DONT/WONT. Assume we start out DONT/WONT.
 						conn["unknown_telnet_" + iac[1]] = 1; //Prevent repeated spam (not that it's likely).
@@ -335,6 +341,13 @@ void sockread(mapping conn,bytes data)
 						conn->readbuffer = "";
 						if (iac != "") sockread(conn, iac); //Reparse residual data so it gets properly decompressed
 						return;
+					case GMCP: {
+						sscanf(subneg, "\372\311%s %s\377\360", string cmd, mixed data);
+						data = Standards.JSON.decode(data);
+						//GMCP messages are not used directly here, but are passed to other modules.
+						G->G->window->runhooks("gmcp_message", 0, conn->display, cmd, data);
+						break;
+					}
 					default: break;
 				}
 				break;
@@ -413,6 +426,12 @@ void send_telnet(mapping conn,bytes data)
 	if (data[1]==SB) data+=(string(0..255))({IAC,SE});
 	conn->writeme+=data;
 	sockwrite(conn);
+}
+
+void send_gmcp(mapping conn, bytes cmd, mixed|void data) {
+	if (!undefinedp(data)) cmd += " " + string_to_utf8(Standards.JSON.encode(data));
+	say(conn->display, "%%%% >>> SB GMCP " + cmd);
+	send_telnet(conn, (string(0..255))({SB, GMCP}) + cmd);
 }
 
 //If a connection were an object (rather than a mapping), this would be create().
