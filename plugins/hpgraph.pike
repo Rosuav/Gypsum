@@ -29,7 +29,6 @@ array barcolors=persist["hpgraph/barcolors"] || ({
 //Stashes some info in subw->hpgraph as a mapping:
 //fadetime: time() when fading should begin. If in the distant past, image is white; if in the future, is fresh and completely solid.
 //barpos: array ({hp, sp, ep}) of 0.0 <= x <= 1.0 for the proportion of the bar that should be colored.
-//vitals: Mapping of vital statistics - the raw data from which barpos can be calculated
 
 int output(mapping(string:mixed) subw,string line)
 {
@@ -54,7 +53,7 @@ int output(mapping(string:mixed) subw,string line)
 int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 	switch (cmd) {
 		case "Char.Vitals": {
-			data = subw->hpgraph->vitals |= data;
+			data = subw->char_vitals = (subw->char_vitals||([])) | data;
 			subw->hpgraph->fadetime = time() + fadedelay;
 			foreach ("hp sp ep" / " "; int pos; string which)
 				subw->hpgraph->barpos[pos] = data["max" + which] && (data[which] / (float)data["max" + which]);
@@ -66,7 +65,7 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 
 GTK2.Widget maketabstatus(mapping(string:mixed) subw)
 {
-	mapping statustxt=subw->hpgraph=(["barpos":({0,0,0}), "vitals": ([])]);
+	mapping statustxt=subw->hpgraph=(["barpos":({0,0,0})]);
 	statustxt->bars=({GTK2.EventBox(),GTK2.EventBox(),GTK2.EventBox()});
 	return GTK2.Vbox(0,2)
 		->add(GTK2.Label("HP:"))

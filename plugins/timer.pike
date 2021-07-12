@@ -113,6 +113,7 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 	switch (cmd) {
 		case "Char.Vitals": {
 			mapping hp=timers[" HP"], sp=timers[" SP"], ep=timers[".EP"];
+			data = subw->char_vitals = (subw->char_vitals||([])) | data;
 			int chp = data->hp, mhp = data->maxhp;
 			int csp = data->sp, msp = data->maxsp;
 			int cep = data->ep, mep = data->maxep;
@@ -122,6 +123,7 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 			if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
 			if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
 			showtimes();
+			break;
 		}
 		case "Char._Tick": subw->regenclick = time(1); break; //The data will be the time till next one.
 		default: break;

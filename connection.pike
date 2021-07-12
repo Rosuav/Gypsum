@@ -430,7 +430,6 @@ void send_telnet(mapping conn,bytes data)
 
 void send_gmcp(mapping conn, bytes cmd, mixed|void data) {
 	if (!undefinedp(data)) cmd += " " + string_to_utf8(Standards.JSON.encode(data));
-	say(conn->display, "%%%% >>> SB GMCP " + cmd);
 	send_telnet(conn, (string(0..255))({SB, GMCP}) + cmd);
 }
 
