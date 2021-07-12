@@ -293,7 +293,7 @@ void sockread(mapping conn,bytes data)
 					case COMPRESS2: if (iac[0] == WILL) send_telnet(conn, (string(0..255))({DO, COMPRESS2})); break;
 					case GMCP: if (iac[0] == WILL) {
 						send_telnet(conn, (string(0..255))({DO, GMCP}));
-						send_gmcp(conn, "Core.Hello", (["client": "Gypsum", "version": gypsum_version()]));
+						send_gmcp(conn, "Core.Hello", (["client": "Gypsum", "version": gypsum_version(), "timezone": Calendar.ISO.now()->timezone()->zoneid]));
 						send_gmcp(conn, "Core.Supports.Set", ({"Char 1", "Char.Skills 1", "Char.Items 1"}));
 					}
 					break;
