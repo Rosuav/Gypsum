@@ -86,12 +86,14 @@ int output(mapping(string:mixed) subw,string line)
 	//simple case of operator error. Unconfirmed. CJA 20150606: How could it even do that?
 	if (sscanf(line,"%*sHP [ %d/%d ]%*[ ]SP [ %d/%d ]%*[ ]EP [ %d/%d ]",int chp,int mhp,int csp,int msp,int cep,int mep) && mep)
 	{
+		//This won't be needed once FluffOS Threshold is the only Threshold.
 		mapping hp=timers[" HP"],sp=timers[" SP"],ep=timers[".EP"];
 		int t=time(1);
-		int ofs=(subw->regenclick-t)%22;
-		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*22+ofs);
-		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*22+ofs);
-		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*22+ofs);
+		int tick = subw->regentick || 22;
+		int ofs=(subw->regenclick-t)%tick || tick;
+		if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*tick+ofs);
+		if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*tick+ofs);
+		if (ep && ep->time) ep->next = t + (cep<mep && (mep-cep-1)/ep->time*tick+ofs);
 		#ifdef DEBUG_REGEN_TIMER
 		string last = subw->lastvitals ? sprintf(" (%ds)", t - subw->lastvitals) : "";
 		subw->lastvitals = t;
