@@ -16,4 +16,6 @@ int output(mapping(string:mixed) subw,string line)
 		send(subw, "PONG :"+pingpong+"\r\n");
 		return 1;
 	}
+	if (sscanf(line, ":%s!%s@%s.%s JOIN #%s", string n1, string n2, string n3, string domain, string chan) && chan) return 1;
+	if (sscanf(line, ":%s!%s@%s.%s PART #%s", string n1, string n2, string n3, string domain, string chan) && chan) return 1;
 }
