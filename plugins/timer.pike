@@ -120,7 +120,7 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 	switch (cmd) {
 		case "Char.Vitals": {
 			mapping hp=timers[" HP"], sp=timers[" SP"], ep=timers[".EP"];
-			data = subw->char_vitals = (subw->char_vitals||([])) | data;
+			data = subw->char_vitals = (subw->char_vitals||([])) | (mapping(string:int))data;
 			int chp = data->hp, mhp = data->maxhp;
 			int csp = data->sp, msp = data->maxsp;
 			int cep = data->ep, mep = data->maxep;
