@@ -9,7 +9,7 @@ protected void create(string n)
 {
 	foreach (indices(this),string f) if (f!="create" && f[0]!='_') add_gypsum_constant(f,this[f]);
 	//TODO: Have some way to 'declare' these down below, rather than
-	//coding them here.
+	//coding them here. StilleBot did this with annotations (Pike 8.1+).
 	if (!G->G->commands) G->G->commands=([]);
 	if (!G->G->hooks) G->G->hooks=([]);
 	if (!G->G->windows) G->G->windows=([]);
