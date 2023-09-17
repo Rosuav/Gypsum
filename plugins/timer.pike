@@ -125,7 +125,7 @@ int gmcp_message(mapping(string:mixed) subw, string cmd, mixed data) {
 			int csp = data->sp, msp = data->maxsp;
 			int cep = data->ep, mep = data->maxep;
 			int t = time(1);
-			int tick = subw->regentick || 22; //Old Threshold has it every 22 seconds; new Threshold announces it (and it's currently 20).
+			int tick = subw->regentick || 20; //Old Threshold has it every 22 seconds; new Threshold announces it (and it's currently 20).
 			int ofs = (subw->regenclick - t) % tick || tick;
 			if (hp && hp->time) hp->next = t + (chp<mhp && (mhp-chp-1)/hp->time*tick+ofs);
 			if (sp && sp->time) sp->next = t + (csp<msp && (msp-csp-1)/sp->time*tick+ofs);
