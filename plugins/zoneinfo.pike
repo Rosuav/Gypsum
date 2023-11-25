@@ -203,7 +203,7 @@ class menu_clicked
 			foreach (sort(Calendar.TZnames.zonenames()), string zone)
 			{
 				array(string) parts = zone/"/"; //eg "America/New_York", "Australia/Melbourne", "America/Argentina/Buenos_Aires"
-				object lastreg = UNDEFINED;
+				object|zero lastreg = UNDEFINED;
 				for (int i=0;i<sizeof(parts);++i)
 				{
 					string region = parts[..i] * "/";

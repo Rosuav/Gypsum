@@ -205,7 +205,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	SelectBox select(string kwd,array(string) options)
 	{
 		SelectBox ret=win[kwd]=SelectBox(options)->set_text(data[kwd]||"");
-		ret->signal_connect("changed",checkchanged,kwd);
+		ret->signal_connect("changed", (function)checkchanged, kwd);
 		return ret;
 	}
 
@@ -224,7 +224,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				depends[fld] += ({reset_strings});
 			}
 			set_text(data[kwd] || "");
-			signal_connect("changed", checkchanged, kwd);
+			signal_connect("changed", (function)checkchanged, kwd);
 		}
 		this_program set_text(string txt)
 		{
@@ -251,7 +251,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	ToggleButton cb(string kwd, string label)
 	{
 		ToggleButton ret = win[kwd] = ToggleButton(label)->set_text(data[kwd] || "");
-		ret->signal_connect("toggled", checkchanged, kwd);
+		ret->signal_connect("toggled", (function)checkchanged, kwd);
 		return ret;
 	}
 
@@ -264,7 +264,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	//Highlight an object - probably a label or ef - as something the human
 	//should be looking at (as opposed to an intermediate calculation, for
 	//instance). It will be accompanied by the specified label.
-	GTK2.Widget readme(string lbl,GTK2.Widget main)
+	GTK2.Widget readme(string|zero lbl,GTK2.Widget main)
 	{
 		if (lbl) main = GTK2.Hbox(0,3)->add(GTK2.Label(lbl))->add(main);
 		return GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))
@@ -558,7 +558,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					({"Weight",ef("weight"),"Carried",calc("inven_tot_weight",0,"float")}),
 					({"Deity",ef("deity"),"Alignment",ef("alignment",12)}),
 				})),0,0,0)
-				->add(GTK2.Frame("Languages known")->add(mle("languages")));
+				->add((object)(GTK2.Frame("Languages known")->add((object)(mle("languages")))));
 	}
 
 	GTK2.Widget Page_Skills()
@@ -1094,7 +1094,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 					}))))
 				,0,0,0)
 				->pack_start(win->lbl_cs_type_changed=GTK2.Label(""),0,0,0)
-				->add(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))));
+				->add((object)(GTK2.Frame("Notes")->add(GTK2.ScrolledWindow()->add((object)(mle("notes")->set_wrap_mode(GTK2.WRAP_WORD))))));
 	}
 
 	void sig_set_roll_default_clicked() {set_value("roll_default", roll_default);}
@@ -1129,7 +1129,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 	{
 		GTK2.Notebook nb=GTK2.Notebook();
 		foreach (pages, string page)
-			nb->append_page(this["Page_"+replace(page," ","_")](),GTK2.Label(page));
+			nb->append_page((object)(this["Page_"+replace(page," ","_")]()), GTK2.Label(page));
 		win->mainwindow=GTK2.Window((["title":"Character Sheet: "+(data->name||"(unnamed)")]))
 			->add(nb)
 			->add_accel_group(GTK2.AccelGroup()
@@ -1350,7 +1350,7 @@ class charsheet(mapping(string:mixed) subw,string owner,mapping(string:mixed) da
 				stuff=({
 					GTK2.Label("Ready to level up!"),0,
 					GTK2.Label("NOTE: This is an assistant, nothing more. You\nare responsible for your own character sheet."),0,
-					"Choose a class",win->ddcb_class=SelectBox(all_classes)->set_row_separator_func(lambda(object store,object iter) {return store->get_value(iter,0)=="";},0),
+					"Choose a class",(object)(win->ddcb_class=SelectBox(all_classes)->set_row_separator_func((function)lambda(object store,object iter) {return store->get_value(iter,0)=="";},0)),
 					display("Hit points (roll d%d+"+data->CON_mod+")","hd"),win->hp=prefill("%d","fixedhp"),
 					"BAB improvement",win->bab=prefill("%s","bab"),
 					"Fort save improvement",win->fort=prefill("%s","fort"),

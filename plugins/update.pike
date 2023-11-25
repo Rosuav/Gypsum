@@ -30,7 +30,7 @@ int simulate; //For command-line usage, allow a "don't actually save anything" t
 //all in memory simultaneously. See my shed/unzip.pike for a Stdio.Buffer implementation -
 //it requires Pike 8.0 (this one runs happily on 7.8), but should keep less in memory.
 //This is not a general unzip tool, but it could be turned into one if needed.
-void unzip(string data,function callback,mixed|void callback_arg)
+void unzip(string|zero data,function callback,mixed|void callback_arg)
 {
 	if (has_prefix(data,"PK\5\6")) return; //File begins with EOCD marker, must be empty.
 	while (sscanf(data,"PK\3\4%-2c%-2c%-2c%-2c%-2c%-4c%-4c%-4c%-2c%-2c%s",

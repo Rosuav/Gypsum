@@ -26,7 +26,7 @@ constant config_description="Wrap width (eg 80)";
 #define SourceBuffer TextBuffer
 #endif
 
-class editor(mapping(string:mixed) subw,string initial)
+class editor(mapping(string:mixed)|zero subw,string initial)
 {
 	inherit movablewindow;
 	constant is_subwindow=0;
@@ -63,14 +63,14 @@ class editor(mapping(string:mixed) subw,string initial)
 		win->mainwindow=GTK2.Window((["title":title]))->add(GTK2.Vbox(0,0)
 			#ifndef NO_SOURCE_VIEW
 			->pack_start(GTK2.MenuBar()
-				->add(GTK2.MenuItem("_Options")->set_submenu(win->optmenu=GTK2.Menu()
-					->add(GTK2.SeparatorMenuItem())
-					->add(win->save_defaults=GTK2.MenuItem("Save defaults"))
-				))
+				->add((object)(GTK2.MenuItem("_Options")->set_submenu(win->optmenu=GTK2.Menu()
+					->add((object)(GTK2.SeparatorMenuItem()))
+					->add((object)(win->save_defaults=GTK2.MenuItem("Save defaults")))
+				)))
 			,0,0,0)
 			#endif
 			->add(GTK2.ScrolledWindow()
-				->add(win->mle=GTK2.SourceView(win->buf=GTK2.SourceBuffer()->set_text(txt)))
+				->add((object)(win->mle=GTK2.SourceView(win->buf=GTK2.SourceBuffer()->set_text(txt))))
 			)
 			->pack_end(GTK2.HbuttonBox()
 				->add(win->pb_send=GTK2.Button((["label":params->once_use?"_Save/quit":subw?"_Send":"_Save","use-underline":1,"focus-on-click":0])))
@@ -86,7 +86,7 @@ class editor(mapping(string:mixed) subw,string initial)
 			GTK2.CheckMenuItem item=GTK2.CheckMenuItem(desc);
 			//Note that we don't need reload support, so makewindow() will only ever
 			//be called once, and we can simply connect signals directly.
-			item->signal_connect("toggled",toggle_option,f);
+			item->signal_connect("toggled", (function)toggle_option, f);
 			if ((int)persist["editor/"+f]) {win->mle["set_"+f](1); item->set_active(1);}
 			win->optmenu->insert(item,0);
 		}
