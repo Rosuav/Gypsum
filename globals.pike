@@ -127,7 +127,7 @@ class MessageBox
 		#else
 		::create(flags,type,buttons,message,parent);
 		#endif
-		signal_connect("response",response,cb_arg);
+		signal_connect("response", (function)response, cb_arg);
 		show();
 	}
 
@@ -743,7 +743,7 @@ class configdlg
 		//Clear the arrays only if we're not recursing.
 		if (!noreset) win->real_strings = win->real_ints = win->real_bools = ({ });
 		elem = elem || elements; if (!sizeof(elem)) elem = migrate_elements();
-		string next_obj_name = 0;
+		string|zero next_obj_name = 0;
 		foreach (elem, mixed element)
 		{
 			if (next_obj_name)
@@ -1259,7 +1259,7 @@ void compile_warning(string fn,int l,string msg) { }
 program probe_plugin(string filename)
 {
 	add_constant("COMPILE_ONLY",1);
-	program ret=UNDEFINED;
+	program|zero ret=UNDEFINED;
 	catch {ret=compile_string(Stdio.read_file(fn(filename)),".probe",this);};
 	add_constant("COMPILE_ONLY");
 	return ret;
@@ -1389,7 +1389,7 @@ class DNS(string hostname,function callback)
 //addresses, it's possible that an interesting error on the IPv4
 //will be ousted by the uninteresting error that this computer has
 //no IPv6 routing. It may be necessary to make errno into an array.
-class establish_connection(string hostname,int port,function callback)
+class establish_connection(string hostname, int port, function|zero callback)
 {
 	object sock;
 	object dns;

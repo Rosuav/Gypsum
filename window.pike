@@ -25,7 +25,7 @@ constant pos_key="window/winpos";
 constant load_size=1;
 mapping(string:mixed) mainwin; //Set equal to win[] and thus available to nested classes
 mapping(string:GTK2.Menu) menus=([]); //Maps keyword to menu, eg "file" to the submenu contained inside the _File menu. Adding something to menu->file adds it to the File menu.
-multiset(string) is_word=0; array(string) dictionary=0;
+multiset(string)|zero is_word=0; array(string)|zero dictionary=0;
 mapping(string:array(string)) dict_suggestions = ([]); //Cache of suggestions for a word, given the current dictionary. Wiped out when dict updated.
 
 //Default set of worlds. Note that new worlds added to this list will never be auto-added to existing config files, due to the setdefault.
@@ -77,7 +77,7 @@ mapping(string:mixed) subwindow(string txt)
 {
 	mapping(string:mixed) subw=(["lines":({ }),"prompt":({([])}),"cmdhist":({ }),"histpos":-1]);
 	win->tabs+=({subw});
-	object scr;
+	GTK2.Widget scr;
 	win->notebook->append_page(subw->page=GTK2.Vbox(0,0)
 		->add(GTK2.Hbox(0,0)
 			[persist["window/tabstatus_left"]?"pack_start":"pack_end"](subw->tabstatus=GTK2.Vbox(0,10),0,0,0)
@@ -87,7 +87,7 @@ mapping(string:mixed) subwindow(string txt)
 			)
 		)
 		->pack_end(GTK2.Frame((["shadow-type":GTK2.SHADOW_IN]))->add(
-			scr=GTK2.ScrolledWindow()->add(subw->ef=MultiLineEntryField())->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
+			scr=GTK2.ScrolledWindow()->add((object)(subw->ef=MultiLineEntryField()))->set_policy(GTK2.POLICY_ALWAYS,GTK2.POLICY_NEVER)
 		),0,0,0)
 	->show_all(),GTK2.Label(subw->tabtext=txt))->set_current_page(sizeof(win->tabs)-1);
 	subw->efbuf=subw->ef->get_buffer();
@@ -148,7 +148,7 @@ void subw_ef_populate_popup(object ef,object menu,mapping subw)
 		foreach (words, string suggestion)
 		{
 			GTK2.MenuItem item=GTK2.MenuItem(sprintf("Spell: %s -> %s", checkme, suggestion));
-			item->show()->signal_connect("activate",spellcheck, ({subw, checkme, suggestion}));
+			item->show()->signal_connect("activate", (function)spellcheck, ({subw, checkme, suggestion}));
 			menu->add(item);
 		}
 	}
@@ -528,7 +528,7 @@ void rtl_check(array line)
  * If msg is an array, it is assumed to be alternating colors and text.
  * Otherwise, additional arguments will be processed with sprintf().
  */
-void say(mapping subw,string|array msg,mixed ... args)
+void say(mapping|zero subw,string|array msg,mixed ... args)
 {
 	if (!subw) subw=current_subw();
 	if (stringp(msg))
@@ -592,7 +592,7 @@ void say(mapping subw,string|array msg,mixed ... args)
 	redraw(subw);
 }
 
-void connect(string world,mapping|void subw)
+void connect(string|zero world,mapping|void subw)
 {
 	if (!subw) subw=current_subw();
 	if (!world)
@@ -1035,7 +1035,7 @@ void enterpressed(mapping subw,string|void cmd)
 //have been processed.
 //NOTE: This function is called externally, but only (as of 20150813) from connection.
 //This may end up getting moved to a more generic location and made more available.
-int runhooks(string hookname,string skiphook,mapping(string:mixed) subw,mixed ... otherargs)
+int runhooks(string hookname,string|zero skiphook,mapping(string:mixed) subw,mixed ... otherargs)
 {
 	//Sort by name for consistency. May be worth keeping them sorted somewhere, but I'm not seeing performance problems.
 	array names=indices(G->G->hooks),hooks=values(G->G->hooks); sort(names,hooks);
@@ -1771,7 +1771,7 @@ class configure_plugins
 			->pack_start(win->cfg=GTK2.Frame("<config>")->add(win->cfg_ef=GTK2.Entry()->show())->set_no_show_all(1),0,0,0)
 			->add(GTK2.Frame("Plugin documentation")->add(GTK2.ScrolledWindow()
 				->set_policy(GTK2.POLICY_AUTOMATIC,GTK2.POLICY_AUTOMATIC)
-				->add(win->docs=MultiLineEntryField()->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD))
+				->add((object)(win->docs=MultiLineEntryField()->set_editable(0)->set_wrap_mode(GTK2.WRAP_WORD)))
 			))
 		;
 	}
@@ -1880,10 +1880,10 @@ void makewindow()
 			//Note these odd casts: set_submenu() expects a GTK2.Widget, and for some
 			//reason won't accept a GTK2.Menu, which is a subclass of Widget. This is
 			//true as of Pike 8.1, and probably not worth the hassle of tracking down.
-			->add(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu()))
-			->add(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu()))
-			->add(GTK2.MenuItem("_Plugins")->set_submenu((object)GTK2.Menu()))
-			->add(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu()))
+			->add((object)(GTK2.MenuItem("_File")->set_submenu((object)GTK2.Menu())))
+			->add((object)(GTK2.MenuItem("_Options")->set_submenu((object)GTK2.Menu())))
+			->add((object)(GTK2.MenuItem("_Plugins")->set_submenu((object)GTK2.Menu())))
+			->add((object)(GTK2.MenuItem("_Help")->set_submenu((object)GTK2.Menu())))
 		,0,0,0)
 		->add(win->notebook=GTK2.Notebook()->popup_enable())
 		->pack_end(win->statusbar=GTK2.Hbox(0,0)->set_size_request(0,-1),0,0,0)

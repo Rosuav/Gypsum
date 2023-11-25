@@ -102,7 +102,7 @@ protected void create(string|void name)
 			"Updates will be applied next time you restart Gypsum.",
 			G->G->window->mainwindow)
 			->show()
-			->signal_connect("response", lambda(object self) {self->destroy();});
+			->signal_connect("response", (function)lambda(object self) {self->destroy();});
 		return;
 	}
 
