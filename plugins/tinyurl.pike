@@ -109,7 +109,7 @@ int input(mapping(string:mixed) subw,string line)
 				{
 					if (q->status<300 || q->status>=400 || !q->headers->location) say(subw,"%% Cannot render URL - server returned a non-redirection response");
 					else say(subw,"%%%% Rendered URL %s: actual location is %s",url,q->headers->location);
-				},lambda()
+				}, lambda(Protocols.HTTP.Query q)
 				{
 					say(subw,"%% Unable to render URL - HTTP query failed"); //Maybe give more info here, but I literally never remember seeing this happen
 				}));
