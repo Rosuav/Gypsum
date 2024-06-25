@@ -213,6 +213,7 @@ void ansiread(mapping conn,string data,int end_of_block)
 						case 1: conn->bold=8; break;
 						case 2: conn->bold=0; break;
 						case 3..9: break; //Unsupported but recognized codes eg blink
+						case 21..29: break; //Style markers, mostly resets like "not italic" (undoing 1..9)
 						case 30..37: conn->fg=params[p]-30; break;
 						case 40..47: conn->bg=params[p]-40; break;
 						case 38: {string dest = "fg"; //fall-through
