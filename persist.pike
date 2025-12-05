@@ -29,6 +29,11 @@ Requirement: Restrict your persist data to JSON-safe values: strings, ints, floa
 of JSON-safe values, and mappings with string keys and JSON-safe values.
 */
 
+#if __PIKE_VERSION__ < 9
+//This file is loaded up before globals
+typedef int(0..0) zero;
+#endif
+
 object persist=class(string savefn)
 {
 	//Persistent storage (when this dies, bring it back with a -1/-1 counter on it).

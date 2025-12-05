@@ -19,6 +19,10 @@ protected void create(string n)
 	if (!G->G->dns_aaaa) G->G->dns_aaaa=([]); //0 means unknown or error; ({ }) meeans successful empty response.
 }
 
+#if __PIKE_VERSION__ < 9
+typedef int(0..0) zero;
+#endif
+
 //In any place where binary data is used, use the type name "bytes" rather than "string"
 //for clarity. In all cases, "string" means "string(0..1114111)" aka Unicode; anything
 //binary should be clearly marked. (Also, no surrogates, thanks! There's no way to say
@@ -36,13 +40,8 @@ typedef string(0..127) ascii;
 //Note that this is relatively slow (a run-time lookup every call), and should normally
 //be avoided in favour of a reload-time replacement. But otherwise, this is a late-bind
 //callable that can be passed around pretty much like a function.
-class bouncer(string ... keys)
-{
-	protected mixed `()(mixed ... args)
-	{
-		mixed func=G->G; foreach (keys,string k) func=func[k];
-		return func(@args);
-	}
+class bouncer(string section, string key) {
+	protected mixed `()(mixed ... args) {return G->G[section][key](@args);}
 }
 
 //Something like strftime(3). If passed an int, is equivalent to strftime(format,gmtime(tm)).
@@ -103,10 +102,10 @@ int wordchar(int ch)
 //Equivalent to some_object->signal_connect("some_signal",handler,arg,arg,arg)
 //When this object expires, the signal is disconnected, which should gc the function.
 //obj should be a GTK2.G.Object or similar.
-class gtksignal(object obj, mixed ... args)
-{
+class gtksignal {
+	object obj; array args;
 	int signal_id;
-	protected void create() {if (obj) signal_id=obj->signal_connect(@args);}
+	protected void create(object o, mixed ... a) {obj = o; args = a; if (obj) signal_id=obj->signal_connect(@args);}
 	protected void destroy() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
 	protected void _destruct() {if (obj && signal_id) obj->signal_disconnect(signal_id);}
 }
@@ -1266,8 +1265,8 @@ program probe_plugin(string filename)
 }
 
 //Look up some sort of name and return one or more IP addresses
-class DNS(string hostname,function callback, mixed ... cbargs)
-{
+class DNS {
+	string hostname; function callback; array cbargs; //Can't use "mixed ... cbargs" in the class signature until Pike 9
 	//Note that async_dual_client would probably be better, but only marginally, so since
 	//it isn't available on all Pikes, I'll stick with UDP-only. TCP is only of value for
 	//large responses, and we aren't expecting any such here (though it is possible).
@@ -1325,8 +1324,8 @@ class DNS(string hostname,function callback, mixed ... cbargs)
 		callback(this,@cbargs);
 	}
 
-	protected void create()
-	{
+	protected void create(string h, function cb, mixed ... a) {
+		hostname = h; callback = cb; cbargs = a;
 		//TODO: What should be done if connection/protocol changes and we
 		//have cached info? Should the cache retain A and AAAA records
 		//separately, and proceed with the two parts independently?
@@ -1383,8 +1382,8 @@ class DNS(string hostname,function callback, mixed ... cbargs)
 //addresses, it's possible that an interesting error on the IPv4
 //will be ousted by the uninteresting error that this computer has
 //no IPv6 routing. It may be necessary to make errno into an array.
-class establish_connection(string hostname, int port, function|zero callback, mixed ... cbargs)
-{
+class establish_connection {
+	string hostname; int port; function|zero callback; array cbargs;
 	object sock;
 	object dns;
 	int errno; //If 0, no socket connections have failed - maybe it was DNS that failed instead.
@@ -1420,7 +1419,10 @@ class establish_connection(string hostname, int port, function|zero callback, mi
 		}
 	}
 
-	protected void create() {dns=DNS(hostname,tryconn);} //As above. Note that initializing dns at its declaration would do it before hostname is set.
+	protected void create(string h, int p, function|zero cb, mixed ... a) {
+		hostname = h; port = p; callback = cb; cbargs = a;
+		dns=DNS(hostname,tryconn); //As above. Note that initializing dns at its declaration would do it before hostname is set.
+	}
 }
 
 int monitorid;

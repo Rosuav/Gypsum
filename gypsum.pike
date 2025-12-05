@@ -83,6 +83,7 @@ mapping(string:int) compat=([
 	"boom2":([7.8:872,8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'boom2' bugfix
 	"boom3":([8.0:4])[__REAL_VERSION__]>__REAL_BUILD__, //Crashes in notebook_switch_page (may be distinct from boom2)
 	"msgdlg":([7.8:876])[__REAL_VERSION__]>__REAL_BUILD__, //MessageDialog parent bug
+	"nozero":([9.0:0])[__REAL_VERSION__]>__REAL_BUILD__, //Lacks the 'zero' identifier
 	"nopasswd":0, //Password handling misbehaves (NEVER active by default)
 ]);
 
