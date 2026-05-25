@@ -64,7 +64,7 @@ class config
 	{
 		//TODO: What should a multi-line trigger mean? Options? Multiple consecutive lines?
 		//For now, just replace newline with space, so it at least makes plausible sense.
-		info->trigger=replace(String.trim_all_whites(info->trigger),"\n"," ");
+		info->trigger=replace(String.trim(info->trigger),"\n"," ");
 		int tm=0; foreach ((array(int))(win->time->get_text()/":"),int part) tm=tm*60+part; info->time=tm;
 		makelabels();
 	}

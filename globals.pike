@@ -1047,7 +1047,7 @@ class tabstatus(string name)
 
 ascii gypsum_version()
 {
-	return String.trim_all_whites(Stdio.read_file("VERSION")); //Assumed (but not checked) to be all-ASCII. Don't break this, kthx.
+	return String.trim(Stdio.read_file("VERSION")); //Assumed (but not checked) to be all-ASCII. Don't break this, kthx.
 }
 
 ascii pike_version()

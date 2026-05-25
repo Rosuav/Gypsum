@@ -569,7 +569,7 @@ void say(mapping|zero subw,string|array msg,mixed ... args)
 			if ((!wrappos || (sizeof(lines) && wrappos<=sizeof(wrapindent))) && !pos) wrappos=wrap;
 			cur[-1]=part[..wrappos-1];
 			//Remove msg[0]->text as it will have changed - and also ensure we have a new mapping.
-			msg=({msg[0]-(<"text">),msg[i-1],wrapindent+String.trim_all_whites(part[wrappos..])})+msg[i+1..];
+			msg=({msg[0]-(<"text">),msg[i-1],wrapindent+String.trim(part[wrappos..])})+msg[i+1..];
 			wrap = point_to_pos(subw, msg, subw->enwidth*persist["window/wrap"]+3);
 		}
 		rtl_check(cur);
@@ -1785,7 +1785,7 @@ class configure_plugins
 			docstring="(unable to compile, see source)";
 			if (program p=probe_plugin(fn))
 			{
-				docstring=String.trim_all_whites(p->docstring || "(undocumented, see source)");
+				docstring=String.trim(p->docstring || "(undocumented, see source)");
 				if (p->plugin_active_by_default) docstring+="\n\nActive by default.";
 				string provides=Array.uniq(Program.all_inherits(p)->provides-({0}))*", ";
 				if (provides!="") docstring+="\n\nProvides: "+provides;
@@ -1805,7 +1805,7 @@ class configure_plugins
 		}
 		//The MLE wraps, so we remove all newlines that aren't doubled.
 		docstring=replace((docstring/"\n\n")[*],"\n"," ")*"\n\n";
-		win->docs->set_text(String.trim_all_whites(docstring));
+		win->docs->set_text(String.trim(docstring));
 	}
 
 	void save_content(mapping(string:mixed) info)

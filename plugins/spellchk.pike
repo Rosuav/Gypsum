@@ -47,7 +47,7 @@ void spellcheck(int all)
 	//Skip the first line and any that are just asterisks, output any others.
 	foreach ((rc->stdout/"\n")[1..],string line)
 	{
-		line=String.trim_all_whites(line);
+		line=String.trim(line);
 		if (line!="" && line!="*") say(subw,"%% "+line);
 	}
 	say(subw,"%% Spell check complete.");

@@ -27,8 +27,8 @@ void setcount(string name,int cnt)
 int output(mapping(string:mixed) subw,string line)
 {
 	mapping conn=subw->connection;
-	if (string partial=m_delete(conn,"components/partial")) line=partial+" "+String.trim_all_whites(line);
-	if (String.trim_all_whites(line)=="Carried Spell Components") conn["components/watch"]=1;
+	if (string partial=m_delete(conn,"components/partial")) line=partial+" "+String.trim(line);
+	if (String.trim(line)=="Carried Spell Components") conn["components/watch"]=1;
 	else if (conn["components/watch"])
 	{
 		//TODO: Detect the end in a way that's compatible with mobile mode
