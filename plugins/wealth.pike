@@ -12,7 +12,7 @@ a new day), and you'll see and reset stats.
 //A set of available monitors
 mapping(string:array) allmonitors=([
 	//Monitors for Threshold RPG
-	"wealth":({"%*[ ]Total Wealth: %[-0-9,]","%9s Prv: %s","Wealth"}),
+	"wealth":({"%*[ ]Total Wealth:%*[ .]%[-0-9,]","%9s Prv: %s","Wealth"}),
 	"xp":({"%*[ ]Current Experience Points: %[- 0-9,]"," First:%13s; last: %s","XP"}),
 	"x":({"%*[ ]Current Expertise Points: %[- 0-9,]"," First:%13s; last: %s","Exp"}),
 	//Feel free to add others, or replace these, according to what you play.
@@ -67,7 +67,7 @@ int output(mapping(string:mixed) subw,string line)
 		updstatus();
 	}
 	foreach (({"Orb","Crown","Danar","Slag"}),string type)
-		if (sscanf(replace(line, ",", ""), "%*[ ]" + type + ": %d", int val) == 2)
+		if (sscanf(line - "," - ".", "%*[ ]" + type + ": %d", int val) == 2)
 			persist["wealth/"+type]=val;
 }
 
